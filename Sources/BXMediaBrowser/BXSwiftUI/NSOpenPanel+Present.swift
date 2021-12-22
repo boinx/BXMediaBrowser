@@ -56,8 +56,6 @@ public extension NSOpenPanel
 			}
 		}
 
-
-
 		if let directoryURL = directoryURL
 		{
 			panel.directoryURL = directoryURL

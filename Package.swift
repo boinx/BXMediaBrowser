@@ -15,7 +15,8 @@ let package = Package(
     
     products:
     [
-        // Products define the executables and libraries a package produces, and make them visible to other packages.
+        // Products define the executables and libraries a package produces, and make them visible to other packages
+        
         .library(
             name: "BXMediaBrowser",
             targets: ["BXMediaBrowser"]),
@@ -23,7 +24,8 @@ let package = Package(
     
     dependencies:
     [
-        // Dependencies declare other packages that this package depends on.
+        // Dependencies declare other packages that this package depends on
+        
         // .package(url: /* package url */, from: "1.0.0"),
     ],
     
