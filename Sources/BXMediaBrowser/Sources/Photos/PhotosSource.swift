@@ -103,17 +103,17 @@ public class PhotosSource : Source,AccessControl //,PHPhotoLibraryChangeObserver
 
 		// Smart Albums
 		
-		let smartAlbums = PHAssetCollection.fetchAssetCollections(
-			with:.smartAlbum,
-			subtype:.any,
-			options:nil)
-
-		for i in 0 ..< smartAlbums.count
-		{
-			let smartAlbum = smartAlbums[i]
-			let container = PhotosContainer(with:smartAlbum)
-			containers += container
-		}
+//		let smartAlbums = PHAssetCollection.fetchAssetCollections(
+//			with:.smartAlbum,
+//			subtype:.any,
+//			options:nil)
+//
+//		for i in 0 ..< smartAlbums.count
+//		{
+//			let smartAlbum = smartAlbums[i]
+//			let container = PhotosContainer(with:smartAlbum)
+//			containers += container
+//		}
 		
 		// Smart Folders
 
