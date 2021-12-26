@@ -32,7 +32,7 @@ import SwiftUI
 /// A Container is the main data structure to create tree like graphs. Each Container has a list of sub-containers
 /// and a list of Objects (media files).
 
-open class Container : ObservableObject, Identifiable
+open class Container : ObservableObject, Identifiable, StateRestoring
 {
 	/// The identifier specifies the location of a Container
 	
@@ -237,77 +237,38 @@ open class Container : ObservableObject, Identifiable
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	public func saveState()
+	public func saveState(to dict:inout [String:Any]) async
 	{
-		UserDefaults.standard.set(isExpanded, forKey:isExpandedPrefsKey)
-
-		Task
-		{
-			let containers = await self.containers
-			
-			await MainActor.run
-			{
-				containers.forEach { $0.saveState() }
-
-			}
-		}
-	}
-	
-	
-	public func restoreState()
-	{
-		self.isExpanded = UserDefaults.standard.bool(forKey:isExpandedPrefsKey)
+		var info:[String:Any] = [:]
+		info[isExpandedKey] = self.isExpanded
 		
-		Task
+		for container in await self.containers
 		{
-			let containers = await self.containers
-			
-			await MainActor.run
-			{
-				containers.forEach { $0.restoreState() }
-			}
+			await container.saveState(to:&info)
+		}
+	}
+	
+	public func restoreState(from dict:[String:Any]) async
+	{
+		let info = dict[infoKey] as? [String:Any] ?? [:]
+		self.isExpanded = info[isExpandedKey] as? Bool ?? false
+		
+		for container in await self.containers
+		{
+			await container.restoreState(from:info)
 		}
 	}
 
-
-	private var isExpandedPrefsKey:String
+	private var infoKey:String
 	{
-		"BXMediaBrowser.Container.\(identifier).isExpanded".replacingOccurrences(of:".", with:"-")
+		"Container.\(identifier)".replacingOccurrences(of:".", with:"-")
 	}
 
+	private var isExpandedKey:String
+	{
+		"isExpanded"
+	}
 
-
-//	var flattenedContainers:[Container]
-//	{
-//		get async
-//		{
-//			await self.containers.flatMap
-//			{
-//				$0.flattenedContainers
-//			}
-//		}
-//	}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-//	public func saveState(to dictionary:[String:Any]) async
-//	{
-//		UserDefaults.standard.set(isExpanded, forKey:"isExpanded")
-//		
-//		for container in await self.containers
-//		{
-//			var subDictionary:[String:Any] = [:]
-//			dictionary["Container-\(container.identifier)"] = subDictionary
-//			dictionary.saveState(to:subDictionary)
-//		}
-//	}
-//	
-//	public func restoreState(from dictionary:[String:Any])
-//	{
-//		self.isExpanded = UserDefaults.standard.bool(forKey:"isExpanded")
-//	}
 }
 
 

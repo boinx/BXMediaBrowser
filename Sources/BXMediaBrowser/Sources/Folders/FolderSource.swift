@@ -82,6 +82,31 @@ open class FolderSource : Source, AccessControl
 	{
 		completionHandler(hasAccess)
 	}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	override public func saveState(to dict:inout [String:Any]) async
+	{
+		await super.saveState(to:&dict)
+		
+//		dict[isExpandedKey] = self.isExpanded
+	}
+	
+	
+	override public func restoreState(from dict:[String:Any]) async
+	{
+		await super.restoreState(from:dict)
+		
+//		self.isExpanded = dict[isExpandedKey] as? Bool ?? false
+	}
+
+
+	private var isExpandedKey:String
+	{
+		"BXMediaBrowser.Source.\(identifier).isExpanded".replacingOccurrences(of:".", with:"-")
+	}
 }
 
 

@@ -29,7 +29,7 @@ import SwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-open class Source : ObservableObject, Identifiable
+open class Source : ObservableObject, Identifiable, StateRestoring
 {
 	public let identifier:String
 	public let name:String
@@ -170,42 +170,41 @@ open class Source : ObservableObject, Identifiable
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	public func saveState()
+	public func saveState(to dict:inout [String:Any]) async
 	{
-		UserDefaults.standard.set(isExpanded, forKey:isExpandedPrefsKey)
-
-		Task
-		{
-			let containers = await self.containers
-			
-			await MainActor.run
-			{
-				containers.forEach { $0.saveState() }
-
-			}
-		}
-	}
-	
-	
-	public func restoreState()
-	{
-		self.isExpanded = UserDefaults.standard.bool(forKey:isExpandedPrefsKey)
+		var info:[String:Any] = [:]
+		info[isExpandedKey] = self.isExpanded
 		
-		Task
+		for container in await self.containers
 		{
-			let containers = await self.containers
-			
-			await MainActor.run
-			{
-				containers.forEach { $0.restoreState() }
-			}
+			await container.saveState(to:&info)
+		}
+		
+		dict[infoKey] = info
+	}
+	
+	
+	public func restoreState(from dict:[String:Any]) async
+	{
+		let info = dict[infoKey] as? [String:Any] ?? [:]
+		self.isExpanded = info[isExpandedKey] as? Bool ?? false
+		
+		for container in await self.containers
+		{
+			await container.restoreState(from:info)
 		}
 	}
 
 
-	private var isExpandedPrefsKey:String
+	private var infoKey:String
 	{
-		"BXMediaBrowser.Source.\(identifier).isExpanded".replacingOccurrences(of:".", with:"-")
+		"Source.\(identifier)".replacingOccurrences(of:".", with:"-")
+	}
+
+
+	private var isExpandedKey:String
+	{
+		"isExpanded"
 	}
 }
 

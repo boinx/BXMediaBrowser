@@ -31,7 +31,7 @@ import SwiftUI
 
 /// A Section is a group of sources within a library.
 
-open class Section : ObservableObject, Identifiable
+open class Section : ObservableObject, Identifiable, StateRestoring
 {
 	/// A unique identifier for this Section
 	
@@ -89,15 +89,21 @@ open class Section : ObservableObject, Identifiable
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	public func saveState()
+	public func saveState(to dict:inout [String:Any]) async
 	{
-		self.sources.forEach { $0.saveState() }
+		for source in self.sources
+		{
+			await source.saveState(to:&dict)
+		}
 	}
 	
 	
-	public func restoreState()
+	public func restoreState(from dict:[String:Any]) async
 	{
-		self.sources.forEach { $0.restoreState() }
+		for source in self.sources
+		{
+			await source.restoreState(from:dict)
+		}
 	}
 }
 
