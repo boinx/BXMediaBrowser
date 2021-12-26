@@ -82,7 +82,6 @@ public struct SectionView : View
 		
 		// Layout
 		
-		.padding(.bottom,4)
 		.padding(.bottom,12)
 		
 		// Apply id to optimized view hierarchy rebuilding

@@ -80,7 +80,7 @@ public struct FolderSourceView : View
 	
 	public var body: some View
     {
-		VStack(alignment:.leading, spacing:6)
+		VStack(alignment:.leading, spacing:4)
 		{
 			ForEach(source.containers)
 			{
@@ -88,6 +88,7 @@ public struct FolderSourceView : View
 			}
 		}
 		.id(source.identifier)
+		.padding(.top,2)
 		.onAppear { self.loadIfNeeded() }
     }
     

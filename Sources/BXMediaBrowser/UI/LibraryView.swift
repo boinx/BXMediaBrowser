@@ -57,6 +57,7 @@ public struct LibraryView : View
 				if SectionView.shouldDisplay($0)
 				{
 					SectionView(section:$0)
+						.padding(.horizontal)
 				}
 			}
 		}
