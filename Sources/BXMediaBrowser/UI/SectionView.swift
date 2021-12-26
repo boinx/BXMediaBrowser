@@ -89,6 +89,11 @@ public struct SectionView : View
 		
 		.id(section.identifier)
     }
+   
+    public static func shouldDisplay(_ section:Section) -> Bool
+    {
+		!section.sources.isEmpty || section.addSourceHandler != nil
+    }
 }
 
 

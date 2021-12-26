@@ -53,7 +53,11 @@ public struct LibraryView : View
 			ForEach(library.sections)
 			{
 //				ViewFactory.shared.build(with:$0)
-				SectionView(section:$0)
+
+				if SectionView.shouldDisplay($0)
+				{
+					SectionView(section:$0)
+				}
 			}
 		}
 		
