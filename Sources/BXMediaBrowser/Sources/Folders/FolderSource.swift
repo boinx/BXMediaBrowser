@@ -23,20 +23,64 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 
-import Foundation
+import SwiftUI
+import QuickLook
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-extension Container
+open class FolderSource : Source, AccessControl
 {
-	public enum Error : Swift.Error
+	/// The unique identifier of this source must always remain the same. Do not change this
+	/// identifier, even if the class name changes due to refactoring, because the identifier
+	/// might be stored in a preferences file or user documents.
+	
+	static let identifier = "FolderSource:"
+	
+	
+	/// Creates a new Source for local file system directories
+	
+	public init()
 	{
-		case notFound
-		case accessDenied
-		case loadContentsCancelled
-		case loadContentsFailed
+		super.init(identifier:Self.identifier, name:"Finder")
+		self.loader = Loader(identifier:self.identifier, loadHandler:self.load)
+	}
+
+
+	/// Converts a file URL to a unique identifier
+	
+	public class func identifier(for url:URL) -> String
+	{
+		return "\(Self.identifier)\(url.absoluteString)"
+	}
+	
+	
+	/// Converts a unique identifier back to a file URL
+	
+	public class func url(for identifier:String) throws -> URL
+	{
+		let string = identifier.replacingOccurrences(of:Self.identifier, with:"")
+		guard let url = URL(string:string) else { throw Container.Error.notFound }
+		return url
+	}
+
+
+	/// Loads the top-level containers of this source.
+	///
+	/// Subclasses can override this function, e.g. to load top level folder from the preferences file
+	
+	private func load() async throws -> [Container]
+	{
+		return []
+	}
+
+
+	public var hasAccess:Bool { true }
+	
+	public func grantAccess(_ completionHandler:@escaping (Bool)->Void)
+	{
+		completionHandler(hasAccess)
 	}
 }
 

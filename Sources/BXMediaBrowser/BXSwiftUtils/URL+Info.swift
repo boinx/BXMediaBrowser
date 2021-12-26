@@ -432,19 +432,18 @@ extension URL
 
 extension URL
 {
-	public func conforms(to type:CFString) -> Bool
+	public func conforms(to type:UTType) -> Bool
 	{
 		guard let utiString = self.uti else { return false }
 		
 		if #available(macOS 12,*)
 		{
-			guard let _type = UTType(type as String) else { return false }
 			guard let uti = UTType(utiString) else { return false }
-			return uti.conforms(to:_type)
+			return uti.conforms(to:type)
 		}
 		else
 		{
-			return UTTypeConformsTo(utiString as CFString, type)
+			return UTTypeConformsTo(utiString as CFString, type.identifier as CFString)
 		}
 	}
 

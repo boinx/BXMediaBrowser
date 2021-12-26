@@ -1,9 +1,25 @@
+//----------------------------------------------------------------------------------------------------------------------
 //
-//  ImageFolderSource.swift
-//  MediaBrowserTest
-//  Created by Peter Baumgartner on 04.12.21.
+//  Copyright ©2022 Peter Baumgartner. All rights reserved.
 //
-
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+//
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -15,7 +31,7 @@ import UniformTypeIdentifiers
 //----------------------------------------------------------------------------------------------------------------------
 
 
-open class ImageFolderSource : FolderSource
+open class VideoFolderSource : FolderSource
 {
 
 }
@@ -26,34 +42,13 @@ open class ImageFolderSource : FolderSource
 
 // MARK: -
 
-open class ImageFolderContainer : FolderContainer
+open class VideoFolderContainer : FolderContainer
 {
-	override open class func createContainer(for url:URL) throws -> Container?
-	{
-		guard url.exists else { throw Container.Error.notFound }
-		guard url.isDirectory else { throw Container.Error.notFound }
-		return ImageFolderContainer(url:url)
-	}
-
-
 	override open class func createObject(for url:URL) throws -> Object?
 	{
-//		guard url.conforms(to:kUTTypeImage) else { return nil }
-
-		let uti = url.uti ?? ""
-		
-		if #available(macOS 12,*)
-		{
-			guard let type = UTType(uti) else { return nil }
-			guard type.conforms(to:.image) else { return nil }
-		}
-		else
-		{
-			guard UTTypeConformsTo(uti as CFString,kUTTypeImage) else { return nil }
-		}
-		
-		let object = ImageFile(url:url)
-		return object
+		guard url.exists else { throw Object.Error.notFound }
+		guard url.isVideoFile else { return nil }
+		return VideoFile(url:url)
 	}
 }
 
@@ -63,7 +58,7 @@ open class ImageFolderContainer : FolderContainer
 
 // MARK: -
 
-open class ImageFile : AnyFile
+open class VideoFile : FolderObject
 {
 	/// Creates a thumbnail image for the specified local file URL
 	
@@ -111,5 +106,3 @@ open class ImageFile : AnyFile
 
 
 //----------------------------------------------------------------------------------------------------------------------
-
-

@@ -1,8 +1,27 @@
+//----------------------------------------------------------------------------------------------------------------------
 //
-//  PhotosSource.swift
-//  MediaBrowserTest
-//  Created by Peter Baumgartner on 04.12.21.
+//  Copyright ©2022 Peter Baumgartner. All rights reserved.
 //
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+//
+//----------------------------------------------------------------------------------------------------------------------
+
 
 import Photos
 
@@ -10,7 +29,7 @@ import Photos
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public class PhotosSource : Source,AccessControl //,PHPhotoLibraryChangeObserver
+public class PhotosSource : Source, AccessControl
 {
 	/// The unique identifier of this source must always remain the same. Do not change this
 	/// identifier, even if the class name changes due to refactoring, because the identifier
@@ -22,6 +41,7 @@ public class PhotosSource : Source,AccessControl //,PHPhotoLibraryChangeObserver
 	
 	static let imageManager:PHImageManager = PHImageManager()
 	
+	///
 	var observer = PhotosChangeObserver()
 	
 	
@@ -35,35 +55,37 @@ public class PhotosSource : Source,AccessControl //,PHPhotoLibraryChangeObserver
 		super.init(identifier:Self.identifier, name:"Photos")
 		self.loader = Loader(identifier:self.identifier, loadHandler:self.load)
 
-		// Request access to photo library if not available yet
-		
-		if PHPhotoLibrary.authorizationStatus() != .authorized
-		{
-			PHPhotoLibrary.requestAuthorization()
-			{
-				_ in
-			}
-		}
-
 		// Make sure we can detect changes to the library
 	
 		observer.didChangeHandler =
 		{
 			[weak self] in self?.photoLibraryDidChange($0)
 		}
+		
+		// Request access to photo library if not available yet. Reload all containers once access has been granted.
+
+		if !self.hasAccess
+		{
+			self.grantAccess()
+			{
+				[weak self] isGranted in
+				if isGranted { self?.load() }
+			}
+		}
 	}
-
-
-//    deinit
-//    {
-//        PHPhotoLibrary.shared().unregisterChangeObserver(self)
-//    }
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	public var hasAccess:Bool { PHPhotoLibrary.authorizationStatus() == .authorized }
+	/// Returns true if we have access to the Photos library
+	
+	public var hasAccess:Bool
+	{
+		PHPhotoLibrary.authorizationStatus() == .authorized
+	}
+	
+	/// Calling this function prompts the user to grant access to the Photos library
 	
 	public func grantAccess(_ completionHandler:@escaping (Bool)->Void)
 	{
@@ -103,17 +125,17 @@ public class PhotosSource : Source,AccessControl //,PHPhotoLibraryChangeObserver
 
 		// Smart Albums
 		
-		let smartAlbums = PHAssetCollection.fetchAssetCollections(
-			with:.smartAlbum,
-			subtype:.any,
-			options:nil)
-
-		for i in 0 ..< smartAlbums.count
-		{
-			let smartAlbum = smartAlbums[i]
-			let container = PhotosContainer(with:smartAlbum)
-			containers += container
-		}
+//		let smartAlbums = PHAssetCollection.fetchAssetCollections(
+//			with:.smartAlbum,
+//			subtype:.any,
+//			options:nil)
+//
+//		for i in 0 ..< smartAlbums.count
+//		{
+//			let smartAlbum = smartAlbums[i]
+//			let container = PhotosContainer(with:smartAlbum)
+//			containers += container
+//		}
 		
 		// Smart Folders
 
@@ -140,7 +162,6 @@ public class PhotosSource : Source,AccessControl //,PHPhotoLibraryChangeObserver
 		
 		return containers
 	}
-
 }
 
 

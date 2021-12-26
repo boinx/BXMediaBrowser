@@ -23,125 +23,88 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 
-import SwiftUI
-import Combine
+import Foundation
+import QuartzCore
+import UniformTypeIdentifiers
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public struct EmptyObjectsView : View
+open class ImageFolderSource : FolderSource
 {
-	public init()
-	{
 
-	}
-	
-	public var body: some View
-    {
-		VStack
-		{
-			Spacer()
-			Text("No Items").centerAligned()
-			Spacer()
-		}
-    }
- }
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-public struct LoadingObjectsView : View
-{
-	public var body: some View
-    {
-		VStack
-		{
-			Spacer()
-			BXSpinningWheel().centerAligned()
-			Spacer()
-		}
-    }
- }
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-public struct LoadedObjectsView : View
-{
-	@ObservedObject var container:Container
-	
-	@State private var selectedObjectIdentifiers:[String] = []
-
-	public var body: some View
-    {
-		ScrollView
-		{
-			LazyVStack(alignment:.leading, spacing:0)
-			{
-				ForEach(container.objects)
-				{
-					object in
-//					SwiftUIFactory.shared.view(for:object)
-					ObjectCell(object:object, isSelected:selectedObjectIdentifiers.contains(object.identifier))
-					
-						.onTapGesture
-						{
-							self.select(object)
-						}
-				}
-			}
-		}
-    }
-    
-    func select(_ object:Object)
-    {
-		selectedObjectIdentifiers = [object.identifier]
-    }
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public struct ObjectsView : View
+// MARK: -
+
+open class ImageFolderContainer : FolderContainer
 {
-	// Data Model
-	
-	@ObservedObject var container:Container
-	
-	// Init
-	
-	public init(with container:Container)
+	override open class func createObject(for url:URL) throws -> Object?
 	{
-		self.container = container
+		guard url.exists else { throw Object.Error.notFound }
+		guard url.isImageFile else { return nil }
+		return ImageFile(url:url)
 	}
-	
-	// Build View
-	
-	public var body: some View
-    {
-		Group
-		{
-			if container.isLoading
-			{
-				LoadingObjectsView()
-			}
-			else if container.isLoaded && !container.objects.isEmpty
-			{
-				LoadedObjectsView(container:container)
-			}
-			else
-			{
-				EmptyObjectsView()
-			}
-		}
-		.id(container.identifier)
-    }
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
- 
+
+
+// MARK: -
+
+open class ImageFile : FolderObject
+{
+	/// Creates a thumbnail image for the specified local file URL
+	
+	override open class func loadThumbnail(for identifier:String, info:Any) async throws -> CGImage
+	{
+		guard let url = info as? URL else { throw Error.loadThumbnailFailed }
+		guard url.exists else { throw Error.loadThumbnailFailed }
+
+		let options:[CFString:AnyObject] =
+		[
+			kCGImageSourceCreateThumbnailFromImageIfAbsent : kCFBooleanTrue,
+			kCGImageSourceCreateThumbnailFromImageAlways : kCFBooleanFalse,
+			kCGImageSourceThumbnailMaxPixelSize : NSNumber(value:256.0),
+			kCGImageSourceCreateThumbnailWithTransform : kCFBooleanTrue
+		]
+
+		guard let source = CGImageSourceCreateWithURL(url as CFURL,nil) else { throw Error.loadThumbnailFailed }
+		guard let thumbnail = CGImageSourceCreateThumbnailAtIndex(source,0,options as CFDictionary) else { throw Error.loadThumbnailFailed }
+		return thumbnail
+	}
+
+
+	/// Loads the metadata dictionary for the specified local file URL
+	
+	override open class func loadMetadata(for identifier:String, info:Any) async throws -> [String:Any]
+	{
+		guard let url = info as? URL else { throw Error.loadMetadataFailed }
+		guard url.exists else { throw Error.loadMetadataFailed }
+		
+		var metadata = try await super.loadMetadata(for:identifier, info:info)
+		
+		if let source = CGImageSourceCreateWithURL(url as CFURL,nil),
+		   let properties = CGImageSourceCopyPropertiesAtIndex(source,0,nil),
+		   let dict = properties as? [String:Any]
+		{
+			for (key,value) in dict
+			{
+				metadata[key] = value
+			}
+		}
+		
+		return metadata
+	}
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+

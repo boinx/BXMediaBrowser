@@ -23,24 +23,21 @@ public extension URL
 	
 	var isImageFile:Bool
 	{
-		guard let uti = self.uti else { return false }
-		return UTTypeConformsTo(uti as CFString, kUTTypeImage)
+		self.conforms(to:.image)
 	}
 
 	/// Returns true if this is an audio file
 	
 	var isAudioFile:Bool
 	{
-		guard let uti = self.uti else { return false }
-		return UTTypeConformsTo(uti as CFString, kUTTypeAudio)
+		self.conforms(to:.audio)
 	}
 	
 	/// Returns true if this is a video file
 	
 	var isVideoFile:Bool
 	{
-		guard let uti = self.uti else { return false }
-		return UTTypeConformsTo(uti as CFString, kUTTypeMovie)
+		self.conforms(to:.movie)
 	}
 }
 

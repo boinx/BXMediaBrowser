@@ -24,21 +24,64 @@
 
 
 import Foundation
+import QuartzCore
+import UniformTypeIdentifiers
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-extension Container
+open class AudioFolderSource : FolderSource
 {
-	public enum Error : Swift.Error
+
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+// MARK: -
+
+open class AudioFolderContainer : FolderContainer
+{
+	override open class func createObject(for url:URL) throws -> Object?
 	{
-		case notFound
-		case accessDenied
-		case loadContentsCancelled
-		case loadContentsFailed
+		guard url.exists else { throw Object.Error.notFound }
+		guard url.isAudioFile else { return nil }
+		return AudioFile(url:url)
 	}
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
+
+
+open class AudioFile : FolderObject
+{
+	/// Loads the metadata dictionary for the specified local file URL
+	
+	override open class func loadMetadata(for identifier:String, info:Any) async throws -> [String:Any]
+	{
+		guard let url = info as? URL else { throw Error.loadMetadataFailed }
+		guard url.exists else { throw Error.loadMetadataFailed }
+		
+		var metadata = try await super.loadMetadata(for:identifier, info:info)
+		
+//		if let source = CGImageSourceCreateWithURL(url as CFURL,nil),
+//		   let properties = CGImageSourceCopyPropertiesAtIndex(source,0,nil),
+//		   let dict = properties as? [String:Any]
+//		{
+//			for (key,value) in dict
+//			{
+//				metadata[key] = value
+//			}
+//		}
+		
+		return metadata
+	}
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
