@@ -26,6 +26,7 @@
 import Foundation
 import QuartzCore
 import UniformTypeIdentifiers
+import AppKit
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -58,6 +59,19 @@ open class AudioFolderContainer : FolderContainer
 
 open class AudioFile : FolderObject
 {
+	/// Returns a generic Finder icon for the audio file
+	
+	override open class func loadThumbnail(for identifier:String, info:Any) async throws -> CGImage
+	{
+		guard let url = info as? URL else { throw Error.loadThumbnailFailed }
+		guard url.exists else { throw Error.loadThumbnailFailed }
+		
+		let image = NSWorkspace.shared.icon(forFile:url.path)
+		guard let thumbnail = image.cgImage(forProposedRect:nil, context:nil, hints:nil) else { throw Error.loadThumbnailFailed }
+		return thumbnail
+	}
+
+
 	/// Loads the metadata dictionary for the specified local file URL
 	
 	override open class func loadMetadata(for identifier:String, info:Any) async throws -> [String:Any]
