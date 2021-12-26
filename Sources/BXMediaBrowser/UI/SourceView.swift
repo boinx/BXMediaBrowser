@@ -51,8 +51,8 @@ public struct SourceView : View
 				{
 					ForEach(source.containers)
 					{
-//						ViewFactory.shared.build(with:$0)
-						ContainerView(container:$0)
+						ViewFactory.shared.view(for:$0)
+//						ContainerView(container:$0)
 					}
 				}
 				.padding(.leading,20)

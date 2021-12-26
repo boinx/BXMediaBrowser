@@ -68,20 +68,21 @@ public struct SectionView : View
 			
 			ForEach(section.sources)
 			{
-//				ViewFactory.shared.build(with:$0)
-				if $0 is FolderSource
-				{
-					FolderSourceView(source:$0)
-				}
-				else
-				{
-					SourceView(source:$0)
-				}
+				ViewFactory.shared.view(for:$0)
+//				if $0 is FolderSource
+//				{
+//					FolderSourceView(source:$0)
+//				}
+//				else
+//				{
+//					SourceView(source:$0)
+//				}
 			}
 		}
 		
 		// Layout
 		
+		.padding(.horizontal)
 		.padding(.bottom,12)
 		
 		// Apply id to optimized view hierarchy rebuilding

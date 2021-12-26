@@ -49,79 +49,104 @@ import SwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public class ViewFactory
+open class ViewFactory
 {
 	public static let shared = ViewFactory()
 	
 //	private var types:[String:Any] = [:]
-	private var factories:[String:Any] = [:]
+//	private var factories:[String:Any] = [:]
 	
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	private init()
+	public required init()
 	{
-		self.addDefaultFactories()
+//		self.addDefaultFactories()
 	}
 	
 
-	private func addDefaultFactories()
-	{
-		self.addViewFactory(forModelType:Library.self)
-		{
-			LibraryView(with:$0)
-		}
-
-		self.addViewFactory(forModelType:Section.self)
-		{
-			SectionView(section:$0)
-		}
-
-		self.addViewFactory(forModelType:Source.self)
-		{
-			SourceView(source:$0)
-		}
-
-		self.addViewFactory(forModelType:FolderSource.self)
-		{
-			FolderSourceView(source:$0)
-		}
-
-		self.addViewFactory(forModelType:Container.self)
-		{
-			ContainerView(container:$0)
-		}
-
-		self.addViewFactory(forModelType:Object.self)
-		{
-			ObjectCell(object:$0, isSelected:false)
-		}
-	}
+//	private func addDefaultFactories()
+//	{
+//		self.addViewFactory(forModelType:Library.self)
+//		{
+//			AnyView(LibraryView(with:$0))
+//		}
+//
+//		self.addViewFactory(forModelType:Section.self)
+//		{
+//			AnyView(SectionView(section:$0))
+//		}
+//
+//		self.addViewFactory(forModelType:Source.self)
+//		{
+//			AnyView(SourceView(source:$0))
+//		}
+//
+//		self.addViewFactory(forModelType:FolderSource.self)
+//		{
+//			AnyView(FolderSourceView(source:$0))
+//		}
+//
+//		self.addViewFactory(forModelType:Container.self)
+//		{
+//			AnyView(ContainerView(container:$0))
+//		}
+//
+//		self.addViewFactory(forModelType:Object.self)
+//		{
+//			AnyView(ObjectCell(object:$0, isSelected:false))
+//		}
+//	}
 	
 	
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	public func addViewFactory<T,M,V:View>(forModelType type:T, _ factory:@escaping (M)->V)
-	{
-		let key = "\(type)"
-//		self.types[key] = V.self
-		self.factories[key] = factory
-	}
-	
-	
-	public func build<M,V:View>(with model:M) -> some View
-	{
-		let key = "\(type(of:model).self)"
-//		let viewType = types[key]
-		let factory = factories[key] as! (M)->V
-		let view = factory(model)
-		return view
-	}
+//	public func addViewFactory<T,M>(forModelType type:T, _ factory:@escaping (M)->AnyView)
+//	{
+//		let key = "\(type)"
+////		self.types[key] = V.self
+//		self.factories[key] = factory
+//	}
+//
+//
+//	public func build<M>(with model:M) -> AnyView
+//	{
+//		let key = "\(type(of:model).self)"
+////		let viewType = types[key]
+//		let factory = factories[key] as! (M)->AnyView
+//		let view = factory(model)
+//		return view
+//	}
 
 
 //----------------------------------------------------------------------------------------------------------------------
+
+
+	@ViewBuilder func view(for model:Any) -> some View
+	{
+		if let library = model as? Library
+		{
+			LibraryView(with:library)
+		}
+		else if let section = model as? Section
+		{
+			SectionView(section:section)
+		}
+		else if let source = model as? FolderSource
+		{
+			FolderSourceView(source:source)
+		}
+		else if let source = model as? Source
+		{
+			SourceView(source:source)
+		}
+		else if let container = model as? Container
+		{
+			ContainerView(container:container)
+		}
+	}
 
 
 //	@ViewBuilder func view(for library:Library) -> some View
