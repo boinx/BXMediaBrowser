@@ -78,28 +78,25 @@ public struct ObjectCell : View
 					.lineLimit(1)
 					.leftAligned()
 				
-				if let metadata = object.metadata
+				Group
 				{
-					if let w = metadata["PixelWidth"] as? Int, let h = metadata["PixelHeight"] as? Int
+					if let info = sizeInfo
 					{
-						Text("Size: \(w) x \(h) pixels")
-							.lineLimit(1)
-							.opacity(0.5)
+						Text(info)
 					}
-	 
-					if let model = metadata["ColorModel"] as? String
+
+					if let info = colorInfo
 					{
-						Text("Type: \(model)")
-							.lineLimit(1)
-							.opacity(0.5)
+						Text(info)
 					}
-					if let profile = metadata["ProfileName"] as? String
+					
+					if let info = self.creationDateInfo
 					{
-						Text("Colorspace: \(profile)")
-							.lineLimit(1)
-							.opacity(0.5)
+						Text(info)
 					}
 				}
+				.lineLimit(1)
+				.opacity(0.5)
 			}
 		}
 		.padding(.horizontal)
@@ -132,6 +129,48 @@ public struct ObjectCell : View
 		{
 			object.load()
 		}
+    }
+    
+    var sizeInfo:String?
+    {
+		if let metadata = object.metadata,
+		   let w = metadata["PixelWidth"] as? Int,
+		   let h = metadata["PixelHeight"] as? Int
+		{
+			return "Size: \(w) x \(h) pixels"
+		}
+
+		return nil
+    }
+    
+    var colorInfo:String?
+    {
+		var text = ""
+		
+		if let metadata = object.metadata
+		{
+			if let model = metadata["ColorModel"] as? String
+			{
+				text += "Type: \(model)"
+			}
+			
+			if let profile = metadata["ProfileName"] as? String
+			{
+				text += " (\(profile))"
+			}
+		}
+
+		return !text.isEmpty ? text : nil
+    }
+    
+    var creationDateInfo:String?
+    {
+		if let metadata = object.metadata, let date = metadata["creationDate"]
+		{
+			return "Capture Date: \(date)"
+		}
+
+		return nil
     }
 }
 
