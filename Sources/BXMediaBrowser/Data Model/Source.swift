@@ -145,6 +145,13 @@ open class Source : ObservableObject, Identifiable
 		}
 	}
 
+	/// Removes the specified subcontainer
+
+	public func removeContainer(_ container:Container)
+	{
+		self.removeContainer(with:container.identifier)
+	}
+	
 	/// Removes the subcontainer with the specified identifier
 
 	public func removeContainer(with identifier:String)

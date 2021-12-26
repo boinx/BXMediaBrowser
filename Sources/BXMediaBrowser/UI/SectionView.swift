@@ -50,6 +50,7 @@ public struct SectionView : View
 				HStack
 				{
 					Text(name.uppercased()).font(.system(size:11))
+						.opacity(0.6)
 						
 					Spacer()
 				
@@ -61,7 +62,6 @@ public struct SectionView : View
 						}
 					}
 				}
-				.opacity(0.6)
 			}
 			
 			// FolderSources are displayed differently than other sources (do not show source name)

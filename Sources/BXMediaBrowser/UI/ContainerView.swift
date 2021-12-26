@@ -65,6 +65,13 @@ public struct ContainerView : View
 						BXSpinningWheel(size:.small)
 							.colorScheme(.dark)
 					}
+					else if let removeHandler = container.removeHandler
+					{
+						Image(systemName:"minus.circle").onTapGesture
+						{
+							removeHandler(container)
+						}
+					}
 				}
 				.font(.system(size:13))
 				

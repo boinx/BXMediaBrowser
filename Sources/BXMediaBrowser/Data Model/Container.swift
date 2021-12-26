@@ -54,6 +54,11 @@ open class Container : ObservableObject, Identifiable
 	
 	public let loader:Loader
 	
+	/// Containers that were added manually by the user should be user-removable as well. This handler will be called
+	/// when the user wants to remove a Container again.
+	
+	public let removeHandler:((Container)->Void)?
+	
 	/// The list of subcontainers
 	
 	@MainActor @Published public private(set) var containers:[Container] = []
@@ -80,12 +85,13 @@ open class Container : ObservableObject, Identifiable
 
 	/// Creates a new Container
 	
-	public init(identifier:String, info:Any, icon:String? = nil, name:String, loadHandler:@escaping Container.Loader.LoadHandler)
+	public init(identifier:String, info:Any, icon:String? = nil, name:String, removeHandler:((Container)->Void)? = nil, loadHandler:@escaping Container.Loader.LoadHandler)
 	{
 		self.identifier = identifier
 		self.info = info
 		self.icon = icon
 		self.name = name
+		self.removeHandler = removeHandler
 		self.loader = Container.Loader(identifier:identifier, info:info, loadHandler:loadHandler)
 	}
 

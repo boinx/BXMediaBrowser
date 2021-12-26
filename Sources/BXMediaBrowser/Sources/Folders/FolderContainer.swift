@@ -37,7 +37,7 @@ open class FolderContainer : Container
 	
 	/// Creates a new Container for the folder at the specified URL
 	
-	public required init(url:URL)
+	public required init(url:URL, removeHandler:((Container)->Void)? = nil)
 	{
 		self.observer = FolderObserver(url:url)
 		
@@ -45,6 +45,7 @@ open class FolderContainer : Container
 			identifier: FolderSource.identifier(for:url),
 			info: url,
 			name: url.lastPathComponent,
+			removeHandler: removeHandler,
 			loadHandler: Self.loadContents)
 			
 		self.observer.folderDidChange =
