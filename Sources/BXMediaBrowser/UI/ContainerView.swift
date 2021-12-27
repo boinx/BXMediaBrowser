@@ -126,9 +126,6 @@ public struct ContainerView : View
 		if !container.isLoaded
 		{
 			container.load()
-			{
-				library.didLoadSelectedContainer += 1
-			}
 		}
     }
     

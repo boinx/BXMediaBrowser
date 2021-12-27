@@ -61,11 +61,6 @@ open class Library : ObservableObject, StateRestoring
 		didSet { selectedContainer?.cancelPurgeCachedDataOfObjects() }
 	}
 	
-	/// This property will be incremented whenever the current selectedContainer was loaded.
-	/// This can trigger an update in the user interface.
-	
-	@Published public var didLoadSelectedContainer = 0
-	
 
 //----------------------------------------------------------------------------------------------------------------------
 
