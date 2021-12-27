@@ -108,7 +108,7 @@ public struct LoadedObjectsView : View
 
 public struct ObjectsView : View
 {
-	// Data Model
+	// Model
 	
 	@ObservedObject var container:Container
 	

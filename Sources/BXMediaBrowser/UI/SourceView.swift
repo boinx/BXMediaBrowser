@@ -31,7 +31,22 @@ import SwiftUI
 
 public struct SourceView : View
 {
+	// Model
+	
 	@ObservedObject var source:Source
+	
+	// Environment
+	
+	@Environment(\.viewFactory) private var viewFactory
+
+	// Init
+	
+	public init(with source:Source)
+	{
+		self.source = source
+	}
+	
+	// View
 	
 	public var body: some View
     {
@@ -51,7 +66,7 @@ public struct SourceView : View
 				{
 					ForEach(source.containers)
 					{
-						ViewFactory.shared.hierarchyView(for:$0)
+						viewFactory.build(with:$0)
 					}
 				}
 				.padding(.leading,20)
@@ -75,7 +90,22 @@ public struct SourceView : View
 
 public struct FolderSourceView : View
 {
+	// Model
+	
 	@ObservedObject var source:Source
+	
+	// Environment
+	
+	@Environment(\.viewFactory) private var viewFactory
+
+	// Init
+	
+	public init(with source:Source)
+	{
+		self.source = source
+	}
+	
+	// View
 	
 	public var body: some View
     {
@@ -83,7 +113,7 @@ public struct FolderSourceView : View
 		{
 			ForEach(source.containers)
 			{
-				ContainerView(container:$0)
+				viewFactory.build(with:$0)
 			}
 		}
 		.id(source.identifier)

@@ -33,9 +33,13 @@ import SwiftUI
 
 public struct LibraryView : View
 {
-	// Data Model
+	// Model
 	
 	@ObservedObject var library:Library
+	
+	// Environment
+	
+	@Environment(\.viewFactory) private var viewFactory
 	
 	// Init
 	
@@ -44,7 +48,7 @@ public struct LibraryView : View
 		self.library = library
 	}
 	
-	// Build View
+	// View
 	
 	public var body: some View
     {
@@ -54,7 +58,7 @@ public struct LibraryView : View
 			{
 				if SectionView.shouldDisplay($0)
 				{
-					ViewFactory.shared.hierarchyView(for:$0)
+					viewFactory.build(with:$0)
 				}
 			}
 		}

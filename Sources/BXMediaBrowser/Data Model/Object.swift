@@ -39,7 +39,7 @@ open class Object : ObservableObject, Identifiable
 	
 	public let name:String
 	
-	/// This can be any lkind of info that subclasses need to their job.
+	/// This can be any kind of information that subclasses need to their job.
 	
 	public let info:Any
 	

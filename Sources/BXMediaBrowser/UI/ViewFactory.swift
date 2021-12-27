@@ -29,61 +29,79 @@ import SwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-open class ViewFactory
-{
-	/// The shared singleton instance of this ViewFactory
-	
-	private static let _shared = ViewFactory()
+/// The ViewFactory protocol defines the API for creating views for the BXMediaBrowser UI. By providing
+/// a custom implementation and injecting it into the environment, the BXMediaBrowser can be customized.
 
-	/// This is the public accessor for the shared singleton instance. If you want to subclass ViewFactory
-	/// to extend the view(for:) methods, you should also override this accessor to return an instance of
-	/// your subclass instead.
+public protocol ViewFactory
+{
+	/// Returns the View for the specifed model object
 	
-	public static var shared:ViewFactory { _shared }
+	func build(with model:Any) -> AnyView
+}
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	@ViewBuilder func hierarchyView(for model:Any) -> some View
+public struct DefaultViewFactory : ViewFactory
+{
+	// Create the View and wrap it in a type-erased AnyView
+	
+	public func build(with model:Any) -> AnyView
+	{
+		let view = Self.defaultView(for:model)
+		return AnyView(view)
+	}
+
+
+	/// This function creates the built-in default Views for the BXMediaBrowser UI
+	
+	@ViewBuilder static public func defaultView(for model:Any) -> some View
 	{
 		if let container = model as? Container
 		{
-			ContainerView(container:container)
+			ContainerView(with:container)
 		}
 		else if let source = model as? FolderSource
 		{
-			FolderSourceView(source:source)
+			FolderSourceView(with:source)
 		}
 		else if let source = model as? Source
 		{
-			SourceView(source:source)
+			SourceView(with:source)
 		}
 		else if let section = model as? Section
 		{
-			SectionView(section:section)
+			SectionView(with:section)
 		}
 		else if let library = model as? Library
 		{
 			LibraryView(with:library)
 		}
 	}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	@ViewBuilder func objectView(for model:Any, isSelected:Bool) -> some View
-	{
-		if let object = model as? Object
-		{
-			ObjectCell(object:object, isSelected:isSelected)
-		}
-	}
-
-
 }
 
+
 //----------------------------------------------------------------------------------------------------------------------
 
 
+/// Injects a ViewFactory into the environment
+
+public extension EnvironmentValues
+{
+    var viewFactory:ViewFactory
+    {
+        set { self[ViewFactoryKey.self] = newValue }
+        get { self[ViewFactoryKey.self] }
+    }
+}
+
+/// If no ViewFactory was injected into the environment, the DefaultViewFactory will be used instead
+
+struct ViewFactoryKey : EnvironmentKey
+{
+    static let defaultValue:ViewFactory = DefaultViewFactory()
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------

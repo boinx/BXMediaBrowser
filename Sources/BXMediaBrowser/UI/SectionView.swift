@@ -33,11 +33,22 @@ import SwiftUI
 
 public struct SectionView : View
 {
-	/// Data Model
+	// Model
 	
 	@ObservedObject var section:Section
 	
-	// Build View
+	// Environment
+	
+	@Environment(\.viewFactory) private var viewFactory
+
+	// Init
+	
+	public init(with section:Section)
+	{
+		self.section = section
+	}
+	
+	// View
 	
 	public var body: some View
     {
@@ -54,6 +65,8 @@ public struct SectionView : View
 						
 					Spacer()
 				
+					// The optional + button will be displayed if a handler was provided
+					
 					if let addSourceHandler = section.addSourceHandler
 					{
 						Image(systemName:"plus.circle").onTapGesture
@@ -64,11 +77,11 @@ public struct SectionView : View
 				}
 			}
 			
-			// FolderSources are displayed differently than other sources (do not show source name)
+			// Display list of Sources
 			
 			ForEach(section.sources)
 			{
-				ViewFactory.shared.hierarchyView(for:$0)
+				viewFactory.build(with:$0)
 			}
 		}
 		
@@ -77,7 +90,7 @@ public struct SectionView : View
 		.padding(.horizontal)
 		.padding(.bottom,12)
 		
-		// Apply id to optimized view hierarchy rebuilding
+		// Apply id to optimize view hierarchy rebuilding
 		
 		.id(section.identifier)
     }

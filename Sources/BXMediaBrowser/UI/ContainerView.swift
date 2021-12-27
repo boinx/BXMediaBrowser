@@ -31,12 +31,23 @@ import SwiftUI
 
 public struct ContainerView : View
 {
-	// Data Model
+	// Model
 	
 	@ObservedObject var container:Container
-	@EnvironmentObject var library:Library
+
+	// Environment
 	
-	// Build View
+	@EnvironmentObject var library:Library
+	@Environment(\.viewFactory) private var viewFactory
+	
+	// Init
+	
+	public init(with container:Container)
+	{
+		self.container = container
+	}
+	
+	// View
 	
 	public var body: some View
     {
@@ -100,7 +111,7 @@ public struct ContainerView : View
 				{
 					ForEach(container.containers)
 					{
-						ViewFactory.shared.hierarchyView(for:$0)
+						viewFactory.build(with:$0)
 					}
 				}
 				.padding(.leading,20)
