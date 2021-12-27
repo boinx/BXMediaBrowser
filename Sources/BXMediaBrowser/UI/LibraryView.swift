@@ -54,8 +54,7 @@ public struct LibraryView : View
 			{
 				if SectionView.shouldDisplay($0)
 				{
-					ViewFactory.shared.view(for:$0)
-//					SectionView(section:$0)
+					ViewFactory.shared.hierarchyView(for:$0)
 				}
 			}
 		}
@@ -63,7 +62,6 @@ public struct LibraryView : View
 		// Pass Library reference down the view hierarchy. This is needed for setting the selected Container.
 		
  		.environmentObject(library)
-//		.frame(minWidth:400)
     }
 }
 

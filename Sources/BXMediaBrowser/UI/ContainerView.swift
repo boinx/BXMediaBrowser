@@ -100,8 +100,7 @@ public struct ContainerView : View
 				{
 					ForEach(container.containers)
 					{
-						ViewFactory.shared.view(for:$0)
-//						ContainerView(container:$0)
+						ViewFactory.shared.hierarchyView(for:$0)
 					}
 				}
 				.padding(.leading,20)

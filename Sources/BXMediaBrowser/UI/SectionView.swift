@@ -68,15 +68,7 @@ public struct SectionView : View
 			
 			ForEach(section.sources)
 			{
-				ViewFactory.shared.view(for:$0)
-//				if $0 is FolderSource
-//				{
-//					FolderSourceView(source:$0)
-//				}
-//				else
-//				{
-//					SourceView(source:$0)
-//				}
+				ViewFactory.shared.hierarchyView(for:$0)
 			}
 		}
 		

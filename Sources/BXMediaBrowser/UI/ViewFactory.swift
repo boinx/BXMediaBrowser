@@ -29,110 +29,27 @@ import SwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-//protocol SwiftUIFactoryDelegate
-//{
-//	@ViewBuilder func view(for library:Library) -> View
-//	@ViewBuilder func view(for section:Section) -> View
-//	@ViewBuilder func view(for source:Source) -> View
-//	@ViewBuilder func view(for container:Container) -> View
-//	@ViewBuilder func view(for object:Object) -> View
-//}
-
-
-//protocol GenericFactory
-//{
-//    associatedtype Input
-//    associatedtype Output
-//    func build(input:Input) -> Output
-//}
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
 open class ViewFactory
 {
-	public static let shared = ViewFactory()
+	/// The shared singleton instance of this ViewFactory
 	
-//	private var types:[String:Any] = [:]
-//	private var factories:[String:Any] = [:]
+	private static let _shared = ViewFactory()
+
+	/// This is the public accessor for the shared singleton instance. If you want to subclass ViewFactory
+	/// to extend the view(for:) methods, you should also override this accessor to return an instance of
+	/// your subclass instead.
 	
+	public static var shared:ViewFactory { _shared }
+
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	public required init()
+	@ViewBuilder func hierarchyView(for model:Any) -> some View
 	{
-//		self.addDefaultFactories()
-	}
-	
-
-//	private func addDefaultFactories()
-//	{
-//		self.addViewFactory(forModelType:Library.self)
-//		{
-//			AnyView(LibraryView(with:$0))
-//		}
-//
-//		self.addViewFactory(forModelType:Section.self)
-//		{
-//			AnyView(SectionView(section:$0))
-//		}
-//
-//		self.addViewFactory(forModelType:Source.self)
-//		{
-//			AnyView(SourceView(source:$0))
-//		}
-//
-//		self.addViewFactory(forModelType:FolderSource.self)
-//		{
-//			AnyView(FolderSourceView(source:$0))
-//		}
-//
-//		self.addViewFactory(forModelType:Container.self)
-//		{
-//			AnyView(ContainerView(container:$0))
-//		}
-//
-//		self.addViewFactory(forModelType:Object.self)
-//		{
-//			AnyView(ObjectCell(object:$0, isSelected:false))
-//		}
-//	}
-	
-	
-//----------------------------------------------------------------------------------------------------------------------
-
-
-//	public func addViewFactory<T,M>(forModelType type:T, _ factory:@escaping (M)->AnyView)
-//	{
-//		let key = "\(type)"
-////		self.types[key] = V.self
-//		self.factories[key] = factory
-//	}
-//
-//
-//	public func build<M>(with model:M) -> AnyView
-//	{
-//		let key = "\(type(of:model).self)"
-////		let viewType = types[key]
-//		let factory = factories[key] as! (M)->AnyView
-//		let view = factory(model)
-//		return view
-//	}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	@ViewBuilder func view(for model:Any) -> some View
-	{
-		if let library = model as? Library
+		if let container = model as? Container
 		{
-			LibraryView(with:library)
-		}
-		else if let section = model as? Section
-		{
-			SectionView(section:section)
+			ContainerView(container:container)
 		}
 		else if let source = model as? FolderSource
 		{
@@ -142,46 +59,30 @@ open class ViewFactory
 		{
 			SourceView(source:source)
 		}
-		else if let container = model as? Container
+		else if let section = model as? Section
 		{
-			ContainerView(container:container)
+			SectionView(section:section)
+		}
+		else if let library = model as? Library
+		{
+			LibraryView(with:library)
 		}
 	}
 
 
-//	@ViewBuilder func view(for library:Library) -> some View
-//	{
-//		LibraryView(library:library)
-//	}
-//
-//	@ViewBuilder func view(for section:Section) -> some View
-//	{
-//		SectionView(section:section)
-//	}
-//
-//	@ViewBuilder func view(for source:Source) -> some View
-//	{
-//		if source is FolderSource
-//		{
-//			FolderSourceView(source:source)
-//		}
-//		else
-//		{
-//			SourceView(source:source)
-//		}
-//	}
-//
-//	@ViewBuilder func view(for container:Container) -> some View
-//	{
-//		ContainerView(container:container)
-//	}
-//
-//	@ViewBuilder func view(for object:Object) -> some View
-//	{
-//		ObjectCell(object:object, isSelected:false)
-//	}
-}
+//----------------------------------------------------------------------------------------------------------------------
 
+
+	@ViewBuilder func objectView(for model:Any, isSelected:Bool) -> some View
+	{
+		if let object = model as? Object
+		{
+			ObjectCell(object:object, isSelected:isSelected)
+		}
+	}
+
+
+}
 
 //----------------------------------------------------------------------------------------------------------------------
 
