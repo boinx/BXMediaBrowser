@@ -69,11 +69,13 @@ open class Section : ObservableObject, Identifiable, StateRestoring
 
 	/// Loads all Sources in this Section
 	
-	public func load()
+	public func load(with sectionState:[String:Any]? = nil)
 	{
 		for source in self.sources
 		{
-			source.load()
+			let key = source.stateKey
+			let sourceState = sectionState?[key] as? [String:Any]
+			source.load(with:sourceState)
 		}
 	}
 
@@ -89,22 +91,36 @@ open class Section : ObservableObject, Identifiable, StateRestoring
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	public func saveState(to dict:inout [String:Any]) async
+	internal var stateKey:String
 	{
+		"\(identifier)".replacingOccurrences(of:".", with:"-")
+	}
+
+
+	public func state() async -> [String:Any]
+	{
+		var state:[String:Any] = [:]
+
 		for source in self.sources
 		{
-			await source.saveState(to:&dict)
+			let key = source.stateKey
+			let value = await source.state()
+			state[key] = value
 		}
+		
+		return state
 	}
 	
 	
-	public func restoreState(from dict:[String:Any]) async
-	{
-		for source in self.sources
-		{
-			await source.restoreState(from:dict)
-		}
-	}
+//	public func restoreState(from sectionState:[String:Any]) async
+//	{
+//		for source in self.sources
+//		{
+//			let key = source.stateKey
+//			let sourceState = sectionState[key] as? [String:Any] ?? [:]
+//			await source.restoreState(from:sourceState)
+//		}
+//	}
 }
 
 

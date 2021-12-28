@@ -44,7 +44,7 @@ open class FolderSource : Source, AccessControl
 	public init()
 	{
 		super.init(identifier:Self.identifier, name:"Finder")
-		self.loader = Loader(identifier:self.identifier, loadHandler:self.load)
+		self.loader = Loader(identifier:self.identifier, loadHandler:Self.loadContainers)
 	}
 
 
@@ -70,9 +70,39 @@ open class FolderSource : Source, AccessControl
 	///
 	/// Subclasses can override this function, e.g. to load top level folder from the preferences file
 	
-	private func load() async throws -> [Container]
+	private class func loadContainers(with sourceState:[String:Any]? = nil) async throws -> [Container]
 	{
-		return []
+		var containers:[Container] = []
+		
+		for (_,value) in sourceState ?? [:]
+		{
+			if let containerState = value as? [String:Any],
+			   let bookmark = containerState["url"] as? Data,
+			   let folderURL = URL(with:bookmark)
+			{
+				if folderURL.startAccessingSecurityScopedResource()
+				{
+					let container = try Self.createContainer(for:folderURL)
+					containers += container
+
+					folderURL.stopAccessingSecurityScopedResource()
+				}
+			}
+		}
+		
+		return containers
+	}
+
+
+	/// Creates a Container for the folder at the specified URL.
+	///
+	/// Subclasses can override this function to filter out some directories.
+	
+	open class func createContainer(for url:URL) throws -> Container?
+	{
+		guard url.exists else { throw Container.Error.notFound }
+		guard url.isDirectory else { throw Container.Error.notFound }
+		return FolderContainer(url:url)
 	}
 
 
@@ -84,29 +114,6 @@ open class FolderSource : Source, AccessControl
 	}
 
 
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	override public func saveState(to dict:inout [String:Any]) async
-	{
-		await super.saveState(to:&dict)
-		
-//		dict[isExpandedKey] = self.isExpanded
-	}
-	
-	
-	override public func restoreState(from dict:[String:Any]) async
-	{
-		await super.restoreState(from:dict)
-		
-//		self.isExpanded = dict[isExpandedKey] as? Bool ?? false
-	}
-
-
-	private var isExpandedKey:String
-	{
-		"BXMediaBrowser.Source.\(identifier).isExpanded".replacingOccurrences(of:".", with:"-")
-	}
 }
 
 

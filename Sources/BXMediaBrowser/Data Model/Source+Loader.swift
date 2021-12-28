@@ -33,11 +33,12 @@ extension Source
 {
 	public actor Loader
 	{
-		public typealias LoadHandler = () async throws -> [Container]
+		public typealias LoadHandler = ([String:Any]?) async throws -> [Container]
 		
 		let identifier:String
-		
 		let loadHandler:LoadHandler
+		
+		/// Creates the thread-safe Loader for a Source
 		
 		init(identifier:String, loadHandler:@escaping LoadHandler)
 		{
@@ -47,12 +48,9 @@ extension Source
 		
 		/// Loads the top-level containers of this source
 		
-		public var containers:[Container]
+		public func containers(with sourceState:[String:Any]? = nil) async throws -> [Container]
 		{
-			get async throws
-			{
-				return try await self.loadHandler()
-			}
+			try await self.loadHandler(sourceState)
 		}
 	}
 }

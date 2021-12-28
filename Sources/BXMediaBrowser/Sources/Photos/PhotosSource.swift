@@ -53,7 +53,7 @@ public class PhotosSource : Source, AccessControl
 	public init()
 	{
 		super.init(identifier:Self.identifier, name:"Photos")
-		self.loader = Loader(identifier:self.identifier, loadHandler:self.load)
+		self.loader = Loader(identifier:self.identifier, loadHandler:self.loadContainers)
 
 		// Make sure we can detect changes to the library
 	
@@ -114,8 +114,10 @@ public class PhotosSource : Source, AccessControl
 	///
 	/// Subclasses can override this function, e.g. to load top level folder from the preferences file
 	
-	private func load() async throws -> [Container]
+	private func loadContainers(with sourceState:[String:Any]? = nil) async throws -> [Container]
 	{
+		Swift.print("Loading \"\(name)\" - \(identifier)")
+
 		var containers:[Container] = []
 		
 		// Library

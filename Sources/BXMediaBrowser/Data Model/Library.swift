@@ -72,6 +72,13 @@ open class Library : ObservableObject, StateRestoring
 		self.identifier = identifier
 	}
 
+	// This key can be used to safely access info in dictionaries or UserDefaults
+	
+	public var stateKey:String
+	{
+		identifier.replacingOccurrences(of:".", with:"-")
+	}
+
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -87,31 +94,16 @@ open class Library : ObservableObject, StateRestoring
 	/// Loads the contents of the library. This essentially just passes the load command on to
 	/// the sources in each section. It is up to the sources to decide how to load the library.
 	
-	public func load()
+	public func load(with libraryState:[String:Any]? = nil)
 	{
-		self.sections.forEach { $0.load() }
-	}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	public func saveState(to dict:inout [String:Any]) async
-	{
-		for section in self.sections
+		for section in sections
 		{
-			await section.saveState(to:&dict)
+			let key = section.stateKey
+			let sectionState = libraryState?[key] as? [String:Any]
+			section.load(with:sectionState)
 		}
 	}
-	
-	
-	public func restoreState(from dict:[String:Any]) async
-	{
-		for section in self.sections
-		{
-			await section.restoreState(from:dict)
-		}
-	}
+
 }
 
 

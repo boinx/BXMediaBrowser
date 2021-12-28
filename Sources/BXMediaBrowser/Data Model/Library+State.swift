@@ -23,18 +23,46 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 
-import SwiftUI
+import Foundation
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public protocol StateRestoring
+extension Library
 {
-	func state() async -> [String:Any]
+
+	private var statePrefsKey:String
+	{
+		"BXMediaBrowser.Library.\(identifier)".replacingOccurrences(of:".", with:"-")
+	}
+
+
+	public func state() async -> [String:Any]
+	{
+		var state:[String:Any] = [:]
+		
+		for section in self.sections
+		{
+			let key = section.stateKey
+			let value = await section.state()
+			state[key] = value
+		}
+		
+		return state
+	}
+	
+	
+//	public func restoreState(from libraryState:[String:Any]) async
+//	{
+//		for section in self.sections
+//		{
+//			let key = section.stateKey
+//			let sectionState = libraryState[key] as? [String:Any] ?? [:]
+//			await section.restoreState(from:sectionState)
+//		}
+//	}
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
-
-
