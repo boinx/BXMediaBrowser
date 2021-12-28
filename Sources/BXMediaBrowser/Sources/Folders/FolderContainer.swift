@@ -156,26 +156,6 @@ open class FolderContainer : Container
 			return FolderObject(url:url)
 		}
 	}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	override public func state() async -> [String:Any]
-	{
-		var state = await super.state()
-		
-		if let url = self.info as? URL,
-		   let bookmark = try? url.bookmarkData()
-		{
-			state[urlKey] = bookmark
-		}
-		
-		return state
-	}
-
-
-	internal var urlKey:String { "url" }
 }
 
 

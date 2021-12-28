@@ -39,6 +39,7 @@ public struct SectionView : View
 	
 	// Environment
 	
+	@EnvironmentObject var library:Library
 	@Environment(\.viewFactory) private var viewFactory
 
 	// Init
@@ -93,6 +94,13 @@ public struct SectionView : View
 		// Apply id to optimize view hierarchy rebuilding
 		
 		.id(section.identifier)
+
+		// Whenever the current state changes, save it to persistent storage
+		
+		.onReceive(section.$sources)
+		{
+			_ in library.saveState()
+		}
     }
    
     public static func shouldDisplay(_ section:Section) -> Bool

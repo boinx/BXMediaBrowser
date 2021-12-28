@@ -23,6 +23,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 
+import Combine
 import Foundation
 
 
@@ -31,13 +32,61 @@ import Foundation
 
 extension Library
 {
-
-	private var statePrefsKey:String
+	class StateSaver
 	{
-		"BXMediaBrowser.Library.\(identifier)".replacingOccurrences(of:".", with:"-")
+		public var action:(()->Void)? = nil
+		
+		@Published internal var requestCounter = 0
+	
+		private var observers:[Any] = []
+		
+		init()
+		{
+			self.observers += self.$requestCounter
+				.debounce(for:0.1, scheduler:RunLoop.main)
+				.sink
+				{
+					[weak self] _ in self?.action?()
+				}
+		}
+		
+		func request()
+		{
+			self.requestCounter += 1
+		}
 	}
 
 
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	/// Calling this function causes the state of this Library to be saved to persistent storage. Please note
+	/// that multiple consecutive calls of this function will be coalesced (debounced) so that the heavy duty
+	/// work is only performed once (per debounce interval).
+	
+	public func saveState()
+	{
+		self.stateSaver.request()
+	}
+	
+	
+	// Since getting the state is an async function that accesses @MainActor properties, this work has to be
+	// wrapped in a Task.
+	
+	internal func asyncSaveState()
+	{
+		Task
+		{
+			Swift.print("\(Self.self).\(#function)")
+			let state = await self.state()
+			self.saveState(state)
+		}
+	}
+	
+	/// Recursively walks through the data model tree and gathers the current state info. Since this
+	/// operation is accessing async properties, this function is also async and can only be called
+	/// from a Task or another async function.
+	
 	public func state() async -> [String:Any]
 	{
 		var state:[String:Any] = [:]
@@ -49,19 +98,23 @@ extension Library
 			state[key] = value
 		}
 		
+		state[selectedContainerIdentifierKey] = self.selectedContainer?.identifier
+		
 		return state
 	}
+
+
+	/// This key can be used to safely access info in dictionaries or UserDefaults
 	
-	
-//	public func restoreState(from libraryState:[String:Any]) async
-//	{
-//		for section in self.sections
-//		{
-//			let key = section.stateKey
-//			let sectionState = libraryState[key] as? [String:Any] ?? [:]
-//			await section.restoreState(from:sectionState)
-//		}
-//	}
+	public var stateKey:String
+	{
+		"BXMediaBrowser.Library.\(identifier)".replacingOccurrences(of:".", with:"-")
+	}
+
+	public var selectedContainerIdentifierKey:String
+	{
+		"selectedContainerIdentifier"
+	}
 }
 
 

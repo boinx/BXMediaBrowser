@@ -61,26 +61,27 @@ open class Library : ObservableObject, StateRestoring
 		didSet { selectedContainer?.cancelPurgeCachedDataOfObjects() }
 	}
 	
-
+	/// Internal helper object that coordinates library state saving
+	
+	internal let stateSaver = StateSaver()
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	/// Create a new Section with the specified name
+	// MARK: - Setup
+	
+	/// Create a new Library with the specified name
 	
 	public init(identifier:String)
 	{
 		self.identifier = identifier
+
+		self.stateSaver.action =
+		{
+			[weak self] in self?.asyncSaveState()
+		}
 	}
-
-	// This key can be used to safely access info in dictionaries or UserDefaults
-	
-	public var stateKey:String
-	{
-		identifier.replacingOccurrences(of:".", with:"-")
-	}
-
-
-//----------------------------------------------------------------------------------------------------------------------
 
 
 	/// Adds a new section to this library
@@ -90,6 +91,12 @@ open class Library : ObservableObject, StateRestoring
 		self.objectWillChange.send()
 		self.sections.append(section)
 	}
+	
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - Load & Save
 	
 	/// Loads the contents of the library. This essentially just passes the load command on to
 	/// the sources in each section. It is up to the sources to decide how to load the library.
@@ -102,6 +109,17 @@ open class Library : ObservableObject, StateRestoring
 			let sectionState = libraryState?[key] as? [String:Any]
 			section.load(with:sectionState)
 		}
+	}
+
+
+	/// This function saves the specified state to persistent storage. The default implementation saves
+	/// the state to the UserDefaults, but if this is not convenient for the host application, simply
+	/// override this method in a subclass and provide your own storage mechanism.
+	
+	open func saveState(_ state:[String:Any])
+	{
+		Swift.print("\(Self.self).\(#function)")
+		UserDefaults.standard.set(state, forKey:stateKey)
 	}
 
 }

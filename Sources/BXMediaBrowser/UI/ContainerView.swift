@@ -117,6 +117,13 @@ public struct ContainerView : View
 				.padding(.leading,20)
 			})
 			.id(container.identifier)
+			
+			// Whenever the current state changes, save it to persistent storage
+		
+			.onReceive(container.$isExpanded)
+			{
+				_ in library.saveState()
+			}
     }
     
     // Subcontainers are loaded lazily when expanding this Container

@@ -44,7 +44,7 @@ open class FolderSource : Source, AccessControl
 	public init()
 	{
 		super.init(identifier:Self.identifier, name:"Finder")
-		self.loader = Loader(identifier:self.identifier, loadHandler:Self.loadContainers)
+		self.loader = Loader(identifier:self.identifier, loadHandler:self.loadContainers)
 	}
 
 
@@ -70,40 +70,64 @@ open class FolderSource : Source, AccessControl
 	///
 	/// Subclasses can override this function, e.g. to load top level folder from the preferences file
 	
-	private class func loadContainers(with sourceState:[String:Any]? = nil) async throws -> [Container]
+	private func loadContainers(with sourceState:[String:Any]? = nil) async throws -> [Container]
 	{
 		var containers:[Container] = []
 		
-		for (_,value) in sourceState ?? [:]
+		// Load stored boolmarks from state. Convert each bookmark to a folder url. If the folder
+		// still exists, then create a FolderContainer for it.
+		
+		if let bookmarks = sourceState?[Self.bookmarksKey] as? [Data]
 		{
-			if let containerState = value as? [String:Any],
-			   let bookmark = containerState["url"] as? Data,
-			   let folderURL = URL(with:bookmark)
+			
+			let folderURLs = bookmarks
+				.compactMap { URL(with:$0) }
+				.filter { $0.exists && $0.isDirectory }
+				.filter { $0.startAccessingSecurityScopedResource() }
+				
+			for folderURL in folderURLs
 			{
-				if folderURL.startAccessingSecurityScopedResource()
-				{
-					let container = try Self.createContainer(for:folderURL)
-					containers += container
-
-					folderURL.stopAccessingSecurityScopedResource()
-				}
+				let container = try self.createContainer(for:folderURL)
+				containers += container
 			}
 		}
-		
+
 		return containers
 	}
 
 
-	/// Creates a Container for the folder at the specified URL.
-	///
-	/// Subclasses can override this function to filter out some directories.
+	/// Creates a Container for the folder at the specified URL. Subclasses can override this
+	/// function to filter out some directories or return more specific Container subclasses.
 	
-	open class func createContainer(for url:URL) throws -> Container?
+	open func createContainer(for url:URL) throws -> Container?
 	{
-		guard url.exists else { throw Container.Error.notFound }
-		guard url.isDirectory else { throw Container.Error.notFound }
-		return FolderContainer(url:url)
+		FolderContainer(url:url)
+		{
+			[weak self] in self?.removeContainer($0)
+		}
 	}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	override public func state() async -> [String:Any]
+	{
+		var state = await super.state()
+		
+		let bookmarks = await self.containers
+			.compactMap { $0.info as? URL }
+			.compactMap { try? $0.bookmarkData() }
+		
+		state[Self.bookmarksKey] = bookmarks
+
+		return state
+	}
+
+	internal static var bookmarksKey:String { "bookmarks" }
+
+
+//----------------------------------------------------------------------------------------------------------------------
 
 
 	public var hasAccess:Bool { true }

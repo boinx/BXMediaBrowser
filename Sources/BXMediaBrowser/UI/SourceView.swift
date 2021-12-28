@@ -37,6 +37,7 @@ public struct SourceView : View
 	
 	// Environment
 	
+	@EnvironmentObject var library:Library
 	@Environment(\.viewFactory) private var viewFactory
 
 	// Init
@@ -73,6 +74,17 @@ public struct SourceView : View
 				.onAppear { self.loadIfNeeded() }
 			})
 			.id(source.identifier)
+			
+			// Whenever the current state changes, save it to persistent storage
+		
+			.onReceive(source.$containers)
+			{
+				_ in library.saveState()
+			}
+			.onReceive(source.$isExpanded)
+			{
+				_ in library.saveState()
+			}
     }
     
     func loadIfNeeded()

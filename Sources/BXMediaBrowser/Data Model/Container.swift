@@ -275,21 +275,6 @@ open class Container : ObservableObject, Identifiable, StateRestoring
 		
 		return state
 	}
-	
-//	public func restoreState(from dict:[String:Any]) async
-//	{
-//		let state = dict[stateKey] as? [String:Any] ?? [:]
-//
-//		await MainActor.run
-//		{
-//			self.isExpanded = state[isExpandedKey] as? Bool ?? false
-//		}
-//		
-//		for container in await self.containers
-//		{
-//			await container.restoreState(from:state)
-//		}
-//	}
 
 }
 
