@@ -123,7 +123,7 @@ public struct ContainerView : View
     
     func loadIfNeeded()
     {
-		if !container.isLoaded
+		if !container.isLoaded && !container.isLoading
 		{
 			container.load()
 		}

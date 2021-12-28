@@ -77,7 +77,7 @@ public struct SourceView : View
     
     func loadIfNeeded()
     {
-		if !source.isLoaded
+		if !source.isLoaded && !source.isLoading
 		{
 			source.load()
 		}
@@ -123,7 +123,7 @@ public struct FolderSourceView : View
     
     func loadIfNeeded()
     {
-		if !source.isLoaded
+		if !source.isLoaded && !source.isLoading
 		{
 			source.load()
 		}
