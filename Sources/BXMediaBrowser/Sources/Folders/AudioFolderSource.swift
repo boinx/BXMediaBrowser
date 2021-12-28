@@ -34,7 +34,14 @@ import AppKit
 
 open class AudioFolderSource : FolderSource
 {
-
+	/// Creates a Container for the folder at the specified URL
+	
+	override open class func createContainer(for url:URL) throws -> Container?
+	{
+		guard url.exists else { throw Container.Error.notFound }
+		guard url.isDirectory else { throw Container.Error.notFound }
+		return AudioFolderContainer(url:url)
+	}
 }
 
 
