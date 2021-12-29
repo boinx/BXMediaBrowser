@@ -98,12 +98,14 @@ open class Library : ObservableObject, StateSaving
 
 	// MARK: - Load & Save
 	
-	/// Loads the contents of the library. This essentially just passes the load command on to
-	/// the sources in each section. It is up to the sources to decide how to load the library.
+	/// Loads the contents of the library
 	
 	public func load(with libraryState:[String:Any]? = nil)
 	{
-		// Restore the selectedContainer
+		// Restore the selectedContainer. Please note that loading the library is an async operation.
+		// we do not know when the Container in question will be created. For this reason we will
+		// listen to the Container.didCreateNotification and check if the identifier matches the one
+		// we are interested in. If yes, then select and load this container.
 		
 		if let identifier = libraryState?[selectedContainerIdentifierKey] as? String
 		{
@@ -119,11 +121,9 @@ open class Library : ObservableObject, StateSaving
 					container.load()
 				}
 			}
-			
-//			self.selectContainer(with:identifier)
 		}
 
-		// Load all sections
+		// Load the library. This is an async operation that may take a while.
 		
 		for section in sections
 		{
