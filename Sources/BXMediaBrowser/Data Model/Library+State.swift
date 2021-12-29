@@ -32,23 +32,36 @@ import Foundation
 
 extension Library
 {
+	/// This helper object is reponsible for coalescing (debouncing) requests to save the Library state.
+	/// That way unnecessary duplicate work is avoided.
+	
 	class StateSaver
 	{
+		/// The externally supplied action closure performs the actual work of saving the state
+		
 		public var action:(()->Void)? = nil
+		
+		/// Incrementing this counter will cause the action closure to be called
 		
 		@Published internal var requestCounter = 0
 	
-		private var observers:[Any] = []
+		/// Reference to the Combine debounding pipeline
+		
+		private var observer:Any? = nil
+		
+		/// Creates the debouncing pipeline
 		
 		init()
 		{
-			self.observers += self.$requestCounter
+			self.observer = self.$requestCounter
 				.debounce(for:0.1, scheduler:RunLoop.main)
 				.sink
 				{
 					[weak self] _ in self?.action?()
 				}
 		}
+		
+		/// Calling this function will cause the state saving action closure to be called shortly.
 		
 		func request()
 		{
@@ -104,13 +117,15 @@ extension Library
 	}
 
 
-	/// This key can be used to safely access info in dictionaries or UserDefaults
+	/// This key can be used to safely access state info in dictionaries or UserDefaults
 	
 	public var stateKey:String
 	{
 		"BXMediaBrowser.Library.\(identifier)".replacingOccurrences(of:".", with:"-")
 	}
 
+	/// The key for accessing the identifier of the selected Container
+	/// 
 	public var selectedContainerIdentifierKey:String
 	{
 		"selectedContainerIdentifier"

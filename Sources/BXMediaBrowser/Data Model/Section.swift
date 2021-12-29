@@ -31,7 +31,7 @@ import SwiftUI
 
 /// A Section is a group of sources within a library.
 
-open class Section : ObservableObject, Identifiable, StateRestoring
+open class Section : ObservableObject, Identifiable, StateSaving
 {
 	/// A unique identifier for this Section
 	
@@ -49,10 +49,6 @@ open class Section : ObservableObject, Identifiable, StateRestoring
 	/// The button call this handler. That way the user can add a new Source to this Section.
 	
 	public var addSourceHandler:((Section)->Void)? = nil
-	
-	// Required by the Identifiable protocol
-
-	nonisolated public var id:String { identifier }
 
 	
 //----------------------------------------------------------------------------------------------------------------------
@@ -66,6 +62,14 @@ open class Section : ObservableObject, Identifiable, StateRestoring
 		self.name = name
 		self.sources = []
 	}
+
+	// Required by the Identifiable protocol
+
+	nonisolated public var id:String { identifier }
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
 
 	/// Loads all Sources in this Section
 	
@@ -110,17 +114,6 @@ open class Section : ObservableObject, Identifiable, StateRestoring
 		
 		return state
 	}
-	
-	
-//	public func restoreState(from sectionState:[String:Any]) async
-//	{
-//		for source in self.sources
-//		{
-//			let key = source.stateKey
-//			let sourceState = sectionState[key] as? [String:Any] ?? [:]
-//			await source.restoreState(from:sourceState)
-//		}
-//	}
 }
 
 

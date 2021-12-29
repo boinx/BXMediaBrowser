@@ -29,7 +29,7 @@ import SwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-open class Source : ObservableObject, Identifiable, StateRestoring
+open class Source : ObservableObject, Identifiable, StateSaving
 {
 	public let identifier:String
 	public let name:String
@@ -38,10 +38,6 @@ open class Source : ObservableObject, Identifiable, StateRestoring
 	/// The list of top-level containers
 	
 	@MainActor @Published public private(set) var containers:[Container] = []
-	
-	/// Returns true if this source is currently being loaded
-	
-//	@Published public private(set) var isLoading = false
 	
 	/// Returns true if this source has been loaded (at least once)
 	
@@ -55,25 +51,34 @@ open class Source : ObservableObject, Identifiable, StateRestoring
 	
 	private var loadTask:Task<Void,Never>? = nil
 
-	// Required by the Identifiable protocol
-
-	nonisolated public var id:String { identifier }
-
+	/// Returns true while this Source is loading. Can be used by the UI to display spinning wheels.
+	
 	var isLoading:Bool { loadTask != nil }
+
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: -
+	
+	/// Creates a Source with the specified identifier and name
+	
 	public init(identifier:String , name:String)
 	{
 		self.identifier = identifier
 		self.name = name
 	}
 
+	// Required by the Identifiable protocol
+
+	nonisolated public var id:String { identifier }
+
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: - Loading
+	
 	/// Loads the top-level containers of this source. If a previous load is still in progress it is cancelled,
 	/// so that the new load can be started sooner.
 	
@@ -88,11 +93,6 @@ open class Source : ObservableObject, Identifiable, StateRestoring
 		{
 			do
 			{
-//				await MainActor.run
-//				{
-//					self.isLoading = true
-//				}
-				
 				// Remember which existing containers are currently expanded, so that we can
 				// restore that state when reloading the containers.
 		
@@ -104,12 +104,11 @@ open class Source : ObservableObject, Identifiable, StateRestoring
 				// Get new list of containers
 				
 				let containers = try await self.loader.containers(with:sourceState)
-
-				let isExpanded = sourceState?[isExpandedKey] as? Bool ?? false
-				
 //				let names = containers.map { $0.name }.joined(separator:", ")
 //				Swift.print("    containers = \(names)")
-				
+
+				let isExpanded = sourceState?[isExpandedKey] as? Bool ?? false
+
 				// Assign result in main thread
 				
 				await MainActor.run
@@ -118,7 +117,6 @@ open class Source : ObservableObject, Identifiable, StateRestoring
 					self.isExpanded = isExpanded
 					
 					self.isLoaded = true
-//					self.isLoading = false
 					self.loadTask = nil
 					
 					// Restore isExpanded state of containers
@@ -187,18 +185,10 @@ open class Source : ObservableObject, Identifiable, StateRestoring
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	internal var stateKey:String
-	{
-		"\(identifier)".replacingOccurrences(of:".", with:"-")
-	}
-
-
-	internal var isExpandedKey:String
-	{
-		"isExpanded"
-	}
-
-
+	// MARK: - State
+	
+	/// Gathers the current state information for this Source.
+	
 	public func state() async -> [String:Any]
 	{
 		var state:[String:Any] = [:]
@@ -216,30 +206,20 @@ open class Source : ObservableObject, Identifiable, StateRestoring
 		return state
 	}
 	
+	/// The key for the state dictionary of this Source
 	
-//	public func restoreState(from dict:[String:Any]) async
-//	{
-//		let sourceState = dict[stateKey] as? [String:Any] ?? [:]
-//		let isExpanded = sourceState[isExpandedKey] as? Bool ?? false
-//		
-//		if isExpanded
-//		{
-//			self.load()
-//		}
-//		
-//		await MainActor.run
-//		{
-//			self.isExpanded = isExpanded
-//		}
-//		
-//		for container in await self.containers
-//		{
-//			await container.restoreState(from:sourceState)
-//		}
-//	}
+	internal var stateKey:String
+	{
+		"\(identifier)".replacingOccurrences(of:".", with:"-")
+	}
+
+	/// The key of the isExpanded state inside the state dictionary
+
+	internal var isExpandedKey:String
+	{
+		"isExpanded"
+	}
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
-
-

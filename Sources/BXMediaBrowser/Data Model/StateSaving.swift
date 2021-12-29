@@ -29,8 +29,12 @@ import SwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public protocol StateRestoring
+public protocol StateSaving
 {
+	/// Data model object that wish to participate in the state saving mechanism must provide an async
+	/// function that returns the current state of the model object. The state is returned as a plist
+	/// style dictionary, so that it can be saved to UserDefaults.
+	
 	func state() async -> [String:Any]
 }
 

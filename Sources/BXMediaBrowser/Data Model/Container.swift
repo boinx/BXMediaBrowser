@@ -32,7 +32,7 @@ import SwiftUI
 /// A Container is the main data structure to create tree like graphs. Each Container has a list of sub-containers
 /// and a list of Objects (media files).
 
-open class Container : ObservableObject, Identifiable, StateRestoring
+open class Container : ObservableObject, Identifiable, StateSaving
 {
 	/// The identifier specifies the location of a Container
 	
@@ -67,7 +67,7 @@ open class Container : ObservableObject, Identifiable, StateRestoring
 	
 	@MainActor @Published public private(set) var objects:[Object] = []
 	
-	/// Returns true if this source is currently being loaded
+	/// Returns true if this container is currently being loaded
 	
 	@MainActor @Published public private(set) var isLoading = false
 	
@@ -83,10 +83,20 @@ open class Container : ObservableObject, Identifiable, StateRestoring
 	
 	private var loadTask:Task<Void,Never>? = nil
 	
-
+	/// This task is used to only show the loading spinner if loading takes a while
+	
+//	private var spinnerTask:Task<Void,Never>? = nil
+	
+	/// This task is used to purge cached data after a specified amount of time
+	
+	internal var purgeTask:Task<Void,Never>? = nil
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: -
+	
 	/// Creates a new Container
 	
 	public init(identifier:String, info:Any, icon:String? = nil, name:String, removeHandler:((Container)->Void)? = nil, loadHandler:@escaping Container.Loader.LoadHandler)
@@ -110,6 +120,8 @@ open class Container : ObservableObject, Identifiable, StateRestoring
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: - Loading
+	
 	/// Loads the contents of the container. If a previous load is still in progress it is cancelled,
 	/// so that the new load can be started sooner.
 	
@@ -120,27 +132,42 @@ open class Container : ObservableObject, Identifiable, StateRestoring
 		self.loadTask?.cancel()
 		self.loadTask = nil
 		
+		// Show spinning wheel after 0.15s
+		
+//		let spinnerTask = Task
+//		{
+//			try? await Task.sleep(nanoseconds:150_000_000) // 0.15s
+//
+//			await MainActor.run
+//			{
+//				self.isLoading = true
+//			}
+//		}
+
+		// Perform loading in a background task
+		
 		self.loadTask = Task
 		{
 			do
 			{
+				// Show spinning wheel
+				
 				await MainActor.run
 				{
 					self.isLoading = true
 				}
-
-				// Remember which existing containers are currently expanded, so that we can restore that state
-				// when reloading the containers.
+				
+				// Remember which existing containers are currently expanded, so
+				// that we can restore that state when reloading the containers.
 		
-				let expandedContainerIdentifiers = await self.containers.compactMap
-				{
-					$0.isExpanded ? $0.identifier : nil
-				}
+//				let expandedContainerIdentifiers = await self.containers.compactMap
+//				{
+//					$0.isExpanded ? $0.identifier : nil
+//				}
 		
 				// Get new list of (sub)containers and objects
 				
 				let (containers,objects) = try await self.loader.contents
-				
 //				let names1 = containers.map { $0.name }.joined(separator:", ")
 //				let names2 = objects.map { $0.name }.joined(separator:", ")
 //				Swift.print("    containers = \(names1)")
@@ -149,8 +176,10 @@ open class Container : ObservableObject, Identifiable, StateRestoring
 				// Check if this container should be expanded
 				
 				let isExpanded = containerState?[isExpandedKey] as? Bool ?? self.isExpanded
-//				let isExpanded2 = expandedContainerIdentifiers.contains(identifier)
-//				let isExpanded = isExpanded1 || isExpanded2
+				
+				// Spinning wheel is no longer needed
+				
+//				spinnerTask.cancel()
 				
 				// Store results in main thread
 				
@@ -185,40 +214,6 @@ open class Container : ObservableObject, Identifiable, StateRestoring
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	/// Purges cached data for the objects in this container. This reduces the memory footprint.
-
-	func purgeCachedDataOfObjects(after delay:Double = 20)
-	{
-		self._purgeTask = Task
-		{
-			let ns = UInt64(delay * 1000000000)
-			try? await Task.sleep(nanoseconds:ns)
-			
-			if Task.isCancelled
-			{
-				self._purgeTask = nil
-				return
-			}
-			
-			await MainActor.run
-			{
-				self.objects.forEach { $0.purge() }
-				self._purgeTask = nil
-			}
-		}
-	}
-	
-	public func cancelPurgeCachedDataOfObjects()
-	{
-		self._purgeTask?.cancel()
-	}
-
-	private var _purgeTask:Task<Void,Never>? = nil
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
 	/// Adds a subcontainer to this container
 	
 	public func addContainer(_ container:Container)
@@ -244,21 +239,17 @@ open class Container : ObservableObject, Identifiable, StateRestoring
 			}
 		}
 	}
-	
-	
+
+
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	internal var stateKey:String
-	{
-		"\(identifier)".replacingOccurrences(of:".", with:"-")
-	}
-
-	internal var isExpandedKey:String
-	{
-		"isExpanded"
-	}
-
+	// MARK: - State
+	
+	/// Recursively walks through the data model tree and gathers the current state info. Since this
+	/// operation is accessing async properties, this function is also async and can only be called
+	/// from a Task or another async function.
+	
 	public func state() async -> [String:Any]
 	{
 		var state:[String:Any] = [:]
@@ -276,6 +267,19 @@ open class Container : ObservableObject, Identifiable, StateRestoring
 		return state
 	}
 
+	/// The key for the state dictionary of this Container
+	
+	internal var stateKey:String
+	{
+		"\(identifier)".replacingOccurrences(of:".", with:"-")
+	}
+
+	/// The key of the isExpanded state inside the state dictionary
+
+	internal var isExpandedKey:String
+	{
+		"isExpanded"
+	}
 }
 
 

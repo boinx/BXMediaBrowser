@@ -43,7 +43,7 @@ import SwiftUI
 /// A Library is the top level object in a BXMediaBrowser object graph. You can create multiple libraries for
 /// different purposes, e.g. an image library, and audio library, etc.
 
-open class Library : ObservableObject, StateRestoring
+open class Library : ObservableObject, StateSaving
 {
 	/// A unique identifier for this Library
 	
@@ -103,11 +103,20 @@ open class Library : ObservableObject, StateRestoring
 	
 	public func load(with libraryState:[String:Any]? = nil)
 	{
+		// Load all section
+		
 		for section in sections
 		{
 			let key = section.stateKey
 			let sectionState = libraryState?[key] as? [String:Any]
 			section.load(with:sectionState)
+		}
+		
+		// Restore the selectedContainer
+		
+		if let identifier = libraryState?[selectedContainerIdentifierKey] as? String
+		{
+			// TODO: ...
 		}
 	}
 
