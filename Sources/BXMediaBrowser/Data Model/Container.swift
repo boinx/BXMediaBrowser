@@ -94,7 +94,7 @@ open class Container : ObservableObject, Identifiable, StateSaving
 	/// This notification is sent after a new Container was created. The notification object
 	/// is the Container.
 	
-	static let didCreateContainerNotification = NSNotification.Name("didCreateContainer")
+	static let didCreateNotification = NSNotification.Name("didCreateContainer")
 	
 	
 //----------------------------------------------------------------------------------------------------------------------
@@ -115,7 +115,7 @@ open class Container : ObservableObject, Identifiable, StateSaving
 		
 		DispatchQueue.main.async
 		{
-			NotificationCenter.default.post(name:Self.didCreateContainerNotification, object:self)
+			NotificationCenter.default.post(name:Self.didCreateNotification, object:self)
 		}
 	}
 

@@ -64,7 +64,7 @@ extension Library
 					[weak self] _ in self?.saveStateHandler?()
 				}
 				
-			self.observers += NotificationCenter.default.publisher(for:Container.didCreateContainerNotification, object:nil).sink
+			self.observers += NotificationCenter.default.publisher(for:Container.didCreateNotification, object:nil).sink
 			{
 				[weak self] notification in
 				guard let self = self else { return }
