@@ -134,43 +134,6 @@ open class Library : ObservableObject, StateSaving
 	}
 
 
-	/// Recursively walks through the model graph and returns the Container with the specified identifier (if found)
-	
-	func container(with identifier:String) async -> Container?
-	{
-		for section in self.sections
-		{
-			for source in section.sources
-			{
-				if let container = await source.container(with:identifier)
-				{
-					return container
-				}
-			}
-		}
-		
-		return nil
-	}
-	
-	
-	/// Selects and loads the Container with the specified identifier
-	
-	func selectContainer(with identifier:String)
-	{
-		Task
-		{
-			try? await Task.sleep(nanoseconds:2_000_000_000)
-			guard let container = await self.container(with:identifier) else { return }
-			
-			await MainActor.run
-			{
-				self.selectedContainer = container
-				container.load()
-			}
-		}
-	}
-	
-	
 //----------------------------------------------------------------------------------------------------------------------
 
 
