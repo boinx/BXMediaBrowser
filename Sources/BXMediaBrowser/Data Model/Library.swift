@@ -77,7 +77,7 @@ open class Library : ObservableObject, StateSaving
 	{
 		self.identifier = identifier
 
-		self.stateSaver.action =
+		self.stateSaver.saveStateHandler =
 		{
 			[weak self] in self?.asyncSaveState()
 		}
@@ -103,20 +103,33 @@ open class Library : ObservableObject, StateSaving
 	
 	public func load(with libraryState:[String:Any]? = nil)
 	{
-		// Load all section
+		// Restore the selectedContainer
+		
+		if let identifier = libraryState?[selectedContainerIdentifierKey] as? String
+		{
+			self.stateSaver.restoreSelectedContainerHandler =
+			{
+				[weak self] container in
+				guard let self = self else { return }
+				guard container.identifier == identifier else { return }
+				
+				DispatchQueue.main.async
+				{
+					self.selectedContainer = container
+					container.load()
+				}
+			}
+			
+//			self.selectContainer(with:identifier)
+		}
+
+		// Load all sections
 		
 		for section in sections
 		{
 			let key = section.stateKey
 			let sectionState = libraryState?[key] as? [String:Any]
 			section.load(with:sectionState)
-		}
-		
-		// Restore the selectedContainer
-		
-		if let identifier = libraryState?[selectedContainerIdentifierKey] as? String
-		{
-			self.selectContainer(with:identifier)
 		}
 	}
 

@@ -37,9 +37,13 @@ extension Library
 	
 	class StateSaver
 	{
-		/// The externally supplied action closure performs the actual work of saving the state
+		/// This externally supplied closure performs the actual work of saving the state
 		
-		public var action:(()->Void)? = nil
+		public var saveStateHandler:(()->Void)? = nil
+		
+		/// This externally supplied closure is used to restore the selected Container
+		
+		public var restoreSelectedContainerHandler:((Container)->Void)? = nil
 		
 		/// Incrementing this counter will cause the action closure to be called
 		
@@ -47,18 +51,26 @@ extension Library
 	
 		/// Reference to the Combine debounding pipeline
 		
-		private var observer:Any? = nil
+		private var observers:[Any] = []
 		
-		/// Creates the debouncing pipeline
+		/// Setup the debouncing pipeline
 		
 		init()
 		{
-			self.observer = self.$requestCounter
+			self.observers += self.$requestCounter
 				.debounce(for:0.1, scheduler:RunLoop.main)
 				.sink
 				{
-					[weak self] _ in self?.action?()
+					[weak self] _ in self?.saveStateHandler?()
 				}
+				
+			self.observers += NotificationCenter.default.publisher(for:Container.didCreateContainerNotification, object:nil).sink
+			{
+				[weak self] notification in
+				guard let self = self else { return }
+				guard let container = notification.object as? Container else { return }
+				self.restoreSelectedContainerHandler?(container)
+			}
 		}
 		
 		/// Calling this function will cause the state saving action closure to be called shortly.

@@ -91,6 +91,11 @@ open class Container : ObservableObject, Identifiable, StateSaving
 	
 	internal var purgeTask:Task<Void,Never>? = nil
 	
+	/// This notification is sent after a new Container was created. The notification object
+	/// is the Container.
+	
+	static let didCreateContainerNotification = NSNotification.Name("didCreateContainer")
+	
 	
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -107,6 +112,11 @@ open class Container : ObservableObject, Identifiable, StateSaving
 		self.name = name
 		self.removeHandler = removeHandler
 		self.loader = Container.Loader(identifier:identifier, info:info, loadHandler:loadHandler)
+		
+		DispatchQueue.main.async
+		{
+			NotificationCenter.default.post(name:Self.didCreateContainerNotification, object:self)
+		}
 	}
 
 	// Required by the Identifiable protocol
