@@ -241,6 +241,27 @@ open class Container : ObservableObject, Identifiable, StateSaving
 	}
 
 
+	/// Recursively walks through the model graph and returns the Container with the specified identifier (if found)
+	
+	func container(with identifier:String) async -> Container?
+	{
+		if self.identifier == identifier
+		{
+			return self
+		}
+
+		for container in await self.containers
+		{
+			if let container = await container.container(with:identifier)
+			{
+				return container
+			}
+		}
+		
+		return nil
+	}
+
+
 //----------------------------------------------------------------------------------------------------------------------
 
 
