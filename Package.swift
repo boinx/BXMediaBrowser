@@ -36,8 +36,8 @@ let package = Package(
 
         .target(
             name: "BXMediaBrowser",
-            dependencies: [],
-            resources: []),
+            dependencies: []), //,
+//            resources: [.process("Sources/BXMediaBrowser/UI/ImageCell.xib")]),
             
         .testTarget(
             name: "BXMediaBrowserTests",
