@@ -30,7 +30,81 @@ import Combine
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public struct ObjectCell : View
+public struct ObjectThumbnailCell : View
+{
+	// Data Model
+	
+	@ObservedObject var object:Object
+	var isSelected:Bool
+	
+	// Build View
+	
+	public var body: some View
+    {
+		HStack(alignment:.top)
+		{
+			// Display thumbnail if already loaded
+			
+			if let image = object.thumbnailImage
+			{
+				Image(image, scale:1.0, orientation:.up, label:Text("Thumbnail"))
+					.resizable()
+					.scaledToFit()
+					.border(Color.primary.opacity(0.2))
+					.frame(width:160, height:90, alignment:.center)
+			}
+			
+			// Display a placeholder with spinning wheel if still loading
+			
+			else
+			{
+				ZStack
+				{
+					Color.primary
+						.opacity(0.1)
+						.frame(width:160, height:90)
+						.border(Color.primary.opacity(0.2))
+						
+					BXSpinningWheel(size: .regular)
+				}
+			}
+		}
+		.padding(10)
+		.background(backgroundColor)
+		.foregroundColor(foregroundColor)
+		
+		.contentShape(Rectangle())
+		
+		.onAppear
+		{
+			self.loadIfNeeded()
+		}
+    }
+    
+    var backgroundColor:Color
+    {
+		isSelected ? .accentColor : .clear
+    }
+    
+    var foregroundColor:Color
+    {
+		isSelected ? .white : .primary
+    }
+    
+    func loadIfNeeded()
+    {
+		if object.thumbnailImage == nil || object.metadata == nil
+		{
+			object.load()
+		}
+    }
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+public struct ObjectDetailCell : View
 {
 	// Data Model
 	

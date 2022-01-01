@@ -77,22 +77,38 @@ public struct LoadedObjectsView : View
 
 	public var body: some View
     {
-		ScrollView
+		let layout:[GridItem] = [GridItem(.adaptive(minimum:160))]
+		
+		return ScrollView
 		{
-			LazyVStack(alignment:.leading, spacing:0)
+			LazyVGrid(columns:layout, alignment:.leading, spacing:0)
 			{
 				ForEach(container.objects)
 				{
 					object in
-//					SwiftUIFactory.shared.view(for:object)
-					ObjectCell(object:object, isSelected:selectedObjectIdentifiers.contains(object.identifier))
 					
+					ObjectThumbnailCell(object:object, isSelected:selectedObjectIdentifiers.contains(object.identifier))
+
 						.onTapGesture
 						{
 							self.select(object)
 						}
 				}
 			}
+			
+//			LazyVStack(alignment:.leading, spacing:0)
+//			{
+//				ForEach(container.objects)
+//				{
+//					object in
+//					ObjectDetailCell(object:object, isSelected:selectedObjectIdentifiers.contains(object.identifier))
+//
+//						.onTapGesture
+//						{
+//							self.select(object)
+//						}
+//				}
+//			}
 		}
     }
     
