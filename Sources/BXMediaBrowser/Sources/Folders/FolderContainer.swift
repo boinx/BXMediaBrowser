@@ -59,7 +59,7 @@ open class FolderContainer : Container
 
 	/// Loads the (shallow) contents of this folder
 	
-	class func loadContents(for identifier:String, info:Any) async throws -> Loader.Contents
+	class func loadContents(for identifier:String, info:Any, filter:String) async throws -> Loader.Contents
 	{
 		var containers:[Container] = []
 		var objects:[Object] = []
@@ -88,7 +88,12 @@ open class FolderContainer : Container
 			guard url.isFileURL else { continue }
 			guard url.isReadable else { continue }
 			guard !url.isHidden else { continue }
-
+			
+			if !filter.isEmpty
+			{
+				guard url.lastPathComponent.contains(filter) else { continue }
+			}
+			
 			// For a directory, create a sub-container
 			
 			if url.isDirectory && !url.isPackage

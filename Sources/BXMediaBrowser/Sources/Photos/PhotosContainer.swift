@@ -130,7 +130,7 @@ public class PhotosContainer : Container
 
 	/// Loads the (shallow) contents of this folder
 	
-	class func loadContents(for identifier:String, info:Any) async throws -> Loader.Contents
+	class func loadContents(for identifier:String, info:Any, filter:String) async throws -> Loader.Contents
 	{
 		var containers:[Container] = []
 		var objects:[Object] = []

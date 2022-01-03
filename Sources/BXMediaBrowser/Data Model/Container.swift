@@ -58,7 +58,7 @@ open class Container : ObservableObject, Identifiable, StateSaving
 	/// when the user wants to remove a Container again.
 	
 	public let removeHandler:((Container)->Void)?
-	
+
 	/// The list of subcontainers
 	
 	@MainActor @Published public private(set) var containers:[Container] = []
@@ -83,6 +83,11 @@ open class Container : ObservableObject, Identifiable, StateSaving
 	
 	private var loadTask:Task<Void,Never>? = nil
 	
+	/// This string can be used for filtering the Objects of this Container. Filtering works
+	/// differently for the various sources, as different metadata can be used when filtering.
+	
+	@Published public var filterString:String = ""
+	
 	/// This task is used to only show the loading spinner if loading takes a while
 	
 //	private var spinnerTask:Task<Void,Never>? = nil
@@ -95,6 +100,10 @@ open class Container : ObservableObject, Identifiable, StateSaving
 	/// is the Container.
 	
 	static let didCreateNotification = NSNotification.Name("didCreateContainer")
+	
+	/// References to subcriptions and notifications
+	
+	private var observers:[Any] = []
 	
 	
 //----------------------------------------------------------------------------------------------------------------------
@@ -113,12 +122,39 @@ open class Container : ObservableObject, Identifiable, StateSaving
 		self.removeHandler = removeHandler
 		self.loader = Container.Loader(identifier:identifier, info:info, loadHandler:loadHandler)
 		
+		// Reload this Container when the filterString changes
+		
+		self.setupFilterObserver()
+			
+		// Send out notification when a new Container is created. This is needed by state restoration.
+		
 		DispatchQueue.main.async
 		{
 			NotificationCenter.default.post(name:Self.didCreateNotification, object:self)
 		}
+		
 	}
 
+	/// Reloads this Container when the filterString changes
+	
+	private func setupFilterObserver()
+	{
+		self.observers += self.$filterString
+			.dropFirst(1)
+			.debounce(for:0.25, scheduler:RunLoop.main)
+			.sink
+			{
+				[weak self] _ in
+				guard let self = self else { return }
+				
+				DispatchQueue.main.async
+				{
+					self.load()
+				}
+			}
+	}
+	
+	
 	// Required by the Identifiable protocol
 	
 	nonisolated public var id:String
@@ -177,7 +213,7 @@ open class Container : ObservableObject, Identifiable, StateSaving
 		
 				// Get new list of (sub)containers and objects
 				
-				let (containers,objects) = try await self.loader.contents
+				let (containers,objects) = try await self.loader.contents(with:filterString)
 //				let names1 = containers.map { $0.name }.joined(separator:", ")
 //				let names2 = objects.map { $0.name }.joined(separator:", ")
 //				Swift.print("    containers = \(names1)")
@@ -249,8 +285,8 @@ open class Container : ObservableObject, Identifiable, StateSaving
 			}
 		}
 	}
-
-
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 

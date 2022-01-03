@@ -23,53 +23,40 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 
-import Foundation
+import SwiftUI
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-extension Container
+/// This is the root view for a BXMediaBrowser.Library
+
+public struct SearchBar : View
 {
-	public actor Loader
+	// Model
+	
+	@ObservedObject var library:Library
+	@EnvironmentObject var selectedContainer:Container
+	
+	// Init
+	
+	public init(with library:Library)
 	{
-		/// The identifier specifies the location of a Container
-		
-		public let identifier:String
-		
-		/// This can be any lkind of info that subclasses need to their job.
-		
-		public let info:Any
-	
-		/// The loadHandler is an externally provided closure that returns the Contents for this Container
-		
-		public let loadHandler:LoadHandler
-	
-		/// A Container has an array of (sub) Containers and an array of Objects
-		
-		public typealias Contents = ([Container],[Object])
-		
-		/// The LoadHandler is a pure function closure that returns the Contents of a Container
-		
-		public typealias LoadHandler = (String,Any,String) async throws -> Contents
-
-		/// Creates a new Container with an externally supplied closure to load the contents
-		
-		public init(identifier:String, info:Any, loadHandler:@escaping LoadHandler)
-		{
-			self.identifier = identifier
-			self.info = info
-			self.loadHandler = loadHandler
-		}
-
-		/// Loads the contents of this container
-		
-		public func contents(with filter:String) async throws -> Contents
-		{
-			try await self.loadHandler(identifier,info,filter)
-		}
+		self.library = library
 	}
+	// View
+	
+	public var body: some View
+    {
+		return TextField("Search", text:self.$selectedContainer.filterString)
+			.frame(maxWidth:300)
+			.textFieldStyle(RoundedBorderTextFieldStyle())
+			.padding(10)
+			.centerAligned()
+    }
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
+
+
