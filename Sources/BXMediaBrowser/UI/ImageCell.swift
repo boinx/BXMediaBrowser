@@ -35,7 +35,7 @@ public class ImageCell : NSCollectionViewItem
 {
 	/// The identifier can be used with makeItem() in the NSCollectionView datasource
 	
-    static let identifier = NSUserInterfaceItemIdentifier("BXMediaBrowser.CollectionView.ImageCell")
+    static let identifier = NSUserInterfaceItemIdentifier("BXMediaBrowser.ImageCell")
 
 	/// The data model for this cell
 	
