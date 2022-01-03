@@ -104,28 +104,22 @@ extension CollectionView
 {
     private func createLayout() -> NSCollectionViewLayout
     {
-		let w:CGFloat = 120
-		let h:CGFloat = 80
-		let t:CGFloat = 18
-		let d:CGFloat = 10
+		let w:CGFloat = ImageCell.width
+		let h:CGFloat = ImageCell.height
+		let d:CGFloat = ImageCell.spacing
 
-        let itemSize = NSCollectionLayoutSize(
-			widthDimension:.absolute(w),
-			heightDimension:.absolute(h+t))
-			
+        let itemSize = NSCollectionLayoutSize(widthDimension:.absolute(w), heightDimension:.absolute(h))
         let item = NSCollectionLayoutItem(layoutSize:itemSize)
-        item.contentInsets = NSDirectionalEdgeInsets(top:0, leading:0, bottom:0, trailing:d)
 
-        let groupSize = NSCollectionLayoutSize(
-			widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(h+t))
-            
+        let groupSize = NSCollectionLayoutSize(widthDimension:.fractionalWidth(1.0), heightDimension:.absolute(h))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize:groupSize, subitems:[item])
-		group.contentInsets = NSDirectionalEdgeInsets(top:d, leading:d, bottom:d, trailing:d)
+		group.interItemSpacing = .fixed(d)
 		
         let section = NSCollectionLayoutSection(group:group)
-        let layout = NSCollectionViewCompositionalLayout(section:section)
-        return layout
+        section.contentInsets = NSDirectionalEdgeInsets(top:d, leading:d, bottom:d, trailing:d)
+        section.interGroupSpacing = d
+        
+        return NSCollectionViewCompositionalLayout(section:section)
     }
 
 
