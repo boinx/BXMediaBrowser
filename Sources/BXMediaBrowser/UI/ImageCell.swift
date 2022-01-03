@@ -1,17 +1,66 @@
-/*
-See LICENSE folder for this sample’s licensing information.
+//----------------------------------------------------------------------------------------------------------------------
+//
+//  Copyright ©2022 Peter Baumgartner. All rights reserved.
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+//
+//----------------------------------------------------------------------------------------------------------------------
 
-Abstract:
-A generic NSCollectionViewItem that has an NSTextField and an enclosing NSBox
-*/
 
-import Cocoa
+#if os(macOS)
+
+import AppKit
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
 
 public class ImageCell : NSCollectionViewItem
 {
+	/// The identifier can be used with makeItem() in the NSCollectionView datasource
+	
+    static let identifier = NSUserInterfaceItemIdentifier("BXMediaBrowser.CollectionView.ImageCell")
 
-    static let reuseIdentifier = NSUserInterfaceItemIdentifier("BXMediaBrowser.ImageCell")
+	/// The data model for this cell
+	
+	var object:Object!
+	{
+		didSet
+		{
+			self.setup()
+			self.redraw()
+		}
+	}
+	
+	/// References to subscriptions
+	
+	var observers:[Any] = []
+	
 
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - Setup
+	
+	// These overrides are important or The NSCollectionView will look in the wrong Bundle (main bundle) and
+	// crash because it cannot find the nib file.
+	
 	override open var nibName: NSNib.Name?
     {
 		"ImageCell"
@@ -22,57 +71,20 @@ public class ImageCell : NSCollectionViewItem
 		Bundle.module
 	}
 
-	var object:Object!
-	{
-		didSet
-		{
-			self.setup()
-			self.update()
-		}
-	}
-	
-	var observers:[Any] = []
-	
-//	override public func loadView()
-//	{
-//		let w:CGFloat = 120
-//		let h:CGFloat = 80
-//		let d:CGFloat = 5
-//		let t:CGFloat = 22
-//
-//		let rect1 = CGRect(x:0, y:0, width:w, height:h+t)
-//		let rect2 = CGRect(x:0, y:t, width:w, height:h)
-//		let rect3 = CGRect(x:0, y:5, width:w, height:t)
-//		let view = NSView(frame:rect1)
-//		view.wantsLayer = true
-//		view.layer?.borderColor = NSColor.green.cgColor
-//		view.layer?.borderWidth = 1
-//
-//		let imageView = NSImageView(frame:rect2)
-//		imageView.autoresizingMask = [.width,.height]
-//		imageView.imageScaling = .scaleProportionallyDown
-//		imageView.imageAlignment = .alignCenter
-//		view.addSubview(imageView)
-//
-//		let textField = NSTextField(frame:rect3)
-//		textField.isEditable = false
-//		textField.isSelectable = false
-//		textField.isBordered = false
-//		textField.alignment = .center
-//		textField.font = NSFont.systemFont(ofSize:11)
-//		textField.autoresizingMask = [.width,.height]
-//		textField.backgroundColor = .clear
-//		view.addSubview(textField)
-//
-//		self.view = view
-//		self.imageView = imageView
-//		self.textField = textField
-//	}
-	
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
 	func setup()
 	{
 		guard let object = object else { return }
 
+		// Load the Object thumbnail and metadata
+		
+		self.loadIfNeeded()
+
+		// Once loaded redraw the view
+		
 		self.observers = []
 		
 		self.observers += object.$thumbnailImage
@@ -80,13 +92,30 @@ public class ImageCell : NSCollectionViewItem
 			.sink
 			{
 				_ in
-				self.update()
+				self.redraw()
 			}
-		
-		self.loadIfNeeded()
 	}
 	
-	func update()
+
+	/// Loads the Object thumbnail and metadata into memory
+	
+    func loadIfNeeded()
+    {
+		if object.thumbnailImage == nil || object.metadata == nil
+		{
+			object.load()
+		}
+    }
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - Drawing
+	
+	/// Redraws the cell by updating the thumbnail and name
+	
+	func redraw()
 	{
 		guard let object = object else { return }
 
@@ -101,31 +130,23 @@ public class ImageCell : NSCollectionViewItem
 		self.textField?.stringValue = self.object.name
 	}
 	
-    func loadIfNeeded()
-    {
-		if object.thumbnailImage == nil || object.metadata == nil
-		{
-			object.load()
-		}
-    }
+	
+//----------------------------------------------------------------------------------------------------------------------
 
-	override public var highlightState: NSCollectionViewItem.HighlightState
-    {
-        didSet
-        {
-            updateSelection()
-        }
-    }
 
+	// MARK: - Selection
+	
     override public var isSelected:Bool
     {
-        didSet
-        {
-            updateSelection()
-        }
+        didSet { self.updateHighlight() }
     }
 
-    private func updateSelection()
+	override public var highlightState:NSCollectionViewItem.HighlightState
+    {
+        didSet { self.updateHighlight() }
+    }
+
+    private func updateHighlight()
     {
         if !isViewLoaded
         {
@@ -141,3 +162,9 @@ public class ImageCell : NSCollectionViewItem
 		}
     }
 }
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+#endif

@@ -14,13 +14,6 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <collectionViewItem nibName="ImageCell" id="qtg-bZ-Fcb" customClass="ImageCell" customModule="BXMediaBrowser">
-            <connections>
-                <outlet property="imageView" destination="BQT-g2-Zqo" id="LJA-zQ-xqm"/>
-                <outlet property="textField" destination="Rdh-yM-tEI" id="RQf-Nw-bmh"/>
-                <outlet property="view" destination="HUS-pi-5U0" id="VKs-w7-B1O"/>
-            </connections>
-        </collectionViewItem>
         <customView id="HUS-pi-5U0">
             <rect key="frame" x="0.0" y="0.0" width="120" height="100"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>

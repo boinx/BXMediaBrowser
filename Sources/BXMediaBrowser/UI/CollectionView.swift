@@ -32,14 +32,20 @@ import AppKit
 //----------------------------------------------------------------------------------------------------------------------
 
 
-/// This view displays a single Section within a LibaryView
+/// This subclass of NSCollectionView can display the Objects of a Container
 
-public struct BXCollectionView : NSViewRepresentable
+public struct CollectionView : NSViewRepresentable
 {
 	public typealias NSViewType = NSScrollView
 	
-	private var container:Container?
+	/// The objects of this Container are displayed in the NSCollectionView
 	
+	private var container:Container? = nil
+	
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
 	public init(container:Container?)
 	{
 		self.container = container
@@ -47,20 +53,18 @@ public struct BXCollectionView : NSViewRepresentable
 	
 	public func makeNSView(context:Context) -> NSScrollView
 	{
-		let collectionView = NSCollectionView(frame:CGRect(x:0, y:0, width:1000, height:1000))
+		let collectionView = NSCollectionView(frame:.zero)
 		
-		let bundle = Bundle.module //BXMediaBrowser
+		let bundle = Bundle.module
         let nib = NSNib(nibNamed:"ImageCell", bundle:bundle)
-        collectionView.register(nib, forItemWithIdentifier: ImageCell.reuseIdentifier)
-//        collectionView.register(ImageCell.self, forItemWithIdentifier:ImageCell.reuseIdentifier)
 
+        collectionView.register(nib, forItemWithIdentifier:ImageCell.identifier)
         collectionView.collectionViewLayout = self.createLayout()
-
-		self.configureDataSource(for:collectionView, coordinator:context.coordinator)
-		
 		collectionView.isSelectable = true
 		collectionView.allowsEmptySelection = true
 		collectionView.allowsMultipleSelection = true
+		
+		self.configureDataSource(for:collectionView, coordinator:context.coordinator)
 		
 		let scrollView = NSScrollView(frame:.zero)
 		scrollView.borderType = .noBorder
@@ -76,7 +80,21 @@ public struct BXCollectionView : NSViewRepresentable
 		context.coordinator.container = self.container
 	}
 	
+
+	public func makeCoordinator() -> Coordinator
+    {
+        return Coordinator(container:container)
+    }
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+// MARK: -
 	
+extension CollectionView
+{
     private func createLayout() -> NSCollectionViewLayout
     {
 		let w:CGFloat = 120
@@ -109,7 +127,7 @@ public struct BXCollectionView : NSViewRepresentable
         {
 			(collectionView:NSCollectionView, indexPath:IndexPath, identifier:Object) -> NSCollectionViewItem? in
 
-			let item = collectionView.makeItem(withIdentifier:ImageCell.reuseIdentifier, for:indexPath)
+			let item = collectionView.makeItem(withIdentifier:ImageCell.identifier, for:indexPath)
 			let object = identifier
 			
 			if let cell = item as? ImageCell
@@ -127,18 +145,15 @@ public struct BXCollectionView : NSViewRepresentable
         snapshot.appendItems([])
         coordinator.dataSource.apply(snapshot, animatingDifferences:false)
     }
-
-	public func makeCoordinator() -> Coordinator
-    {
-        return Coordinator(container:container)
-    }
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-extension BXCollectionView
+// MARK: -
+	
+extension CollectionView
 {
 	public class Coordinator : NSObject
     {
@@ -151,15 +166,15 @@ extension BXCollectionView
 		
 		private var observers:[Any] = []
 		
+		
         init(container:Container?)
         {
 			self.container = container
         }
 		
+		
 		@MainActor func updateDataSource()
 		{
-print("\(Self.self).\(#function)")
-
 			self.observers = []
 			
 			if let container = self.container
@@ -173,6 +188,7 @@ print("\(Self.self).\(#function)")
 			
 			self._updateDataSource()
 		}
+		
 		
 		@MainActor func _updateDataSource()
 		{
@@ -216,7 +232,7 @@ class GridWindowController: NSWindowController
     private func configureHierarchy()
     {
         let itemNib = NSNib(nibNamed: "TextItem", bundle: nil)
-        collectionView.register(itemNib, forItemWithIdentifier: TextItem.reuseIdentifier)
+        collectionView.register(itemNib, forItemWithIdentifier: TextItem.identifier)
         collectionView.collectionViewLayout = createLayout()
     }
     
