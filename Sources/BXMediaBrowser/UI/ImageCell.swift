@@ -12,6 +12,16 @@ public class ImageCell : NSCollectionViewItem
 
     static let reuseIdentifier = NSUserInterfaceItemIdentifier("BXMediaBrowser.ImageCell")
 
+	override open var nibName: NSNib.Name?
+    {
+		"ImageCell"
+	}
+
+	override open var nibBundle: Bundle?
+    {
+		Bundle.module
+	}
+
 	var object:Object!
 	{
 		didSet
@@ -23,37 +33,41 @@ public class ImageCell : NSCollectionViewItem
 	
 	var observers:[Any] = []
 	
-	override public func loadView()
-	{
-		let rect1 = CGRect(x:0, y:0, width:120, height:100)
-		let rect2 = CGRect(x:0, y:20, width:120, height:80)
-		let rect3 = CGRect(x:0, y:0, width:120, height:20)
-		let view = NSView(frame:rect1)
+//	override public func loadView()
+//	{
+//		let w:CGFloat = 120
+//		let h:CGFloat = 80
+//		let d:CGFloat = 5
+//		let t:CGFloat = 22
+//
+//		let rect1 = CGRect(x:0, y:0, width:w, height:h+t)
+//		let rect2 = CGRect(x:0, y:t, width:w, height:h)
+//		let rect3 = CGRect(x:0, y:5, width:w, height:t)
+//		let view = NSView(frame:rect1)
 //		view.wantsLayer = true
-		
-		let imageView = NSImageView(frame:rect2)
-		imageView.autoresizingMask = [.width,.height]
-		imageView.imageScaling = .scaleProportionallyDown
-		imageView.imageAlignment = .alignCenter
-//		imageView.imageFrameStyle = .photo
-		view.addSubview(imageView)
-		
-		let textField = NSTextField(frame:rect3)
-		textField.isEditable = false
-		textField.isSelectable = false
-		textField.isBordered = false
-		textField.alignment = .center
-		textField.font = NSFont.systemFont(ofSize:11)
-		textField.autoresizingMask = [.width,.height]
-		textField.backgroundColor = .clear
-		view.addSubview(textField)
-		
-		self.view = view
-		self.imageView = imageView
-		self.textField = textField
-		
-		
-	}
+//		view.layer?.borderColor = NSColor.green.cgColor
+//		view.layer?.borderWidth = 1
+//
+//		let imageView = NSImageView(frame:rect2)
+//		imageView.autoresizingMask = [.width,.height]
+//		imageView.imageScaling = .scaleProportionallyDown
+//		imageView.imageAlignment = .alignCenter
+//		view.addSubview(imageView)
+//
+//		let textField = NSTextField(frame:rect3)
+//		textField.isEditable = false
+//		textField.isSelectable = false
+//		textField.isBordered = false
+//		textField.alignment = .center
+//		textField.font = NSFont.systemFont(ofSize:11)
+//		textField.autoresizingMask = [.width,.height]
+//		textField.backgroundColor = .clear
+//		view.addSubview(textField)
+//
+//		self.view = view
+//		self.imageView = imageView
+//		self.textField = textField
+//	}
 	
 	func setup()
 	{

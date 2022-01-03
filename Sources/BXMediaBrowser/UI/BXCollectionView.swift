@@ -36,7 +36,7 @@ import AppKit
 
 public struct BXCollectionView : NSViewRepresentable
 {
-	public typealias NSViewType = NSCollectionView
+	public typealias NSViewType = NSScrollView
 	
 	private var container:Container?
 	
@@ -45,28 +45,33 @@ public struct BXCollectionView : NSViewRepresentable
 		self.container = container
 	}
 	
-	public func makeNSView(context:Context) -> NSCollectionView
+	public func makeNSView(context:Context) -> NSScrollView
 	{
-		let view = NSCollectionView(frame:CGRect(x:0, y:0, width:1000, height:1000))
+		let collectionView = NSCollectionView(frame:CGRect(x:0, y:0, width:1000, height:1000))
 		
 		let bundle = Bundle.module //BXMediaBrowser
         let nib = NSNib(nibNamed:"ImageCell", bundle:bundle)
-        view.register(nib, forItemWithIdentifier: ImageCell.reuseIdentifier)
-//        view.register(ImageCell.self, forItemWithIdentifier:ImageCell.reuseIdentifier)
+        collectionView.register(nib, forItemWithIdentifier: ImageCell.reuseIdentifier)
+//        collectionView.register(ImageCell.self, forItemWithIdentifier:ImageCell.reuseIdentifier)
 
-        view.collectionViewLayout = self.createLayout()
+        collectionView.collectionViewLayout = self.createLayout()
 
-		self.configureDataSource(for:view, coordinator:context.coordinator)
+		self.configureDataSource(for:collectionView, coordinator:context.coordinator)
 		
-		view.isSelectable = true
-		view.allowsEmptySelection = true
-		view.allowsMultipleSelection = true
+		collectionView.isSelectable = true
+		collectionView.allowsEmptySelection = true
+		collectionView.allowsMultipleSelection = true
 		
-		return view
+		let scrollView = NSScrollView(frame:.zero)
+		scrollView.borderType = .noBorder
+		scrollView.hasVerticalScroller = true
+		scrollView.documentView = collectionView
+
+		return scrollView
 	}
 	
 	
-	public func updateNSView(_ collectionView:NSCollectionView, context:Context)
+	public func updateNSView(_ scrollView:NSScrollView, context:Context)
 	{
 		context.coordinator.container = self.container
 	}
@@ -74,25 +79,21 @@ public struct BXCollectionView : NSViewRepresentable
 	
     private func createLayout() -> NSCollectionViewLayout
     {
-print("\(Self.self).\(#function)")
+		let w:CGFloat = 120
+		let h:CGFloat = 80
+		let d:CGFloat = 5
+		let t:CGFloat = 18
 
         let itemSize = NSCollectionLayoutSize(
-			widthDimension: .absolute(120),
-			heightDimension: .absolute(80))
-		
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-		let padding:CGFloat = 5
-		
-        item.contentInsets = NSDirectionalEdgeInsets(
-			top:padding,
-			leading:padding,
-			bottom:padding,
-			trailing:padding)
+			widthDimension:.absolute(w),
+			heightDimension:.absolute(h+t))
+			
+        let item = NSCollectionLayoutItem(layoutSize:itemSize)
+        item.contentInsets = NSDirectionalEdgeInsets(top:d, leading:d, bottom:d, trailing:d)
 
         let groupSize = NSCollectionLayoutSize(
 			widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(80))
+            heightDimension: .absolute(h+t))
             
         let group = NSCollectionLayoutGroup.horizontal(layoutSize:groupSize, subitems:[item])
 
@@ -104,8 +105,6 @@ print("\(Self.self).\(#function)")
 
     private func configureDataSource(for collectionView:NSCollectionView, coordinator:Coordinator)
     {
-print("\(Self.self).\(#function)")
-
         coordinator.dataSource = NSCollectionViewDiffableDataSource<Int,Object>(collectionView:collectionView)
         {
 			(collectionView:NSCollectionView, indexPath:IndexPath, identifier:Object) -> NSCollectionViewItem? in
