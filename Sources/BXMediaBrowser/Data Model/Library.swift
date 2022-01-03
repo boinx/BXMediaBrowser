@@ -29,17 +29,6 @@ import SwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-//	BXMediaBrowser.Library							IMBLibrary
-//		[BXMediaBrowser.Section]
-//			[BXMediaBrowser.Source]        			IMBParser			e.g. Lightroom, Photos, Music, Finder
-//				[BXMediaBrowser.Container]			IMBNode				e.g. Album, Playlist, Folder
-//					[BXMediaBrowser.Container]		IMBNode
-//					[BXMediaBrowser.Object]			IMBObject			e.g. Image, Video, Audio file
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
 /// A Library is the top level object in a BXMediaBrowser object graph. You can create multiple libraries for
 /// different purposes, e.g. an image library, and audio library, etc.
 

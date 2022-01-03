@@ -97,7 +97,7 @@ extension Object
 
 				let task = Task<CGImage,Swift.Error>
 				{
-					Swift.print("Loading thumbnail for \(identifier)")
+//					Swift.print("Loading thumbnail for \(identifier)")
 
 					let image = try await self.loadThumbnailHandler(identifier,info)
 					self._thumbnailImage = image
@@ -153,7 +153,7 @@ extension Object
 				
 				let task = Task<[String:Any],Swift.Error>
 				{
-					Swift.print("Loading metadata for \(identifier)")
+//					Swift.print("Loading metadata for \(identifier)")
 					
 					let metadata:[String:Any] = try await self.loadMetadataHandler(identifier,info)
 					self._metadata = metadata
