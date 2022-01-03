@@ -34,7 +34,7 @@ import AppKit
 
 /// This subclass of NSCollectionView can display the Objects of a Container
 
-public struct CollectionView : NSViewRepresentable
+public struct CollectionView<Cell> : NSViewRepresentable where Cell:ObjectCell
 {
 	public typealias NSViewType = NSScrollView
 	
@@ -42,22 +42,26 @@ public struct CollectionView : NSViewRepresentable
 	
 	private var container:Container? = nil
 	
-
+	private let cellType:Cell.Type
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	public init(container:Container?)
+	public init(container:Container?, cellType:Cell.Type)
 	{
 		self.container = container
+		self.cellType = cellType
 	}
 	
 	public func makeNSView(context:Context) -> NSScrollView
 	{
 		let collectionView = NSCollectionView(frame:.zero)
 		
+		let identifier = self.cellType.identifier
+		let name = self.cellType.nibName
 		let bundle = Bundle.module
-        let nib = NSNib(nibNamed:"ImageCell", bundle:bundle)
-        collectionView.register(nib, forItemWithIdentifier:ImageCell.identifier)
+        let nib = NSNib(nibNamed:name, bundle:bundle)
+        collectionView.register(nib, forItemWithIdentifier:identifier)
         
         collectionView.collectionViewLayout = self.createLayout()
 		collectionView.isSelectable = true

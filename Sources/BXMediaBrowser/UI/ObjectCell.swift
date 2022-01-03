@@ -31,56 +31,104 @@ import AppKit
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public class ImageCell : ObjectCell
+public class ObjectCell : NSCollectionViewItem
 {
-	/// Redraws the cell by updating the thumbnail and name
+	/// The data model for this cell
 	
-	override func redraw()
+	var object:Object!
 	{
-		guard let object = object else { return }
-
-		if let thumbnail = object.thumbnailImage
+		didSet
 		{
-			let w = thumbnail.width
-			let h = thumbnail.height
-			let size = CGSize(width:w, height:h)
-			self.imageView?.image = NSImage(cgImage:thumbnail, size:size)
+			self.setup()
+			self.redraw()
 		}
-	
-		self.textField?.stringValue = self.object.name
 	}
 	
+	/// References to subscriptions
 	
+	var observers:[Any] = []
+	
+
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	// MARK: -
+	/// The identifier can be used with makeItem() in the NSCollectionView datasource
 	
-    override public var isSelected:Bool
+    class var identifier:NSUserInterfaceItemIdentifier
     {
-        didSet { self.updateHighlight() }
-    }
-
-	override public var highlightState:NSCollectionViewItem.HighlightState
+    	NSUserInterfaceItemIdentifier("BXMediaBrowser.\(Self.self)")
+	}
+	
+	/// The nib name should be the same as the class name
+	
+	class var nibName:NSNib.Name
+	{
+		"\(Self.self)"
+	}
+	
+	// These overrides are important or The NSCollectionView will look in the wrong Bundle (main bundle) and
+	// crash because it cannot find the nib file.
+	
+	override open var nibName: NSNib.Name?
     {
-        didSet { self.updateHighlight() }
-    }
+		Self.nibName
+	}
 
-    private func updateHighlight()
+	override open var nibBundle: Bundle?
     {
-        if !isViewLoaded
-        {
-            return
-        }
+		Bundle.module
+	}
 
-		let isHilited = self.isSelected	|| self.highlightState != .none
 
-		if let layer = self.imageView?.subviews.first?.layer
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - Setup
+	
+	func setup()
+	{
+		guard let object = object else { return }
+
+		// Load the Object thumbnail and metadata
+		
+		self.loadIfNeeded()
+
+		// Once loaded redraw the view
+		
+		self.observers = []
+		
+		self.observers += object.$thumbnailImage
+			.receive(on:RunLoop.main)
+			.sink
+			{
+				_ in
+				self.redraw()
+			}
+	}
+	
+
+	/// Loads the Object thumbnail and metadata into memory
+	
+    func loadIfNeeded()
+    {
+		if object.thumbnailImage == nil || object.metadata == nil
 		{
-			layer.borderWidth = isHilited ? 4.0 : 0.0
-			layer.borderColor = isHilited ? NSColor.systemYellow.cgColor : NSColor.clear.cgColor
+			object.load()
 		}
     }
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - Drawing
+	
+	/// Redraws the cell
+	
+	func redraw()
+	{
+		// To be overridden in subclasses
+	}
 }
 
 
