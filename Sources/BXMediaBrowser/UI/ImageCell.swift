@@ -25,18 +25,20 @@ public class ImageCell : NSCollectionViewItem
 	
 	override public func loadView()
 	{
-		let rect = CGRect(x:0, y:0, width:120, height:80)
-		let rect2 = CGRect(x:0, y:0, width:120, height:22)
-		let view = NSView(frame:rect)
-		view.wantsLayer = true
+		let rect1 = CGRect(x:0, y:0, width:120, height:100)
+		let rect2 = CGRect(x:0, y:20, width:120, height:80)
+		let rect3 = CGRect(x:0, y:0, width:120, height:20)
+		let view = NSView(frame:rect1)
+//		view.wantsLayer = true
 		
-		let imageView = NSImageView(frame:rect)
+		let imageView = NSImageView(frame:rect2)
 		imageView.autoresizingMask = [.width,.height]
 		imageView.imageScaling = .scaleProportionallyDown
 		imageView.imageAlignment = .alignCenter
+//		imageView.imageFrameStyle = .photo
 		view.addSubview(imageView)
 		
-		let textField = NSTextField(frame:rect2)
+		let textField = NSTextField(frame:rect3)
 		textField.isEditable = false
 		textField.isSelectable = false
 		textField.isBordered = false
@@ -74,19 +76,15 @@ public class ImageCell : NSCollectionViewItem
 	{
 		guard let object = object else { return }
 
-//		DispatchQueue.main.async
-//		{
-			if let thumbnail = object.thumbnailImage
-			{
-				let w = thumbnail.width
-				let h = thumbnail.height
-				let size = CGSize(width:w, height:h)
-				
-				self.imageView?.image = NSImage(cgImage:thumbnail, size:size)
-			}
-		
-			self.textField?.stringValue = self.object.name
-//		}
+		if let thumbnail = object.thumbnailImage
+		{
+			let w = thumbnail.width
+			let h = thumbnail.height
+			let size = CGSize(width:w, height:h)
+			self.imageView?.image = NSImage(cgImage:thumbnail, size:size)
+		}
+	
+		self.textField?.stringValue = self.object.name
 	}
 	
     func loadIfNeeded()
@@ -101,7 +99,7 @@ public class ImageCell : NSCollectionViewItem
     {
         didSet
         {
-            updateSelectionHighlighting()
+            updateSelection()
         }
     }
 
@@ -109,31 +107,23 @@ public class ImageCell : NSCollectionViewItem
     {
         didSet
         {
-            updateSelectionHighlighting()
+            updateSelection()
         }
     }
 
-    private func updateSelectionHighlighting()
+    private func updateSelection()
     {
         if !isViewLoaded
         {
             return
         }
 
-        let showAsHighlighted =
-			(highlightState == .forSelection) ||
-            (isSelected && highlightState != .forDeselection) ||
-            (highlightState == .asDropTarget)
+		let isHilited = self.isSelected	|| self.highlightState != .none
 
-//        textField?.textColor = showAsHighlighted ? .selectedControlTextColor : .labelColor
-        
-        self.view.layer?.backgroundColor = showAsHighlighted ?
-			NSColor.blue.cgColor :
-			NSColor.clear.cgColor
-        
-//        if let box = view as? NSBox
-//        {
-//            box.fillColor = showAsHighlighted ? .selectedControlColor : .gray
-//        }
+		if let layer = self.imageView?.subviews.first?.layer
+		{
+			layer.borderWidth = isHilited ? 4.0 : 0.0
+			layer.borderColor = isHilited ? NSColor.systemYellow.cgColor : NSColor.clear.cgColor
+		}
     }
 }
