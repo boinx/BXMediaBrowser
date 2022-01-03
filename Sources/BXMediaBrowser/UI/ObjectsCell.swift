@@ -41,7 +41,7 @@ public struct ObjectThumbnailCell : View
 	
 	public var body: some View
     {
-		HStack(alignment:.top)
+		VStack(spacing:4)
 		{
 			// Display thumbnail if already loaded
 			
@@ -68,6 +68,11 @@ public struct ObjectThumbnailCell : View
 					BXSpinningWheel(size: .regular)
 				}
 			}
+			
+			Text(object.name)
+				.lineLimit(1)
+				.font(.system(size:11))
+				.opacity(0.5)
 		}
 		.padding(10)
 		.background(backgroundColor)
