@@ -34,7 +34,7 @@ import AppKit
 
 /// This subclass of NSCollectionView can display the Objects of a Container
 
-public struct CollectionView<Cell> : NSViewRepresentable where Cell:ObjectCell
+public struct CollectionView<Cell:ObjectCell> : NSViewRepresentable
 {
 	public typealias NSViewType = NSScrollView
 	
@@ -42,16 +42,23 @@ public struct CollectionView<Cell> : NSViewRepresentable where Cell:ObjectCell
 	
 	private var container:Container? = nil
 	
+	/// The class type of the Object cell to be displayed in this NSCollectionView
+	
 	private let cellType:Cell.Type
+	
 	
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	/// Creates CollectionView with the specified Container and cell type
+	
 	public init(container:Container?, cellType:Cell.Type)
 	{
 		self.container = container
 		self.cellType = cellType
 	}
+	
+	/// Builds a view hierarchy with a NSScrollView and a NSCollectionView inside
 	
 	public func makeNSView(context:Context) -> NSScrollView
 	{
@@ -76,6 +83,7 @@ public struct CollectionView<Cell> : NSViewRepresentable where Cell:ObjectCell
 		scrollView.hasVerticalScroller = true
 		scrollView.contentView.drawsBackground = false
 		scrollView.drawsBackground = false
+		scrollView.backgroundColor = .clear
 
 		return scrollView
 	}
