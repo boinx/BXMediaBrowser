@@ -34,7 +34,7 @@ import AppKit
 public class ImageCell : ObjectCell
 {
 	static let width:CGFloat = 120
-	static let height:CGFloat = 94
+	static let height:CGFloat = 96
 	static let spacing:CGFloat = 10
 
 
