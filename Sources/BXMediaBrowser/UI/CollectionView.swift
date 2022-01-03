@@ -57,8 +57,8 @@ public struct CollectionView : NSViewRepresentable
 		
 		let bundle = Bundle.module
         let nib = NSNib(nibNamed:"ImageCell", bundle:bundle)
-
         collectionView.register(nib, forItemWithIdentifier:ImageCell.identifier)
+        
         collectionView.collectionViewLayout = self.createLayout()
 		collectionView.isSelectable = true
 		collectionView.allowsEmptySelection = true
@@ -67,9 +67,11 @@ public struct CollectionView : NSViewRepresentable
 		self.configureDataSource(for:collectionView, coordinator:context.coordinator)
 		
 		let scrollView = NSScrollView(frame:.zero)
+		scrollView.documentView = collectionView
 		scrollView.borderType = .noBorder
 		scrollView.hasVerticalScroller = true
-		scrollView.documentView = collectionView
+		scrollView.contentView.drawsBackground = false
+		scrollView.drawsBackground = false
 
 		return scrollView
 	}
@@ -77,6 +79,7 @@ public struct CollectionView : NSViewRepresentable
 	
 	public func updateNSView(_ scrollView:NSScrollView, context:Context)
 	{
+		scrollView.drawsBackground = false
 		context.coordinator.container = self.container
 	}
 	
@@ -99,22 +102,23 @@ extension CollectionView
     {
 		let w:CGFloat = 120
 		let h:CGFloat = 80
-		let d:CGFloat = 5
 		let t:CGFloat = 18
+		let d:CGFloat = 10
 
         let itemSize = NSCollectionLayoutSize(
 			widthDimension:.absolute(w),
 			heightDimension:.absolute(h+t))
 			
         let item = NSCollectionLayoutItem(layoutSize:itemSize)
-        item.contentInsets = NSDirectionalEdgeInsets(top:d, leading:d, bottom:d, trailing:d)
+        item.contentInsets = NSDirectionalEdgeInsets(top:0, leading:0, bottom:0, trailing:d)
 
         let groupSize = NSCollectionLayoutSize(
 			widthDimension: .fractionalWidth(1.0),
             heightDimension: .absolute(h+t))
             
         let group = NSCollectionLayoutGroup.horizontal(layoutSize:groupSize, subitems:[item])
-
+		group.contentInsets = NSDirectionalEdgeInsets(top:d, leading:d, bottom:d, trailing:d)
+		
         let section = NSCollectionLayoutSection(group:group)
         let layout = NSCollectionViewCompositionalLayout(section:section)
         return layout
