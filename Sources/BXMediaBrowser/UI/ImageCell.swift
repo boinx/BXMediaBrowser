@@ -26,15 +26,22 @@ public class ImageCell : NSCollectionViewItem
 	override public func loadView()
 	{
 		let rect = CGRect(x:0, y:0, width:120, height:80)
-		let rect2 = CGRect(x:0, y:0, width:120, height:20)
+		let rect2 = CGRect(x:0, y:0, width:120, height:22)
 		let view = NSView(frame:rect)
 		view.wantsLayer = true
 		
 		let imageView = NSImageView(frame:rect)
 		imageView.autoresizingMask = [.width,.height]
+		imageView.imageScaling = .scaleProportionallyDown
+		imageView.imageAlignment = .alignCenter
 		view.addSubview(imageView)
 		
 		let textField = NSTextField(frame:rect2)
+		textField.isEditable = false
+		textField.isSelectable = false
+		textField.isBordered = false
+		textField.alignment = .center
+		textField.font = NSFont.systemFont(ofSize:11)
 		textField.autoresizingMask = [.width,.height]
 		textField.backgroundColor = .clear
 		view.addSubview(textField)
@@ -42,10 +49,14 @@ public class ImageCell : NSCollectionViewItem
 		self.view = view
 		self.imageView = imageView
 		self.textField = textField
+		
+		
 	}
 	
 	func setup()
 	{
+		guard let object = object else { return }
+
 		self.observers = []
 		
 		self.observers += object.$thumbnailImage
@@ -55,26 +66,37 @@ public class ImageCell : NSCollectionViewItem
 				_ in
 				self.update()
 			}
+		
+		self.loadIfNeeded()
 	}
 	
 	func update()
 	{
-		DispatchQueue.main.async
-		{
-			if let thumbnail = self.object.thumbnailImage
-		{
-			let width = thumbnail.width
-			let height = thumbnail.width
-			let size = CGSize(width:width, height:height)
-			
-			self.imageView?.image = NSImage(cgImage:thumbnail, size:size)
-			
-		}
+		guard let object = object else { return }
+
+//		DispatchQueue.main.async
+//		{
+			if let thumbnail = object.thumbnailImage
+			{
+				let w = thumbnail.width
+				let h = thumbnail.height
+				let size = CGSize(width:w, height:h)
+				
+				self.imageView?.image = NSImage(cgImage:thumbnail, size:size)
+			}
 		
 			self.textField?.stringValue = self.object.name
-		}
+//		}
 	}
 	
+    func loadIfNeeded()
+    {
+		if object.thumbnailImage == nil || object.metadata == nil
+		{
+			object.load()
+		}
+    }
+
 	override public var highlightState: NSCollectionViewItem.HighlightState
     {
         didSet
@@ -107,7 +129,7 @@ public class ImageCell : NSCollectionViewItem
         
         self.view.layer?.backgroundColor = showAsHighlighted ?
 			NSColor.blue.cgColor :
-			NSColor.gray.cgColor
+			NSColor.clear.cgColor
         
 //        if let box = view as? NSBox
 //        {

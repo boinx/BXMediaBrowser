@@ -38,11 +38,6 @@ public struct BXCollectionView : NSViewRepresentable
 {
 	public typealias NSViewType = NSCollectionView
 	
-    enum Section1
-    {
-        case main
-    }
-	
 	private var container:Container?
 	
 	public init(container:Container?)
@@ -63,22 +58,19 @@ public struct BXCollectionView : NSViewRepresentable
 
 		self.configureDataSource(for:view, coordinator:context.coordinator)
 		
-//		view.dataSource = context.coordinator
-//		view.delegate = context.coordinator
-//		view.collectionViewLayout = NSCollectionViewFlowLayout()
-
-//		view.isSelectable = true
-//		view.allowsEmptySelection = true
-//		view.allowsMultipleSelection = true
+		view.isSelectable = true
+		view.allowsEmptySelection = true
+		view.allowsMultipleSelection = true
 		
 		return view
 	}
 	
+	
 	public func updateNSView(_ collectionView:NSCollectionView, context:Context)
 	{
 		context.coordinator.container = self.container
-		collectionView.reloadData()
 	}
+	
 	
     private func createLayout() -> NSCollectionViewLayout
     {
@@ -109,41 +101,32 @@ print("\(Self.self).\(#function)")
         return layout
     }
 
+
     private func configureDataSource(for collectionView:NSCollectionView, coordinator:Coordinator)
     {
 print("\(Self.self).\(#function)")
 
-		collectionView.dataSource = coordinator
-		
-//        coordinator.dataSource = NSCollectionViewDiffableDataSource<Section1,String>(collectionView:collectionView)
-//        {
-//			(collectionView:NSCollectionView, indexPath:IndexPath, identifier:String) -> NSCollectionViewItem? in
-//
-//print("collectionView.makeItem ")
-//
-//			let item = collectionView.makeItem(withIdentifier:ImageCell.reuseIdentifier, for:indexPath)
-//
-// 			let i = indexPath.item
-//
-//			if let object = coordinator.container?.objects[i],
-//			   let thumbnail = object.thumbnailImage
-//			{
-//				let width = thumbnail.width
-//				let height = thumbnail.width
-//				let size = CGSize(width:width, height:height)
-//				item.imageView?.image = NSImage(cgImage:thumbnail, size:size)
-//				item.textField?.stringValue = object.name
-//			}
-//
-//        	return item
-//        }
+        coordinator.dataSource = NSCollectionViewDiffableDataSource<Int,Object>(collectionView:collectionView)
+        {
+			(collectionView:NSCollectionView, indexPath:IndexPath, identifier:Object) -> NSCollectionViewItem? in
+
+			let item = collectionView.makeItem(withIdentifier:ImageCell.reuseIdentifier, for:indexPath)
+			let object = identifier
+			
+			if let cell = item as? ImageCell
+			{
+				cell.object = object
+			}
+
+        	return item
+        }
 
         // initial data
         
-//        var snapshot = NSDiffableDataSourceSnapshot<Section1,String>()
-//        snapshot.appendSections([Section1.main])
-//        snapshot.appendItems([])
-//        coordinator.dataSource.apply(snapshot, animatingDifferences:false)
+        var snapshot = NSDiffableDataSourceSnapshot<Int,Object>()
+        snapshot.appendSections([0])
+        snapshot.appendItems([])
+        coordinator.dataSource.apply(snapshot, animatingDifferences:false)
     }
 
 	public func makeCoordinator() -> Coordinator
@@ -158,17 +141,16 @@ print("\(Self.self).\(#function)")
 
 extension BXCollectionView
 {
-	public class Coordinator : NSObject, NSCollectionViewDataSource
+	public class Coordinator : NSObject
     {
 		@MainActor var container:Container? = nil
 		{
-			didSet
-			{
-				self.updateDataSource()
-			}
+			didSet { self.updateDataSource() }
 		}
 		
-//		var dataSource: NSCollectionViewDiffableDataSource<Section1,String>! = nil
+		var dataSource: NSCollectionViewDiffableDataSource<Int,Object>! = nil
+		
+		private var observers:[Any] = []
 		
         init(container:Container?)
         {
@@ -179,51 +161,28 @@ extension BXCollectionView
 		{
 print("\(Self.self).\(#function)")
 
-//			let objects = self.container?.objects ?? []
-//			let identifiers = objects.map { $0.identifier }
-//			var snapshot = NSDiffableDataSourceSnapshot<Section1,String>()
-//
-//			snapshot.appendSections([Section1.main])
-//			snapshot.appendItems(identifiers)
-//			self.dataSource.apply(snapshot, animatingDifferences:true)
-		}
-		
-		
-		@MainActor public func numberOfSections(in collectionView:NSCollectionView) -> Int
-    	{
-			return 1
-    	}
-
-		@MainActor public func collectionView(_ collectionView:NSCollectionView, numberOfItemsInSection section:Int) -> Int
-		{
-			guard let container = self.container else { return 0 }
-			let n = container.objects.count
-			return n
-		}
-
-		@MainActor public func collectionView(_ collectionView:NSCollectionView, itemForRepresentedObjectAt indexPath:IndexPath) -> NSCollectionViewItem
-		{
-			let item = collectionView.makeItem(withIdentifier:ImageCell.reuseIdentifier, for:indexPath)
-
-			if let cell = item as? ImageCell
+			self.observers = []
+			
+			if let container = self.container
 			{
-				let i = indexPath.item
-				let object = self.container?.objects[i]
-				cell.object = object
+				self.observers += container.$objects.sink
+				{
+					_ in
+					DispatchQueue.main.async { self._updateDataSource() }
+				}
 			}
 			
-//			if let object = self.container?.objects[i],
-//			   let thumbnail = object.thumbnailImage
-//			{
-//				let width = thumbnail.width
-//				let height = thumbnail.width
-//				let size = CGSize(width:width, height:height)
-//				
-//				cell.imageView?.image = NSImage(cgImage:thumbnail, size:size)
-//				cell.textField?.stringValue = object.name
-//			}
+			self._updateDataSource()
+		}
+		
+		@MainActor func _updateDataSource()
+		{
+			let objects = self.container?.objects ?? []
+			var snapshot = NSDiffableDataSourceSnapshot<Int,Object>()
 
-        	return item
+			snapshot.appendSections([0])
+			snapshot.appendItems(objects)
+			self.dataSource.apply(snapshot, animatingDifferences:true)
 		}
 	}
 }
