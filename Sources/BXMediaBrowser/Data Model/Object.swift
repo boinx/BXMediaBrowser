@@ -136,7 +136,39 @@ open class Object : NSObject, ObservableObject, Identifiable
 		}
 	}
 	
-	var localURL:URL
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	/// Returns the filename of the local file. This property must be overridden by conrete subclasses to provide
+	/// the correct filename. In some cases (e.g. Photos.app) a filename is not available, so a generated name
+	/// must be used.
+	
+	var localFileName:String
+	{
+		var name = self.name
+		
+		if name.isEmpty
+		{
+			name = self.identifier
+		}
+		
+		return name
+	}
+	
+	
+	/// Returns the UTI for the local file. Since the Object can still be in the cloud, and needs to be downloaded
+	/// first, thi UTI must be know ahead of the download by the concrete subclass.
+	
+	var localFileUTI:String
+	{
+		return kUTTypeFileURL as String // To be overridden by subclasses
+	}
+	
+	
+	/// Returns the URL to the local file. This can possibly trigger a download, if the Object is still in the cloud.
+	
+	var localFileURL:URL
 	{
 		get async throws
 		{

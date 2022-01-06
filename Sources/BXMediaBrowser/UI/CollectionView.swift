@@ -84,6 +84,14 @@ public struct CollectionView<Cell:ObjectCell> : NSViewRepresentable
 		
 		self.configureDataSource(for:collectionView, coordinator:context.coordinator)
 		
+		// Configure drag & drop
+		
+		collectionView.delegate = context.coordinator
+        collectionView.setDraggingSourceOperationMask([.copy], forLocal:true)
+        collectionView.setDraggingSourceOperationMask([.copy], forLocal:false)
+		
+		// Wrap in a NSScrollView
+		
 		let scrollView = NSScrollView(frame:.zero)
 		scrollView.documentView = collectionView
 		scrollView.borderType = .noBorder
@@ -174,7 +182,7 @@ extension CollectionView
 	
 extension CollectionView
 {
-	public class Coordinator : NSObject
+	public class Coordinator : NSObject, NSCollectionViewDelegate
     {
 		@MainActor var container:Container? = nil
 		{
@@ -217,6 +225,44 @@ extension CollectionView
 			snapshot.appendSections([0])
 			snapshot.appendItems(objects)
 			self.dataSource.apply(snapshot, animatingDifferences:true)
+		}
+
+
+		// Allow dragging of cells to other destinations
+		
+		@MainActor public func collectionView(_ collectionView:NSCollectionView, canDragItemsAt indexPaths:Set<IndexPath>, with event:NSEvent) -> Bool
+		{
+			return true
+		}
+		
+		
+		// Start dragging the Object. Since the Object can be remote, a NSFilePromiseProvider will be returned. The download will be triggered,
+		// once the NSFilePromiseProvider is received at the drop destination. Obviously the download is skipped if the Object already points
+		// to local file.
+		
+		@MainActor public func collectionView(_ collectionView:NSCollectionView, pasteboardWriterForItemAt indexPath:IndexPath) -> NSPasteboardWriting?
+		{
+			// Get Object to be dragged
+			
+			let i = indexPath.item
+			guard let objects = self.container?.objects else { return nil }
+			guard i < objects.count else { return nil }
+			let object = objects[i]
+			
+			// Get a file promise from the Object
+			
+			return object.filePromiseProvider
+		}
+		
+		
+		//  Prevent item from being hidden (creating a hole in the grid) while being dragged
+
+		@MainActor public func collectionView(_ collectionView:NSCollectionView, draggingSession session:NSDraggingSession, willBeginAt screenPoint:NSPoint, forItemsAt indexPaths:Set<IndexPath>)
+		{
+			for indexPath in indexPaths
+			{
+				collectionView.item(at:indexPath)?.view.isHidden = false
+			}
 		}
 	}
 }
