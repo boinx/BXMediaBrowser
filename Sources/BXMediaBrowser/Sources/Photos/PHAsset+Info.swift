@@ -30,6 +30,7 @@ import Photos
 
 
 /// The following accessors are taken from https://stackoverflow.com/questions/32687403/phasset-get-original-file-name
+/// and https://slk11075.medium.com/traps-for-phasset-how-to-get-filename-from-phasset-67d856e75c64
 
 extension PHAsset
 {
@@ -43,9 +44,27 @@ extension PHAsset
 
 	/// Returns the UTI for the PHAsset
 	
-    var uti:String?
+    var uti:String
     {
-        self.primaryResource?.uniformTypeIdentifier
+		// First try to get an exact UTI from the PHAsset, e.g. "public.jpeg" or "public.tiff"
+		
+        if let uti = self.primaryResource?.uniformTypeIdentifier
+		{
+			return uti
+		}
+
+		// If that fails that simply try to map the mediatype to a more generic UTI
+		
+		if self.mediaType == .video
+		{
+			return kUTTypeMovie as String
+		}
+		else if self.mediaType == .audio
+		{
+			return kUTTypeAudio as String
+		}
+		
+		return kUTTypeImage as String
     }
 
 

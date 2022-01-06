@@ -148,26 +148,7 @@ public class PhotosObject : Object
 	override var localFileUTI:String
 	{
 		guard let asset = info as? PHAsset else { return "public.image" }
-		
-		// First try to get an exact UTI from the PHAsset, e.g. "public.jpeg" or "public.tiff"
-		
-		if let uti = asset.uti
-		{
-			return uti
-		}
-
-		// If that fails that simply try to map the mediatype to a more generic UTI
-		
-		if asset.mediaType == .video
-		{
-			return kUTTypeMovie as String
-		}
-		else if asset.mediaType == .audio
-		{
-			return kUTTypeAudio as String
-		}
-		
-		return kUTTypeImage as String
+		return asset.uti
 	}
 
 
@@ -177,10 +158,9 @@ public class PhotosObject : Object
 	{
 		// Try to get the original filename from the PHAsset
 		
-		if let asset = info as? PHAsset,
-		   let originalFilename = asset.originalFilename
+		if let asset = info as? PHAsset, let filename = asset.originalFilename
 		{
-			return originalFilename
+			return filename
 		}
 		
 		// Otherwise return a default fallback filename, which could be wrong, since
