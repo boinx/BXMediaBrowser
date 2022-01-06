@@ -55,7 +55,7 @@ public class ImageCell : ObjectCell
 			self.imageView?.image = NSImage(cgImage:thumbnail, size:size)
 		}
 	
-		self.textField?.stringValue = self.object.name
+		self.textField?.stringValue = object.name
 	}
 	
 	

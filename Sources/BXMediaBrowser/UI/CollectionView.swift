@@ -64,16 +64,23 @@ public struct CollectionView<Cell:ObjectCell> : NSViewRepresentable
 	{
 		let collectionView = NSCollectionView(frame:.zero)
 		
+		// Configure layout
+		
 		let identifier = self.cellType.identifier
 		let name = self.cellType.nibName
 		let bundle = Bundle.module
         let nib = NSNib(nibNamed:name, bundle:bundle)
-        collectionView.register(nib, forItemWithIdentifier:identifier)
         
+        collectionView.register(nib, forItemWithIdentifier:identifier)
         collectionView.collectionViewLayout = self.createLayout()
+        
+        // Configure selection handling
+        
 		collectionView.isSelectable = true
 		collectionView.allowsEmptySelection = true
 		collectionView.allowsMultipleSelection = true
+		
+		// Configure data source
 		
 		self.configureDataSource(for:collectionView, coordinator:context.coordinator)
 		
@@ -89,9 +96,11 @@ public struct CollectionView<Cell:ObjectCell> : NSViewRepresentable
 	}
 	
 	
+	// The selected Container has changed, pass it on to the Coordinator
+	
 	public func updateNSView(_ scrollView:NSScrollView, context:Context)
 	{
-		scrollView.drawsBackground = false
+//		scrollView.drawsBackground = false
 		context.coordinator.container = self.container
 	}
 	

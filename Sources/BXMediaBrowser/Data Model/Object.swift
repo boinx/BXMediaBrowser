@@ -63,6 +63,9 @@ open class Object : NSObject, ObservableObject, Identifiable
 	@Published public var useCount:Int = 0
 	
 
+//----------------------------------------------------------------------------------------------------------------------
+
+
 	public init(identifier:String, name:String, info:Any, loadThumbnailHandler:@escaping Object.Loader.LoadThumbnailHandler, loadMetadataHandler:@escaping Object.Loader.LoadMetadataHandler, downloadFileHandler:@escaping Object.Loader.DownloadFileHandler)
 	{
 		self.identifier = identifier
@@ -84,6 +87,9 @@ open class Object : NSObject, ObservableObject, Identifiable
 	{
 		identifier
 	}
+
+
+//----------------------------------------------------------------------------------------------------------------------
 
 
 	public func load(_ completionHandler:(()->Void)? = nil)
