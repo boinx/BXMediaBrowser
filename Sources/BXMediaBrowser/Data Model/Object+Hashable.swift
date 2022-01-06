@@ -23,13 +23,13 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 
-extension Object : Hashable
+extension Object 
 {
-	public func hash(into hasher:inout Hasher)
+	override public var hash:Int
 	{
-		hasher.combine(identifier)
+		identifier.hash
 	}
-	
+
 	public static func ==(lhs:Object, rhs:Object) -> Bool
 	{
 		lhs.identifier == rhs.identifier

@@ -29,7 +29,7 @@ import SwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-open class Object : ObservableObject, Identifiable
+open class Object : NSObject, ObservableObject, Identifiable
 {
 	/// This unique identifier is persistent across application launches and should be able to locate an object again
 	
