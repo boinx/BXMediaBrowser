@@ -101,6 +101,14 @@ open class AudioFile : FolderObject
 		
 		return metadata
 	}
+
+	
+	/// Returns the UTI of the promised image file
+	
+	override var localFileUTI:String
+	{
+		return kUTTypeAudio as String
+	}
 }
 
 

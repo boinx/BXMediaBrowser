@@ -110,6 +110,14 @@ open class VideoFile : FolderObject
 		
 		return metadata
 	}
+
+	
+	/// Returns the UTI of the promised image file
+	
+	override var localFileUTI:String
+	{
+		return kUTTypeMovie as String
+	}
 }
 
 

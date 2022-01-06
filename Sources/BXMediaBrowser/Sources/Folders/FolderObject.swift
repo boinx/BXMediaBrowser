@@ -103,6 +103,15 @@ open class FolderObject : Object
 		guard url.exists else { throw Error.downloadFileFailed }
 		return url
 	}
+
+
+	// Since the file is already local we can get its filename
+	
+	override var localFileName:String
+	{
+		guard let url = info as? URL else { return super.localFileName }
+		return url.lastPathComponent
+	}
 }
 
 
