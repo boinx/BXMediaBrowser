@@ -49,10 +49,11 @@ public class PhotosObject : Object
 	public init(with asset:PHAsset)
 	{
 		let identifier = "PhotosSource:\(asset.localIdentifier)"
+		let name = asset.originalFilename ?? ""
 		
 		super.init(
 			identifier: identifier,
-			name: "", 								// Photos framework does not offer names for PHAssets
+			name: name,
 			info: asset,
 			loadThumbnailHandler: Self.loadThumbnail,
 			loadMetadataHandler: Self.loadMetadata,
@@ -117,6 +118,7 @@ public class PhotosObject : Object
 		return metadata
 	}
 
+
 //					if let w = metadata["PixelWidth"] as? Int, let h = metadata["PixelHeight"] as? Int
 //					{
 //						Text("Size: \(w) x \(h) pixels")
@@ -137,15 +139,224 @@ public class PhotosObject : Object
 //							.opacity(0.5)
 //					}
 
+
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	/// Since we are already dealing with a local media file, this function simply returns the specified file URL
+	/// Returns the UTI of the promised local file
+	
+	override var localFileUTI:String
+	{
+		guard let asset = info as? PHAsset else { return "public.image" }
+		
+		// First try to get an exact UTI from the PHAsset, e.g. "public.jpeg" or "public.tiff"
+		
+		if let uti = asset.uti
+		{
+			return uti
+		}
+
+		// If that fails that simply try to map the mediatype to a more generic UTI
+		
+		if asset.mediaType == .video
+		{
+			return kUTTypeMovie as String
+		}
+		else if asset.mediaType == .audio
+		{
+			return kUTTypeAudio as String
+		}
+		
+		return kUTTypeImage as String
+	}
+
+
+	/// Returns the filename of the local file
+	
+	override var localFileName:String
+	{
+		// Try to get the original filename from the PHAsset
+		
+		if let asset = info as? PHAsset,
+		   let originalFilename = asset.originalFilename
+		{
+			return originalFilename
+		}
+		
+		// Otherwise return a default fallback filename, which could be wrong, since
+		// the image might not be a JPEG file, but could be HEIF, TIFF, PNG, etc...
+		
+		return "Image.jpg"
+	}
+	
+	
+	// Request the URL of an Object. Apple really doesn't want us to work with URLs of PHAssets, so we have to resort
+	// to various tricks. In case of an image we'll pretend to want edit an image file in-place to get the URL. In the
+	// case of a video, we'll pretend we want to play an AVURLAsset with an AVPlayer.
+	// Taken from https://stackoverflow.com/questions/38183613/how-to-get-url-for-a-phasset
 	
 	class func downloadFile(for identifier:String, info:Any) async throws -> URL
 	{
-		return URL(fileURLWithPath:"/")
+		guard let asset = info as? PHAsset else { throw Object.Error.downloadFileFailed }
+		
+		if asset.mediaType == .image
+		{
+			return try await self.downloadImageFile(for:asset)
+		}
+		else
+		{
+			return try await self.downloadVideoFile(for:asset)
+		}
 	}
+	
+	
+	// For image files request the full size image URL for "editing"
+
+	class func downloadImageFile(for asset:PHAsset) async throws -> URL
+	{
+//		var continueDownloading = true
+
+		let options = PHContentEditingInputRequestOptions()
+		options.isNetworkAccessAllowed = true
+		options.progressHandler =
+		{
+			progress,outStop in
+
+//			continueDownloading = iOSMediaBrowser.downloadProgressHandler?(self,progress,nil) ?? true
+//			if !continueDownloading { outStop.pointee = true }
+		}
+
+        return try await withCheckedThrowingContinuation
+        {
+			continuation in
+
+			asset.requestContentEditingInput(with:options)
+			{
+				(input:PHContentEditingInput?,_) in
+				
+				if let url = input?.fullSizeImageURL
+				{
+					continuation.resume(returning:url)
+				}
+				else
+				{
+					continuation.resume(throwing:Object.Error.downloadFileFailed)
+				}
+			}
+		}
+	}
+	
+	
+	// For video and audio request an AVURLAsset, which we can query for its URL
+
+	class func downloadVideoFile(for asset:PHAsset) async throws -> URL
+	{
+//		var continueDownloading = true
+	
+		let options = PHVideoRequestOptions()
+		options.version = .original
+		options.isNetworkAccessAllowed = true
+		options.progressHandler =
+		{
+			progress,error,outStop,_ in
+//			continueDownloading = iOSMediaBrowser.downloadProgressHandler?(self,progress,error) ?? true
+//			if !continueDownloading { outStop.pointee = true }
+		}
+			
+        return try await withCheckedThrowingContinuation
+        {
+			continuation in
+
+			PhotosSource.imageManager.requestAVAsset(forVideo:asset, options:options)
+			{
+				(avasset:AVAsset?,_,_) in
+
+				if let urlAsset = avasset as? AVURLAsset
+				{
+					let url = urlAsset.url
+					continuation.resume(returning:url)
+				}
+				else
+				{
+					continuation.resume(throwing:Object.Error.downloadFileFailed)
+				}
+			}
+		}
+	}
+	
+	
+/*
+
+	// Request the URL of an iOSMediaBrowserItem. Apple really doesn't want us to work with URLs of PHAssets,
+	// so we have to resort to various tricks. In case of an image we'll pretend to want edit an image file in-place
+	// to get the URL. In the case of a video, we'll pretend we want to play an AVURLAsset with an AVPlayer.
+	// Taken from https://stackoverflow.com/questions/38183613/how-to-get-url-for-a-phasset
+	
+	public func requestMediaFileURL(type:iOSMediaBrowserItemURLType = .file,completionHandler:@escaping (URL?,iOSMediaBrowserError?)->())
+	{
+		var continueDownloading = true
+		
+		// For image files request the full size image URL for "editing"
+
+		if self.asset.mediaType == .image
+		{
+			let options = PHContentEditingInputRequestOptions()
+			options.isNetworkAccessAllowed = true
+    		options.progressHandler =
+    		{
+    			progress,outStop in
+
+				continueDownloading = iOSMediaBrowser.downloadProgressHandler?(self,progress,nil) ?? true
+				if !continueDownloading { outStop.pointee = true }
+     		}
+
+			self.asset.requestContentEditingInput(with:options)
+			{
+				(input:PHContentEditingInput?,_) in
+				
+				if let url = input?.fullSizeImageURL
+				{
+					completionHandler(url,nil)
+				}
+				else
+				{
+					completionHandler(nil,.accessDenied)
+ 				}
+			}
+		}
+
+		// For video and audio request an AVURLAsset, which we can query for its URL
+
+		else
+		{
+			let options = PHVideoRequestOptions()
+			options.version = .original
+			options.isNetworkAccessAllowed = true
+			options.progressHandler =
+			{
+				progress,error,outStop,_ in
+				continueDownloading = iOSMediaBrowser.downloadProgressHandler?(self,progress,error) ?? true
+				if !continueDownloading { outStop.pointee = true }
+			}
+			
+			iOSMediaBrowserSourcePhotosApp.imageManager.requestAVAsset(forVideo:self.asset,options:options)
+			{
+				(avasset:AVAsset?,_,_) in
+
+				if let urlAsset = avasset as? AVURLAsset
+				{
+					completionHandler(urlAsset.url,nil)
+				}
+				else
+				{
+					completionHandler(nil,.accessDenied)
+				}
+			}
+		}
+	}
+
+*/
+	
 }
 
 
