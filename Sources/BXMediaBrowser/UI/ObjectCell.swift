@@ -39,6 +39,12 @@ public class ObjectCell : NSCollectionViewItem
 	{
 		didSet
 		{
+			let oldID = oldValue?.identifier
+			let newID = object?.identifier
+			print("ObjectCell")
+			print("    oldID = \(oldID)")
+			print("    newID = \(newID)")
+			
 			self.setup()
 			self.redraw()
 		}

@@ -61,7 +61,7 @@ extension Object
 
 		public func purge() async
 		{
-			Swift.print("Purging data for \(identifier)")
+//			Swift.print("Purging data for \(identifier)")
 			self._thumbnailImage = nil
 			self._metadata = nil
 		}
