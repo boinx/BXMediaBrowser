@@ -23,13 +23,25 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 
-extension Object 
+extension Object
 {
+	// Provide correct Hashable support based on identifier property. Please note that for NSObject subclasses
+	// overriding hash(into:) doesn'tseem to work.
+	
 	override public var hash:Int
 	{
 		identifier.hash
 	}
 
+	// Provide correct Equatable support based on identifier property. Please note that we have to override
+	// isEqual() - simply implementing the == operator doesn't seem to suffice.
+	
+	override public func isEqual(_ object:Any?) -> Bool
+	{
+		guard let other = object as? Object else { return false }
+		return self == other
+	}
+	
 	public static func ==(lhs:Object, rhs:Object) -> Bool
 	{
 		lhs.identifier == rhs.identifier
