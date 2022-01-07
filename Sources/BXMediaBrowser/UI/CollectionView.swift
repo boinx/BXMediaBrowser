@@ -36,6 +36,12 @@ import AppKit
 
 public struct CollectionView<Cell:ObjectCell> : NSViewRepresentable
 {
+	// This NSViewRepresentable doesn't return a single view, but a whole hierarchy:
+	//
+	// 	 NSScrollView
+	//	   NSClipView
+	//	     NSCollectionView
+	
 	public typealias NSViewType = NSScrollView
 	
 	/// The objects of this Container are displayed in the NSCollectionView
@@ -108,11 +114,11 @@ public struct CollectionView<Cell:ObjectCell> : NSViewRepresentable
 	
 	public func updateNSView(_ scrollView:NSScrollView, context:Context)
 	{
-//		scrollView.drawsBackground = false
 		context.coordinator.container = self.container
 	}
 	
-
+	/// Creates the Coordinator which provides persistant state to this view
+	
 	public func makeCoordinator() -> Coordinator
     {
         return Coordinator(container:container)
@@ -127,6 +133,8 @@ public struct CollectionView<Cell:ObjectCell> : NSViewRepresentable
 	
 extension CollectionView
 {
+	/// Creates a NSCollectionViewCompositionalLayout that looks similar to regular flow layout
+	
     private func createLayout() -> NSCollectionViewLayout
     {
 		let w:CGFloat = ImageCell.width
@@ -148,6 +156,9 @@ extension CollectionView
     }
 
 
+	/// Creates a NSCollectionViewDiffableDataSource. The Coordinator will is the owner of the datasource,
+	/// since it also has access to the data model.
+	
     private func configureDataSource(for collectionView:NSCollectionView, coordinator:Coordinator)
     {
 		// Setup the cell provider for the dataSource
@@ -177,6 +188,8 @@ extension CollectionView
 {
 	public class Coordinator : NSObject, NSCollectionViewDelegate
     {
+		/// The Container is the data model for the NSCollectionView
+		
 		@MainActor var container:Container? = nil
 		{
 			didSet { self.updateDataSource() }
@@ -186,15 +199,18 @@ extension CollectionView
 		
 		var dataSource: NSCollectionViewDiffableDataSource<Int,Object>! = nil
 		
+		/// References to internal subscriptions
 		
 		private var observers:[Any] = []
 		
+		/// Creates a Coordinator
 		
         init(container:Container?)
         {
 			self.container = container
         }
 		
+		/// Updates the dataSource when the data model has been changed
 		
 		@MainActor func updateDataSource()
 		{
@@ -207,33 +223,32 @@ extension CollectionView
 					.sink
 					{
 						[weak self] _ in self?._updateDataSource()
-//						DispatchQueue.main.async { self._updateDataSource() }
 					}
 			}
 			
 			self._updateDataSource()
 		}
 		
+		/// Updates the dataSource when the data model has been changed
 		
 		@MainActor func _updateDataSource()
 		{
 			let objects = self.container?.objects ?? []
-			let identifiers = objects.map { $0.identifier }
+			
 			var snapshot = NSDiffableDataSourceSnapshot<Int,Object>()
-
 			snapshot.appendSections([0])
 			snapshot.appendItems(objects, toSection:0)
+			
 			self.dataSource.apply(snapshot, animatingDifferences:true)
 		}
 
 
-		/// Creates a cell (NSCollectionViewItem) for the specified identifier
+		/// Returns a cell for the specified Object
 		
 		@MainActor func cell(for collectionView:NSCollectionView, indexPath:IndexPath, identifier:Object) -> NSCollectionViewItem?
 		{
-			// Get the object from the data model (by indexPath)
+			// Get the object - Please note that the dataSource use Object directly, because it is Hashable and Equatable
 			
-//			guard let object = self.container?.objects[indexPath.item] else { return nil }
 			let object = identifier
 			
 			// Reuse (or create) a cell
@@ -296,79 +311,3 @@ extension CollectionView
 
 #endif
 
-
-
-/*
-
-class GridWindowController: NSWindowController
-{
-    private var dataSource: NSCollectionViewDiffableDataSource<Section, Int>! = nil
-    @IBOutlet weak var collectionView: NSCollectionView!
-
-    enum Section
-    {
-        case main
-    }
-
-    override func windowDidLoad()
-    {
-        super.windowDidLoad()
-        configureHierarchy()
-        configureDataSource()
-    }
-
-    private func configureHierarchy()
-    {
-        let itemNib = NSNib(nibNamed: "TextItem", bundle: nil)
-        collectionView.register(itemNib, forItemWithIdentifier: TextItem.identifier)
-        collectionView.collectionViewLayout = createLayout()
-    }
-    
-    private func createLayout() -> NSCollectionViewLayout
-    {
-        let itemSize = NSCollectionLayoutSize(
-			widthDimension: .absolute(120),
-			heightDimension: .absolute(80))
-		
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-		let padding:CGFloat = 5
-		
-        item.contentInsets = NSDirectionalEdgeInsets(
-			top:padding,
-			leading:padding,
-			bottom:padding,
-			trailing:padding)
-
-        let groupSize = NSCollectionLayoutSize(
-			widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(80))
-            
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize:groupSize, subitems:[item])
-
-        let section = NSCollectionLayoutSection(group:group)
-        let layout = NSCollectionViewCompositionalLayout(section:section)
-        return layout
-    }
-
-    private func configureDataSource()
-    {
-        dataSource = NSCollectionViewDiffableDataSource<Section,Int>(collectionView: collectionView, itemProvider:
-        {
-			(collectionView:NSCollectionView, indexPath:IndexPath, identifier:Int) -> NSCollectionViewItem? in
-            let item = collectionView.makeItem(withIdentifier:TextItem.reuseIdentifier, for:indexPath)
-            item.textField?.stringValue = "\(identifier)"
-            return item
-        })
-
-        // initial data
-        
-        var snapshot = NSDiffableDataSourceSnapshot<Section,Int>()
-        snapshot.appendSections([Section.main])
-        snapshot.appendItems(Array(0..<94))
-        dataSource.apply(snapshot, animatingDifferences:false)
-    }
-}
-
-
-*/
