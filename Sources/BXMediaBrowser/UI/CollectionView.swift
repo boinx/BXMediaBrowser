@@ -151,16 +151,16 @@ extension CollectionView
     private func configureDataSource(for collectionView:NSCollectionView, coordinator:Coordinator)
     {
 		// Setup the cell provider for the dataSource
-        coordinator.dataSource = NSCollectionViewDiffableDataSource<Int,String>(collectionView:collectionView)
+		
+        coordinator.dataSource = NSCollectionViewDiffableDataSource<Int,Object>(collectionView:collectionView)
         {
-			[weak coordinator] (collectionView:NSCollectionView, indexPath:IndexPath, identifier:String) -> NSCollectionViewItem? in
-
+			[weak coordinator] (collectionView:NSCollectionView, indexPath:IndexPath, identifier:Object) -> NSCollectionViewItem? in
 			return coordinator?.cell(for:collectionView, indexPath:indexPath, identifier:identifier)
 		}
 
         // Set initial data
         
-        var snapshot = NSDiffableDataSourceSnapshot<Int,String>()
+        var snapshot = NSDiffableDataSourceSnapshot<Int,Object>()
         snapshot.appendSections([0])
         snapshot.appendItems([], toSection:0)
         coordinator.dataSource.apply(snapshot, animatingDifferences:false)
@@ -182,7 +182,10 @@ extension CollectionView
 			didSet { self.updateDataSource() }
 		}
 		
-		var dataSource: NSCollectionViewDiffableDataSource<Int,String>! = nil
+		/// The dataSource accesses the Objects of the Container
+		
+		var dataSource: NSCollectionViewDiffableDataSource<Int,Object>! = nil
+		
 		
 		private var observers:[Any] = []
 		
@@ -214,22 +217,23 @@ extension CollectionView
 		{
 			let objects = self.container?.objects ?? []
 			let identifiers = objects.map { $0.identifier }
-			var snapshot = NSDiffableDataSourceSnapshot<Int,String>()
+			var snapshot = NSDiffableDataSourceSnapshot<Int,Object>()
 
 			snapshot.appendSections([0])
-			snapshot.appendItems(identifiers, toSection:0)
+			snapshot.appendItems(objects, toSection:0)
 			self.dataSource.apply(snapshot, animatingDifferences:true)
 		}
 
 
 		/// Creates a cell (NSCollectionViewItem) for the specified identifier
 		
-		@MainActor func cell(for collectionView:NSCollectionView, indexPath:IndexPath, identifier:String) -> NSCollectionViewItem?
+		@MainActor func cell(for collectionView:NSCollectionView, indexPath:IndexPath, identifier:Object) -> NSCollectionViewItem?
 		{
 			// Get the object from the data model (by indexPath)
 			
-			guard let object = self.container?.objects[indexPath.item] else { return nil }
-
+//			guard let object = self.container?.objects[indexPath.item] else { return nil }
+			let object = identifier
+			
 			// Reuse (or create) a cell
 			
 			let item = collectionView.makeItem(withIdentifier:ImageCell.identifier, for:indexPath)
