@@ -31,7 +31,7 @@ import AppKit
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public class ImageCell : ObjectCell
+public class ImageThumbnailCell : ObjectCell
 {
 	static let width:CGFloat = 120
 	static let height:CGFloat = 96

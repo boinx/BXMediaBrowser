@@ -5,7 +5,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="ImageCell" customModule="BXMediaBrowser">
+        <customObject id="-2" userLabel="File's Owner" customClass="ImageThumbnailCell" customModule="BXMediaBrowser">
             <connections>
                 <outlet property="imageView" destination="BQT-g2-Zqo" id="WCB-FM-pe3"/>
                 <outlet property="textField" destination="Rdh-yM-tEI" id="jwC-v4-uzl"/>

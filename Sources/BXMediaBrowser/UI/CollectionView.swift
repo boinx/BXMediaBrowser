@@ -137,9 +137,9 @@ extension CollectionView
 	
     private func createLayout() -> NSCollectionViewLayout
     {
-		let w:CGFloat = ImageCell.width
-		let h:CGFloat = ImageCell.height
-		let d:CGFloat = ImageCell.spacing
+		let w:CGFloat = ImageThumbnailCell.width
+		let h:CGFloat = ImageThumbnailCell.height
+		let d:CGFloat = ImageThumbnailCell.spacing
 
         let itemSize = NSCollectionLayoutSize(widthDimension:.absolute(w), heightDimension:.absolute(h))
         let item = NSCollectionLayoutItem(layoutSize:itemSize)
@@ -253,11 +253,11 @@ extension CollectionView
 			
 			// Reuse (or create) a cell
 			
-			let item = collectionView.makeItem(withIdentifier:ImageCell.identifier, for:indexPath)
+			let item = collectionView.makeItem(withIdentifier:ImageThumbnailCell.identifier, for:indexPath)
 			
 			// Configure the cell with the model object
 			
-			if let cell = item as? ImageCell
+			if let cell = item as? ImageThumbnailCell
 			{
 				cell.object = object
 			}
