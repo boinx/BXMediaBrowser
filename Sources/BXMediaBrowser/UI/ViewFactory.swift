@@ -79,6 +79,33 @@ public struct DefaultViewFactory : ViewFactory
 			LibraryView(with:library)
 		}
 	}
+	
+	/// Returns the type of ObjectCell subclass to be used for the specified Container
+	
+	static public func objectCellType(for container:Container?) -> ObjectCell.Type
+	{
+		// For some Container subclasses we want custom ObjectCells
+		
+		if let container = container
+		{
+			if container is VideoFolderContainer
+			{
+	//			return ImageThumbnailCell.self
+			}
+			else if container is AudioFolderContainer
+			{
+				return AudioCell.self
+			}
+			else if container is PhotosContainer
+			{
+	//			return ImageThumbnailCell.self
+			}
+		}
+		
+		// Default is a ImageThumbnailCell
+		
+		return ImageThumbnailCell.self
+	}
 }
 
 
