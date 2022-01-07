@@ -202,11 +202,13 @@ extension CollectionView
 			
 			if let container = self.container
 			{
-				self.observers += container.$objects.sink
-				{
-					_ in
-					DispatchQueue.main.async { self._updateDataSource() }
-				}
+				self.observers += container.$objects
+					.debounce(for:0.05, scheduler:RunLoop.main)
+					.sink
+					{
+						[weak self] _ in self?._updateDataSource()
+//						DispatchQueue.main.async { self._updateDataSource() }
+					}
 			}
 			
 			self._updateDataSource()
