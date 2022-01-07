@@ -37,6 +37,10 @@ public protocol ViewFactory
 	/// Returns the View for the specifed model object
 	
 	func build(with model:Any) -> AnyView
+	
+	/// Returns the type of ObjectCell subclass to be used for the specified Container
+
+	func objectCellType(for container:Container?) -> ObjectCell.Type
 }
 
 
@@ -80,9 +84,20 @@ public struct DefaultViewFactory : ViewFactory
 		}
 	}
 	
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
 	/// Returns the type of ObjectCell subclass to be used for the specified Container
 	
-	static public func objectCellType(for container:Container?) -> ObjectCell.Type
+	public func objectCellType(for container:Container?) -> ObjectCell.Type
+	{
+		Self.defaultObjectCellType(for:container)
+	}
+
+	/// Returns the type of ObjectCell subclass to be used for the specified Container
+	
+	public static func defaultObjectCellType(for container:Container?) -> ObjectCell.Type
 	{
 		// For some Container subclasses we want custom ObjectCells
 		
