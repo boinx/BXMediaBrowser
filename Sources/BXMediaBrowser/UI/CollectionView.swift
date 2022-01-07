@@ -121,7 +121,7 @@ public struct CollectionView<Cell:ObjectCell> : NSViewRepresentable
 	
 	public func makeCoordinator() -> Coordinator
     {
-        return Coordinator(container:container)
+        return Coordinator(container:container, cellType:cellType)
     }
 }
 
@@ -137,9 +137,9 @@ extension CollectionView
 	
     private func createLayout() -> NSCollectionViewLayout
     {
-		let w:CGFloat = ImageThumbnailCell.width
-		let h:CGFloat = ImageThumbnailCell.height
-		let d:CGFloat = ImageThumbnailCell.spacing
+		let w:CGFloat = cellType.width
+		let h:CGFloat = cellType.height
+		let d:CGFloat = cellType.spacing
 
         let itemSize = NSCollectionLayoutSize(widthDimension:.absolute(w), heightDimension:.absolute(h))
         let item = NSCollectionLayoutItem(layoutSize:itemSize)
@@ -195,6 +195,10 @@ extension CollectionView
 			didSet { self.updateDataSource() }
 		}
 		
+		/// The class type of the Object cell to be displayed in this NSCollectionView
+	
+		private let cellType:Cell.Type
+	
 		/// The dataSource accesses the Objects of the Container
 		
 		var dataSource: NSCollectionViewDiffableDataSource<Int,Object>! = nil
@@ -205,9 +209,10 @@ extension CollectionView
 		
 		/// Creates a Coordinator
 		
-        init(container:Container?)
+        init(container:Container?, cellType:Cell.Type)
         {
 			self.container = container
+			self.cellType = cellType
         }
 		
 		/// Updates the dataSource when the data model has been changed
@@ -253,11 +258,11 @@ extension CollectionView
 			
 			// Reuse (or create) a cell
 			
-			let item = collectionView.makeItem(withIdentifier:ImageThumbnailCell.identifier, for:indexPath)
+			let item = collectionView.makeItem(withIdentifier:cellType.identifier, for:indexPath)
 			
 			// Configure the cell with the model object
 			
-			if let cell = item as? ImageThumbnailCell
+			if let cell = item as? ObjectCell
 			{
 				cell.object = object
 			}

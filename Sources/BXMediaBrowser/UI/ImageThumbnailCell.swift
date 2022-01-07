@@ -33,9 +33,17 @@ import AppKit
 
 public class ImageThumbnailCell : ObjectCell
 {
-	static let width:CGFloat = 120
-	static let height:CGFloat = 96
-	static let spacing:CGFloat = 10
+	/// The width of this cell
+	
+	override class var width:CGFloat { 120 }
+	
+	/// The height of this cell
+	
+	override class var height:CGFloat { 96 }
+	
+	/// Spacing between cells (both horizontal and vertical)
+	
+	override class var spacing:CGFloat { 10 }
 
 
 //----------------------------------------------------------------------------------------------------------------------

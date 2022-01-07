@@ -39,12 +39,6 @@ public class ObjectCell : NSCollectionViewItem
 	{
 		didSet
 		{
-			let oldID = oldValue?.identifier
-			let newID = object?.identifier
-			print("ObjectCell")
-			print("    oldID = \(oldID)")
-			print("    newID = \(newID)")
-			
 			self.setup()
 			self.redraw()
 		}
@@ -65,6 +59,22 @@ public class ObjectCell : NSCollectionViewItem
     	NSUserInterfaceItemIdentifier("BXMediaBrowser.\(Self.self)")
 	}
 	
+	/// The width of this cell
+	
+	class var width:CGFloat { 120 }
+	
+	/// The height of this cell
+	
+	class var height:CGFloat { 96 }
+	
+	/// Spacing between cells (both horizontal and vertical)
+	
+	class var spacing:CGFloat { 10 }
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
 	/// The nib name should be the same as the class name
 	
 	class var nibName:NSNib.Name
