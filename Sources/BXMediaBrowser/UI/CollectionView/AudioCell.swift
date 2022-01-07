@@ -51,7 +51,7 @@ public class AudioCell : ObjectCell
 	
 	override class var width:CGFloat { 0 } // 0 means full width of view
 	
-	override class var height:CGFloat { 54 }
+	override class var height:CGFloat { 46 }
 	
 	override class var spacing:CGFloat { 0 }
 
@@ -62,10 +62,41 @@ public class AudioCell : ObjectCell
 	override func redraw()
 	{
 		guard let object = object else { return }
+		guard let metadata = object.metadata else { return }
+		
+		let title = metadata[kMDItemTitle as String] as? String
+		let authors = metadata[kMDItemTitle as String] as? [String]
+		let composer = metadata[kMDItemComposer as String] as? String
+		let album = metadata[kMDItemAlbum as String] as? String
+		let genre = metadata[kMDItemMusicalGenre as String] as? String
+		let duration = metadata[kMDItemDurationSeconds as String] as? Double
 
-		self.nameField?.stringValue = object.name
-		self.metadataField?.stringValue = object.identifier
-		self.durationField?.stringValue = "0:00:00"
+		let name = title ?? object.name
+		var info = ""
+		
+		if let artist = authors?.first ?? composer
+		{
+			info += artist
+		}
+
+		if let album = album
+		{
+			if !info.isEmpty { info += ", " }
+			info += album
+		}
+
+		if let genre = genre
+		{
+			if !info.isEmpty { info += ", " }
+			info += genre
+		}
+
+		self.nameField?.stringValue = name
+		self.metadataField?.stringValue = info
+		self.durationField?.doubleValue = duration ?? 0.0
+		
+		self.nameField?.lineBreakMode = .byTruncatingTail
+		self.metadataField?.lineBreakMode = .byTruncatingTail
 	}
 	
 	

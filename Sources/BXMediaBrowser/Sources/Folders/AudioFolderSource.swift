@@ -89,15 +89,12 @@ open class AudioFile : FolderObject
 		
 		var metadata = try await super.loadMetadata(for:identifier, info:info)
 		
-//		if let source = CGImageSourceCreateWithURL(url as CFURL,nil),
-//		   let properties = CGImageSourceCopyPropertiesAtIndex(source,0,nil),
-//		   let dict = properties as? [String:Any]
-//		{
-//			for (key,value) in dict
-//			{
-//				metadata[key] = value
-//			}
-//		}
+		let audioInfo = url.audioMetadata
+		
+		for (key,value) in audioInfo
+		{
+			metadata[key as String] = value
+		}
 		
 		return metadata
 	}
