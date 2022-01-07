@@ -33,15 +33,14 @@ import AppKit
 
 public class ImageThumbnailCell : ObjectCell
 {
-	/// The width of this cell
+    override class var identifier:NSUserInterfaceItemIdentifier
+    {
+    	NSUserInterfaceItemIdentifier("BXMediaBrowser.ImageThumbnailCell")
+	}
 	
 	override class var width:CGFloat { 120 }
 	
-	/// The height of this cell
-	
 	override class var height:CGFloat { 96 }
-	
-	/// Spacing between cells (both horizontal and vertical)
 	
 	override class var spacing:CGFloat { 10 }
 
@@ -84,10 +83,7 @@ public class ImageThumbnailCell : ObjectCell
 
     private func updateHighlight()
     {
-        if !isViewLoaded
-        {
-            return
-        }
+        guard isViewLoaded else { return }
 
 		let isHilited = self.isSelected	|| self.highlightState != .none
 

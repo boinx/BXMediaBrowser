@@ -39,8 +39,8 @@ public struct CollectionView<Cell:ObjectCell> : NSViewRepresentable
 	// This NSViewRepresentable doesn't return a single view, but a whole hierarchy:
 	//
 	// 	 NSScrollView
-	//	   NSClipView
-	//	     NSCollectionView
+	//	    NSClipView
+	//	       NSCollectionView
 	
 	public typealias NSViewType = NSScrollView
 	
@@ -115,6 +115,13 @@ public struct CollectionView<Cell:ObjectCell> : NSViewRepresentable
 	public func updateNSView(_ scrollView:NSScrollView, context:Context)
 	{
 		context.coordinator.container = self.container
+		context.coordinator.cellType = self.cellType
+		
+		if let collectionView = scrollView.documentView as? NSCollectionView
+		{
+			collectionView.collectionViewLayout = self.createLayout()
+			collectionView.reloadData()
+		}
 	}
 	
 	/// Creates the Coordinator which provides persistant state to this view
@@ -140,11 +147,13 @@ extension CollectionView
 		let w:CGFloat = cellType.width
 		let h:CGFloat = cellType.height
 		let d:CGFloat = cellType.spacing
-
-        let itemSize = NSCollectionLayoutSize(widthDimension:.absolute(w), heightDimension:.absolute(h))
+		let width:NSCollectionLayoutDimension = w>0 ? .absolute(w) : .fractionalWidth(1.0)
+		let height:NSCollectionLayoutDimension = .absolute(h)
+		
+        let itemSize = NSCollectionLayoutSize(widthDimension:width, heightDimension:height)
         let item = NSCollectionLayoutItem(layoutSize:itemSize)
 
-        let groupSize = NSCollectionLayoutSize(widthDimension:.fractionalWidth(1.0), heightDimension:.absolute(h))
+        let groupSize = NSCollectionLayoutSize(widthDimension:.fractionalWidth(1.0), heightDimension:height)
         let group = NSCollectionLayoutGroup.horizontal(layoutSize:groupSize, subitems:[item])
 		group.interItemSpacing = .fixed(d)
 		
@@ -197,7 +206,7 @@ extension CollectionView
 		
 		/// The class type of the Object cell to be displayed in this NSCollectionView
 	
-		private let cellType:Cell.Type
+		@MainActor var cellType:Cell.Type
 	
 		/// The dataSource accesses the Objects of the Container
 		
