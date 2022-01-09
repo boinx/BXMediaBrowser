@@ -97,6 +97,14 @@ public class AudioCell : ObjectCell
 		
 		self.nameField?.lineBreakMode = .byTruncatingTail
 		self.metadataField?.lineBreakMode = .byTruncatingTail
+
+		if let thumbnail = object.thumbnailImage
+		{
+			let w = thumbnail.width
+			let h = thumbnail.height
+			let size = CGSize(width:w, height:h)
+			self.imageView?.image = NSImage(cgImage:thumbnail, size:size)
+		}
 	}
 	
 	
