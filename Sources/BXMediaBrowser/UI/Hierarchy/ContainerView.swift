@@ -125,7 +125,7 @@ public struct ContainerView : View
 						viewFactory.build(with:$0)
 					}
 				}
-				.padding(.leading,20)
+				.padding(.leading,16)
 			})
 			.id(container.identifier)
 			
