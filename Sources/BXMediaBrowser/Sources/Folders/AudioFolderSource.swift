@@ -104,7 +104,9 @@ open class AudioFile : FolderObject
 	
 	override var localFileUTI:String
 	{
-		return kUTTypeAudio as String
+		let audioUTI = kUTTypeAudio as String
+		guard let url = info as? URL else { return audioUTI }
+		return url.uti ?? audioUTI
 	}
 }
 
