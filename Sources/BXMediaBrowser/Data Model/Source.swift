@@ -84,7 +84,7 @@ open class Source : ObservableObject, Identifiable, StateSaving
 	
 	public func load(with sourceState:[String:Any]? = nil)
 	{
-		Swift.print("Loading \"\(name)\" - \(identifier)")
+//		Swift.print("Loading \"\(name)\" - \(identifier)")
 
 		self.loadTask?.cancel()
 		self.loadTask = nil

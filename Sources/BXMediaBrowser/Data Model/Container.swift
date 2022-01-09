@@ -173,7 +173,7 @@ open class Container : ObservableObject, Identifiable, StateSaving
 	
 	public func load(with containerState:[String:Any]? = nil)
 	{
-		Swift.print("Loading \"\(name)\" - \(identifier)")
+//		Swift.print("Loading \"\(name)\" - \(identifier)")
 
 		self.loadTask?.cancel()
 		self.loadTask = nil
