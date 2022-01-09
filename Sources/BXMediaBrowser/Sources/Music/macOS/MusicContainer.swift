@@ -162,7 +162,7 @@ public class MusicContainer : Container
 	}
 	
 	
-	class func albums(with mediaItems:[ITLibMediaItem]) -> Set<ITLibAlbum>
+	class func albums(with mediaItems:[ITLibMediaItem]) -> [ITLibAlbum]
 	{
 		var albums = Set<ITLibAlbum>()
 		
@@ -171,11 +171,11 @@ public class MusicContainer : Container
 			albums.insert(mediaItem.album)
 		}
 		
-		return albums
+		return albums.sorted { ($0.title ?? "") < ($1.title ?? "") }
 	}
 	
 	
-	class func artists(with mediaItems:[ITLibMediaItem]) -> Set<ITLibArtist>
+	class func artists(with mediaItems:[ITLibMediaItem]) -> [ITLibArtist]
 	{
 		var artists = Set<ITLibArtist>()
 		
@@ -185,7 +185,7 @@ public class MusicContainer : Container
 			artists.insert(artist)
 		}
 		
-		return artists
+		return artists.sorted { ($0.name ?? "") < ($1.name ?? "") }
 	}
 	
 	
