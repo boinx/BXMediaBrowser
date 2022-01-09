@@ -111,6 +111,10 @@ public struct DefaultViewFactory : ViewFactory
 			{
 				return AudioCell.self
 			}
+			else if container is MusicContainer
+			{
+				return AudioCell.self
+			}
 			else if container is PhotosContainer
 			{
 	//			return ImageThumbnailCell.self
