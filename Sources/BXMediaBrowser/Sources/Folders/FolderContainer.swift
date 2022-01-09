@@ -33,13 +33,13 @@ import UniformTypeIdentifiers
 
 open class FolderContainer : Container
 {
-	let observer:FolderObserver
+	let folderObserver:FolderObserver
 	
 	/// Creates a new Container for the folder at the specified URL
 	
 	public required init(url:URL, removeHandler:((Container)->Void)? = nil)
 	{
-		self.observer = FolderObserver(url:url)
+		self.folderObserver = FolderObserver(url:url)
 		
 		super.init(
 			identifier: FolderSource.identifier(for:url),
@@ -48,12 +48,12 @@ open class FolderContainer : Container
 			removeHandler: removeHandler,
 			loadHandler: Self.loadContents)
 			
-		self.observer.folderDidChange =
+		self.folderObserver.folderDidChange =
 		{
 			[weak self] in self?.load()
 		}
 		
-		self.observer.resume()
+		self.folderObserver.resume()
 	}
 
 
