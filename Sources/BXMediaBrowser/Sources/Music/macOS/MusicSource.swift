@@ -41,14 +41,17 @@ public class MusicSource : Source, AccessControl
 	
 	var folderObserver:FolderObserver? = nil
 	
+	let allowedMediaKinds:[ITLibMediaItemMediaKind]
+	
 	
 //----------------------------------------------------------------------------------------------------------------------
 
 
 	/// Creates a new Source for local file system directories
 	
-	public init()
+	public init(allowedMediaKinds:[ITLibMediaItemMediaKind] = [.kindSong])
 	{
+		self.allowedMediaKinds = allowedMediaKinds
 		self.library = try? ITLibrary(apiVersion:"1", options:.lazyLoadData)
 		
 		super.init(identifier:Self.identifier, name:"Music")
@@ -112,7 +115,10 @@ public class MusicSource : Source, AccessControl
 		var containers:[Container] = []
 		
 		guard let library = self.library else { return containers }
+		
 		let mediaItems = library.allMediaItems
+			.filter { self.allowedMediaKinds.contains($0.mediaKind) }
+
 		let playlists = library.allPlaylists
 		
 		containers += MusicContainer(identifier:"MusicSource:Songs", kind:.library(mediaItems:mediaItems), icon:"music.note", name:"Songs")
