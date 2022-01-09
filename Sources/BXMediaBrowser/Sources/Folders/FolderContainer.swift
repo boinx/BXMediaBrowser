@@ -77,6 +77,8 @@ open class FolderContainer : Container
 			.contentsOfDirectory(atPath:folderURL.path)
 			.sorted(using:.localizedStandard)
 		
+		let filterString = filter.lowercased()
+		
 		// Go through all items
 		
 		for filename in filenames
@@ -89,9 +91,9 @@ open class FolderContainer : Container
 			guard url.isReadable else { continue }
 			guard !url.isHidden else { continue }
 			
-			if !filter.isEmpty
+			if !filterString.isEmpty
 			{
-				guard url.lastPathComponent.contains(filter) else { continue }
+				guard url.lastPathComponent.lowercased().contains(filterString) else { continue }
 			}
 			
 			// For a directory, create a sub-container
