@@ -69,7 +69,7 @@ public class AudioCell : ObjectCell
 		let composer = metadata[kMDItemComposer as String] as? String
 		let album = metadata[kMDItemAlbum as String] as? String
 		let genre = metadata[kMDItemMusicalGenre as String] as? String
-		let duration = metadata[kMDItemDurationSeconds as String] as? Double
+		let duration = metadata[kMDItemDurationSeconds as String] as? Double ?? 0.0
 
 		let name = title ?? object.name
 		var info = ""
@@ -93,7 +93,7 @@ public class AudioCell : ObjectCell
 
 		self.nameField?.stringValue = name
 		self.metadataField?.stringValue = info
-		self.durationField?.doubleValue = duration ?? 0.0
+		self.durationField?.stringValue = duration.shortTimecodeString()
 		
 		self.nameField?.lineBreakMode = .byTruncatingTail
 		self.metadataField?.lineBreakMode = .byTruncatingTail
