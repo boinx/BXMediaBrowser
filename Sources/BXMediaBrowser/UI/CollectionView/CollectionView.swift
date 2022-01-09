@@ -114,14 +114,11 @@ public struct CollectionView<Cell:ObjectCell> : NSViewRepresentable
 	
 	public func updateNSView(_ scrollView:NSScrollView, context:Context)
 	{
-		context.coordinator.container = self.container
-		context.coordinator.cellType = self.cellType
-		
-		if let collectionView = scrollView.documentView as? NSCollectionView
-		{
-			collectionView.collectionViewLayout = self.createLayout()
-			collectionView.reloadData()
-		}
+		guard let collectionView = scrollView.documentView as? NSCollectionView else { return }
+		collectionView.collectionViewLayout = self.createLayout()
+
+		context.coordinator.cellType = self.cellType 	// Must update this first
+		context.coordinator.container = self.container	// because this line already triggers reload of NSCollectionView
 	}
 	
 	/// Creates the Coordinator which provides persistant state to this view
@@ -201,7 +198,11 @@ extension CollectionView
 		
 		@MainActor var container:Container? = nil
 		{
-			didSet { self.updateDataSource() }
+			didSet
+			{
+				self.shouldAnimate = false
+				self.updateDataSource()
+			}
 		}
 		
 		/// The class type of the Object cell to be displayed in this NSCollectionView
@@ -211,6 +212,8 @@ extension CollectionView
 		/// The dataSource accesses the Objects of the Container
 		
 		var dataSource: NSCollectionViewDiffableDataSource<Int,Object>! = nil
+		
+		private var shouldAnimate = false
 		
 		/// References to internal subscriptions
 		
@@ -236,7 +239,9 @@ extension CollectionView
 					.debounce(for:0.05, scheduler:RunLoop.main)
 					.sink
 					{
-						[weak self] _ in self?._updateDataSource()
+						[weak self] _ in
+						self?.shouldAnimate = true
+						self?._updateDataSource()
 					}
 			}
 			
@@ -253,7 +258,7 @@ extension CollectionView
 			snapshot.appendSections([0])
 			snapshot.appendItems(objects, toSection:0)
 			
-			self.dataSource.apply(snapshot, animatingDifferences:true)
+			self.dataSource.apply(snapshot, animatingDifferences:shouldAnimate)
 		}
 
 
