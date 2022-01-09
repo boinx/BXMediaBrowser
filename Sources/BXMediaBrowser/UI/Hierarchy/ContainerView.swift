@@ -61,9 +61,20 @@ public struct ContainerView : View
 				
 				HStack(spacing:4)
 				{
-					BXDisclosureButton("", isExpanded:self.$container.isExpanded)
-					Image(systemName:icon)
+					if container.canExpand
+					{
+						BXDisclosureButton("", isExpanded:self.$container.isExpanded)
+							.frame(width:10)
+					}
+					else
+					{
+						Spacer()
+							.frame(width:10)
+					}
 					
+					Image(systemName:icon)
+						.frame(minWidth:16, alignment:.center)
+						
 					Text(container.name)
 						.lineLimit(1)
 						.truncationMode(.tail)
