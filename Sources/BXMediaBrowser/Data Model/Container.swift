@@ -330,7 +330,7 @@ open class Container : ObservableObject, Identifiable, StateSaving
 	/// Subclasses can override this read-only property if the know that a container can never be expanded,
 	/// because it will never have any sub-containers.
 	
-	var canExpand:Bool { true }
+	@MainActor var canExpand:Bool { true }
 }
 
 

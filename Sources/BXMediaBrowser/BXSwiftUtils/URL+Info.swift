@@ -160,6 +160,23 @@ extension URL
 		}
 	}
 	
+	/// Checks if the URL is a directory with subfolders
+	
+	public var hasSubfolders: Bool
+	{
+		guard self.isDirectory else { return false }
+
+		let filenames = (try? FileManager.default.contentsOfDirectory(atPath:self.path)) ?? []
+		
+		for filename in filenames
+		{
+			let url = self.appendingPathComponent(filename)
+			if url.isDirectory { return true }
+		}
+		
+		return false
+	}
+	
 	/// Checks if the URL points to a package directory
 	
 	public var isPackage: Bool

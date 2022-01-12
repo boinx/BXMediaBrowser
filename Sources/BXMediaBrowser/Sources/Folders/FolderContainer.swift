@@ -57,6 +57,16 @@ open class FolderContainer : Container
 	}
 
 
+	// This container can be expanded if it has subfolders
+	
+	override var canExpand: Bool
+	{
+		if self.isLoaded { return !self.containers.isEmpty }
+		guard let folderURL = info as? URL else { return false }
+		return folderURL.hasSubfolders
+	}
+	
+	
 	/// Loads the (shallow) contents of this folder
 	
 	class func loadContents(for identifier:String, info:Any, filter:String) async throws -> Loader.Contents
