@@ -24,6 +24,7 @@
 
 
 import Photos
+import AppKit
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -36,6 +37,9 @@ public class PhotosSource : Source, AccessControl
 	/// might be stored in a preferences file or user documents.
 	
 	static let identifier = "PhotosSource:"
+	
+	static let icon = NSImage.icon(for:"com.apple.Photos")?.CGImage
+	
 	
 	/// The controller that takes care of loading media assets
 	
@@ -52,7 +56,7 @@ public class PhotosSource : Source, AccessControl
 	
 	public init()
 	{
-		super.init(identifier:Self.identifier, name:"Photos")
+		super.init(identifier:Self.identifier, icon:Self.icon, name:"Photos")
 		self.loader = Loader(identifier:self.identifier, loadHandler:self.loadContainers)
 
 		// Make sure we can detect changes to the library

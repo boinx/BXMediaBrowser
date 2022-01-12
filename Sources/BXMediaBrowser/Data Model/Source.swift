@@ -32,6 +32,7 @@ import SwiftUI
 open class Source : ObservableObject, Identifiable, StateSaving
 {
 	public let identifier:String
+	public let icon:CGImage?
 	public let name:String
 	public var loader:Loader! = nil
 	
@@ -63,9 +64,10 @@ open class Source : ObservableObject, Identifiable, StateSaving
 	
 	/// Creates a Source with the specified identifier and name
 	
-	public init(identifier:String , name:String)
+	public init(identifier:String, icon:CGImage? = nil, name:String)
 	{
 		self.identifier = identifier
+		self.icon = icon
 		self.name = name
 	}
 
