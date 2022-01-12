@@ -23,7 +23,10 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 
+#if os(macOS)
+
 import iTunesLibrary
+import UniformTypeIdentifiers
 import QuickLook
 import AppKit
 
@@ -63,25 +66,40 @@ public class MusicObject : Object
 	
 	class func loadThumbnail(for identifier:String, info:Any) async throws -> CGImage
 	{
-		guard let item = info as? ITLibMediaItem else { throw Error.notFound }
-		guard let url = item.location else { throw Error.notFound }
-
-		let uti = url.uti ?? ""
-		let image = NSWorkspace.shared.icon(forFile:url.path)
-		guard let thumbnail = image.cgImage(forProposedRect:nil, context:nil, hints:nil) else { throw Error.loadThumbnailFailed }
-		return thumbnail
+		guard let item = info as? ITLibMediaItem else {
+			throw Error.notFound
 		
-//    	let size = CGSize(width:64, height:64)
-//        let options = [ kQLThumbnailOptionIconModeKey : kCFBooleanFalse ]
-//
-//        let ref = QLThumbnailImageCreate(
-//			kCFAllocatorDefault,
-//			url as CFURL,
-//			size,
-//			options as CFDictionary)
-//
-//        guard let thumbnail = ref?.takeUnretainedValue() else { throw Error.loadThumbnailFailed }
-//		return thumbnail
+		}
+		
+		let url = item.location
+		let uti = url?.uti ?? "public.mp3"
+		
+		if #available(macOS 11, *)
+		{
+			if let type = UTType(uti)
+			{
+//				let kind = item.kind
+				let image = NSWorkspace.shared.icon(for:type)
+				guard let thumbnail = image.cgImage(forProposedRect:nil, context:nil, hints:nil) else {
+				throw Error.loadThumbnailFailed
+				
+				}
+				return thumbnail
+			}
+		}
+		
+		guard let url = url else {
+			throw Error.notFound
+		
+		}
+		
+		let image = NSWorkspace.shared.icon(forFile:url.path)
+		guard let thumbnail = image.cgImage(forProposedRect:nil, context:nil, hints:nil) else
+		{
+		throw Error.loadThumbnailFailed
+		
+		}
+		return thumbnail
 	}
 
 
@@ -150,3 +168,4 @@ public class MusicObject : Object
 //----------------------------------------------------------------------------------------------------------------------
 
 
+#endif

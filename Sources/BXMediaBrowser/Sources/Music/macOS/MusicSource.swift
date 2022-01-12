@@ -23,7 +23,10 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 
+#if os(macOS)
+
 import iTunesLibrary
+import AppKit
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -37,12 +40,18 @@ public class MusicSource : Source, AccessControl
 	
 	static let identifier = "MusicSource:"
 		
+	static let icon = NSImage.icon(for:"com.apple.Music")?.CGImage
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
 	let library:ITLibrary?
 	
 	var folderObserver:FolderObserver? = nil
 	
 	let allowedMediaKinds:[ITLibMediaItemMediaKind]
-	
+		
 	
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -52,9 +61,9 @@ public class MusicSource : Source, AccessControl
 	public init(allowedMediaKinds:[ITLibMediaItemMediaKind] = [.kindSong])
 	{
 		self.allowedMediaKinds = allowedMediaKinds
-		self.library = try? ITLibrary(apiVersion:"1", options:.lazyLoadData)
+		self.library = try? ITLibrary(apiVersion:"1.1", options:.lazyLoadData)
 		
-		super.init(identifier:Self.identifier, name:"Music")
+		super.init(identifier:Self.identifier, icon:Self.icon, name:"Music")
 		
 		self.loader = Loader(identifier:self.identifier, loadHandler:self.loadContainers)
 
@@ -115,19 +124,17 @@ public class MusicSource : Source, AccessControl
 		var containers:[Container] = []
 		
 		guard let library = self.library else { return containers }
-		
-		let mediaItems = library.allMediaItems
-			.filter { self.allowedMediaKinds.contains($0.mediaKind) }
+		let allMediaItems = library.allMediaItems.filter { self.allowedMediaKinds.contains($0.mediaKind) }
+		let allPlaylists = library.allPlaylists
+		let topLevelPlaylists = allPlaylists.filter { $0.parentID == nil }
 
-		let playlists = library.allPlaylists
+		containers += MusicContainer(identifier:"MusicSource:Songs", kind:.library(allMediaItems:allMediaItems), icon:"music.note", name:"Songs")
 		
-		containers += MusicContainer(identifier:"MusicSource:Songs", kind:.library(mediaItems:mediaItems), icon:"music.note", name:"Songs")
-		
-		containers += MusicContainer(identifier:"MusicSource:Albums", kind:.albumFolder(mediaItems:mediaItems), icon:"square.stack", name:"Albums")
+		containers += MusicContainer(identifier:"MusicSource:Albums", kind:.albumFolder(allMediaItems:allMediaItems), icon:"square.stack", name:"Albums")
 
-		containers += MusicContainer(identifier:"MusicSource:Artists", kind:.artistFolder(mediaItems:mediaItems), icon:"music.mic", name:"Artists")
+		containers += MusicContainer(identifier:"MusicSource:Artists", kind:.artistFolder(allMediaItems:allMediaItems), icon:"music.mic", name:"Artists")
 
-		containers += MusicContainer(identifier:"MusicSource:Playlists", kind:.playlistFolder(playlists:playlists), icon:"music.note.list", name:"Playlists")
+		containers += MusicContainer(identifier:"MusicSource:Playlists", kind:.playlistFolder(playlists:topLevelPlaylists, allPlaylists:allPlaylists), icon:"music.note.list", name:"Playlists")
 		
 		return containers
 	}
@@ -137,3 +144,4 @@ public class MusicSource : Source, AccessControl
 //----------------------------------------------------------------------------------------------------------------------
 
 
+#endif

@@ -23,7 +23,8 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 
-import Photos
+#if os(macOS)
+
 import iTunesLibrary
 
 
@@ -34,12 +35,12 @@ public class MusicContainer : Container
 {
 	public enum Kind
 	{
-		case library(mediaItems:[ITLibMediaItem])
-		case albumFolder(mediaItems:[ITLibMediaItem])
-		case album(album:ITLibAlbum, mediaItems:[ITLibMediaItem])
-		case artistFolder(mediaItems:[ITLibMediaItem])
-		case artist(artist:ITLibArtist, mediaItems:[ITLibMediaItem])
-		case playlistFolder(playlists:[ITLibPlaylist])
+		case library(allMediaItems:[ITLibMediaItem])
+		case albumFolder(allMediaItems:[ITLibMediaItem])
+		case album(album:ITLibAlbum, allMediaItems:[ITLibMediaItem])
+		case artistFolder(allMediaItems:[ITLibMediaItem])
+		case artist(artist:ITLibArtist, allMediaItems:[ITLibMediaItem])
+		case playlistFolder(playlists:[ITLibPlaylist], allPlaylists:[ITLibPlaylist])
 		case playlist(playlist:ITLibPlaylist)
 	}
 
@@ -84,62 +85,91 @@ public class MusicContainer : Container
 		
 		switch kind
 		{
-			case .library(let mediaItems):
+			// Loads the objects (tracks) for the top-level "Library"
+			
+			case .library(let allMediaItems):
 
-				for item in songs(with:mediaItems)
+				for item in Self.tracks(with:allMediaItems)
 				{
 					objects += MusicObject(with:item)
 				}
 
-			case .albumFolder(let mediaItems):
+			// Loads the sub-containers for the top-level "Albums" folder
 			
-				let albums = Self.albums(with:mediaItems)
-				
-				for album in albums
+			case .albumFolder(let allMediaItems):
+			
+				for album in Self.albums(with:allMediaItems)
 				{
 					containers += MusicContainer(
 						identifier:"MusicSource:Album:\(album.persistentID)",
-						kind:.album(album:album, mediaItems:mediaItems),
+						kind:.album(album:album, allMediaItems:allMediaItems),
 						icon:"square",
 						name:album.title ?? "Album")
 				}
-				
-			case .album(let album, let mediaItems):
 			
-				for item in Self.mediaItems(for:album, allMediaItems:mediaItems)
-				{
-					objects += MusicObject(with:item)
-				}
-
-			case .artistFolder(let mediaItems):
+			// Loads the sub-containers for the top-level "Artists" folder
 			
-				let artists = Self.artists(with:mediaItems)
-				
-				for artist in artists
+			case .artistFolder(let allMediaItems):
+			
+				for artist in Self.artists(with:allMediaItems)
 				{
 					containers += MusicContainer(
 						identifier:"MusicSource:Artist:\(artist.persistentID)",
-						kind:.artist(artist:artist, mediaItems:mediaItems),
+						kind:.artist(artist:artist, allMediaItems:allMediaItems),
 						icon:"person",
 						name:artist.name ?? "Artist")
 				}
 				
-			case .artist(let artist, let mediaItems):
+			// Loads the sub-containers for a playlist folder
 			
-				for item in Self.mediaItems(for:artist, allMediaItems:mediaItems)
+			case .playlistFolder(let playlists, let allPlaylists):
+			
+				for playlist in playlists
+				{
+					guard !playlist.isPrimary else { continue }
+					let kind = playlist.kind
+					let distinguishedKind = playlist.distinguishedKind
+					
+					if kind == .regular	// Accept regular user playlists
+					{
+						containers += Self.container(for:playlist)
+					}
+					else if kind == .smart && distinguishedKind == .kindNone // Accept user smart playlists
+					{
+						containers += Self.container(for:playlist)
+					}
+					else if kind == .folder	// Accept sub-folders
+					{
+						let childPlaylists = Self.childPlaylists(for:playlist, allPlaylists:allPlaylists)
+						
+						containers += MusicContainer(
+							identifier:"MusicSource:Playlist:\(playlist.persistentID)",
+							kind:.playlistFolder(playlists:childPlaylists, allPlaylists:allPlaylists),
+							icon:"folder",
+							name:playlist.name)
+					}
+				}
+				
+			// Load the objects (tracks) of an album
+			
+			case .album(let album, let allMediaItems):
+			
+				for item in Self.mediaItems(for:album, allMediaItems:allMediaItems)
 				{
 					objects += MusicObject(with:item)
 				}
 
-			case .playlistFolder(let playlists):
+			// Load the objects (tracks) of an artist
 			
-				for playlist in playlists
+			case .artist(let artist, let allMediaItems):
+			
+				for item in Self.mediaItems(for:artist, allMediaItems:allMediaItems)
 				{
-					guard playlist.kind == .regular else { continue }
-					guard !playlist.isPrimary else { continue }
-					containers += Self.container(for:playlist)
+					objects += MusicObject(with:item)
 				}
-				
+
+			// Load the objects (tracks) of a playlist
+			
 			case .playlist(let playlist):
 			
 				for item in playlist.items
@@ -150,51 +180,64 @@ public class MusicContainer : Container
 
 		return (containers,objects)
 	}
+}
 
 
+//----------------------------------------------------------------------------------------------------------------------
+
+
+extension MusicContainer
+{
+	/// Creates a Container for the specified playlist
+	
 	class func container(for playlist:ITLibPlaylist) -> MusicContainer
 	{
-		MusicContainer(
+		var icon = "music.note.list"
+		
+		switch playlist.kind
+		{
+			case .folder: icon = "folder"
+			case .smart: icon = "gearshape"
+			default: icon = "music.note.list"
+		}
+		
+		return MusicContainer(
 			identifier:"MusicSource:Playlist:\(playlist.persistentID)",
 			kind:.playlist(playlist:playlist),
-			icon:"music.note.list",
+			icon:icon,
 			name:playlist.name)
 	}
+
+	/// Returns an array of tracks sorted by name
 	
-	
-	class func albums(with mediaItems:[ITLibMediaItem]) -> [ITLibAlbum]
+	class func tracks(with allMediaItems:[ITLibMediaItem]) -> [ITLibMediaItem]
 	{
-		var albums = Set<ITLibAlbum>()
-		
-		for mediaItem in mediaItems
-		{
-			albums.insert(mediaItem.album)
-		}
-		
-		return albums.sorted { ($0.title ?? "") < ($1.title ?? "") }
+		allMediaItems
+			.sorted { $0.title < $1.title }
 	}
 	
+
+	/// Returns a alphabetically sorted array of artists
 	
-	class func artists(with mediaItems:[ITLibMediaItem]) -> [ITLibArtist]
+	class func artists(with allMediaItems:[ITLibMediaItem]) -> [ITLibArtist]
 	{
-		var artists = Set<ITLibArtist>()
-		
-		for mediaItem in mediaItems
-		{
-			guard let artist = mediaItem.artist else { continue }
-			artists.insert(artist)
-		}
-		
+		let tracksByArtist = Dictionary(grouping:allMediaItems, by: { $0.artist })
+		let artists = tracksByArtist.keys.compactMap { $0 }
 		return artists.sorted { ($0.name ?? "") < ($1.name ?? "") }
 	}
 	
 	
-	class func songs(with mediaItems:[ITLibMediaItem]) -> [ITLibMediaItem]
+	/// Returns a alphabetically sorted array of albums
+	
+	class func albums(with allMediaItems:[ITLibMediaItem]) -> [ITLibAlbum]
 	{
-		mediaItems
-			.filter { $0.mediaKind == .kindSong }
+		let tracksByAlbum = Dictionary(grouping:allMediaItems, by: { $0.album })
+		let albums = tracksByAlbum.keys
+		return albums.sorted { ($0.title ?? "") < ($1.title ?? "") }
 	}
 	
+	
+	/// Returns an array of tracks for the specified album (sorted by track number)
 	
 	class func mediaItems(for album:ITLibAlbum, allMediaItems:[ITLibMediaItem]) -> [ITLibMediaItem]
 	{
@@ -204,58 +247,27 @@ public class MusicContainer : Container
 	}
 	
 	
+	/// Returns an array of tracks for the specified artist
+	
 	class func mediaItems(for artist:ITLibArtist, allMediaItems:[ITLibMediaItem]) -> [ITLibMediaItem]
 	{
 		allMediaItems
 			.filter { $0.artist == artist }
-	}
-}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-extension ITLibArtist
-{
-	override public var hash:Int
-	{
-		self.persistentID.hash
-	}
-
-	public static func ==(lhs:ITLibArtist, rhs:ITLibArtist) -> Bool
-	{
-		lhs.persistentID == rhs.persistentID
-	}
-
-	override public func isEqual(_ object:Any?) -> Bool
-	{
-		guard let other = object as? ITLibArtist else { return false }
-		return self == other
-	}
-}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-extension ITLibAlbum
-{
-	override public var hash:Int
-	{
-		self.persistentID.hash
+			.sorted { $0.title < $1.title }
 	}
 	
-	public static func ==(lhs:ITLibAlbum, rhs:ITLibAlbum) -> Bool
+	
+	/// Returns the array of children for the specified playlist - given the flat array of allPlaylists
+	
+	class func childPlaylists(for playlist:ITLibPlaylist, allPlaylists:[ITLibPlaylist]) -> [ITLibPlaylist]
 	{
-		lhs.persistentID == rhs.persistentID
-	}
-
-	override public func isEqual(_ object:Any?) -> Bool
-	{
-		guard let other = object as? ITLibAlbum else { return false }
-		return self == other
-	}
+		allPlaylists
+			.filter({ $0.parentID == playlist.persistentID })
+    }
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
+
+
+#endif
