@@ -60,6 +60,7 @@ public struct BXDisclosureButton : View
 	// Params
 	
 	private var label:String
+	private var icon:CGImage?
 	private var isExpanded:Binding<Bool>
 
 	// Environment
@@ -68,9 +69,10 @@ public struct BXDisclosureButton : View
 
 	// Init
 	
-	public init(_ label:String, isExpanded:Binding<Bool>)
+	public init(_ label:String, icon:CGImage? = nil, isExpanded:Binding<Bool>)
 	{
 		self.label = label
+		self.icon = icon
 		self.isExpanded = isExpanded
 	}
 	
@@ -88,17 +90,28 @@ public struct BXDisclosureButton : View
 				.rotationEffect(.degrees(isExpanded.wrappedValue ? 90 : 0))
 				
 				// Provide a bigger hit target for clicking the triangle
-				
-				.overlay(
-					GeometryReader
-					{
-						Rectangle()
-							.fill(Color(white:0.0, opacity:0.01))
-							.offset(x:-5, y:-5)
-							.frame(width:$0.size.width+10, height:$0.size.height+14)
-					}
-				)
+			// Provide a bigger hit target for clicking the triangle
+			
+			.overlay(
+				GeometryReader
+				{
+					Rectangle()
+						.fill(Color(white:0.0, opacity:0.01))
+						.offset(x:-5, y:-5)
+						.frame(width:$0.size.width+10, height:$0.size.height+14)
+				}
+			)
 
+			// Optional icon
+			
+			if let icon = self.icon
+			{
+				Image(decorative:icon, scale:1)
+					.resizable()
+					.scaledToFit()
+					.frame(width:20, height:20)
+			}
+				
 			// Label
 			
 			if label.count > 0
