@@ -84,12 +84,24 @@ public struct BXDisclosureButton : View
 		{
 			// Disclosure triangle
 			
-			Text("▶︎")
-				.font(font)
-				.scaleEffect(0.85)
-				.rotationEffect(.degrees(isExpanded.wrappedValue ? 90 : 0))
-				
-				// Provide a bigger hit target for clicking the triangle
+			Group
+			{
+				if #available(macOS 11,*)
+				{
+					Text("\(Image(systemName:"chevron.forward"))")
+						.bold()
+						.scaleEffect(0.7)
+				}
+				else
+				{
+					Text("﹥")
+						.font(font)
+						.bold()
+//						.rotationEffect(.degrees(isExpanded.wrappedValue ? 90 : 0))
+				}
+			}
+			.rotationEffect(.degrees(isExpanded.wrappedValue ? 90 : 0))
+						
 			// Provide a bigger hit target for clicking the triangle
 			
 			.overlay(
