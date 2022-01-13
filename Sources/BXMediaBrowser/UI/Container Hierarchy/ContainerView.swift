@@ -122,7 +122,7 @@ public struct ContainerView : View
 				{
 					ForEach(container.containers)
 					{
-						viewFactory.build(with:$0)
+						viewFactory.containerView(for:$0)
 					}
 				}
 				.padding(.leading,16)

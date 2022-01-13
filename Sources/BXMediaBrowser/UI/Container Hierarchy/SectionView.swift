@@ -29,34 +29,85 @@ import SwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-/// This is the root view for a BXMediaBrowser.Library
+/// This view displays a single Section within a LibaryView
 
-public struct SearchBar : View
+public struct SectionView : View
 {
 	// Model
 	
-	@ObservedObject var library:Library
-	@EnvironmentObject var selectedContainer:Container
+	@ObservedObject var section:Section
 	
+	// Environment
+	
+	@EnvironmentObject var library:Library
+	@Environment(\.viewFactory) private var viewFactory
+
 	// Init
 	
-	public init(with library:Library)
+	public init(with section:Section)
 	{
-		self.library = library
+		self.section = section
 	}
+	
 	// View
 	
 	public var body: some View
     {
-		return TextField("Search", text:self.$selectedContainer.filterString)
-			.frame(maxWidth:300)
-			.textFieldStyle(RoundedBorderTextFieldStyle())
-			.padding(10)
-			.centerAligned()
+		VStack(alignment:.leading, spacing:4)
+		{
+			// Section name is optional
+			
+			if let name = section.name
+			{
+				HStack
+				{
+					Text(name.uppercased()).font(.system(size:11))
+						.opacity(0.6)
+						
+					Spacer()
+				
+					// The optional + button will be displayed if a handler was provided
+					
+					if let addSourceHandler = section.addSourceHandler
+					{
+						Image(systemName:"plus.circle").onTapGesture
+						{
+							addSourceHandler(section)
+						}
+					}
+				}
+			}
+			
+			// Display list of Sources
+			
+			ForEach(section.sources)
+			{
+				viewFactory.containerView(for:$0)
+			}
+		}
+		
+		// Layout
+		
+		.padding(.horizontal)
+		.padding(.bottom,12)
+		
+		// Apply id to optimize view hierarchy rebuilding
+		
+		.id(section.identifier)
+
+		// Whenever the current state changes, save it to persistent storage
+		
+		.onReceive(section.$sources)
+		{
+			_ in library.saveState()
+		}
+    }
+   
+    public static func shouldDisplay(_ section:Section) -> Bool
+    {
+		!section.sources.isEmpty || section.addSourceHandler != nil
     }
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
-
-

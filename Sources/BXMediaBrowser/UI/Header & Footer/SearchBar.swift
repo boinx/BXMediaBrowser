@@ -29,85 +29,35 @@ import SwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-/// This view displays a single Section within a LibaryView
+/// This is the root view for a BXMediaBrowser.Library
 
-public struct SectionView : View
+public struct SearchBar : View
 {
 	// Model
 	
-	@ObservedObject var section:Section
+	@ObservedObject var selectedContainer:Container
 	
-	// Environment
-	
-	@EnvironmentObject var library:Library
-	@Environment(\.viewFactory) private var viewFactory
-
 	// Init
 	
-	public init(with section:Section)
+	public init(with selectedContainer:Container)
 	{
-		self.section = section
+		self.selectedContainer = selectedContainer
 	}
 	
 	// View
 	
 	public var body: some View
     {
-		VStack(alignment:.leading, spacing:4)
-		{
-			// Section name is optional
-			
-			if let name = section.name
-			{
-				HStack
-				{
-					Text(name.uppercased()).font(.system(size:11))
-						.opacity(0.6)
-						
-					Spacer()
-				
-					// The optional + button will be displayed if a handler was provided
-					
-					if let addSourceHandler = section.addSourceHandler
-					{
-						Image(systemName:"plus.circle").onTapGesture
-						{
-							addSourceHandler(section)
-						}
-					}
-				}
-			}
-			
-			// Display list of Sources
-			
-			ForEach(section.sources)
-			{
-				viewFactory.build(with:$0)
-			}
-		}
+		TextField("Search", text:self.$selectedContainer.filterString)
+			.frame(maxWidth:300)
+			.textFieldStyle(RoundedBorderTextFieldStyle())
+			.padding(10)
+			.centerAligned()
 		
-		// Layout
-		
-		.padding(.horizontal)
-		.padding(.bottom,12)
-		
-		// Apply id to optimize view hierarchy rebuilding
-		
-		.id(section.identifier)
-
-		// Whenever the current state changes, save it to persistent storage
-		
-		.onReceive(section.$sources)
-		{
-			_ in library.saveState()
-		}
-    }
-   
-    public static func shouldDisplay(_ section:Section) -> Bool
-    {
-		!section.sources.isEmpty || section.addSourceHandler != nil
     }
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
+
+
