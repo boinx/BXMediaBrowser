@@ -39,7 +39,9 @@ public class MusicSource : Source, AccessControl
 	/// might be stored in a preferences file or user documents.
 	
 	static let identifier = "MusicSource:"
-		
+	
+	// Get icon of Music.app
+	
 	static let icon = NSImage.icon(for:"com.apple.Music")?.CGImage
 
 
@@ -130,9 +132,9 @@ public class MusicSource : Source, AccessControl
 
 		containers += MusicContainer(identifier:"MusicSource:Songs", kind:.library(allMediaItems:allMediaItems), icon:"music.note", name:"Songs")
 		
-		containers += MusicContainer(identifier:"MusicSource:Albums", kind:.albumFolder(allMediaItems:allMediaItems), icon:"square.stack", name:"Albums")
-
 		containers += MusicContainer(identifier:"MusicSource:Artists", kind:.artistFolder(allMediaItems:allMediaItems), icon:"music.mic", name:"Artists")
+
+		containers += MusicContainer(identifier:"MusicSource:Albums", kind:.albumFolder(allMediaItems:allMediaItems), icon:"square.stack", name:"Albums")
 
 		containers += MusicContainer(identifier:"MusicSource:Playlists", kind:.playlistFolder(playlists:topLevelPlaylists, allPlaylists:allPlaylists), icon:"music.note.list", name:"Playlists")
 		
