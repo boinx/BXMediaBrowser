@@ -27,6 +27,7 @@
 
 import iTunesLibrary
 import AppKit
+import Foundation
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -48,12 +49,20 @@ public class MusicSource : Source, AccessControl
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	/// Reference to the Music library
+	
 	let library:ITLibrary?
 	
-	var folderObserver:FolderObserver? = nil
+	/// The list of allowed media kinds. This can be used to e.g. only display audio or only videos
 	
 	let allowedMediaKinds:[ITLibMediaItemMediaKind]
-		
+	
+	/// Internal observers and subscriptions
+	
+	private var observers:[Any] = []
+	
+//	var folderObserver:FolderObserver? = nil
+	
 	
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -63,22 +72,56 @@ public class MusicSource : Source, AccessControl
 	public init(allowedMediaKinds:[ITLibMediaItemMediaKind] = [.kindSong])
 	{
 		self.allowedMediaKinds = allowedMediaKinds
+		
+		// Get reference to Music library
+		
 		self.library = try? ITLibrary(apiVersion:"1.1", options:.lazyLoadData)
+		
+		// Configure the Source
 		
 		super.init(identifier:Self.identifier, icon:Self.icon, name:"Music")
 		
 		self.loader = Loader(identifier:self.identifier, loadHandler:self.loadContainers)
 
-		if let url = self.library?.mediaFolderLocation
+		// Setup observers to detect changes
+		
+		if let library = self.library
 		{
-			self.folderObserver = FolderObserver(url:url)
-
-			self.folderObserver?.folderDidChange =
+			self.observers += KVO(object:library, keyPath:"allMediaItems")
 			{
-				[weak self] in
-				print("Music database has changed")
+				[weak self] _,_ in
+				print("MusicSource: library has changed")
 			}
+
+			self.observers += KVO(object:library, keyPath:"allPlaylists")
+			{
+				[weak self] _,_ in
+				print("MusicSource: library has changed")
+			}
+
+//			self.observers += library.publisher(for:ReferenceWritableKeyPath(\.allPlaylists)).sink
+//			{
+//				[weak self] _ in
+//				print("MusicSource: library has changed")
+//			}
+//
+//			self.observers += library.publisher(for:KeyPath<ITLibrary,[ITLibMediaItem]>(\.allMediaItems)).sink
+//			{
+//				[weak self] _ in
+//				print("MusicSource: library has changed")
+//			}
 		}
+		
+//		if let url = self.library?.mediaFolderLocation
+//		{
+//			self.folderObserver = FolderObserver(url:url)
+//
+//			self.folderObserver?.folderDidChange =
+//			{
+//				[weak self] in
+//				print("Music database has changed")
+//			}
+//		}
 		
 		
 //		// Request access to photo library if not available yet. Reload all containers once access has been granted.

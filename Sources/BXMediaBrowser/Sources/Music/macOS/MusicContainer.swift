@@ -45,6 +45,14 @@ public class MusicContainer : Container
 	}
 
 
+	/// Internal observers and subscriptions
+	
+	private var observers:[Any] = []
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
  	public init(identifier:String, kind:Kind, icon:String?, name:String)
 	{
 		super.init(
@@ -53,6 +61,15 @@ public class MusicContainer : Container
 			icon:icon,
 			name:name,
 			loadHandler:Self.loadContents)
+
+		if case .playlist(let playlist) = kind
+		{
+			self.observers += KVO(object:playlist, keyPath:"items")
+			{
+				[weak self] _,_ in
+				print("MusicContainer: items has changed")
+			}
+		}
 	}
 	
 
