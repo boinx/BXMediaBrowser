@@ -36,7 +36,15 @@ public protocol ViewFactory
 {
 	/// Returns the View for the specifed model object
 	
-	func build(with model:Any) -> AnyView
+	func containerView(for model:Any) -> AnyView
+	
+	/// Returns a header view that is appropriate for the currently selected Container of the Library
+	
+	func objectsHeaderView(for library:Library) -> AnyView
+	
+	/// Returns a footer view that is appropriate for the currently selected Container of the Library
+	
+	func objectsFooterView(for library:Library) -> AnyView
 	
 	/// Returns the type of ObjectCell subclass to be used for the specified Container
 
@@ -51,16 +59,16 @@ public struct DefaultViewFactory : ViewFactory
 {
 	// Create the View and wrap it in a type-erased AnyView
 	
-	public func build(with model:Any) -> AnyView
+	public func containerView(for model:Any) -> AnyView
 	{
-		let view = Self.defaultView(for:model)
+		let view = Self.defaultContainerView(for:model)
 		return AnyView(view)
 	}
 
 
-	/// This function creates the built-in default Views for the BXMediaBrowser UI
+	/// This function creates the built-in default Views for the Container view hierarchy
 	
-	@ViewBuilder static public func defaultView(for model:Any) -> some View
+	@ViewBuilder static public func defaultContainerView(for model:Any) -> some View
 	{
 		if let container = model as? Container
 		{
@@ -88,7 +96,54 @@ public struct DefaultViewFactory : ViewFactory
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	/// Returns the type of ObjectCell subclass to be used for the specified Container
+	/// Returns a header view that is appropriate for the currently selected Container of the Library
+	
+	public func objectsHeaderView(for library:Library) -> AnyView
+	{
+		let view = Self.defaultObjectsHeaderView(for:library)
+		return AnyView(view)
+	}
+	
+	/// This function creates the built-in default Views for the Object browser header
+	
+	@ViewBuilder static public func defaultObjectsHeaderView(for library:Library) -> some View
+	{
+		if let container = library.selectedContainer
+		{
+			SearchBar(with:container)
+		}
+		else
+		{
+			EmptyView()
+		}
+	}
+	
+	
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	/// Returns a footer view that is appropriate for the currently selected Container
+	
+	public func objectsFooterView(for library:Library) -> AnyView
+	{
+		let view = Self.defaultObjectsFooterView(for:library)
+		return AnyView(view)
+	}
+	
+	/// This function creates the built-in default Views for the Object browser footer
+	
+	@ViewBuilder static public func defaultObjectsFooterView(for library:Library) -> some View
+	{
+		EmptyView()
+	}
+	
+	
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	/// Returns the type of ObjectCell subclass to be used for the specified Container.
+	///
+	/// This factory method is only needed by the CollectionView.
 	
 	public func objectCellType(for container:Container?) -> ObjectCell.Type
 	{
