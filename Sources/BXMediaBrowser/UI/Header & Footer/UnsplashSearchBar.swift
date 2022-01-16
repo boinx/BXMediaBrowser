@@ -29,11 +29,12 @@ import SwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public struct SearchBar : View
+public struct UnsplashSearchBar : View
 {
 	// Model
 	
 	@ObservedObject var selectedContainer:Container
+	@State private var searchString:String = ""
 	
 	// Init
 	
@@ -46,11 +47,20 @@ public struct SearchBar : View
 	
 	public var body: some View
     {
-		TextField("Search", text:self.$selectedContainer.filterString)
-			.frame(maxWidth:300)
+		HStack
+		{
+			TextField("Search", text:self.$searchString)
+			{
+				self.selectedContainer.filterString = self.searchString
+			}
 			.textFieldStyle(RoundedBorderTextFieldStyle())
-			.padding(10)
-			.centerAligned()
+			.frame(maxWidth:300)
+			
+			Spacer()
+			
+			Text("more search options")
+		}
+		.padding(10)
     }
 }
 

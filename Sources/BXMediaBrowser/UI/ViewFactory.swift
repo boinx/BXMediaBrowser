@@ -108,7 +108,11 @@ public struct DefaultViewFactory : ViewFactory
 	
 	@ViewBuilder static public func defaultObjectsHeaderView(for library:Library) -> some View
 	{
-		if let container = library.selectedContainer
+		if let container = library.selectedContainer as? UnsplashContainer
+		{
+			UnsplashSearchBar(with:container)
+		}
+		else if let container = library.selectedContainer
 		{
 			SearchBar(with:container)
 		}
