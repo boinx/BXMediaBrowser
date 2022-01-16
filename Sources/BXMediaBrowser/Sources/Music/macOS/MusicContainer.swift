@@ -45,11 +45,6 @@ public class MusicContainer : Container
 	}
 
 
-	/// Internal observers and subscriptions
-	
-	private var observers:[Any] = []
-
-
 //----------------------------------------------------------------------------------------------------------------------
 
 

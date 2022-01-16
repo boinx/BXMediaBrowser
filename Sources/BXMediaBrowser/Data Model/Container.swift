@@ -103,7 +103,7 @@ open class Container : ObservableObject, Identifiable, StateSaving
 	
 	/// References to subcriptions and notifications
 	
-	private var observers:[Any] = []
+	internal var observers:[Any] = []
 	
 	
 //----------------------------------------------------------------------------------------------------------------------
