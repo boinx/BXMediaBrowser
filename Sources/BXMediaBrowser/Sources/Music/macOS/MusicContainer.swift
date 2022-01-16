@@ -103,7 +103,10 @@ public class MusicContainer : Container
 
 				for item in Self.tracks(with:allMediaItems)
 				{
-					objects += MusicObject(with:item)
+					if item.contains(filter)
+					{
+						objects += MusicObject(with:item)
+					}
 				}
 
 			// Loads the sub-containers for the top-level "Albums" folder
@@ -168,7 +171,10 @@ public class MusicContainer : Container
 			
 				for item in Self.mediaItems(for:album, allMediaItems:allMediaItems)
 				{
-					objects += MusicObject(with:item)
+					if item.contains(filter)
+					{
+						objects += MusicObject(with:item)
+					}
 				}
 
 			// Load the objects (tracks) of an artist
@@ -177,7 +183,10 @@ public class MusicContainer : Container
 			
 				for item in Self.mediaItems(for:artist, allMediaItems:allMediaItems)
 				{
-					objects += MusicObject(with:item)
+					if item.contains(filter)
+					{
+						objects += MusicObject(with:item)
+					}
 				}
 
 			// Load the objects (tracks) of a playlist
@@ -186,7 +195,10 @@ public class MusicContainer : Container
 			
 				for item in playlist.items
 				{
-					objects += MusicObject(with:item)
+					if item.contains(filter)
+					{
+						objects += MusicObject(with:item)
+					}
 				}
 		}
 
