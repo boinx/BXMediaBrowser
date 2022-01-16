@@ -251,6 +251,11 @@ open class Container : ObservableObject, Identifiable, StateSaving
 			}
 			catch //let error
 			{
+				await MainActor.run
+				{
+					self.isLoading = false
+					self.isLoaded = false
+				}
 //				Swift.print("    ERROR \(error)")
 			}
 		}
