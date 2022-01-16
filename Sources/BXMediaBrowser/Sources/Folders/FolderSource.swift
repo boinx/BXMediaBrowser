@@ -74,7 +74,7 @@ open class FolderSource : Source, AccessControl
 	{
 		var containers:[Container] = []
 		
-		// Load stored boolmarks from state. Convert each bookmark to a folder url. If the folder
+		// Load stored bookmarks from state. Convert each bookmark to a folder url. If the folder
 		// still exists, then create a FolderContainer for it.
 		
 		if let bookmarks = sourceState?[Self.bookmarksKey] as? [Data]
