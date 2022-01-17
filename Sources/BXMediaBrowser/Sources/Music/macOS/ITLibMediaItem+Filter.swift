@@ -35,10 +35,10 @@ extension ITLibMediaItem
 {
 	public func contains(_ filter:Any?) -> Bool
 	{
-		guard let string = filter as? String else { return true }
-		
-		let searchString = string.lowercased()
-		
+		guard let str = filter as? String else { return true }
+		guard !str.isEmpty else { return true }
+		let searchString = str.lowercased()
+
 		if self.title.lowercased().contains(searchString)
 		{
 			return true
