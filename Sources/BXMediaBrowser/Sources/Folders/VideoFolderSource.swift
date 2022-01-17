@@ -70,9 +70,9 @@ open class VideoFile : FolderObject
 {
 	/// Creates a thumbnail image for the specified local file URL
 	
-	override open class func loadThumbnail(for identifier:String, info:Any) async throws -> CGImage
+	override open class func loadThumbnail(for identifier:String, data:Any) async throws -> CGImage
 	{
-		guard let url = info as? URL else { throw Error.loadThumbnailFailed }
+		guard let url = data as? URL else { throw Error.loadThumbnailFailed }
 		guard url.exists else { throw Error.loadThumbnailFailed }
 
 		let options:[CFString:AnyObject] =
@@ -91,12 +91,12 @@ open class VideoFile : FolderObject
 
 	/// Loads the metadata dictionary for the specified local file URL
 	
-	override open class func loadMetadata(for identifier:String, info:Any) async throws -> [String:Any]
+	override open class func loadMetadata(for identifier:String, data:Any) async throws -> [String:Any]
 	{
-		guard let url = info as? URL else { throw Error.loadMetadataFailed }
+		guard let url = data as? URL else { throw Error.loadMetadataFailed }
 		guard url.exists else { throw Error.loadMetadataFailed }
 		
-		var metadata = try await super.loadMetadata(for:identifier, info:info)
+		var metadata = try await super.loadMetadata(for:identifier, data:data)
 		
 		if let source = CGImageSourceCreateWithURL(url as CFURL,nil),
 		   let properties = CGImageSourceCopyPropertiesAtIndex(source,0,nil),

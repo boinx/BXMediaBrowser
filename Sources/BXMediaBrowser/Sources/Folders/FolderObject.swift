@@ -39,7 +39,7 @@ open class FolderObject : Object
 		super.init(
 			identifier: FolderSource.identifier(for:url),
 			name: url.lastPathComponent,
-			info: url,
+			data: url,
 			loadThumbnailHandler: Self.loadThumbnail,
 			loadMetadataHandler: Self.loadMetadata,
 			downloadFileHandler: Self.downloadFile)
@@ -48,9 +48,9 @@ open class FolderObject : Object
 
 	/// Creates a thumbnail image for the specified local file URL
 	
-	open class func loadThumbnail(for identifier:String, info:Any) async throws -> CGImage
+	open class func loadThumbnail(for identifier:String, data:Any) async throws -> CGImage
 	{
-		guard let url = info as? URL else { throw Error.loadThumbnailFailed }
+		guard let url = data as? URL else { throw Error.loadThumbnailFailed }
 		guard url.exists else { throw Error.loadThumbnailFailed }
 		
     	let size = CGSize(width:256, height:256)
@@ -69,9 +69,9 @@ open class FolderObject : Object
 
 	/// Loads the metadata dictionary for the specified local file URL
 	
-	open class func loadMetadata(for identifier:String, info:Any) async throws -> [String:Any]
+	open class func loadMetadata(for identifier:String, data:Any) async throws -> [String:Any]
 	{
-		guard let url = info as? URL else { throw Error.loadMetadataFailed }
+		guard let url = data as? URL else { throw Error.loadMetadataFailed }
 		guard url.exists else { throw Error.loadMetadataFailed }
 
 		var metadata:[String:Any] = [:]
@@ -97,9 +97,9 @@ open class FolderObject : Object
 
 	/// Since we are already dealing with a local media file, this function simply returns the specified file URL
 	
-	open class func downloadFile(for identifier:String, info:Any) async throws -> URL
+	open class func downloadFile(for identifier:String, data:Any) async throws -> URL
 	{
-		guard let url = info as? URL else { throw Error.downloadFileFailed }
+		guard let url = data as? URL else { throw Error.downloadFileFailed }
 		guard url.exists else { throw Error.downloadFileFailed }
 		return url
 	}
@@ -109,7 +109,7 @@ open class FolderObject : Object
 	
 	override var localFileName:String
 	{
-		guard let url = info as? URL else { return super.localFileName }
+		guard let url = data as? URL else { return super.localFileName }
 		return url.lastPathComponent
 	}
 }

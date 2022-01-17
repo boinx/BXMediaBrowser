@@ -41,15 +41,15 @@ extension Object
 		public typealias DownloadFileHandler = (String,Any) async throws -> URL
 
 		private let identifier:String
-		private let info:Any
+		private let data:Any
 		private let loadThumbnailHandler:LoadThumbnailHandler
 		private let loadMetadataHandler:LoadMetadataHandler
 		private let downloadFileHandler:DownloadFileHandler
 	
-		public init(identifier:String, info:Any, loadThumbnailHandler:@escaping LoadThumbnailHandler, loadMetadataHandler:@escaping LoadMetadataHandler, downloadFileHandler:@escaping DownloadFileHandler)
+		public init(identifier:String, data:Any, loadThumbnailHandler:@escaping LoadThumbnailHandler, loadMetadataHandler:@escaping LoadMetadataHandler, downloadFileHandler:@escaping DownloadFileHandler)
 		{
 			self.identifier = identifier
-			self.info = info
+			self.data = data
 			self.loadThumbnailHandler = loadThumbnailHandler
 			self.loadMetadataHandler = loadMetadataHandler
 			self.downloadFileHandler = downloadFileHandler
@@ -99,7 +99,7 @@ extension Object
 				{
 //					Swift.print("Loading thumbnail for \(identifier)")
 
-					let image = try await self.loadThumbnailHandler(identifier,info)
+					let image = try await self.loadThumbnailHandler(identifier,data)
 					self._thumbnailImage = image
 					self._loadThumbnailTask = nil
 					return image
@@ -155,7 +155,7 @@ extension Object
 				{
 //					Swift.print("Loading metadata for \(identifier)")
 					
-					let metadata:[String:Any] = try await self.loadMetadataHandler(identifier,info)
+					let metadata:[String:Any] = try await self.loadMetadataHandler(identifier,data)
 					self._metadata = metadata
 					self._loadMetadataTask = nil
 					return metadata
@@ -208,7 +208,7 @@ extension Object
 				
 				let task = Task<URL,Swift.Error>
 				{
-					let url:URL = try await self.downloadFileHandler(identifier,info)
+					let url:URL = try await self.downloadFileHandler(identifier,data)
 					self._localFileURL = url
 					self._downloadFileTask = nil
 					return url

@@ -44,7 +44,7 @@ public class MusicObject : Object
 		super.init(
 			identifier: identifier,
 			name: name,
-			info: item,
+			data: item,
 			loadThumbnailHandler: Self.loadThumbnail,
 			loadMetadataHandler: Self.loadMetadata,
 			downloadFileHandler: Self.downloadFile)
@@ -64,12 +64,9 @@ public class MusicObject : Object
 
 	/// Creates a thumbnail image for the ITLibMediaItem
 	
-	class func loadThumbnail(for identifier:String, info:Any) async throws -> CGImage
+	class func loadThumbnail(for identifier:String, data:Any) async throws -> CGImage
 	{
-		guard let item = info as? ITLibMediaItem else {
-			throw Error.notFound
-		
-		}
+		guard let item = data as? ITLibMediaItem else { throw Error.notFound }
 		
 		let url = item.location
 		let uti = url?.uti ?? "public.mp3"
@@ -108,9 +105,9 @@ public class MusicObject : Object
 
 	/// Loads the metadata dictionary
 	
-	class func loadMetadata(for identifier:String, info:Any) async throws -> [String:Any]
+	class func loadMetadata(for identifier:String, data:Any) async throws -> [String:Any]
 	{
-		guard let item = info as? ITLibMediaItem else { throw Object.Error.loadMetadataFailed }
+		guard let item = data as? ITLibMediaItem else { throw Object.Error.loadMetadataFailed }
 		let artist = (item.artist?.name ?? "") as String
 		var metadata:[String:Any] = [:]
 		
@@ -133,7 +130,7 @@ public class MusicObject : Object
 	
 	override var localFileUTI:String
 	{
-		guard let item = info as? ITLibMediaItem else { return kUTTypeAudio as String }
+		guard let item = data as? ITLibMediaItem else { return kUTTypeAudio as String }
 		guard let url = item.location else { return kUTTypeAudio as String }
 		return url.uti ?? ""
 	}
@@ -143,7 +140,7 @@ public class MusicObject : Object
 	
 	override var localFileName:String
 	{
-		guard let item = info as? ITLibMediaItem else { return "Audio File" }
+		guard let item = data as? ITLibMediaItem else { return "Audio File" }
 		guard let url = item.location else { return "Audio File" }
 		return url.lastPathComponent
 	}
@@ -154,9 +151,9 @@ public class MusicObject : Object
 	// case of a video, we'll pretend we want to play an AVURLAsset with an AVPlayer.
 	// Taken from https://stackoverflow.com/questions/38183613/how-to-get-url-for-a-phasset
 	
-	class func downloadFile(for identifier:String, info:Any) async throws -> URL
+	class func downloadFile(for identifier:String, data:Any) async throws -> URL
 	{
-		guard let item = info as? ITLibMediaItem else { throw Object.Error.notFound }
+		guard let item = data as? ITLibMediaItem else { throw Object.Error.notFound }
 		guard let url = item.location else { throw Object.Error.downloadFileFailed }
 		return url
 	}

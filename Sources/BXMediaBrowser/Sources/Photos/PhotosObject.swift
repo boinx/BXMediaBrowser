@@ -54,7 +54,7 @@ public class PhotosObject : Object
 		super.init(
 			identifier: identifier,
 			name: name,
-			info: asset,
+			data: asset,
 			loadThumbnailHandler: Self.loadThumbnail,
 			loadMetadataHandler: Self.loadMetadata,
 			downloadFileHandler: Self.downloadFile)
@@ -66,13 +66,13 @@ public class PhotosObject : Object
 
 	/// Creates a thumbnail image for the PHAsset with the specified identifier
 	
-	class func loadThumbnail(for identifier:String, info:Any) async throws -> CGImage
+	class func loadThumbnail(for identifier:String, data:Any) async throws -> CGImage
 	{
         try await withCheckedThrowingContinuation
         {
 			continuation in
 
-			guard let asset = info as? PHAsset else
+			guard let asset = data as? PHAsset else
 			{
 				return continuation.resume(throwing:Object.Error.notFound)
 			}
@@ -99,11 +99,11 @@ public class PhotosObject : Object
 
 	/// Loads the metadata dictionary for the specified local file URL
 	
-	class func loadMetadata(for identifier:String, info:Any) async throws -> [String:Any]
+	class func loadMetadata(for identifier:String, data:Any) async throws -> [String:Any]
 	{
 		var metadata:[String:Any] = [:]
 		
-		guard let asset = info as? PHAsset else
+		guard let asset = data as? PHAsset else
 		{
 			throw Object.Error.loadMetadataFailed
 		}
@@ -147,7 +147,7 @@ public class PhotosObject : Object
 	
 	override var localFileUTI:String
 	{
-		guard let asset = info as? PHAsset else { return "public.image" }
+		guard let asset = data as? PHAsset else { return "public.image" }
 		return asset.uti
 	}
 
@@ -158,7 +158,7 @@ public class PhotosObject : Object
 	{
 		// Try to get the original filename from the PHAsset
 		
-		if let asset = info as? PHAsset, let filename = asset.originalFilename
+		if let asset = data as? PHAsset, let filename = asset.originalFilename
 		{
 			return filename
 		}
@@ -175,9 +175,9 @@ public class PhotosObject : Object
 	// case of a video, we'll pretend we want to play an AVURLAsset with an AVPlayer.
 	// Taken from https://stackoverflow.com/questions/38183613/how-to-get-url-for-a-phasset
 	
-	class func downloadFile(for identifier:String, info:Any) async throws -> URL
+	class func downloadFile(for identifier:String, data:Any) async throws -> URL
 	{
-		guard let asset = info as? PHAsset else { throw Object.Error.downloadFileFailed }
+		guard let asset = data as? PHAsset else { throw Object.Error.downloadFileFailed }
 		
 		if asset.mediaType == .image
 		{

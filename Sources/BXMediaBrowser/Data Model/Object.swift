@@ -41,7 +41,7 @@ open class Object : NSObject, ObservableObject, Identifiable
 	
 	/// This can be any kind of information that subclasses need to their job.
 	
-	public let info:Any
+	public let data:Any
 	
 	/// The Loader is responsible for loading the contents of this Object
 	
@@ -66,15 +66,15 @@ open class Object : NSObject, ObservableObject, Identifiable
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	public init(identifier:String, name:String, info:Any, loadThumbnailHandler:@escaping Object.Loader.LoadThumbnailHandler, loadMetadataHandler:@escaping Object.Loader.LoadMetadataHandler, downloadFileHandler:@escaping Object.Loader.DownloadFileHandler)
+	public init(identifier:String, name:String, data:Any, loadThumbnailHandler:@escaping Object.Loader.LoadThumbnailHandler, loadMetadataHandler:@escaping Object.Loader.LoadMetadataHandler, downloadFileHandler:@escaping Object.Loader.DownloadFileHandler)
 	{
 		self.identifier = identifier
 		self.name = name
-		self.info = info
+		self.data = data
 		
 		self.loader = Object.Loader(
 			identifier: identifier,
-			info: info,
+			data: data,
 			loadThumbnailHandler: loadThumbnailHandler,
 			loadMetadataHandler: loadMetadataHandler,
 			downloadFileHandler: downloadFileHandler)

@@ -39,7 +39,7 @@ open class UnsplashObject : Object
 		super.init(
 			identifier: "UnsplashSource:Photo:\(photo.id)",
 			name: photo.description ?? "Photo",
-			info: photo,
+			data: photo,
 			loadThumbnailHandler: Self.loadThumbnail,
 			loadMetadataHandler: Self.loadMetadata,
 			downloadFileHandler: Self.downloadFile)
@@ -51,9 +51,9 @@ open class UnsplashObject : Object
 
 	/// Creates a thumbnail image for the specified local file URL
 	
-	open class func loadThumbnail(for identifier:String, info:Any) async throws -> CGImage
+	open class func loadThumbnail(for identifier:String, data:Any) async throws -> CGImage
 	{
-		guard let photo = info as? UnsplashPhoto else { throw Error.loadThumbnailFailed }
+		guard let photo = data as? UnsplashPhoto else { throw Error.loadThumbnailFailed }
 		guard let url = photo.urls["thumb"] else { throw Error.loadThumbnailFailed }
 		
 		let (data,_) = try await URLSession.shared.data(with:url)
@@ -69,9 +69,9 @@ open class UnsplashObject : Object
 
 	/// Loads the metadata dictionary for the specified local file URL
 	
-	open class func loadMetadata(for identifier:String, info:Any) async throws -> [String:Any]
+	open class func loadMetadata(for identifier:String, data:Any) async throws -> [String:Any]
 	{
-		guard let photo = info as? UnsplashPhoto else { throw Error.loadMetadataFailed }
+		guard let photo = data as? UnsplashPhoto else { throw Error.loadMetadataFailed }
 
 		var metadata:[String:Any] = [:]
 		
@@ -122,9 +122,9 @@ open class UnsplashObject : Object
 	}
 	
 	
-	open class func downloadFile(for identifier:String, info:Any) async throws -> URL
+	open class func downloadFile(for identifier:String, data:Any) async throws -> URL
 	{
-		guard let photo = info as? UnsplashPhoto else { throw Error.downloadFileFailed }
+		guard let photo = data as? UnsplashPhoto else { throw Error.downloadFileFailed }
 		guard let url = photo.urls["full"] else { throw Error.downloadFileFailed }
 		
 		// TODO
