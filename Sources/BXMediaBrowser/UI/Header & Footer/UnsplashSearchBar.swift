@@ -51,7 +51,10 @@ public struct UnsplashSearchBar : View
 		{
 			TextField("Search", text:self.$searchString)
 			{
-				self.selectedContainer.filterString = self.searchString
+				self.selectedContainer.filter = UnsplashFilter(
+					searchString:self.searchString,
+					orientation:nil,
+					color:nil)
 			}
 			.textFieldStyle(RoundedBorderTextFieldStyle())
 			.frame(maxWidth:300)

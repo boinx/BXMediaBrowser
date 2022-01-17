@@ -46,7 +46,12 @@ public struct SearchBar : View
 	
 	public var body: some View
     {
-		TextField("Search", text:self.$selectedContainer.filterString)
+		let binding = Binding<String>(
+			get:{ self.selectedContainer.filter as? String ?? "" },
+			set:{ self.selectedContainer.filter = $0 }
+		)
+		
+		TextField("Search", text:binding) //self.$selectedContainer.filterString)
 			.frame(maxWidth:300)
 			.textFieldStyle(RoundedBorderTextFieldStyle())
 			.padding(10)

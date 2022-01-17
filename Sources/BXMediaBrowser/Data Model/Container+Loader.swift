@@ -64,7 +64,7 @@ extension Container
 
 		/// Loads the contents of this container
 		
-		public func contents(with filter:String) async throws -> Contents
+		public func contents(with filter:Any?) async throws -> Contents
 		{
 			try await self.loadHandler(identifier,data,filter)
 		}

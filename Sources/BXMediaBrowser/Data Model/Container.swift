@@ -83,10 +83,10 @@ open class Container : ObservableObject, Identifiable, StateSaving
 	
 	private var loadTask:Task<Void,Never>? = nil
 	
-	/// This string can be used for filtering the Objects of this Container. Filtering works
+	/// This info can be used for filtering the Objects of this Container. Filtering works
 	/// differently for the various sources, as different metadata can be used when filtering.
 	
-	@Published public var filterString:String = ""
+	@Published public var filter:Any? = nil
 	
 	/// This task is used to only show the loading spinner if loading takes a while
 	
@@ -139,7 +139,7 @@ open class Container : ObservableObject, Identifiable, StateSaving
 	
 	private func setupFilterObserver()
 	{
-		self.observers += self.$filterString
+		self.observers += self.$filter
 			.dropFirst(1)
 			.debounce(for:0.25, scheduler:RunLoop.main)
 			.sink
@@ -213,7 +213,7 @@ open class Container : ObservableObject, Identifiable, StateSaving
 		
 				// Get new list of (sub)containers and objects
 				
-				let (containers,objects) = try await self.loader.contents(with:filterString)
+				let (containers,objects) = try await self.loader.contents(with:filter)
 //				let names1 = containers.map { $0.name }.joined(separator:", ")
 //				let names2 = objects.map { $0.name }.joined(separator:", ")
 //				Swift.print("    containers = \(names1)")
