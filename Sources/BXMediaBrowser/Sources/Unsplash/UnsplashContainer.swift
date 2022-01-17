@@ -91,7 +91,7 @@ open class UnsplashContainer : Container
 		{
 			currentData.page += 1
 			currentData.filter.searchString = unplashFilter.searchString
-			currentData.photos += try await self.photos(for:unplashFilter.searchString, page:currentData.page)
+			currentData.photos += try await self.photos(for:unplashFilter, page:currentData.page)
 			print("UnsplashContainer: appending page \(currentData.page)")
 		}
 		
@@ -112,7 +112,7 @@ open class UnsplashContainer : Container
 	
 	/// Returns an array of UnsplashPhotos for the specified search string and page number
 
-	private class func photos(for searchString:String, page:Int) async throws -> [UnsplashPhoto]
+	private class func photos(for filter:UnsplashFilter, page:Int) async throws -> [UnsplashPhoto]
 	{
 		// Build a search request with the provided search string (filter)
 		
@@ -123,11 +123,21 @@ open class UnsplashContainer : Container
         
 		urlComponents.queryItems =
 		[
-			URLQueryItem(name:"query", value:searchString),
+			URLQueryItem(name:"query", value:filter.searchString),
 			URLQueryItem(name:"page", value:"\(page)"),
 			URLQueryItem(name:"per_page", value:"30")
 		]
-
+		
+		if let orientation = filter.orientation
+		{
+			urlComponents.queryItems?.append(URLQueryItem(name:"orientation", value:orientation.rawValue))
+		}
+		
+		if let color = filter.color
+		{
+			urlComponents.queryItems?.append(URLQueryItem(name:"color", value:color.rawValue))
+		}
+		
 		guard let url = urlComponents.url else { throw Error.loadContentsFailed }
 
 		var request = URLRequest(url:url)

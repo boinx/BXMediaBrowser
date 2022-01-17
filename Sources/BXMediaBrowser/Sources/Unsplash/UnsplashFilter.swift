@@ -2,15 +2,22 @@
 
 public struct UnsplashFilter : Equatable
 {
-	enum Orientation : String,Equatable
+	enum Orientation : String,Equatable,CaseIterable
 	{
+		case any = ""
 		case landscape
 		case portrait
 		case squarish
+		
+		static var allValues:[String]
+		{
+			self.allCases.map { $0.rawValue }
+		}
 	}
 	
-	enum Color : String,Equatable
+	enum Color : String,Equatable,CaseIterable
 	{
+		case any = ""
 		case black_and_white
 		case black
 		case white
@@ -22,6 +29,11 @@ public struct UnsplashFilter : Equatable
 		case green
 		case teal
 		case blue
+
+		static var allValues:[String]
+		{
+			self.allCases.map { $0.rawValue }
+		}
 	}
 	
 	var searchString:String = ""

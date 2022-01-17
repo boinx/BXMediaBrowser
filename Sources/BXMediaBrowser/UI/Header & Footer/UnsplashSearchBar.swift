@@ -34,7 +34,10 @@ public struct UnsplashSearchBar : View
 	// Model
 	
 	@ObservedObject var selectedContainer:Container
+	
 	@State private var searchString:String = ""
+//	@State private var orientation:String = "" // UnsplashFilter.Orientation.any.rawValue
+//	@State private var color:String = "" // UnsplashFilter.Color.any.rawValue
 	
 	// Init
 	
@@ -51,19 +54,47 @@ public struct UnsplashSearchBar : View
 		{
 			TextField("Search", text:self.$searchString)
 			{
-				self.selectedContainer.filter = UnsplashFilter(
-					searchString:self.searchString,
-					orientation:nil,
-					color:nil)
+				self.updateFilter()
 			}
 			.textFieldStyle(RoundedBorderTextFieldStyle())
 			.frame(maxWidth:300)
 			
 			Spacer()
 			
-			Text("more search options")
+//			Picker("Orientation:", selection: $orientation)
+//			{
+//				ForEach(UnsplashFilter.Orientation.allValues, id:\.self)
+//				{
+//					Text($0)
+//				}
+//            }
+//			.pickerStyle(.menu)
+//
+//
+//			Picker("Color:", selection: $color)
+//			{
+//				ForEach(UnsplashFilter.Color.allValues, id:\.self)
+//				{
+//					Text($0)
+//				}
+//           }
+//			.pickerStyle(.menu)
 		}
 		.padding(10)
+    }
+    
+    func updateFilter()
+    {
+//		var orientation = UnsplashFilter.Orientation(rawValue: self.orientation)
+//		if self.orientation == "" { orientation = nil }
+//
+//		var color = UnsplashFilter.Color(rawValue: self.color)
+//		if self.color == "" { color = nil }
+		
+		self.selectedContainer.filter = UnsplashFilter(
+			searchString:self.searchString,
+			orientation:nil,
+			color:nil)
     }
 }
 
