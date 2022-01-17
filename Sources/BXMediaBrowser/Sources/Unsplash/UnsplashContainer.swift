@@ -156,6 +156,11 @@ open class UnsplashContainer : Container
 		return photos
 	}
 	
+	
+	/// Removes any duplicate photos from the specified array. The returned array only contains unique entries.
+	/// This is important when using a NSDiffableDataSource with NSCollectionView. Having duplicate identifiers
+	/// would cause fatal exceptions.
+	
 	private class func removeDuplicates(from photos:[UnsplashPhoto]) -> [UnsplashPhoto]
 	{
 		var uniquePhotos:[UnsplashPhoto] = []
