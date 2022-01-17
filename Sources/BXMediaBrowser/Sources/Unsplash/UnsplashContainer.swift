@@ -33,7 +33,7 @@ open class UnsplashContainer : Container
 {
 	class Data
 	{
-		var searchString = ""
+		var filter = UnsplashFilter()
 		var page = 0
 		var photos:[UnsplashPhoto] = []
 	}
@@ -74,30 +74,30 @@ open class UnsplashContainer : Container
 		let containers:[Container] = []
 		var objects:[Object] = []
 		
-		guard let state = data as? Data else { return (containers,objects) }
+		guard let currentData = data as? Data else { return (containers,objects) }
 		
 		// If the search string has changed, then clear the results
 		
-		if (filter as? String) != state.searchString
+		if (filter as? UnsplashFilter) != currentData.filter
 		{
-			state.page = 0
-			state.photos = []
+			currentData.page = 0
+			currentData.photos = []
 			print("UnsplashContainer: clear search results")
 		}
 		
 		// Append the next page of search results
 			
-		if let searchString = filter as? String, !searchString.isEmpty
+		if let unplashFilter = filter as? UnsplashFilter, !unplashFilter.searchString.isEmpty
 		{
-			state.page += 1
-			state.searchString = searchString
-			state.photos += try await self.photos(for:searchString, page:state.page)
-			print("UnsplashContainer: appending page \(state.page)")
+			currentData.page += 1
+			currentData.filter.searchString = unplashFilter.searchString
+			currentData.photos += try await self.photos(for:unplashFilter.searchString, page:currentData.page)
+			print("UnsplashContainer: appending page \(currentData.page)")
 		}
 		
 		// Remove potential duplicates, as that would cause serious issues with NSDiffableDataSource
 		
-		let photos = self.removeDuplicates(from:state.photos)
+		let photos = self.removeDuplicates(from:currentData.photos)
 		
 		// Build an Object for each UnsplashPhoto in the search results
 		
