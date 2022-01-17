@@ -51,7 +51,7 @@ extension Container
 		
 		/// The LoadHandler is a pure function closure that returns the Contents of a Container
 		
-		public typealias LoadHandler = (String,Any,String) async throws -> Contents
+		public typealias LoadHandler = (String,Any,Any?) async throws -> Contents
 
 		/// Creates a new Container with an externally supplied closure to load the contents
 		

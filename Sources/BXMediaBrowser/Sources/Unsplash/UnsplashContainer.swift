@@ -31,14 +31,14 @@ import Foundation
 
 open class UnsplashContainer : Container
 {
-	class State
+	class Data
 	{
-		var filterString = ""
+		var searchString = ""
 		var page = 0
 		var photos:[UnsplashPhoto] = []
 	}
 	
-	let state = State()
+	let _data = Data()
 	
 	// Unsplash Container can never be expanded, as they do not have any sub-containers
 	
@@ -54,7 +54,7 @@ open class UnsplashContainer : Container
 	{
 		super.init(
 			identifier: "UnsplashSource:Search",
-			data: self.state,
+			data: self._data,
 			icon: "magnifyingglass",
 			name: "Search",
 			removeHandler: nil,
@@ -69,16 +69,16 @@ open class UnsplashContainer : Container
 
 	/// Loads the (shallow) contents of this folder
 	
-	class func loadContents(for identifier:String, data:Any, filter:String) async throws -> Loader.Contents
+	class func loadContents(for identifier:String, data:Any, filter:Any?) async throws -> Loader.Contents
 	{
 		let containers:[Container] = []
 		var objects:[Object] = []
 		
-		guard let state = data as? State else { return (containers,objects) }
+		guard let state = data as? Data else { return (containers,objects) }
 		
 		// If the search string has changed, then clear the results
 		
-		if filter != state.filterString
+		if (filter as? String) != state.searchString
 		{
 			state.page = 0
 			state.photos = []
@@ -87,11 +87,11 @@ open class UnsplashContainer : Container
 		
 		// Append the next page of search results
 			
-		if !filter.isEmpty
+		if let searchString = filter as? String, !searchString.isEmpty
 		{
 			state.page += 1
-			state.filterString = filter
-			state.photos += try await self.photos(for:filter, page:state.page)
+			state.searchString = searchString
+			state.photos += try await self.photos(for:searchString, page:state.page)
 			print("UnsplashContainer: appending page \(state.page)")
 		}
 		

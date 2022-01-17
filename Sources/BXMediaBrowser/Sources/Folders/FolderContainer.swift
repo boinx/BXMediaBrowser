@@ -69,7 +69,7 @@ open class FolderContainer : Container
 	
 	/// Loads the (shallow) contents of this folder
 	
-	class func loadContents(for identifier:String, data:Any, filter:String) async throws -> Loader.Contents
+	class func loadContents(for identifier:String, data:Any, filter:Any?) async throws -> Loader.Contents
 	{
 		var containers:[Container] = []
 		var objects:[Object] = []
@@ -87,7 +87,7 @@ open class FolderContainer : Container
 			.contentsOfDirectory(atPath:folderURL.path)
 			.sorted(using:.localizedStandard)
 		
-		let filterString = filter.lowercased()
+		let searchString = (filter as? String)?.lowercased() ?? ""
 		
 		// Go through all items
 		
@@ -101,9 +101,12 @@ open class FolderContainer : Container
 			guard url.isReadable else { continue }
 			guard !url.isHidden else { continue }
 			
-			if !filterString.isEmpty
+			// Skip files that do not meet search criteria
+			
+			if !searchString.isEmpty
 			{
-				guard url.lastPathComponent.lowercased().contains(filterString) else { continue }
+				let filename = url.lastPathComponent
+				guard filename.lowercased().contains(searchString) else { continue }
 			}
 			
 			// For a directory, create a sub-container

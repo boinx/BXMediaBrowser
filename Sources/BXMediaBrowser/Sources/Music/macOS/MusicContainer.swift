@@ -88,7 +88,7 @@ public class MusicContainer : Container
 
 	/// Loads the (shallow) contents of this folder
 	
-	class func loadContents(for identifier:String, data:Any, filter:String) async throws -> Loader.Contents
+	class func loadContents(for identifier:String, data:Any, filter:Any?) async throws -> Loader.Contents
 	{
 		var containers:[Container] = []
 		var objects:[Object] = []
