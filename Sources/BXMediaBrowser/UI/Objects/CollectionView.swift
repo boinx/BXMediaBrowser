@@ -285,6 +285,22 @@ extension CollectionView
 		}
 		
 		
+		/// Once the user scrolls down near the bottom of the CollectionView, then send out a notification that
+		/// can trigger certain actions (like reloading the Container).
+		
+		@MainActor public func collectionView(_ collectionView:NSCollectionView, willDisplay item:NSCollectionViewItem, forRepresentedObjectAt indexPath:IndexPath)
+		{
+			let n = self.container?.objects.count ?? 0
+			let i = indexPath.item
+			let j = (n - 20).clipped(to:0 ... n-1)
+			
+			if i == j
+			{
+				NotificationCenter.default.post(name:didScrollToEndNotification, object:self.container)
+			}
+		}
+
+
 		// Allow dragging of cells to other destinations
 		
 		@MainActor public func collectionView(_ collectionView:NSCollectionView, canDragItemsAt indexPaths:Set<IndexPath>, with event:NSEvent) -> Bool
@@ -323,6 +339,12 @@ extension CollectionView
 		}
 	}
 }
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+public let didScrollToEndNotification = NSNotification.Name("CollectionView.didScrollToEnd")
 
 
 //----------------------------------------------------------------------------------------------------------------------
