@@ -116,7 +116,7 @@ open class UnsplashContainer : Container
 	{
 		// Build a search request with the provided search string (filter)
 		
-		let accessKey = UnsplashConfig.shared.accessKey //"VKrgdYuo88hVc1dsG30xE6OjunULacXlvcfdIO6-Zlw" //
+		let accessKey = UnsplashConfig.shared.accessKey
 		let authorization = "Client-ID \(accessKey)"
 		let accessPoint = "https://api.unsplash.com/search/photos"
 		var urlComponents = URLComponents(string:accessPoint)!
