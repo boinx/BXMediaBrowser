@@ -69,7 +69,7 @@ open class UnsplashSource : Source, AccessControl
 		var state = await super.state()
 		
 //		let bookmarks = await self.containers
-//			.compactMap { $0.info as? URL }
+//			.compactMap { $0.data as? URL }
 //			.compactMap { try? $0.bookmarkData() }
 //
 //		state[Self.bookmarksKey] = bookmarks

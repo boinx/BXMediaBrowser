@@ -111,7 +111,7 @@ open class UnsplashObject : Object
 	{
 //		do
 //		{
-//			guard let photo = info as? UnsplashPhoto else { throw Error.downloadFileFailed }
+//			guard let photo = data as? UnsplashPhoto else { throw Error.downloadFileFailed }
 //			guard let url = photo.urls[.full] else { throw Error.downloadFileFailed }
 //			return url.lastPathComponent
 //		}

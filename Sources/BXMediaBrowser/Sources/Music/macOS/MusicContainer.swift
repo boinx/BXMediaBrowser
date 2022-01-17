@@ -52,7 +52,7 @@ public class MusicContainer : Container
 	{
 		super.init(
 			identifier:identifier,
-			info:kind,
+			data:kind,
 			icon:icon,
 			name:name,
 			loadHandler:Self.loadContents)
@@ -70,7 +70,7 @@ public class MusicContainer : Container
 
 	override var canExpand:Bool
 	{
-		guard let kind = info as? Kind else { return true }
+		guard let kind = data as? Kind else { return true }
 
 		switch kind
 		{
@@ -88,12 +88,12 @@ public class MusicContainer : Container
 
 	/// Loads the (shallow) contents of this folder
 	
-	class func loadContents(for identifier:String, info:Any, filter:String) async throws -> Loader.Contents
+	class func loadContents(for identifier:String, data:Any, filter:String) async throws -> Loader.Contents
 	{
 		var containers:[Container] = []
 		var objects:[Object] = []
 		
-		guard let kind = info as? Kind else { throw Error.loadContentsFailed }
+		guard let kind = data as? Kind else { throw Error.loadContentsFailed }
 		
 		switch kind
 		{

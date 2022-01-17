@@ -54,7 +54,7 @@ open class UnsplashContainer : Container
 	{
 		super.init(
 			identifier: "UnsplashSource:Search",
-			info: self.state,
+			data: self.state,
 			icon: "magnifyingglass",
 			name: "Search",
 			removeHandler: nil,
@@ -69,12 +69,12 @@ open class UnsplashContainer : Container
 
 	/// Loads the (shallow) contents of this folder
 	
-	class func loadContents(for identifier:String, info:Any, filter:String) async throws -> Loader.Contents
+	class func loadContents(for identifier:String, data:Any, filter:String) async throws -> Loader.Contents
 	{
 		let containers:[Container] = []
 		var objects:[Object] = []
 		
-		guard let state = info as? State else { return (containers,objects) }
+		guard let state = data as? State else { return (containers,objects) }
 		
 		// If the search string has changed, then clear the results
 		

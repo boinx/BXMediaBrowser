@@ -37,9 +37,9 @@ extension Container
 		
 		public let identifier:String
 		
-		/// This can be any lkind of info that subclasses need to their job.
+		/// This can be any lkind of data that subclasses need to their job.
 		
-		public let info:Any
+		public let data:Any
 	
 		/// The loadHandler is an externally provided closure that returns the Contents for this Container
 		
@@ -55,10 +55,10 @@ extension Container
 
 		/// Creates a new Container with an externally supplied closure to load the contents
 		
-		public init(identifier:String, info:Any, loadHandler:@escaping LoadHandler)
+		public init(identifier:String, data:Any, loadHandler:@escaping LoadHandler)
 		{
 			self.identifier = identifier
-			self.info = info
+			self.data = data
 			self.loadHandler = loadHandler
 		}
 
@@ -66,7 +66,7 @@ extension Container
 		
 		public func contents(with filter:String) async throws -> Contents
 		{
-			try await self.loadHandler(identifier,info,filter)
+			try await self.loadHandler(identifier,data,filter)
 		}
 	}
 }

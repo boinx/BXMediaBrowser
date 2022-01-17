@@ -38,9 +38,9 @@ open class Container : ObservableObject, Identifiable, StateSaving
 	
 	public let identifier:String
 	
-	/// This can be any kind of info that subclasses need to their job
+	/// This can be any kind of data that subclasses need to their job
 	
-	public var info:Any
+	public var data:Any
 	
 	/// An SFSymbol name for the container icon
 	
@@ -113,14 +113,14 @@ open class Container : ObservableObject, Identifiable, StateSaving
 	
 	/// Creates a new Container
 	
-	public init(identifier:String, info:Any, icon:String? = nil, name:String, removeHandler:((Container)->Void)? = nil, loadHandler:@escaping Container.Loader.LoadHandler)
+	public init(identifier:String, data:Any, icon:String? = nil, name:String, removeHandler:((Container)->Void)? = nil, loadHandler:@escaping Container.Loader.LoadHandler)
 	{
 		self.identifier = identifier
-		self.info = info
+		self.data = data
 		self.icon = icon
 		self.name = name
 		self.removeHandler = removeHandler
-		self.loader = Container.Loader(identifier:identifier, info:info, loadHandler:loadHandler)
+		self.loader = Container.Loader(identifier:identifier, data:data, loadHandler:loadHandler)
 		
 		// Reload this Container when the filterString changes
 		

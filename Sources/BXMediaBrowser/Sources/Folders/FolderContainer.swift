@@ -43,7 +43,7 @@ open class FolderContainer : Container
 		
 		super.init(
 			identifier: FolderSource.identifier(for:url),
-			info: url,
+			data: url,
 			name: url.lastPathComponent,
 			removeHandler: removeHandler,
 			loadHandler: Self.loadContents)
@@ -62,21 +62,21 @@ open class FolderContainer : Container
 	override var canExpand: Bool
 	{
 		if self.isLoaded { return !self.containers.isEmpty }
-		guard let folderURL = info as? URL else { return false }
+		guard let folderURL = data as? URL else { return false }
 		return folderURL.hasSubfolders
 	}
 	
 	
 	/// Loads the (shallow) contents of this folder
 	
-	class func loadContents(for identifier:String, info:Any, filter:String) async throws -> Loader.Contents
+	class func loadContents(for identifier:String, data:Any, filter:String) async throws -> Loader.Contents
 	{
 		var containers:[Container] = []
 		var objects:[Object] = []
 		
 		// Convert identifier to URL and perform some sanity checks
 		
-		guard let folderURL = info as? URL else { throw Error.notFound }
+		guard let folderURL = data as? URL else { throw Error.notFound }
 		guard folderURL.exists else { throw Error.notFound }
 		guard folderURL.isDirectory else { throw Error.notFound }
 		guard folderURL.isReadable else { throw Error.accessDenied }

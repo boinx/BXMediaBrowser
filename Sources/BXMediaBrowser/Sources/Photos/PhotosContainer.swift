@@ -49,7 +49,7 @@ public class PhotosContainer : Container
 
 		super.init(
 			identifier:identifier,
-			info:assets,
+			data:assets,
 			icon:icon,
 			name:name,
 			loadHandler:Self.loadContents)
@@ -62,7 +62,7 @@ public class PhotosContainer : Container
 	{
 		super.init(
 			identifier:identifier,
-			info:albums,
+			data:albums,
 			name:name,
 			loadHandler:Self.loadContents)
 
@@ -77,7 +77,7 @@ public class PhotosContainer : Container
 	
 		super.init(
 			identifier:identifier,
-			info:collectionList,
+			data:collectionList,
 			name:name,
 			loadHandler:Self.loadContents)
 
@@ -92,7 +92,7 @@ public class PhotosContainer : Container
 		
 		super.init(
 			identifier:identifier,
-			info:assetCollection,
+			data:assetCollection,
 			icon:"rectangle.stack",
 			name:name,
 			loadHandler:Self.loadContents)
@@ -108,7 +108,7 @@ public class PhotosContainer : Container
 
 		super.init(
 			identifier:identifier,
-			info:collection,
+			data:collection,
 			name:name,
 			loadHandler:Self.loadContents)
 
@@ -131,7 +131,7 @@ public class PhotosContainer : Container
 	{
 		if self.identifier == "PhotosSource:Library" { return false }
 		if self.identifier == "PhotosSource:Albums" { return true }
-		return info is PHCollectionList
+		return data is PHCollectionList
 	}
 	
 	
@@ -140,14 +140,14 @@ public class PhotosContainer : Container
 
 	/// Loads the (shallow) contents of this folder
 	
-	class func loadContents(for identifier:String, info:Any, filter:String) async throws -> Loader.Contents
+	class func loadContents(for identifier:String, data:Any, filter:String) async throws -> Loader.Contents
 	{
 		var containers:[Container] = []
 		var objects:[Object] = []
 		
 		// PHCollectionList (Folder) - can contain subfolders and albums, but no images (PHAssets)
 		
-		if let collectionList = info as? PHCollectionList
+		if let collectionList = data as? PHCollectionList
 		{
 			let collections = PHCollection.fetchCollections(in:collectionList, options:nil)
 			
@@ -192,7 +192,7 @@ public class PhotosContainer : Container
 		
 		// PHAssetCollection (Album) - only contains images (PHAssets) but no subfolders
 		
-		else if let album = info as? PHAssetCollection
+		else if let album = data as? PHAssetCollection
 		{
 			let assets = PHAsset.fetchAssets(in:album, options:nil)
 
@@ -205,14 +205,14 @@ public class PhotosContainer : Container
 		
 		//
 		
-		else if let collection = info as? PHCollection
+		else if let collection = data as? PHCollection
 		{
 			print("hmmm")
 		}
 		
 		// Datatype not determined yet, so get it from a PHFetchResult
 		
-		else if let items = info as? PHFetchResult<PHObject>
+		else if let items = data as? PHFetchResult<PHObject>
 		{
 			for i in 0 ..< items.count
 			{
@@ -252,19 +252,19 @@ public class PhotosContainer : Container
     {
 		DispatchQueue.main.async
 		{
-			if let object = self.info as? PHObject
+			if let object = self.data as? PHObject
 			{
 				if let object = change.changeDetails(for:object)
 				{
-					self.info = object
+					self.data = object
 					self.load()
 				}
 			}
-			else if let fetchResult = self.info as? PHFetchResult<PHObject>
+			else if let fetchResult = self.data as? PHFetchResult<PHObject>
 			{
 				if let fetchResult = change.changeDetails(for:fetchResult)
 				{
-					self.info = fetchResult
+					self.data = fetchResult
 					self.load()
 				}
 			}
