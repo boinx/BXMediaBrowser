@@ -39,6 +39,7 @@ public class ObjectCell : NSCollectionViewItem
 	{
 		didSet
 		{
+			self.reset()
 			self.setup()
 			self.redraw()
 		}
@@ -100,6 +101,13 @@ public class ObjectCell : NSCollectionViewItem
 
 
 	// MARK: - Setup
+	
+	func reset()
+	{
+		self.imageView?.image = nil
+		self.textField?.stringValue = ""
+	}
+	
 	
 	func setup()
 	{
