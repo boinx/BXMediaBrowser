@@ -50,7 +50,7 @@ extension Object : NSFilePromiseProviderDelegate
     }
     
 	
-	public func filePromiseProvider(_ filePromiseProvider:NSFilePromiseProvider, fileNameForType fileType: String) -> String
+	public func filePromiseProvider(_ filePromiseProvider:NSFilePromiseProvider, fileNameForType fileType:String) -> String
     {
 		self.localFileName
     }
