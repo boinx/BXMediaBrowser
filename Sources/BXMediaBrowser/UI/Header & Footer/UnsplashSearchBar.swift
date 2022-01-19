@@ -38,7 +38,7 @@ public struct UnsplashSearchBar : View
 	// For some reason having more than one @State var crashes SwiftUI here, so we'll bundle the three needed
 	// properties in a helper class called UsplashFilterData. Seems to be a functioning workaround.
 	
-	@State private var filterData = UsplashFilterData()
+	@State private var filterData = UnsplashFilterData()
 	
 //	@State private var searchString:String = ""
 //	@State private var orientation:String = "" // UnsplashFilter.Orientation.any.rawValue
@@ -84,10 +84,9 @@ public struct UnsplashSearchBar : View
             }
 			.pickerStyle(.menu)
 
-
 			Picker("Color:", selection: self.$filterData.color)
 			{
-				ForEach(UnsplashFilter.Color.allValues, id:\.self)
+				ForEach(UnsplashFilter.Color.allIdentifiers, id:\.self)
 				{
 					Text($0)
 				}
@@ -95,15 +94,6 @@ public struct UnsplashSearchBar : View
 			.pickerStyle(.menu)
 		}
 		.padding(10)
-		
-//		.onReceive(self.$filterData.orientation)
-//		{
-//			_ in DispatchQueue.main.async { self.updateFilter() }
-//		}
-//		.onReceive(self.$filterData.color)
-//		{
-//			_ in DispatchQueue.main.async { self.updateFilter() }
-//		}
     }
     
     func updateFilter()
@@ -127,7 +117,26 @@ public struct UnsplashSearchBar : View
 //----------------------------------------------------------------------------------------------------------------------
 
 
-class UsplashFilterData : ObservableObject
+struct UnsplashColorButton : View
+{
+	var color:UnsplashFilter.Color
+	var action:(UnsplashFilter.Color)->Void
+	
+	var body: some View
+	{
+		color.color
+			.frame(width:16, height:16)
+			.cornerRadius(8)
+			.overlay( Circle().strokeBorder(Color.primary, lineWidth:0.5, antialiased:true) )
+			.onTapGesture { action(color) }
+	}
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+class UnsplashFilterData : ObservableObject
 {
 	@Published var searchString:String = ""
 
