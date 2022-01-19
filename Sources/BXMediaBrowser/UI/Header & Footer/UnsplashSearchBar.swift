@@ -36,13 +36,12 @@ public struct UnsplashSearchBar : View
 	@ObservedObject var selectedContainer:Container
 	
 	// For some reason having more than one @State var crashes SwiftUI here, so we'll bundle the three needed
-	// properties in a helper class called UsplashFilterData. Seems to be a functioning workaround.
-	
-	@State private var filterData = UnsplashFilterData()
+	// properties in a helper class called UsplashFilterData. Seems to be a functioning workaround for now.
 	
 //	@State private var searchString:String = ""
-//	@State private var orientation:String = "" // UnsplashFilter.Orientation.any.rawValue
-//	@State private var color:String = "" // UnsplashFilter.Color.any.rawValue
+//	@State private var orientation:String = ""
+//	@State private var color:String = ""
+	@State private var filterData = UnsplashFilterData()
 	
 	// Init
 	

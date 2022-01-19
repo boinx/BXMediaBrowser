@@ -83,21 +83,6 @@ open class UnsplashObject : Object
 			metadata["creationDate"] = creationDate
 		}
 		
-//		if let fileSize = url.fileSize
-//		{
-//			metadata["fileSize"] = fileSize
-//		}
-//
-//		if let creationDate = url.creationDate
-//		{
-//			metadata["creationDate"] = creationDate
-//		}
-//
-//		if let modificationDate = url.modificationDate
-//		{
-//			metadata["modificationDate"] = modificationDate
-//		}
-		
 		return metadata
 	}
 
