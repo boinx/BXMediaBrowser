@@ -72,8 +72,17 @@ extension Object : NSFilePromiseProviderDelegate
 			}
 			catch
 			{
-				try FileManager.default.copyItem(at:localURL, to:dstURL)
+				do
+				{
+					try FileManager.default.copyItem(at:localURL, to:dstURL)
+				}
+				catch let error
+				{
+					print("\(Self.self).\(#function) ERROR \(error)")
+				}
 			}
+			
+			
 		}
     }
 
