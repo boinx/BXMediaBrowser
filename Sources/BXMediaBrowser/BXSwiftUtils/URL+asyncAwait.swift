@@ -14,11 +14,11 @@ import Foundation
 
 
 @available(macOS, deprecated:12.0, message:"Use the built-in API instead")
-//@available(iOS, deprecated:15.0, message:"Use the built-in API instead")
+@available(iOS, deprecated:15.0, message:"Use the built-in API instead")
 
 extension URLSession
 {
-    func data(with url:URL) async throws -> (Data,URLResponse)
+    public func data(from url:URL, delegate:URLSessionTaskDelegate? = nil) async throws -> (Data, URLResponse)
     {
         try await withCheckedThrowingContinuation
         {
@@ -37,12 +37,13 @@ extension URLSession
                 continuation.resume(returning:(data,response))
             }
 
+			task.delegate = delegate
             task.resume()
         }
     }
 
 
-    func data(with request:URLRequest) async throws -> (Data,URLResponse)
+    public func data(for request:URLRequest, delegate:URLSessionTaskDelegate? = nil) async throws -> (Data, URLResponse)
     {
         try await withCheckedThrowingContinuation
         {
