@@ -31,14 +31,14 @@ import Foundation
 
 open class UnsplashContainer : Container
 {
-	class Data
+	class UnsplashData
 	{
 		var filter = UnsplashFilter()
 		var page = 0
 		var photos:[UnsplashPhoto] = []
 	}
 	
-	let _data = Data()
+	let _unsplashData = UnsplashData()
 	
 	// Unsplash Container can never be expanded, as they do not have any sub-containers
 	
@@ -54,7 +54,7 @@ open class UnsplashContainer : Container
 	{
 		super.init(
 			identifier: "UnsplashSource:Search",
-			data: self._data,
+			data: self._unsplashData,
 			icon: "magnifyingglass",
 			name: "Search",
 			removeHandler: nil,
@@ -74,14 +74,14 @@ open class UnsplashContainer : Container
 		let containers:[Container] = []
 		var objects:[Object] = []
 		
-		guard let currentData = data as? Data else { return (containers,objects) }
+		guard let unsplashData = data as? UnsplashData else { return (containers,objects) }
 		
 		// If the search string has changed, then clear the results
 		
-		if (filter as? UnsplashFilter) != currentData.filter
+		if (filter as? UnsplashFilter) != unsplashData.filter
 		{
-			currentData.page = 0
-			currentData.photos = []
+			unsplashData.page = 0
+			unsplashData.photos = []
 			print("UnsplashContainer: clear search results")
 		}
 		
@@ -89,15 +89,15 @@ open class UnsplashContainer : Container
 			
 		if let unplashFilter = filter as? UnsplashFilter, !unplashFilter.searchString.isEmpty
 		{
-			currentData.page += 1
-			currentData.filter.searchString = unplashFilter.searchString
-			currentData.photos += try await self.photos(for:unplashFilter, page:currentData.page)
-			print("UnsplashContainer: appending page \(currentData.page)")
+			unsplashData.page += 1
+			unsplashData.filter = unplashFilter
+			unsplashData.photos += try await self.photos(for:unplashFilter, page:unsplashData.page)
+			print("UnsplashContainer: appending page \(unsplashData.page)")
 		}
 		
 		// Remove potential duplicates, as that would cause serious issues with NSDiffableDataSource
 		
-		let photos = self.removeDuplicates(from:currentData.photos)
+		let photos = self.removeDuplicates(from:unsplashData.photos)
 		
 		// Build an Object for each UnsplashPhoto in the search results
 		
@@ -146,7 +146,7 @@ open class UnsplashContainer : Container
 		
 		// Perform the online search
 		
-		let (data,_) = try await URLSession.shared.data(with:request)
+		let (data,_) = try await URLSession.shared.data(for:request)
 		
 		// Decode returned JSON to array of UnsplashPhoto
 		
