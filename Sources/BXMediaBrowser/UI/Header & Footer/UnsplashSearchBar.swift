@@ -35,7 +35,12 @@ public struct UnsplashSearchBar : View
 	
 	@ObservedObject var selectedContainer:Container
 	
-	@State private var searchString:String = ""
+	// For some reason having more than one @State var crashes SwiftUI here, so we'll bundle the three needed
+	// properties in a helper class called UsplashFilterData. Seems to be a functioning workaround.
+	
+	@State private var filterData = UsplashFilterData()
+	
+//	@State private var searchString:String = ""
 //	@State private var orientation:String = "" // UnsplashFilter.Orientation.any.rawValue
 //	@State private var color:String = "" // UnsplashFilter.Color.any.rawValue
 	
@@ -44,6 +49,15 @@ public struct UnsplashSearchBar : View
 	public init(with selectedContainer:Container)
 	{
 		self.selectedContainer = selectedContainer
+		
+		if let filter = selectedContainer.filter as? UnsplashFilter
+		{
+			self.filterData.searchString = filter.searchString
+			self.filterData.orientation = filter.orientation?.rawValue ?? ""
+			self.filterData.color = filter.color?.rawValue ?? ""
+		}
+		
+		self.filterData.didChange = self.updateFilter
 	}
 	
 	// View
@@ -52,7 +66,7 @@ public struct UnsplashSearchBar : View
     {
 		HStack
 		{
-			TextField("Search", text:self.$searchString)
+			TextField("Search", text:self.$filterData.searchString)
 			{
 				self.updateFilter()
 			}
@@ -61,40 +75,51 @@ public struct UnsplashSearchBar : View
 			
 			Spacer()
 			
-//			Picker("Orientation:", selection: $orientation)
-//			{
-//				ForEach(UnsplashFilter.Orientation.allValues, id:\.self)
-//				{
-//					Text($0)
-//				}
-//            }
-//			.pickerStyle(.menu)
-//
-//
-//			Picker("Color:", selection: $color)
-//			{
-//				ForEach(UnsplashFilter.Color.allValues, id:\.self)
-//				{
-//					Text($0)
-//				}
-//           }
-//			.pickerStyle(.menu)
+			Picker("Orientation:", selection: self.$filterData.orientation)
+			{
+				ForEach(UnsplashFilter.Orientation.allValues, id:\.self)
+				{
+					Text($0)
+				}
+            }
+			.pickerStyle(.menu)
+
+
+			Picker("Color:", selection: self.$filterData.color)
+			{
+				ForEach(UnsplashFilter.Color.allValues, id:\.self)
+				{
+					Text($0)
+				}
+           }
+			.pickerStyle(.menu)
 		}
 		.padding(10)
+		
+//		.onReceive(self.$filterData.orientation)
+//		{
+//			_ in DispatchQueue.main.async { self.updateFilter() }
+//		}
+//		.onReceive(self.$filterData.color)
+//		{
+//			_ in DispatchQueue.main.async { self.updateFilter() }
+//		}
     }
     
     func updateFilter()
     {
-//		var orientation = UnsplashFilter.Orientation(rawValue: self.orientation)
-//		if self.orientation == "" { orientation = nil }
-//
-//		var color = UnsplashFilter.Color(rawValue: self.color)
-//		if self.color == "" { color = nil }
+		let searchString = self.filterData.searchString
+		
+		var orientation = UnsplashFilter.Orientation(rawValue: self.filterData.orientation)
+		if self.filterData.orientation == "" { orientation = nil }
+
+		var color = UnsplashFilter.Color(rawValue: self.filterData.color)
+		if self.filterData.color == "" { color = nil }
 		
 		self.selectedContainer.filter = UnsplashFilter(
-			searchString:self.searchString,
-			orientation:nil,
-			color:nil)
+			searchString:searchString,
+			orientation:orientation,
+			color:color)
     }
 }
 
@@ -102,3 +127,22 @@ public struct UnsplashSearchBar : View
 //----------------------------------------------------------------------------------------------------------------------
 
 
+class UsplashFilterData : ObservableObject
+{
+	@Published var searchString:String = ""
+
+	@Published var orientation:String = ""
+	{
+		didSet { self.didChange() }
+	}
+	
+	@Published var color:String = ""
+	{
+		didSet { self.didChange() }
+	}
+	
+	var didChange:()->Void = { }
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
