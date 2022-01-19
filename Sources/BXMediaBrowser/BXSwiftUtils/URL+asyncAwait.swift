@@ -62,6 +62,32 @@ extension URLSession
                 continuation.resume(returning:(data,response))
             }
 
+			task.delegate = delegate
+            task.resume()
+        }
+    }
+    
+ 
+	public func download(from url:URL, delegate:URLSessionTaskDelegate? = nil) async throws -> (URL, URLResponse)
+    {
+        try await withCheckedThrowingContinuation
+        {
+			continuation in
+
+            let task = self.downloadTask(with:url)
+            {
+				(localURL,response,error) in
+
+                guard let localURL = localURL, let response = response else
+                {
+                    let error = error ?? URLError(.badServerResponse)
+                    return continuation.resume(throwing:error)
+                }
+
+                continuation.resume(returning:(localURL,response))
+            }
+
+			task.delegate = delegate
             task.resume()
         }
     }
