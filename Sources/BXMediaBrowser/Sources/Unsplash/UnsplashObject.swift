@@ -90,35 +90,61 @@ open class UnsplashObject : Object
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	// Get the filename of the downloaded file
+	// Returns the filename of the file that will be downloaded
 	
 	override var localFileName:String
 	{
-//		do
-//		{
-//			guard let photo = data as? UnsplashPhoto else { throw Error.downloadFileFailed }
-//			guard let url = photo.urls[.full] else { throw Error.downloadFileFailed }
-//			return url.lastPathComponent
-//		}
-//		catch
-//		{
-			return "Unsplash Photo"
-//		}
+		// Fallback filename
+		
+		var name = "UnsplashPhoto"
+		var ext = "jpg"
+		
+		do
+		{
+			// Unfortunately the remote URL is not simple. To get the file extension, we need to parse the URL query
+			
+			let remoteURL = try Self.remoteURL(for:identifier, data:data)
+			let components = URLComponents(url:remoteURL, resolvingAgainstBaseURL:false)
+			let queryItems = components?.queryItems ?? []
+			
+			name = components?.path.replacingOccurrences(of:"/", with:"") ?? name
+			
+			for queryItem in queryItems
+			{
+				if queryItem.name == "fm", let value = queryItem.value
+				{
+					ext = value
+					break
+				}
+			}
+		}
+		catch let error
+		{
+			print("\(Self.self).\(#function) ERROR \(error)")
+		}
+		
+		return "\(name).\(ext)"
 	}
 	
+	
+	/// Return the remote URL for an Unsplash Photo
+	
+	class func remoteURL(for identifier:String, data:Any) throws -> URL
+	{
+		guard let photo = data as? UnsplashPhoto else { throw Error.downloadFileFailed }
+		guard let remoteURL = photo.urls["full"] else { throw Error.downloadFileFailed }
+		return remoteURL
+	}
+	
+	
+	/// Starts downloading an image file
 	
 	open class func downloadFile(for identifier:String, data:Any) async throws -> URL
 	{
-		guard let photo = data as? UnsplashPhoto else { throw Error.downloadFileFailed }
-		guard let url = photo.urls["full"] else { throw Error.downloadFileFailed }
-		
-		// TODO
-		
-		
-		return url
+		let remoteURL = try remoteURL(for:identifier, data:data)
+		let localURL = try await URLSession.shared.downloadFile(from:remoteURL)
+		return localURL
 	}
-
-
 }
 
 
