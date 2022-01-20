@@ -184,7 +184,8 @@ extension Object
 
 		// MARK: -
 		
-		///
+		/// Returns the local media file URL. This can potentially trigger a lengthy download from the Internet,
+		/// depending on the Source that created this Object.
 		
 		var localURL:URL
 		{
