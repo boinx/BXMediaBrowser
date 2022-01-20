@@ -29,7 +29,7 @@ extension URLSession
             {
 				(data,response,error) in
 
-                guard let data = data, let response = response else
+                guard let data = data else
                 {
                     let error = error ?? URLError(.badServerResponse)
                     return continuation.resume(throwing:error)
@@ -60,7 +60,7 @@ extension URLSession
             {
 				(data,response,error) in
 
-                guard let data = data, let response = response else
+                guard let data = data else
                 {
                     let error = error ?? URLError(.badServerResponse)
                     return continuation.resume(throwing:error)
@@ -78,17 +78,11 @@ extension URLSession
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	public func downloadFile(from remoteURL:URL, delegate:URLSessionTaskDelegate? = nil, cleanupDelay:Double = 20.0) async throws -> URL
+	public func downloadFile(from remoteURL:URL, delegate:URLSessionTaskDelegate? = nil) async throws -> URL
     {
 		if #available(macOS 12, iOS 15, *)
 		{
 			let (tmpURL,_) = try await self.download(from:remoteURL, delegate:delegate)
-
-			DispatchQueue.main.asyncAfter(deadline:.now()+cleanupDelay)
-			{
-				try? FileManager.default.removeItem(at:tmpURL)
-			}
-
 			return tmpURL
 		}
 		else
@@ -105,7 +99,7 @@ extension URLSession
 
 					// Report potential errors and bail out
 					
-					guard let tmpURL = tmpURL, let response = response else
+					guard let tmpURL = tmpURL else
 					{
 						let error = error ?? URLError(.badServerResponse)
 						return continuation.resume(throwing:error)
@@ -116,13 +110,6 @@ extension URLSession
 					let tmpURL2 = tmpURL.appendingPathExtension("backup")
 					try? FileManager.default.linkItem(at:tmpURL, to:tmpURL2)
 					
-					// Get rid of backup file after specified delay
-					
-					DispatchQueue.main.asyncAfter(deadline:.now()+cleanupDelay)
-					{
-						try? FileManager.default.removeItem(at:tmpURL2)
-					}
-
 					// Return URL to backup file instead
 					
 					continuation.resume(returning:(tmpURL2))
