@@ -143,6 +143,7 @@ open class UnsplashObject : Object
 	{
 		let remoteURL = try remoteURL(for:identifier, data:data)
 		let localURL = try await URLSession.shared.downloadFile(from:remoteURL)
+		TempFilePool.shared.register(localURL)
 		return localURL
 	}
 }
