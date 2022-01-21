@@ -70,7 +70,11 @@ public struct DefaultViewFactory : ViewFactory
 	
 	@ViewBuilder static public func defaultContainerView(for model:Any) -> some View
 	{
-		if let container = model as? Container
+		if let container = model as? FolderContainer
+		{
+			FolderContainerView(with:container)
+		}
+		else if let container = model as? Container
 		{
 			ContainerView(with:container)
 		}
