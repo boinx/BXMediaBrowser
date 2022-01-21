@@ -57,14 +57,14 @@ public class MusicContainer : Container
 			name:name,
 			loadHandler:Self.loadContents)
 
-		if case .playlist(let playlist) = kind
-		{
-			self.observers += KVO(object:playlist, keyPath:"items")
-			{
-				[weak self] _,_ in
-				print("MusicContainer: items has changed")
-			}
-		}
+//		if case .playlist(let playlist) = kind
+//		{
+//			self.observers += KVO(object:playlist, keyPath:"items")
+//			{
+//				[weak self] _,_ in
+//				print("MusicContainer: items has changed")
+//			}
+//		}
 	}
 	
 

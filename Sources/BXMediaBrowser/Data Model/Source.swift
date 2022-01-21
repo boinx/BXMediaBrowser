@@ -98,10 +98,10 @@ open class Source : ObservableObject, Identifiable, StateSaving
 				// Remember which existing containers are currently expanded, so that we can
 				// restore that state when reloading the containers.
 		
-				let expandedContainerIdentifiers = await self.containers.compactMap
-				{
-					$0.isExpanded ? $0.identifier : nil
-				}
+//				let expandedContainerIdentifiers = await self.containers.compactMap
+//				{
+//					$0.isExpanded ? $0.identifier : nil
+//				}
 		
 				// Get new list of containers
 				
@@ -127,9 +127,9 @@ open class Source : ObservableObject, Identifiable, StateSaving
 					{
 						let containerState = sourceState?[container.stateKey] as? [String:Any] // ?? [:]
 						let isExpanded1 = containerState?[container.isExpandedKey] as? Bool ?? false
-						let isExpanded2 = expandedContainerIdentifiers.contains(container.identifier)
+//						let isExpanded2 = expandedContainerIdentifiers.contains(container.identifier)
 						
-						if isExpanded1 || isExpanded2
+						if isExpanded1 //|| isExpanded2
 						{
 							container.isExpanded = true
 							container.load(with:containerState)
