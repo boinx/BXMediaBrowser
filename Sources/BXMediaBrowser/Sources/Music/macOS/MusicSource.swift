@@ -87,6 +87,14 @@ public class MusicSource : Source, AccessControl
 		
 		if let library = self.library
 		{
+			let url = library.mediaFolderLocation
+			print("MusicSource: url = \(url)")
+			
+			self.observers += NotificationCenter.default.publisher(for:NSApplication.didBecomeActiveNotification, object:nil).sink
+			{
+				[weak self] _ in self?.reload()
+			}
+			
 			self.observers += KVO(object:library, keyPath:"allMediaItems")
 			{
 				[weak self] _,_ in
@@ -99,30 +107,7 @@ public class MusicSource : Source, AccessControl
 				print("MusicSource: library has changed")
 			}
 
-//			self.observers += library.publisher(for:ReferenceWritableKeyPath(\.allPlaylists)).sink
-//			{
-//				[weak self] _ in
-//				print("MusicSource: library has changed")
-//			}
-//
-//			self.observers += library.publisher(for:KeyPath<ITLibrary,[ITLibMediaItem]>(\.allMediaItems)).sink
-//			{
-//				[weak self] _ in
-//				print("MusicSource: library has changed")
-//			}
 		}
-		
-//		if let url = self.library?.mediaFolderLocation
-//		{
-//			self.folderObserver = FolderObserver(url:url)
-//
-//			self.folderObserver?.folderDidChange =
-//			{
-//				[weak self] in
-//				print("Music database has changed")
-//			}
-//		}
-		
 		
 //		// Request access to photo library if not available yet. Reload all containers once access has been granted.
 //
@@ -182,6 +167,31 @@ public class MusicSource : Source, AccessControl
 		containers += MusicContainer(identifier:"MusicSource:Playlists", kind:.playlistFolder(playlists:topLevelPlaylists, allPlaylists:allPlaylists), icon:"music.note.list", name:"Playlists")
 		
 		return containers
+	}
+	
+	
+	private func reload()
+	{
+		print("\(Self.self).\(#function)")
+
+		Task
+		{
+			// First reload the ITLibrary. Unfortunately this has to be done manually and it is monolithic.
+			// We cannot detect granular changes to individual playlists.
+
+			self.library?.reloadData()
+
+			// Get the current expanded state of all Containers
+			
+			let state = await self.state()
+			
+			// Now reload the complete Source and all its Containers, but try to preserve the existing state
+			
+			await MainActor.run
+			{
+				self.load(with:state)
+			}
+		}
 	}
 }
 
