@@ -53,7 +53,8 @@ public class MusicObject : Object
 		{
 			await MainActor.run
 			{
-				self.isLocallyAvailable = item.locationType == .file
+				self.isLocallyAvailable = item.locationType == .file && item.location != nil
+				self.isDownloadable = false
 			}
 		}
 	}

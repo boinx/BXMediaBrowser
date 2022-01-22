@@ -324,6 +324,8 @@ extension CollectionView
 			
 			// Get a file promise from the Object
 			
+			guard object.isLocallyAvailable || object.isDownloadable else { return nil }
+			
 			return object.filePromiseProvider
 		}
 		

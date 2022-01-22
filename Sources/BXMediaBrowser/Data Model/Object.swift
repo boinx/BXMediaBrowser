@@ -56,8 +56,8 @@ open class Object : NSObject, ObservableObject, Identifiable
 	@MainActor @Published public private(set) var metadata:[String:Any]? = nil
 
 	@MainActor @Published public internal(set) var isLocallyAvailable:Bool = true
-//	@MainActor @Published public internal(set) var isDownloadable:Bool = false
-//	@MainActor @Published public internal(set) var isStreaming:Bool = false
+	@MainActor @Published public internal(set) var isDownloadable:Bool = false
+	@MainActor @Published public internal(set) var isStreaming:Bool = false
 	
 	@Published public var rating:Int = 0
 	@Published public var useCount:Int = 0

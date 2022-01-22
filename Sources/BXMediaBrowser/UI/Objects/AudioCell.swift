@@ -105,6 +105,26 @@ public class AudioCell : ObjectCell
 			let size = CGSize(width:w, height:h)
 			self.imageView?.image = NSImage(cgImage:thumbnail, size:size)
 		}
+
+		if object.isLocallyAvailable
+		{
+			self.button?.image = NSImage(systemSymbolName:"play", accessibilityDescription:nil)
+			self.imageView?.alphaValue = 1.0
+			self.nameField?.alphaValue = 1.0
+		}
+		else if object.isDownloadable
+		{
+			self.button?.image = NSImage(systemSymbolName:"icloud.and.arrow.down", accessibilityDescription:nil)
+			self.imageView?.alphaValue = 0.5
+			self.nameField?.alphaValue = 0.5
+		}
+		else
+		{
+			self.button?.image = NSImage(systemSymbolName:"icloud.slash", accessibilityDescription:nil)
+			self.imageView?.alphaValue = 0.5
+			self.nameField?.alphaValue = 0.5
+		}
+		
 	}
 	
 	
