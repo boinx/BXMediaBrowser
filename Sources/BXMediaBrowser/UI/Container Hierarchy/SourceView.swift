@@ -29,7 +29,7 @@ import SwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public struct FolderSourceView : View
+public struct SourceView : View
 {
 	// Model
 	
@@ -37,6 +37,7 @@ public struct FolderSourceView : View
 	
 	// Environment
 	
+	@EnvironmentObject var library:Library
 	@Environment(\.viewFactory) private var viewFactory
 
 	// Init
@@ -50,16 +51,40 @@ public struct FolderSourceView : View
 	
 	public var body: some View
     {
-		VStack(alignment:.leading, spacing:4)
-		{
-			ForEach(source.containers)
+		BXDisclosureView(isExpanded:self.$source.isExpanded,
+		
+			header:
 			{
-				viewFactory.containerView(for:$0)
+				BXDisclosureButton(source.name, icon:source.icon, isExpanded:self.$source.isExpanded)
+					.leftAligned()
+					.font(.system(size:13))
+					.padding(.vertical,2)
+			},
+			
+			body:
+			{
+				VStack(alignment:.leading, spacing:2)
+				{
+					ForEach(source.containers)
+					{
+						viewFactory.containerView(for:$0)
+					}
+				}
+				.padding(.leading,20)
+				.onAppear { self.loadIfNeeded() }
+			})
+//			.id(source.identifier)
+			
+			// Whenever the current state changes, save it to persistent storage
+		
+			.onReceive(source.$containers)
+			{
+				_ in library.saveState()
 			}
-		}
-		.id(source.identifier)
-		.padding(.top,2)
-		.onAppear { self.loadIfNeeded() }
+			.onReceive(source.$isExpanded)
+			{
+				_ in library.saveState()
+			}
     }
     
     func loadIfNeeded()

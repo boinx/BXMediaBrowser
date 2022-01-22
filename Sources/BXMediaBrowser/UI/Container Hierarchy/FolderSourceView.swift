@@ -29,7 +29,7 @@ import SwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public struct SourceView : View
+public struct FolderSourceView : View
 {
 	// Model
 	
@@ -37,7 +37,6 @@ public struct SourceView : View
 	
 	// Environment
 	
-	@EnvironmentObject var library:Library
 	@Environment(\.viewFactory) private var viewFactory
 
 	// Init
@@ -51,40 +50,18 @@ public struct SourceView : View
 	
 	public var body: some View
     {
-		BXDisclosureView(isExpanded:self.$source.isExpanded,
+		print("FolderSourceView.body \(source.identifier)    ptr = \(Unmanaged.passUnretained(source).toOpaque())")
 		
-			header:
+		return VStack(alignment:.leading, spacing:4)
+		{
+			ForEach(source.containers)
 			{
-				BXDisclosureButton(source.name, icon:source.icon, isExpanded:self.$source.isExpanded)
-					.leftAligned()
-					.font(.system(size:13))
-					.padding(.vertical,2)
-			},
-			
-			body:
-			{
-				VStack(alignment:.leading, spacing:2)
-				{
-					ForEach(source.containers)
-					{
-						viewFactory.containerView(for:$0)
-					}
-				}
-				.padding(.leading,20)
-				.onAppear { self.loadIfNeeded() }
-			})
-			.id(source.identifier)
-			
-			// Whenever the current state changes, save it to persistent storage
-		
-			.onReceive(source.$containers)
-			{
-				_ in library.saveState()
+				viewFactory.containerView(for:$0)
 			}
-			.onReceive(source.$isExpanded)
-			{
-				_ in library.saveState()
-			}
+		}
+		.id(source.identifier)
+		.padding(.top,2)
+		.onAppear { self.loadIfNeeded() }
     }
     
     func loadIfNeeded()
