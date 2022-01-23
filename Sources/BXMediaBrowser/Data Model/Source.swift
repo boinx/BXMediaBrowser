@@ -40,6 +40,10 @@ open class Source : ObservableObject, Identifiable, StateSaving
 	
 	@MainActor @Published public private(set) var containers:[Container] = []
 	
+	/// Returns true if this container is currently being loaded
+	
+	@MainActor @Published public private(set) var isLoading = false
+		
 	/// Returns true if this source has been loaded (at least once)
 	
 	@MainActor @Published public private(set) var isLoaded = false
@@ -48,13 +52,9 @@ open class Source : ObservableObject, Identifiable, StateSaving
 	
 	@Published public var isExpanded = false
 	
-	/// The currently running Task for loading the top-level containers
+ 	/// The currently running Task for loading the top-level containers
 	
 	private var loadTask:Task<Void,Never>? = nil
-
-	/// Returns true while this Source is loading. Can be used by the UI to display spinning wheels.
-	
-	var isLoading:Bool { loadTask != nil }
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -95,14 +95,13 @@ open class Source : ObservableObject, Identifiable, StateSaving
 		{
 			do
 			{
-				// Remember which existing containers are currently expanded, so that we can
-				// restore that state when reloading the containers.
-		
-//				let expandedContainerIdentifiers = await self.containers.compactMap
-//				{
-//					$0.isExpanded ? $0.identifier : nil
-//				}
-		
+				// Show spinning wheel
+				
+				await MainActor.run
+				{
+					self.isLoading = true
+				}
+
 				// Get new list of containers
 				
 				let containers = try await self.loader.containers(with:sourceState)
@@ -118,33 +117,53 @@ open class Source : ObservableObject, Identifiable, StateSaving
 					self.containers = containers
 					self.isExpanded = isExpanded
 					
-					self.isLoaded = true
-					self.loadTask = nil
-					
 					// Restore isExpanded state of containers
 					
 					for container in containers
 					{
-						let containerState = sourceState?[container.stateKey] as? [String:Any] // ?? [:]
-						let isExpanded1 = containerState?[container.isExpandedKey] as? Bool ?? false
-//						let isExpanded2 = expandedContainerIdentifiers.contains(container.identifier)
+						let containerState = sourceState?[container.stateKey] as? [String:Any] 
+						let isExpanded = containerState?[container.isExpandedKey] as? Bool ?? false
 						
-						if isExpanded1 //|| isExpanded2
+						if isExpanded
 						{
 							container.isExpanded = true
 							container.load(with:containerState)
 						}
 					}
+					
+					self.isLoading = false
+					self.isLoaded = true
+					self.loadTask = nil
 				}
 			}
-			catch //let error
+			catch let error
 			{
-//				Swift.print("    ERROR \(error)")
+				await MainActor.run
+				{
+					self.isLoading = false
+					self.isLoaded = false
+				}
+
+				Swift.print("    ERROR \(error)")
 			}
 		}
 	}
 	
 
+	func container(for identifier:String) async -> Container?
+	{
+		for container in await containers
+		{
+			if container.identifier == identifier
+			{
+				return container
+			}
+		}
+		
+		return nil
+	}
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 
