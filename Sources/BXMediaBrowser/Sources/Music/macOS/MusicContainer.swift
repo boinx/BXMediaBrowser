@@ -48,13 +48,13 @@ public class MusicContainer : Container
 //----------------------------------------------------------------------------------------------------------------------
 
 
- 	public init(identifier:String, kind:Kind, icon:String?, name:String)
+ 	public init(identifier:String, data:Kind, icon:String?, name:String)
 	{
 		super.init(
 			identifier:identifier,
-			data:kind,
 			icon:icon,
 			name:name,
+			data:data,
 			loadHandler:Self.loadContents)
 
 //		if case .playlist(let playlist) = kind
@@ -117,7 +117,7 @@ public class MusicContainer : Container
 				{
 					containers += MusicContainer(
 						identifier:"MusicSource:Album:\(album.persistentID)",
-						kind:.album(album:album, allMediaItems:allMediaItems),
+						data:.album(album:album, allMediaItems:allMediaItems),
 						icon:"square",
 						name:album.title ?? "Album")
 				}
@@ -130,7 +130,7 @@ public class MusicContainer : Container
 				{
 					containers += MusicContainer(
 						identifier:"MusicSource:Artist:\(artist.persistentID)",
-						kind:.artist(artist:artist, allMediaItems:allMediaItems),
+						data:.artist(artist:artist, allMediaItems:allMediaItems),
 						icon:"person",
 						name:artist.name ?? "Artist")
 				}
@@ -157,11 +157,11 @@ public class MusicContainer : Container
 					{
 						let childPlaylists = Self.childPlaylists(for:playlist, allPlaylists:allPlaylists)
 						
-						containers += MusicContainer(
-							identifier:"MusicSource:Playlist:\(playlist.persistentID)",
-							kind:.playlistFolder(playlists:childPlaylists, allPlaylists:allPlaylists),
-							icon:"folder",
-							name:playlist.name)
+						containers += MusicSource.makeMusicContainer(
+								identifier:"MusicSource:Playlist:\(playlist.persistentID)",
+								data:.playlistFolder(playlists:childPlaylists, allPlaylists:allPlaylists),
+								icon:"folder",
+								name:playlist.name)
 					}
 				}
 				

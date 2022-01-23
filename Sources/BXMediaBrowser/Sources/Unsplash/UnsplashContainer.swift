@@ -54,11 +54,11 @@ open class UnsplashContainer : Container
 	{
 		super.init(
 			identifier: "UnsplashSource:Search",
-			data: self._unsplashData,
 			icon: "magnifyingglass",
 			name: "Search",
-			removeHandler: nil,
-			loadHandler: Self.loadContents)
+			data: self._unsplashData,
+			loadHandler: Self.loadContents,
+			removeHandler: nil)
 			
 		self.observers += NotificationCenter.default.publisher(for:didScrollToEndNotification, object:self).sink
 		{

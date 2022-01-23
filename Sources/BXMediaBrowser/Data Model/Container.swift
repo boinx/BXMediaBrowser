@@ -38,10 +38,6 @@ open class Container : ObservableObject, Identifiable, StateSaving
 	
 	public let identifier:String
 	
-	/// This can be any kind of data that subclasses need to their job
-	
-	public var data:Any
-	
 	/// An SFSymbol name for the container icon
 	
 	public let icon:String?
@@ -49,6 +45,15 @@ open class Container : ObservableObject, Identifiable, StateSaving
 	/// The name of the Container can be displayed in the UI
 	
 	public let name:String
+	
+	/// This can be any kind of data that subclasses need to their job
+	
+	public var data:Any
+	
+	/// This info can be used for filtering the Objects of this Container. Filtering works differently for the
+	/// various sources, as different metadata can be used when filtering.
+	
+	@Published public var filter:Any? = nil
 	
 	/// The Loader is responsible for loading the contents of this Container
 	
@@ -83,11 +88,6 @@ open class Container : ObservableObject, Identifiable, StateSaving
 	
 	private var loadTask:Task<Void,Never>? = nil
 	
-	/// This info can be used for filtering the Objects of this Container. Filtering works
-	/// differently for the various sources, as different metadata can be used when filtering.
-	
-	@Published public var filter:Any? = nil
-	
 	/// This task is used to only show the loading spinner if loading takes a while
 	
 //	private var spinnerTask:Task<Void,Never>? = nil
@@ -113,16 +113,16 @@ open class Container : ObservableObject, Identifiable, StateSaving
 	
 	/// Creates a new Container
 	
-	public init(identifier:String, data:Any, icon:String? = nil, name:String, removeHandler:((Container)->Void)? = nil, loadHandler:@escaping Container.Loader.LoadHandler)
+	public init(identifier:String, icon:String? = nil, name:String, data:Any, loadHandler:@escaping Container.Loader.LoadHandler, removeHandler:((Container)->Void)? = nil)
 	{
 		self.identifier = identifier
 		self.data = data
 		self.icon = icon
 		self.name = name
+		self.loader = Container.Loader(identifier:identifier, loadHandler:loadHandler)
 		self.removeHandler = removeHandler
-		self.loader = Container.Loader(identifier:identifier, data:data, loadHandler:loadHandler)
 		
-		// Reload this Container when the filterString changes
+		// Reload this Container when the filter changes
 		
 		self.setupFilterObserver()
 			

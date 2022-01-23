@@ -49,9 +49,9 @@ public class PhotosContainer : Container
 
 		super.init(
 			identifier:identifier,
-			data:assets,
 			icon:icon,
 			name:name,
+			data:assets,
 			loadHandler:Self.loadContents)
 
 		self.commonInit()
@@ -62,8 +62,8 @@ public class PhotosContainer : Container
 	{
 		super.init(
 			identifier:identifier,
-			data:albums,
 			name:name,
+			data:albums,
 			loadHandler:Self.loadContents)
 
 		self.commonInit()
@@ -77,8 +77,8 @@ public class PhotosContainer : Container
 	
 		super.init(
 			identifier:identifier,
-			data:collectionList,
 			name:name,
+			data:collectionList,
 			loadHandler:Self.loadContents)
 
 		self.commonInit()
@@ -92,9 +92,9 @@ public class PhotosContainer : Container
 		
 		super.init(
 			identifier:identifier,
-			data:assetCollection,
 			icon:"rectangle.stack",
 			name:name,
+			data:assetCollection,
 			loadHandler:Self.loadContents)
 
 		self.commonInit()
@@ -108,8 +108,8 @@ public class PhotosContainer : Container
 
 		super.init(
 			identifier:identifier,
-			data:collection,
 			name:name,
+			data:collection,
 			loadHandler:Self.loadContents)
 
 		self.commonInit()

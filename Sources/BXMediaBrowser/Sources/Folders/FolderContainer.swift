@@ -43,10 +43,10 @@ open class FolderContainer : Container
 		
 		super.init(
 			identifier: FolderSource.identifier(for:url),
-			data: url,
 			name: url.lastPathComponent,
-			removeHandler: removeHandler,
-			loadHandler: Self.loadContents)
+			data: url,
+			loadHandler: Self.loadContents,
+			removeHandler: removeHandler)
 			
 		self.folderObserver.folderDidChange =
 		{
