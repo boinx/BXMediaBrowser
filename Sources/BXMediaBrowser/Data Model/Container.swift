@@ -104,8 +104,8 @@ open class Container : ObservableObject, Identifiable, StateSaving
 	/// References to subcriptions and notifications
 	
 	internal var observers:[Any] = []
-	
-	
+
+
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -135,7 +135,7 @@ open class Container : ObservableObject, Identifiable, StateSaving
 		
 	}
 
-	/// Reloads this Container when the filterString changes
+	/// Reloads this Container when the filter changes
 	
 	private func setupFilterObserver()
 	{
@@ -173,7 +173,7 @@ open class Container : ObservableObject, Identifiable, StateSaving
 	
 	public func load(with containerState:[String:Any]? = nil)
 	{
-//		Swift.print("Loading \"\(name)\" - \(identifier)")
+		Swift.print("Loading \"\(name)\" - \(identifier)")
 
 		self.loadTask?.cancel()
 		self.loadTask = nil
@@ -203,14 +203,6 @@ open class Container : ObservableObject, Identifiable, StateSaving
 					self.isLoading = true
 				}
 				
-				// Remember which existing containers are currently expanded, so
-				// that we can restore that state when reloading the containers.
-		
-//				let expandedContainerIdentifiers = await self.containers.compactMap
-//				{
-//					$0.isExpanded ? $0.identifier : nil
-//				}
-		
 				// Get new list of (sub)containers and objects
 				
 				let (containers,objects) = try await self.loader.contents(with:filter)
@@ -234,10 +226,6 @@ open class Container : ObservableObject, Identifiable, StateSaving
 					self.containers = containers
 					self.objects = objects
 					self.isExpanded = isExpanded
-					
-					self.isLoaded = true
-					self.isLoading = false
-					self.loadTask = nil
 
 					// Restore isExpanded state of containers
 					
@@ -247,6 +235,10 @@ open class Container : ObservableObject, Identifiable, StateSaving
 						let isExpanded = state?[container.isExpandedKey] as? Bool ?? false
 						if isExpanded { container.load(with:state) }
 					}
+					
+					self.isLoaded = true
+					self.isLoading = false
+					self.loadTask = nil
 				}
 			}
 			catch //let error
@@ -256,12 +248,27 @@ open class Container : ObservableObject, Identifiable, StateSaving
 					self.isLoading = false
 					self.isLoaded = false
 				}
+				
 //				Swift.print("    ERROR \(error)")
 			}
 		}
 	}
 	
 
+	func container(for identifier:String) async -> Container?
+	{
+		for container in await containers
+		{
+			if container.identifier == identifier
+			{
+				return container
+			}
+		}
+		
+		return nil
+	}
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 
