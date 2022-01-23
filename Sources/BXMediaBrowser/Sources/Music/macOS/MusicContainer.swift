@@ -37,10 +37,10 @@ public class MusicContainer : Container
 	{
 		case library(allMediaItems:[ITLibMediaItem])
 		case albumFolder(allMediaItems:[ITLibMediaItem])
-		case album(album:ITLibAlbum, allMediaItems:[ITLibMediaItem])
 		case artistFolder(allMediaItems:[ITLibMediaItem])
-		case artist(artist:ITLibArtist, allMediaItems:[ITLibMediaItem])
 		case playlistFolder(playlists:[ITLibPlaylist], allPlaylists:[ITLibPlaylist])
+		case album(album:ITLibAlbum, allMediaItems:[ITLibMediaItem])
+		case artist(artist:ITLibArtist, allMediaItems:[ITLibMediaItem])
 		case playlist(playlist:ITLibPlaylist)
 	}
 
@@ -56,15 +56,6 @@ public class MusicContainer : Container
 			name:name,
 			data:data,
 			loadHandler:Self.loadContents)
-
-//		if case .playlist(let playlist) = kind
-//		{
-//			self.observers += KVO(object:playlist, keyPath:"items")
-//			{
-//				[weak self] _,_ in
-//				print("MusicContainer: items has changed")
-//			}
-//		}
 	}
 	
 

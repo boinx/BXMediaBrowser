@@ -150,18 +150,18 @@ open class Source : ObservableObject, Identifiable, StateSaving
 	}
 	
 
-	func container(for identifier:String) async -> Container?
-	{
-		for container in await containers
-		{
-			if container.identifier == identifier
-			{
-				return container
-			}
-		}
-		
-		return nil
-	}
+//	func container(for identifier:String) async -> Container?
+//	{
+//		for container in await containers
+//		{
+//			if container.identifier == identifier
+//			{
+//				return container
+//			}
+//		}
+//
+//		return nil
+//	}
 	
 	
 //----------------------------------------------------------------------------------------------------------------------

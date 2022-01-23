@@ -37,10 +37,6 @@ extension Container
 		
 		public let identifier:String
 		
-		/// This can be any kind of data that subclasses need to their job.
-		
-//		public let data:Any
-	
 		/// The loadHandler is an externally provided closure that returns the Contents for this Container
 		
 		public let loadHandler:LoadHandler
@@ -55,10 +51,9 @@ extension Container
 
 		/// Creates a new Container with an externally supplied closure to load the contents
 		
-		public init(identifier:String, data:Any, loadHandler:@escaping LoadHandler)
+		public init(identifier:String, loadHandler:@escaping LoadHandler)
 		{
 			self.identifier = identifier
-//			self.data = data
 			self.loadHandler = loadHandler
 		}
 
