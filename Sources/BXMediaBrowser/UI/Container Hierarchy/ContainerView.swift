@@ -51,6 +51,8 @@ public struct ContainerView : View
 	
 	public var body: some View
     {
+//		print("ContainerView.body \(container.identifier)    name = \"\(container.name)\"    ptr = \(Unmanaged.passUnretained(container).toOpaque())")
+		
 		let icon = container.icon ?? "folder"
 		
 		return BXDisclosureView(isExpanded:self.$container.isExpanded,
