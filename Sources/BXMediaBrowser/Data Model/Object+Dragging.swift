@@ -40,7 +40,9 @@ extension Object : NSFilePromiseProviderDelegate
 	@MainActor var filePromiseProvider:NSFilePromiseProvider
 	{
 		let uti = self.localFileUTI
-		return NSFilePromiseProvider(fileType:uti, delegate:self)
+		let provider = NSFilePromiseProvider(fileType:uti, delegate:self)
+		provider.userInfo = self
+		return provider
 	}
 	
 	
