@@ -205,10 +205,10 @@ open class Container : ObservableObject, Identifiable, StateSaving
 				
 				// Get new list of (sub)containers and objects
 				
-//				let names1 = containers.map { $0.name }.joined(separator:", ")
 				let (containers,objects) = try await self.loader.contents(with:data, filter:filter)
+				let names1 = containers.map { $0.name }.joined(separator:", ")
 //				let names2 = objects.map { $0.name }.joined(separator:", ")
-//				Swift.print("    containers = \(names1)")
+				Swift.print("    containers = \(names1)")
 //				Swift.print("    objects = \(names2)")
 				
 				// Check if this container should be expanded
