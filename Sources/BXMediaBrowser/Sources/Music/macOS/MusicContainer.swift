@@ -33,7 +33,9 @@ import iTunesLibrary
 
 public class MusicContainer : Container
 {
-	public enum Kind
+	/// The data property is stored via a enum that is carrying associated data
+	
+	public enum MusicData
 	{
 		case library(allMediaItems:[ITLibMediaItem])
 		case albumFolder(allMediaItems:[ITLibMediaItem])
@@ -48,7 +50,9 @@ public class MusicContainer : Container
 //----------------------------------------------------------------------------------------------------------------------
 
 
- 	public init(identifier:String, data:Kind, icon:String?, name:String)
+	/// Creates a new MusicContainer. The data argument carries essential information about this Container
+	
+ 	public init(identifier:String, icon:String?, name:String, data:MusicData)
 	{
 		super.init(
 			identifier:identifier,
@@ -59,11 +63,13 @@ public class MusicContainer : Container
 	}
 	
 
+	/// Returns true if this Container can be expanded. Depends on the type of Container.
+	
 	override var canExpand:Bool
 	{
-		guard let kind = data as? Kind else { return true }
+		guard let musicData = data as? MusicData else { return true }
 
-		switch kind
+		switch musicData
 		{
 			case .library: return false
 			case .album: return false
@@ -84,9 +90,9 @@ public class MusicContainer : Container
 		var containers:[Container] = []
 		var objects:[Object] = []
 		
-		guard let kind = data as? Kind else { throw Error.loadContentsFailed }
+		guard let musicData = data as? MusicData else { throw Error.loadContentsFailed }
 		
-		switch kind
+		switch musicData
 		{
 			// Loads the objects (tracks) for the top-level "Library"
 			
@@ -96,7 +102,7 @@ public class MusicContainer : Container
 				{
 					if item.contains(filter)
 					{
-						objects += MusicObject(with:item)
+						objects += MusicSource.makeMusicObject(with:item)
 					}
 				}
 
@@ -106,11 +112,11 @@ public class MusicContainer : Container
 			
 				for album in Self.albums(with:allMediaItems)
 				{
-					containers += MusicContainer(
+					containers += MusicSource.makeMusicContainer(
 						identifier:"MusicSource:Album:\(album.persistentID)",
-						data:.album(album:album, allMediaItems:allMediaItems),
 						icon:"square",
-						name:album.title ?? "Album")
+						name:album.title ?? "Album",
+						data:.album(album:album, allMediaItems:allMediaItems))
 				}
 			
 			// Loads the sub-containers for the top-level "Artists" folder
@@ -119,11 +125,11 @@ public class MusicContainer : Container
 			
 				for artist in Self.artists(with:allMediaItems)
 				{
-					containers += MusicContainer(
+					containers += MusicSource.makeMusicContainer(
 						identifier:"MusicSource:Artist:\(artist.persistentID)",
-						data:.artist(artist:artist, allMediaItems:allMediaItems),
 						icon:"person",
-						name:artist.name ?? "Artist")
+						name:artist.name ?? "Artist",
+						data:.artist(artist:artist, allMediaItems:allMediaItems))
 				}
 				
 			// Loads the sub-containers for a playlist folder
@@ -150,9 +156,9 @@ public class MusicContainer : Container
 						
 						containers += MusicSource.makeMusicContainer(
 								identifier:"MusicSource:Playlist:\(playlist.persistentID)",
-								data:.playlistFolder(playlists:childPlaylists, allPlaylists:allPlaylists),
 								icon:"folder",
-								name:playlist.name)
+								name:playlist.name,
+								data:.playlistFolder(playlists:childPlaylists, allPlaylists:allPlaylists))
 					}
 				}
 				
@@ -164,7 +170,7 @@ public class MusicContainer : Container
 				{
 					if item.contains(filter)
 					{
-						objects += MusicObject(with:item)
+						objects += MusicSource.makeMusicObject(with:item)
 					}
 				}
 
@@ -176,7 +182,7 @@ public class MusicContainer : Container
 				{
 					if item.contains(filter)
 					{
-						objects += MusicObject(with:item)
+						objects += MusicSource.makeMusicObject(with:item)
 					}
 				}
 
@@ -188,12 +194,23 @@ public class MusicContainer : Container
 				{
 					if item.contains(filter)
 					{
-						objects += MusicObject(with:item)
+						objects += MusicSource.makeMusicObject(with:item)
 					}
 				}
 		}
 
 		return (containers,objects)
+	}
+
+
+	/// Loads this Container again if it was loaded before
+
+	func reload() async
+	{
+		if await self.isLoaded
+		{
+			self.load()
+		}
 	}
 }
 
@@ -216,11 +233,11 @@ extension MusicContainer
 			default: icon = "music.note.list"
 		}
 		
-		return MusicContainer(
+		return MusicSource.makeMusicContainer(
 			identifier:"MusicSource:Playlist:\(playlist.persistentID)",
-			kind:.playlist(playlist:playlist),
 			icon:icon,
-			name:playlist.name)
+			name:playlist.name,
+			data:.playlist(playlist:playlist))
 	}
 
 	/// Returns an array of tracks sorted by name

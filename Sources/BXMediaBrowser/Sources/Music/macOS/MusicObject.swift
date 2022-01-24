@@ -36,6 +36,8 @@ import AppKit
 
 public class MusicObject : Object
 {
+	/// Creates a new MusicObject with the specified ITLibMediaItem
+	///
 	public init(with item:ITLibMediaItem)
 	{
 		let identifier = "MusicSource:ITLibMediaItem:\(item.persistentID)"
@@ -68,7 +70,6 @@ public class MusicObject : Object
 	class func loadThumbnail(for identifier:String, data:Any) async throws -> CGImage
 	{
 		guard let item = data as? ITLibMediaItem else { throw Error.notFound }
-		
 		let url = item.location
 		let uti = url?.uti ?? "public.mp3"
 		
@@ -76,27 +77,15 @@ public class MusicObject : Object
 		{
 			if let type = UTType(uti)
 			{
-//				let kind = item.kind
 				let image = NSWorkspace.shared.icon(for:type)
-				guard let thumbnail = image.cgImage(forProposedRect:nil, context:nil, hints:nil) else {
-				throw Error.loadThumbnailFailed
-				
-				}
+				guard let thumbnail = image.cgImage(forProposedRect:nil, context:nil, hints:nil) else { throw Error.loadThumbnailFailed }
 				return thumbnail
 			}
 		}
 		
-		guard let url = url else {
-			throw Error.notFound
-		
-		}
-		
+		guard let url = url else { throw Error.notFound }
 		let image = NSWorkspace.shared.icon(forFile:url.path)
-		guard let thumbnail = image.cgImage(forProposedRect:nil, context:nil, hints:nil) else
-		{
-		throw Error.loadThumbnailFailed
-		
-		}
+		guard let thumbnail = image.cgImage(forProposedRect:nil, context:nil, hints:nil) else { throw Error.loadThumbnailFailed }
 		return thumbnail
 	}
 
@@ -158,7 +147,6 @@ public class MusicObject : Object
 		guard let url = item.location else { throw Object.Error.downloadFileFailed }
 		return url
 	}
-	
 	
 }
 

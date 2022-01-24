@@ -51,17 +51,27 @@ public class MusicSource : Source, AccessControl
 
 	/// Reference to the Music library
 	
-	let library:ITLibrary?
+	static var library:ITLibrary? = nil
 	
 	/// The list of allowed media kinds. This can be used to e.g. only display audio or only videos
 	
-	let allowedMediaKinds:[ITLibMediaItemMediaKind]
+	static var allowedMediaKinds:[ITLibMediaItemMediaKind] = [.kindSong]
 	
+	
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	/// The known Container are stored by identifier, so that they can be reused
+	
+	static var cachedContainers:[String:MusicContainer] = [:]
+
+	/// The known Objects are stored by identifier, so that they can be reused
+	
+	static var cachedObjects:[String:MusicObject] = [:]
+
 	/// Internal observers and subscriptions
 	
 	private var observers:[Any] = []
-	
-//	var folderObserver:FolderObserver? = nil
 	
 	
 //----------------------------------------------------------------------------------------------------------------------
@@ -71,54 +81,25 @@ public class MusicSource : Source, AccessControl
 	
 	public init(allowedMediaKinds:[ITLibMediaItemMediaKind] = [.kindSong])
 	{
-		self.allowedMediaKinds = allowedMediaKinds
-		
-		// Get reference to Music library
-		
-		self.library = try? ITLibrary(apiVersion:"1.1", options:.lazyLoadData)
-		
 		// Configure the Source
 		
 		super.init(identifier:Self.identifier, icon:Self.icon, name:"Music")
 		
-		self.loader = Loader(identifier:self.identifier, loadHandler:self.loadContainers)
-
-		// Setup observers to detect changes
+		self.loader = Loader(identifier:self.identifier, loadHandler:Self.loadContainers)
 		
-		if let library = self.library
+		// Get reference to Music library
+		
+		Self.library = try? ITLibrary(apiVersion:"1.1", options:.lazyLoadData)
+		Self.allowedMediaKinds = allowedMediaKinds
+		
+		// Setup observers to detect changes - well not really, since the API doesn't support it. Instead we "fake" it
+		// by simply reloading EVERYTHING when the application is brought to the foreground again. In this scenario we
+		// simply assume that the user went to the Music.app and made some changes.
+		
+		self.observers += NotificationCenter.default.publisher(for:NSApplication.didBecomeActiveNotification, object:nil).sink
 		{
-			let url = library.mediaFolderLocation
-			print("MusicSource: url = \(url)")
-			
-			self.observers += NotificationCenter.default.publisher(for:NSApplication.didBecomeActiveNotification, object:nil).sink
-			{
-				[weak self] _ in self?.reload()
-			}
-			
-			self.observers += KVO(object:library, keyPath:"allMediaItems")
-			{
-				[weak self] _,_ in
-				print("MusicSource: library has changed")
-			}
-
-			self.observers += KVO(object:library, keyPath:"allPlaylists")
-			{
-				[weak self] _,_ in
-				print("MusicSource: library has changed")
-			}
-
+			[weak self] _ in self?.reload()
 		}
-		
-//		// Request access to photo library if not available yet. Reload all containers once access has been granted.
-//
-//		if !self.hasAccess
-//		{
-//			self.grantAccess()
-//			{
-//				[weak self] isGranted in
-//				if isGranted { self?.load() }
-//			}
-//		}
 	}
 
 
@@ -143,32 +124,9 @@ public class MusicSource : Source, AccessControl
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	/// Loads the top-level containers of this source.
-	///
-	/// Subclasses can override this function, e.g. to load top level folder from the preferences file
-	
-	private func loadContainers(with sourceState:[String:Any]? = nil) async throws -> [Container]
-	{
-		Swift.print("Loading \"\(name)\" - \(identifier)")
-
-		var containers:[Container] = []
-		
-		guard let library = self.library else { return containers }
-		let allMediaItems = library.allMediaItems.filter { self.allowedMediaKinds.contains($0.mediaKind) }
-		let allPlaylists = library.allPlaylists
-		let topLevelPlaylists = allPlaylists.filter { $0.parentID == nil }
-
-		containers += MusicContainer(identifier:"MusicSource:Songs", kind:.library(allMediaItems:allMediaItems), icon:"music.note", name:"Songs")
-		
-		containers += MusicContainer(identifier:"MusicSource:Artists", kind:.artistFolder(allMediaItems:allMediaItems), icon:"music.mic", name:"Artists")
-
-		containers += MusicContainer(identifier:"MusicSource:Albums", kind:.albumFolder(allMediaItems:allMediaItems), icon:"square.stack", name:"Albums")
-
-		containers += MusicContainer(identifier:"MusicSource:Playlists", kind:.playlistFolder(playlists:topLevelPlaylists, allPlaylists:allPlaylists), icon:"music.note.list", name:"Playlists")
-		
-		return containers
-	}
-	
+	/// This function is called the the app is brought to the foreground again in this case the whole
+	/// Source will be reloaded with updated data from the iTunesLibrary framework, while preserving
+	/// the expanded state of each Container.
 	
 	private func reload()
 	{
@@ -179,7 +137,7 @@ public class MusicSource : Source, AccessControl
 			// First reload the ITLibrary. Unfortunately this has to be done manually and it is monolithic.
 			// We cannot detect granular changes to individual playlists.
 
-			self.library?.reloadData()
+			Self.library?.reloadData()
 
 			// Get the current expanded state of all Containers
 			
@@ -193,9 +151,88 @@ public class MusicSource : Source, AccessControl
 			}
 		}
 	}
+
+
+	/// Loads the top-level containers of this source.
+	///
+	/// Subclasses can override this function, e.g. to load top level folder from the preferences file
+	
+	private class func loadContainers(with sourceState:[String:Any]? = nil) async throws -> [Container]
+	{
+		Swift.print("Loading \(identifier)")
+
+		var containers:[Container] = []
+		
+		guard let library = Self.library else { return containers }
+		let allMediaItems = library.allMediaItems.filter { Self.allowedMediaKinds.contains($0.mediaKind) }
+		let allPlaylists = library.allPlaylists
+		let topLevelPlaylists = allPlaylists.filter { $0.parentID == nil }
+		
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Songs", icon:"music.note", name:"Songs", data:MusicContainer.MusicData.library(allMediaItems:allMediaItems))
+
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Artists", icon:"music.mic", name:"Artists", data:MusicContainer.MusicData.artistFolder(allMediaItems:allMediaItems))
+
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Albums", icon:"square.stack", name:"Albums", data:MusicContainer.MusicData.albumFolder(allMediaItems:allMediaItems))
+
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Playlists", icon:"music.note.list", name:"Playlists", data:MusicContainer.MusicData.playlistFolder(playlists:topLevelPlaylists, allPlaylists:allPlaylists))
+
+		return containers
+	}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	/// Tries to reuse an existing Container from the cache before creating a new one and storing it in the cache.
+	
+	class func makeMusicContainer(identifier:String, icon:String?, name:String, data:MusicContainer.MusicData) -> MusicContainer
+	{
+		if let container = Self.cachedContainers[identifier]
+		{
+			container.data = data
+
+			Task
+			{
+				await container.reload()
+			}
+			
+			return container
+		}
+		else
+		{
+			let container = MusicContainer(
+				identifier:identifier,
+				icon:icon,
+				name:name,
+				data:data)
+
+			Self.cachedContainers[identifier] = container
+
+			return container
+		}
+	}
+
+
+	/// Tries to reuse an existing Object from the cache before creating a new one and storing it in the cache.
+	
+	class func makeMusicObject(with item:ITLibMediaItem) -> MusicObject
+	{
+		let identifier = "MusicSource:ITLibMediaItem:\(item.persistentID)"
+
+		if let object = Self.cachedObjects[identifier]
+		{
+			return object
+		}
+		else
+		{
+			let object = MusicObject(with:item)
+			Self.cachedObjects[identifier] = object
+			return object
+		}
+	}
 }
-
-
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 
