@@ -54,106 +54,24 @@ public struct FolderContainerView : View
 		
 			.id(container.identifier)
 
-			.background(dropTargetView)
-			
-//			.onDrop(of:dropTypes, delegate: DropDelegate)
-
-			.onDrop(of:dropTypes, isTargeted:self.$isDropTarget)
-			{
-				(itemProviders:[NSItemProvider])->Bool in
-				
-				for itemProvider in itemProviders
-				{
-//					if let receiver = itemProvider as? NSFilePromiseReceiver
-//					{
-//						print("didDrop \(receiver)")
-//					}
-
-//					let ok = itemProvider.canLoadObject(ofClass:NSFilePromiseReceiver.self)
-//					print("has NSFilePromiseReceiver \(ok)")
-					
-//					let progress = itemProvider.loadFileRepresentation(forTypeIdentifier:"com.apple.pasteboard.promised-file-content-type")
-//					{
-//						url,error in
-//
-//						print("didDrop \(url) \(error)")
-//					}
-					
-//					let progress = itemProvider.loadObject(ofClass:NSFilePromiseReceiver.self)
-//					{
-//						(reader:NSItemProviderReading?, error:Error?) -> Void in
-//
-//						if let error = error
-//						{
-//							print("didDrop ERROR \(error)")
-//						}
-//						else if let reader = reader
-//						{
-//							print("didDrop \(reader)")
-//						}
-//					}
-				}
-				
-				return true
-			}
+			.background(dropDestinationView)
     }
     
-    /// Returns a background view that highlights the current drop target Container
-	
-	var dropTargetView: some View
+    var dropDestinationView: some View
     {
-		GeometryReader
+		Group
 		{
-			dropTargetColor
-				.frame(width:$0.size.width+1000, height:20, alignment:.top)
-				.offset(x:-900, y:0)
+			if let url = container.data as? URL
+			{
+				DropDestinationView(destinationFolderURL:url)
+			}
+			else
+			{
+				EmptyView()
+			}
 		}
     }
-
-	/// Returns the background color for this Container
-	
-    var dropTargetColor:Color
-    {
-		isDropTarget ? .primary.opacity(0.15) : .clear
-    }
-    
-    var dropTypes:[String]
-    {
-		var types = NSFilePromiseReceiver.readableDraggedTypes
-//		types += "public.url"
-		return types
-    }
 }
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-//struct URLDropDelegate: DropDelegate
-//{
-//    @Binding var urlItems: [URLItem]
-//
-//    func performDrop(info:DropInfo) -> Bool
-//    {
-//        guard info.hasItemsConforming(to: ["public.url"]) else {
-//            return false
-//        }
-//
-//        let items = info.itemProviders(for: ["public.url"])
-//
-//        for item in items {
-//            _ = item.loadObject(ofClass: URL.self) { url, _ in
-//                if let url = url {
-//                    DispatchQueue.main.async {
-//                        self.urlItems.insert(URLItem(link: url), at: 0)
-//                    }
-//                }
-//            }
-//        }
-//
-//        return true
-//    }
-//}
 
 
 //----------------------------------------------------------------------------------------------------------------------
