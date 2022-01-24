@@ -13,6 +13,7 @@
                 <outlet property="imageView" destination="9gO-LH-lBt" id="yDs-MY-e7k"/>
                 <outlet property="metadataField" destination="SmP-5w-hYd" id="gdz-Wk-Afg"/>
                 <outlet property="nameField" destination="Rdh-yM-tEI" id="TBa-2f-2xF"/>
+                <outlet property="sizeField" destination="YMH-1S-sgr" id="l9c-mU-o1y"/>
                 <outlet property="textField" destination="Rdh-yM-tEI" id="jwC-v4-uzl"/>
                 <outlet property="view" destination="HUS-pi-5U0" id="ONe-pe-1qO"/>
             </connections>
@@ -42,7 +43,7 @@
                     </buttonCell>
                 </button>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" alphaValue="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="SmP-5w-hYd">
-                    <rect key="frame" x="71" y="6" width="857" height="14"/>
+                    <rect key="frame" x="71" y="6" width="797" height="14"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" enabled="NO" alignment="left" id="4JS-T1-aLl">
                         <font key="font" metaFont="smallSystem"/>
@@ -64,6 +65,15 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="MwA-gR-zyV"/>
                 </imageView>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" alphaValue="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="YMH-1S-sgr">
+                    <rect key="frame" x="872" y="6" width="56" height="14"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" enabled="NO" alignment="right" id="OSE-NU-eB3">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
             </subviews>
             <point key="canvasLocation" x="477" y="527"/>
         </customView>

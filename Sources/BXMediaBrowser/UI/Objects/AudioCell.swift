@@ -39,6 +39,7 @@ public class AudioCell : ObjectCell
     @IBOutlet weak open var nameField: NSTextField?
     @IBOutlet weak open var metadataField: NSTextField?
     @IBOutlet weak open var durationField: NSTextField?
+    @IBOutlet weak open var sizeField: NSTextField?
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -70,30 +71,38 @@ public class AudioCell : ObjectCell
 		let album = metadata[kMDItemAlbum as String] as? String
 		let genre = metadata[kMDItemMusicalGenre as String] as? String
 		let duration = metadata[kMDItemDurationSeconds as String] as? Double ?? 0.0
-
+		let size = metadata[kMDItemFSSize as String] as? Int
+		let kind = metadata[kMDItemKind as String] as? String
 		let name = title ?? object.name
 		var info = ""
 		
-		if let artist = authors?.first ?? composer
+		if let artist = authors?.first ?? composer, !artist.isEmpty
 		{
 			info += artist
 		}
 
-		if let album = album
+		if let album = album, !album.isEmpty
 		{
 			if !info.isEmpty { info += ", " }
 			info += album
 		}
 
-		if let genre = genre
+		if let genre = genre, !genre.isEmpty
 		{
 			if !info.isEmpty { info += ", " }
 			info += genre
+		}
+		
+		if let kind = kind, !kind.isEmpty
+		{
+			if !info.isEmpty { info += ", " }
+			info += kind
 		}
 
 		self.nameField?.stringValue = name
 		self.metadataField?.stringValue = info
 		self.durationField?.stringValue = duration.shortTimecodeString()
+		self.sizeField?.stringValue = size?.fileSizeDescription ?? ""
 		
 		self.nameField?.lineBreakMode = .byTruncatingTail
 		self.metadataField?.lineBreakMode = .byTruncatingTail
@@ -120,7 +129,7 @@ public class AudioCell : ObjectCell
 		}
 		else
 		{
-			self.button?.image = NSImage(systemSymbolName:"icloud.slash", accessibilityDescription:nil)
+			self.button?.image = NSImage(systemSymbolName:"exclamationmark.icloud", accessibilityDescription:nil)
 			self.imageView?.alphaValue = 0.5
 			self.nameField?.alphaValue = 0.5
 		}
@@ -156,6 +165,58 @@ public class AudioCell : ObjectCell
 		metadataField?.textColor = textColor
 		durationField?.textColor = textColor
     }
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+extension Int
+{
+	/// Creates a formatted file size description for the number of bytes
+	
+	var fileSizeDescription:String
+	{
+		let bytes = self
+		let kilobytes = Double(bytes) / 1000
+		let megabytes = kilobytes / 1000
+		let gigabytes = megabytes / 1000
+		let terabytes = gigabytes / 1000
+		
+		if bytes < 1000
+		{
+			return"\(bytes) bytes"
+		}
+		else if kilobytes < 1000
+		{
+			return "\(kilobytes.string(digits:1)) KB"
+		}
+		else if megabytes < 1000
+		{
+			return "\(megabytes.string(digits:1)) MB"
+		}
+		else if gigabytes < 1000
+		{
+			return "\(gigabytes.string(digits:1)) GB"
+		}
+
+		return "\(terabytes.string(digits:1)) TB"
+	}
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+fileprivate extension Double
+{
+	/// Formats a Double number with the specified precision
+	
+	func string(for format:String = "#.#", digits:Int = 1) -> String
+	{
+		let formatter = NumberFormatter.forFloatingPoint(with:format, numberOfDigits:digits)
+		return formatter.string(from:NSNumber(value:self)) ?? "0"
+	}
 }
 
 

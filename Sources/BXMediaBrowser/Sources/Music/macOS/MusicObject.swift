@@ -107,6 +107,8 @@ public class MusicObject : Object
 		metadata[kMDItemAlbum as String] = item.album.title
 		metadata[kMDItemMusicalGenre as String] = item.genre
 		metadata[kMDItemDurationSeconds as String] = Double(item.totalTime) / 1000.0
+		metadata[kMDItemFSSize as String] = Int(item.fileSize)
+		metadata[kMDItemKind as String] = item.kind
 		metadata["bpm"] = Double(item.beatsPerMinute)
 
 		return metadata
