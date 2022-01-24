@@ -50,8 +50,6 @@ public struct FolderSourceView : View
 	
 	public var body: some View
     {
-		print("FolderSourceView.body \(source.identifier)    ptr = \(Unmanaged.passUnretained(source).toOpaque())")
-		
 		return VStack(alignment:.leading, spacing:4)
 		{
 			ForEach(source.containers)

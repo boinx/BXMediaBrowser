@@ -79,7 +79,6 @@ open class FolderSource : Source, AccessControl
 		
 		if let bookmarks = sourceState?[Self.bookmarksKey] as? [Data]
 		{
-			
 			let folderURLs = bookmarks
 				.compactMap { URL(with:$0) }
 				.filter { $0.exists && $0.isDirectory }

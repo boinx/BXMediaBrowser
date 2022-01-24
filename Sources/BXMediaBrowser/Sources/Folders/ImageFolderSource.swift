@@ -37,10 +37,12 @@ open class ImageFolderSource : FolderSource
 	
 	override open func createContainer(for url:URL) throws -> Container?
 	{
-		ImageFolderContainer(url:url)
+		let container = ImageFolderContainer(url:url)
 		{
 			[weak self] in self?.removeContainer($0)
 		}
+		
+		return container
 	}
 }
 
