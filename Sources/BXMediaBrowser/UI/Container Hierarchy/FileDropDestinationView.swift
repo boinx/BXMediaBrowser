@@ -33,18 +33,23 @@ public struct FileDropDestinationView : NSViewRepresentable
 {
 	public typealias NSViewType = _FileDropDestinationView
 
-	public var folderURL:URL
+	public var fileDropDestination:FileDropDestination? = nil
+	
+	public init(with fileDropDestination:FileDropDestination?)
+	{
+		self.fileDropDestination = fileDropDestination
+	}
 	
 	public func makeNSView(context:Context) -> _FileDropDestinationView
 	{
 		let view = _FileDropDestinationView(frame:.zero)
-		view.folderURL = self.folderURL
+		view.fileDropDestination = self.fileDropDestination
 		return view
 	}
 	
 	public func updateNSView(_ view:_FileDropDestinationView, context:Context)
 	{
-		view.folderURL = self.folderURL
+		view.fileDropDestination = self.fileDropDestination
 	}
 }
 
@@ -54,22 +59,32 @@ public struct FileDropDestinationView : NSViewRepresentable
 
 public class _FileDropDestinationView : NSView
 {
-	public var folderURL:URL? = nil
+	/// An externally supplied FileDropDestination helper object. This helper object implements the
+	/// NSDraggingDestination for dropped files.
+	
+ 	internal var fileDropDestination:FileDropDestination? = nil
 	{
-		didSet { self.configureFileDropDestination() }
+		didSet
+		{
+			self.fileDropDestination?.highlightDropTargetHandler = { [weak self] in self?.setHighlighted($0) }
+		}
 	}
 	
- 	private var fileDropDestination:FileDropDestination? = nil
-
+	/// A CALayer that is responsible for displaying a highlight
+	
 	private var dropTargetLayer:CALayer? = nil
     
     
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	/// Creates a new _FileDropDestinationView and configures it for receiving dropped files
+	
 	override init(frame:NSRect)
 	{
 		super.init(frame:frame)
 		FileDropDestination.registerDragTypes(for:self)
 	}
-	
 	
 	required init?(coder: NSCoder)
 	{
@@ -77,19 +92,10 @@ public class _FileDropDestinationView : NSView
 	}
 
 
-	private func configureFileDropDestination()
-	{
-		if let url = self.folderURL
-		{
-			self.fileDropDestination = FileDropDestination(folderURL:url)
-			self.fileDropDestination?.highlightDropTargetHandler = { [weak self] in self?.setHighlighted($0) }
-		}
-		else
-		{
-			self.fileDropDestination = nil
-		}
-	}
+//----------------------------------------------------------------------------------------------------------------------
+
 	
+	/// Creates the CALayer for thsi view and adds a sublayer for displaying the drop target highlight
 	
 	public override func makeBackingLayer() -> CALayer
 	{
@@ -104,6 +110,8 @@ public class _FileDropDestinationView : NSView
 	}
 	
 	
+	/// Displays the highlight when the supplied state is true
+	
 	func setHighlighted(_ state:Bool)
 	{
  		let frame = self.bounds.insetBy(dx:-200, dy:0)
@@ -116,24 +124,25 @@ public class _FileDropDestinationView : NSView
 	}
 
 
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// Route the NSDraggingDestination delegate messages to the FileDropDestination helper object
+	
 	override public func draggingEntered(_ sender:NSDraggingInfo) -> NSDragOperation
     {
 		return self.fileDropDestination?.draggingEntered(sender) ?? []
-		
     }
-
 
     override public func draggingExited(_ sender:NSDraggingInfo?)
     {
 		self.fileDropDestination?.draggingExited(sender)
     }
 
-
 	override public func performDragOperation(_ sender:NSDraggingInfo) -> Bool
 	{
 		return self.fileDropDestination?.performDragOperation(sender) ?? false
 	}
-
 
     override public func concludeDragOperation(_ sender: NSDraggingInfo?)
     {
@@ -142,113 +151,4 @@ public class _FileDropDestinationView : NSView
 }
 
 
-//----------------------------------------------------------------------------------------------------------------------
-
-
-//@objc protocol FileDropDestinationMixin : NSDraggingDestination
-//{
-//	var destinationFolderURL:URL? { set get }
-//
-//	func setHighlighted(_ state:Bool)
-//}
-//
-//extension FileDropDestinationMixin
-//{
-//
-//	func registerDragTypes(for view:NSView)
-//	{
-//        view.registerForDraggedTypes(NSFilePromiseReceiver.readableDraggedTypes.map { NSPasteboard.PasteboardType($0) })
-//        view.registerForDraggedTypes([NSPasteboard.PasteboardType.fileURL])
-//	}
-//
-//	public func mixin_draggingEntered(_ sender:NSDraggingInfo) -> NSDragOperation
-//    {
-// 		self.setHighlighted(true)
-//		return .copy
-//    }
-//
-//
-//    public func mixin_draggingExited(_ sender:NSDraggingInfo?)
-//    {
-//  		self.setHighlighted(false)
-//    }
-//
-//
-//    public func mixin_concludeDragOperation(_ sender: NSDraggingInfo?)
-//    {
-// 		self.setHighlighted(false)
-//    }
-//
-//
-//	public func mixin_performDragOperation(_ sender:NSDraggingInfo) -> Bool
-//	{
-//		guard let folderURL = destinationFolderURL else { return false }
-//
-//		let classes =
-//		[
-//			NSFilePromiseReceiver.self,
-//			NSURL.self
-//		]
-//
-//        let searchOptions:[NSPasteboard.ReadingOptionKey:Any] =
-//        [
-//            .urlReadingFileURLsOnly:true,
-//        ]
-//
-//        sender.enumerateDraggingItems(options:[], for:nil, classes:classes, searchOptions:searchOptions)
-//        {
-//			(draggingItem, _, _) in
-//
-//            switch draggingItem.item
-//            {
-//				case let filePromiseReceiver as NSFilePromiseReceiver:
-//
-//				filePromiseReceiver.receivePromisedFiles(atDestination:folderURL, options:[:], operationQueue:workQueue)
-//                {
-//					url,error in
-//					print(url)
-//                }
-//
-//				case let srcURL as URL:
-//
-//					let dstURL = folderURL.appendingPathComponent(srcURL.lastPathComponent)
-//					self.copy(from:srcURL, to:dstURL)
-//
-//				default: break
-//            }
-//        }
-//
-//        return true
-//	}
-//
-//
-//	func copy(from srcURL:URL, to dstURL:URL)
-//	{
-//		do
-//		{
-//			try FileManager.default.linkItem(at:srcURL, to:dstURL)
-//		}
-//		catch
-//		{
-//			do
-//			{
-//				try FileManager.default.copyItem(at:srcURL, to:dstURL)
-//			}
-//			catch
-//			{
-//				print(error)
-//			}
-//		}
-//	}
-//}
-//
-//
-//fileprivate let workQueue:OperationQueue =
-//{
-//	let providerQueue = OperationQueue()
-//	providerQueue.qualityOfService = .userInitiated
-//	return providerQueue
-//}()
-    
-    
 //----------------------------------------------------------------------------------------------------------------------

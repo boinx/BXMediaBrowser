@@ -59,17 +59,7 @@ public struct FolderContainerView : View
     
     var dropDestinationView: some View
     {
-		Group
-		{
-			if let url = container.data as? URL
-			{
-				FileDropDestinationView(folderURL:url)
-			}
-			else
-			{
-				EmptyView()
-			}
-		}
+		FileDropDestinationView(with:container.fileDropDestination)
     }
 }
 

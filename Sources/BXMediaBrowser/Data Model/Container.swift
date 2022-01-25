@@ -96,6 +96,10 @@ open class Container : ObservableObject, Identifiable, StateSaving
 	
 	internal var purgeTask:Task<Void,Never>? = nil
 	
+	/// An optional helper that can copy dropped file to this Container
+	
+	public var fileDropDestination:FileDropDestination? = nil
+	
 	/// This notification is sent after a new Container was created. The notification object
 	/// is the Container.
 	
