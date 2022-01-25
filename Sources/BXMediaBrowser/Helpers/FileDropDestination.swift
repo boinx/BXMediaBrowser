@@ -84,23 +84,41 @@ public class FileDropDestination : NSObject,NSDraggingDestination
 		return .copy
     }
 
-
     public func draggingExited(_ sender:NSDraggingInfo?)
     {
  		self.highlightDropTargetHandler?(false)
     }
-
 
 	public func concludeDragOperation(_ sender: NSDraggingInfo?)
     {
  		self.highlightDropTargetHandler?(false)
     }
 
-
 	public func performDragOperation(_ sender:NSDraggingInfo) -> Bool
 	{
 		self.copyDroppedFiles(sender)
         return true
+	}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - NSCollectionViewDelegate
+	
+	@MainActor public func collectionView(_ collectionView:NSCollectionView, validateDrop draggingInfo:NSDraggingInfo, proposedIndexPath:AutoreleasingUnsafeMutablePointer<NSIndexPath>, dropOperation:UnsafeMutablePointer<NSCollectionView.DropOperation>) -> NSDragOperation
+	{
+		let n = collectionView.numberOfItems(inSection:0)
+        dropOperation.pointee = .before
+        proposedIndexPath.pointee = NSIndexPath(index:n)
+		return [.copy]
+	}
+
+
+	@MainActor public func collectionView(_ collectionView:NSCollectionView, acceptDrop draggingInfo:NSDraggingInfo, indexPath:IndexPath, dropOperation:NSCollectionView.DropOperation) -> Bool
+	{
+		self.copyDroppedFiles(draggingInfo)
+		return true
 	}
 
 

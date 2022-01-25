@@ -95,6 +95,7 @@ public struct CollectionView<Cell:ObjectCell> : NSViewRepresentable
 		collectionView.delegate = context.coordinator
         collectionView.setDraggingSourceOperationMask([.copy], forLocal:true)
         collectionView.setDraggingSourceOperationMask([.copy], forLocal:false)
+		FileDropDestination.registerDragTypes(for:collectionView)
 		
 		// Wrap in a NSScrollView
 		
@@ -227,6 +228,12 @@ extension CollectionView
 			self.cellType = cellType
         }
 		
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+ 		// MARK: - Data Source
+ 		
 		/// Updates the dataSource when the data model has been changed
 		
 		@MainActor func updateDataSource()
@@ -301,6 +308,11 @@ extension CollectionView
 		}
 
 
+//----------------------------------------------------------------------------------------------------------------------
+
+
+		// MARK: - Dragging Source
+
 		// Allow dragging of cells to other destinations
 		
 		@MainActor public func collectionView(_ collectionView:NSCollectionView, canDragItemsAt indexPaths:Set<IndexPath>, with event:NSEvent) -> Bool
@@ -337,6 +349,27 @@ extension CollectionView
 			{
 				collectionView.item(at:indexPath)?.view.isHidden = false
 			}
+		}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+ 		// MARK: - Dragging Destination
+
+		// Check if the collectionView can receive the dragged files
+		
+		@MainActor public func collectionView(_ collectionView:NSCollectionView, validateDrop draggingInfo:NSDraggingInfo, proposedIndexPath:AutoreleasingUnsafeMutablePointer<NSIndexPath>, dropOperation proposedDropOperation:UnsafeMutablePointer<NSCollectionView.DropOperation>) -> NSDragOperation
+		{
+			return self.container?.fileDropDestination?.collectionView(collectionView, validateDrop:draggingInfo, proposedIndexPath:proposedIndexPath, dropOperation:proposedDropOperation) ?? []
+		}
+
+
+		// Copy the dragged files to the Container
+		
+		@MainActor public func collectionView(_ collectionView:NSCollectionView, acceptDrop draggingInfo:NSDraggingInfo, indexPath:IndexPath, dropOperation:NSCollectionView.DropOperation) -> Bool
+		{
+			return self.container?.fileDropDestination?.collectionView(collectionView, acceptDrop:draggingInfo, indexPath:indexPath, dropOperation:dropOperation) ?? false
 		}
 	}
 }
