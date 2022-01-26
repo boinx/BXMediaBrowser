@@ -31,7 +31,7 @@ import SwiftUI
 
 /// This struct bundles all parameters for a photo search on Unsplash.com
 
-public struct UnsplashFilter : Equatable
+public struct UnsplashFilter : Equatable,Codable
 {
 	/// The search string for looking up images on Unsplash.com
 	
@@ -52,7 +52,7 @@ public struct UnsplashFilter : Equatable
 
 extension UnsplashFilter
 {
-	public enum Orientation : String,Equatable,CaseIterable
+	public enum Orientation : String,Equatable,CaseIterable,Codable
 	{
 		case any = ""
 		case landscape
@@ -82,7 +82,7 @@ extension UnsplashFilter
 
 extension UnsplashFilter
 {
-	public enum Color : String,Equatable,CaseIterable
+	public enum Color : String,Equatable,CaseIterable,Codable
 	{
 		case any = ""
 		case black_and_white
