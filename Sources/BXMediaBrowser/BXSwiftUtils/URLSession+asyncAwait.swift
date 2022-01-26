@@ -80,44 +80,46 @@ extension URLSession
 
 	public func downloadFile(from remoteURL:URL, delegate:URLSessionTaskDelegate? = nil) async throws -> URL
     {
-		if #available(macOS 12, iOS 15, *)
+		return try await withCheckedThrowingContinuation
 		{
-			let (tmpURL,_) = try await self.download(from:remoteURL, delegate:delegate)
-			return tmpURL
-		}
-		else
-		{
-			return try await withCheckedThrowingContinuation
+			continuation in
+
+			// Download the file from remoteURL
+			
+			let task = self.downloadTask(with:remoteURL)
 			{
-				continuation in
+				(tmpURL,response,error) in
 
-				// Download the file from remoteURL
+				// Report potential errors and bail out
 				
-				let task = self.downloadTask(with:remoteURL)
+				guard let tmpURL = tmpURL else
 				{
-					(tmpURL,response,error) in
+					let error = error ?? URLError(.badServerResponse)
+					return continuation.resume(throwing:error)
+				}
 
-					// Report potential errors and bail out
-					
-					guard let tmpURL = tmpURL else
-					{
-						let error = error ?? URLError(.badServerResponse)
-						return continuation.resume(throwing:error)
-					}
-
-					// Move file to backup location (because tmpURL will be deleted after lifetime of this completionHandler
-					
-					let tmpURL2 = tmpURL.appendingPathExtension("backup")
-					try? FileManager.default.linkItem(at:tmpURL, to:tmpURL2)
-					
-					// Return URL to backup file instead
-					
-					continuation.resume(returning:(tmpURL2))
-				 }
-
-				task.delegate = delegate
-				task.resume()
+				// Move file to backup location (because tmpURL will be deleted after lifetime of this completionHandler
+				
+				let tmpURL2 = tmpURL.appendingPathExtension("backup")
+				try? FileManager.default.linkItem(at:tmpURL, to:tmpURL2)
+				
+				// Return URL to backup file instead
+				
+				continuation.resume(returning:(tmpURL2))
 			}
+
+			task.delegate = delegate
+			
+			// If Progress.current is nil, this means that we didn't see the parent Progress object, because it
+			// was created in a different thread (most likely the main thread). In this case we try to attach
+			// to globalParent (which is visible to all threads) as a workaround
+			
+			let parentProgress = Progress.current() ?? Progress.globalParent
+			parentProgress?.addChild(task.progress, withPendingUnitCount:1)
+			
+			// Start downloading
+			
+			task.resume()
 		}
     }
 }

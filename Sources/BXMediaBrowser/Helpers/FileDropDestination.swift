@@ -42,22 +42,34 @@ public class FileDropDestination : NSObject,NSDraggingDestination
 	
 	public var highlightDropTargetHandler:((Bool)->Void)? = nil
     
-    /// File downloading and copying will take place on this background queue
+    /// A background queue for file downloading/copying
 	
-	private let workQueue:OperationQueue =
+	private let queue:OperationQueue =
 	{
 		let providerQueue = OperationQueue()
 		providerQueue.qualityOfService = .userInitiated
 		return providerQueue
 	}()
     
-
+    /// The Progress object for the current download/copy operation
+	
+    public private(set) var progress:Progress? = nil
+    
+    /// The start time of a download/copy operation
+	
+    private var startTime:CFAbsoluteTime = .zero
+    
+    /// KVO observers
+	
+	private var observers:[Any] = []
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 
 	/// Creates a new FileDropDestination
 	
-	init(folderURL:URL)
+	init(folderURL:URL, cancelHandler:()->Void = {})
 	{
 		self.folderURL = folderURL
 	}
@@ -125,7 +137,7 @@ public class FileDropDestination : NSObject,NSDraggingDestination
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	// MARK: - Helpers
+	// MARK: - Copying
 	
 	
 	/// Copies dropped files to the destination folder. In the case of NSFilePromiseProvider, the file may
@@ -133,30 +145,33 @@ public class FileDropDestination : NSObject,NSDraggingDestination
 	
 	private func copyDroppedFiles(_ draggingInfo:NSDraggingInfo)
 	{
-		let classes =
-		[
-			NSFilePromiseReceiver.self,
-			NSURL.self
-		]
-
-        let searchOptions:[NSPasteboard.ReadingOptionKey:Any] =
-        [
-            .urlReadingFileURLsOnly:true,
-        ]
-
-        draggingInfo.enumerateDraggingItems(options:[], for:nil, classes:classes, searchOptions:searchOptions)
-        {
-			draggingItem,_,_ in
+		// Get the dropped files from the dragging pasteboard
+		
+		let classes = [ NSFilePromiseReceiver.self, NSURL.self ]
+        let options:[NSPasteboard.ReadingOptionKey:Any] = [ .urlReadingFileURLsOnly:true ]
+		let files = draggingInfo.draggingPasteboard.readObjects(forClasses:classes, options:options) ?? []
+		
+		// Prepare progress observing
+		
+		let progress = self.prepareProgress(with:files.count)
+		
+		// Iterate through all NSDraggingItems and copy dropped files
+		
+		for file in files
+		{
+			progress.becomeCurrent(withPendingUnitCount:1)
 			
-			if let srcURL = draggingItem.item as? URL
-			{
-				self.copyFile(at:srcURL)
-			}
-			else if let receiver = draggingItem.item as? NSFilePromiseReceiver
+			if let receiver = file as? NSFilePromiseReceiver
 			{
 				self.copyFile(with:receiver)
 			}
-        }
+			else if let srcURL = file as? URL
+			{
+				self.copyFile(at:srcURL)
+			}
+			
+			progress.resignCurrent()
+		}
 	}
 
 
@@ -164,10 +179,18 @@ public class FileDropDestination : NSObject,NSDraggingDestination
 	
 	private func copyFile(with receiver:NSFilePromiseReceiver)
 	{
-		receiver.receivePromisedFiles(atDestination:self.folderURL, options:[:], operationQueue:self.workQueue)
+		receiver.receivePromisedFiles(atDestination:self.folderURL, options:[:], operationQueue:self.queue)
 		{
 			url,error in
-			print(url)
+			
+			if let error = error
+			{
+				print("\(Self.self).\(#function) ERROR \(error)")
+			}
+			else
+			{
+				print("\(Self.self).\(#function) RECEIVED \(url)")
+			}
 		}
 	}
 	
@@ -190,11 +213,96 @@ public class FileDropDestination : NSObject,NSDraggingDestination
 			}
 			catch
 			{
-				print(error)
+				print("\(Self.self).\(#function) ERROR \(error)")
 			}
 		}
 	}
+	
+	
+//----------------------------------------------------------------------------------------------------------------------
 
+
+	// MARK: - Progress
+	
+	
+	/// Creates a root Progress object with the specified totalUnitCount
+	
+	private func prepareProgress(with count:Int) -> Progress
+	{
+		// Create root Progress
+		
+		let progress = Progress(totalUnitCount:Int64(count))
+		progress.cancellationHandler = { [weak self] in self?.cancel() }
+		self.progress = progress
+		Progress.globalParent = progress
+
+		// Store starting time
+		
+		self.startTime = CFAbsoluteTimeGetCurrent()
+		
+		// Register KVO observers
+		
+		self.observers = []
+		
+		self.observers += KVO(object:progress, keyPath:"fractionCompleted", options:[.new])
+		{
+			[weak self] _,_ in
+			let fraction = progress.fractionCompleted
+			self?.updateProgress(fraction)
+		}
+		
+		self.observers += KVO(object:progress, keyPath:"isFinished", options:[.new])
+		{
+			[weak self] _,_ in
+			let isFinished = progress.isFinished
+			if isFinished { self?.hideProgress() }
+		}
+		
+//		self.observers += progress.publisher(for:\.fractionCompleted).sink
+//		{
+//			[weak self] in
+//			self?.updateProgress($0)
+//		}
+//
+//		self.observers += progress.publisher(for:\.isFinished).sink
+//		{
+//			[weak self] isFinished in
+//			if isFinished { self?.hideProgress() }
+//		}
+
+		return progress
+	}
+	
+	
+	/// Update the progress UI with the specified fraction
+	
+	private func updateProgress(_ fraction:Double)
+	{
+		let now = CFAbsoluteTimeGetCurrent()
+		let dt = now - startTime
+		let percent = Int(fraction*100)
+		print("\(Self.self).\(#function)   progress = \(percent)%   duration = \(dt)s")
+	}
+	
+	
+	/// Hides the progress UI
+	
+	private func hideProgress()
+	{
+		print("\(Self.self).\(#function)")
+		
+		Progress.globalParent = nil
+		self.progress = nil
+		self.observers = []
+	}
+
+
+	/// Cancels the currently running download/copy operation
+	
+	public func cancel()
+	{
+		self.progress?.cancel()
+	}
 }
 
 
