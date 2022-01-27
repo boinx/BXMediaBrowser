@@ -25,9 +25,10 @@
 
 #if os(macOS)
 
+import BXSwiftUtils
 import iTunesLibrary
-import AppKit
 import Foundation
+import AppKit
 
 
 //----------------------------------------------------------------------------------------------------------------------
