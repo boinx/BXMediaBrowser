@@ -205,6 +205,8 @@ public class FileDropDestination : NSObject,NSDraggingDestination
 		Progress.globalParent?.addChild(childProgress, withPendingUnitCount:1)
 		defer { childProgress.completedUnitCount = 1 }
 		
+		// Copy the file to the folder
+		
 		let dstURL = self.folderURL.appendingPathComponent(srcURL.lastPathComponent)
 		
 		do
@@ -265,18 +267,6 @@ public class FileDropDestination : NSObject,NSDraggingDestination
 			self?.cancel()
 			self?.hideProgress()
 		}
-		
-//		self.observers += progress.publisher(for:\.fractionCompleted).sink
-//		{
-//			[weak self] in
-//			self?.updateProgress($0)
-//		}
-//
-//		self.observers += progress.publisher(for:\.isFinished).sink
-//		{
-//			[weak self] isFinished in
-//			if isFinished { self?.hideProgress() }
-//		}
 
 		return progress
 	}

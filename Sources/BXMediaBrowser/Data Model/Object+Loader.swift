@@ -191,7 +191,7 @@ extension Object
 		{
 			get async throws
 			{
-				// If we already have the local file, then return it immediately
+				// If we already have the local file, then return it immediately. Progress will be faked.
 				
 				if let url = self._localFileURL
 				{
@@ -232,7 +232,11 @@ extension Object
 			}
 		}
 		
+		/// If already available locally, this property caches the URL to the local file
+		
 		private var _localFileURL:URL? = nil
+		
+		/// If the file is currently being downloaded, this is the reference to the download Task
 		
 		private var _downloadFileTask:Task<URL,Swift.Error>? = nil
 	}
