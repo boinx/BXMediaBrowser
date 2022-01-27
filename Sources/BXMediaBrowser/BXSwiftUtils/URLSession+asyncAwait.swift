@@ -114,8 +114,7 @@ extension URLSession
 			// was created in a different thread (most likely the main thread). In this case we try to attach
 			// to globalParent (which is visible to all threads) as a workaround
 			
-			let parentProgress = Progress.current() ?? Progress.globalParent
-			parentProgress?.addChild(task.progress, withPendingUnitCount:1)
+			Progress.globalParent?.addChild(task.progress, withPendingUnitCount:1)
 			
 			// Start downloading
 			

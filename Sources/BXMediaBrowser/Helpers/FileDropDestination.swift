@@ -199,6 +199,12 @@ public class FileDropDestination : NSObject,NSDraggingDestination
 	
 	private func copyFile(at srcURL:URL)
 	{
+		// Unfortunately FileManager doesn't support NSProgress, so we have to fake it here
+		
+		let childProgress = Progress(totalUnitCount:1)
+		Progress.globalParent?.addChild(childProgress, withPendingUnitCount:1)
+		defer { childProgress.completedUnitCount = 1 }
+		
 		let dstURL = self.folderURL.appendingPathComponent(srcURL.lastPathComponent)
 		
 		do
@@ -247,15 +253,17 @@ public class FileDropDestination : NSObject,NSDraggingDestination
 		self.observers += KVO(object:progress, keyPath:"fractionCompleted", options:[.new])
 		{
 			[weak self] _,_ in
+			guard let self = self else { return }
 			let fraction = progress.fractionCompleted
-			self?.updateProgress(fraction)
+			self.updateProgress(fraction)
+			if fraction >= 0.99 { self.hideProgress() }
 		}
 		
-		self.observers += KVO(object:progress, keyPath:"isFinished", options:[.new])
+		BXProgressWindowController.shared.cancelHandler =
 		{
-			[weak self] _,_ in
-			let isFinished = progress.isFinished
-			if isFinished { self?.hideProgress() }
+			[weak self] in
+			self?.cancel()
+			self?.hideProgress()
 		}
 		
 //		self.observers += progress.publisher(for:\.fractionCompleted).sink
@@ -278,10 +286,22 @@ public class FileDropDestination : NSObject,NSDraggingDestination
 	
 	private func updateProgress(_ fraction:Double)
 	{
-		let now = CFAbsoluteTimeGetCurrent()
-		let dt = now - startTime
-		let percent = Int(fraction*100)
-		print("\(Self.self).\(#function)   progress = \(percent)%   duration = \(dt)s")
+		DispatchQueue.main.async
+		{
+			let now = CFAbsoluteTimeGetCurrent()
+			let dt = now - self.startTime
+			let percent = Int(fraction*100)
+
+			BXProgressWindowController.shared.title = "Copying Media Files"
+			BXProgressWindowController.shared.value = fraction
+			
+			if !BXProgressWindowController.shared.isVisible && dt>1.0 && fraction<0.8
+			{
+				BXProgressWindowController.shared.show()
+			}
+
+			print("\(Self.self).\(#function)   progress = \(percent)%   duration = \(dt)s")
+		}
 	}
 	
 	
@@ -289,11 +309,16 @@ public class FileDropDestination : NSObject,NSDraggingDestination
 	
 	private func hideProgress()
 	{
-		print("\(Self.self).\(#function)")
+		DispatchQueue.main.async
+		{
+			print("\(Self.self).\(#function)")
+			
+			BXProgressWindowController.shared.hide()
 		
-		Progress.globalParent = nil
-		self.progress = nil
-		self.observers = []
+			Progress.globalParent = nil
+			self.progress = nil
+			self.observers = []
+		}
 	}
 
 

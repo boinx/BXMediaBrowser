@@ -195,6 +195,9 @@ extension Object
 				
 				if let url = self._localFileURL
 				{
+					let childProgress = Progress(totalUnitCount:1)
+					Progress.globalParent?.addChild(childProgress, withPendingUnitCount:1)
+					childProgress.completedUnitCount = 1
 					return url
 				}
 				
