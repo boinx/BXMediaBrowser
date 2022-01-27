@@ -53,7 +53,7 @@ public struct SectionView : View
 	
 	public var body: some View
     {
-		VStack(alignment:.leading, spacing:4)
+		LazyVStack(alignment:.leading, spacing:4)
 		{
 			// Section name is optional
 			

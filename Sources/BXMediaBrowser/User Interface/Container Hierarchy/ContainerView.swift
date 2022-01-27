@@ -120,7 +120,7 @@ public struct ContainerView : View
 			{
 				// Subcontainers
 				
-				VStack(alignment:.leading, spacing:0)
+				LazyVStack(alignment:.leading, spacing:0)
 				{
 					ForEach(container.containers)
 					{

@@ -63,7 +63,7 @@ public struct SourceView : View
 			
 			body:
 			{
-				VStack(alignment:.leading, spacing:2)
+				LazyVStack(alignment:.leading, spacing:2)
 				{
 					ForEach(source.containers)
 					{
