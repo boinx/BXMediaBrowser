@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="YYi-67-frk">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19529"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Window Controller-->
+        <scene sceneID="HTJ-JZ-xXj">
+            <objects>
+                <windowController showSeguePresentationStyle="single" id="YYi-67-frk" customClass="BXProgressWindowController" customModule="BXMediaBrowser" sceneMemberID="viewController">
+                    <window key="window" title="Progress" separatorStyle="none" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" tabbingMode="disallowed" titlebarAppearsTransparent="YES" titleVisibility="hidden" id="R0y-1m-kYZ">
+                        <windowStyleMask key="styleMask" titled="YES" documentModal="YES" fullSizeContentView="YES"/>
+                        <rect key="contentRect" x="1573" y="839" width="320" height="104"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="3008" height="1669"/>
+                        <connections>
+                            <outlet property="delegate" destination="YYi-67-frk" id="8s1-zV-apg"/>
+                        </connections>
+                    </window>
+                    <connections>
+                        <segue destination="5Jk-jk-MNo" kind="relationship" relationship="window.shadowedContentViewController" id="Cq5-kJ-0rh"/>
+                    </connections>
+                </windowController>
+                <customObject id="WAB-kl-6tc" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-646" y="1562"/>
+        </scene>
+        <!--Progress View Controller-->
+        <scene sceneID="QR2-tD-7t9">
+            <objects>
+                <viewController id="5Jk-jk-MNo" customClass="BXProgressViewController" customModule="BXMediaBrowser" sceneMemberID="viewController">
+                    <view key="view" id="c55-Gf-fTd" customClass="BXProgressBackgroundView" customModule="FotoMagico" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="365" height="104"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fTe-6L-iD5">
+                                <rect key="frame" x="18" y="68" width="329" height="16"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" id="deM-TD-67f">
+                                    <font key="font" usesAppearanceFont="YES"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <attributedString key="userComments">
+                                    <fragment content="DNL"/>
+                                </attributedString>
+                            </textField>
+                            <progressIndicator wantsLayer="YES" fixedFrame="YES" maxValue="1" indeterminate="YES" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="iaC-vQ-op6">
+                                <rect key="frame" x="20" y="41" width="299" height="20"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                            </progressIndicator>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GQo-dT-H63">
+                                <rect key="frame" x="18" y="20" width="329" height="14"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" id="X46-xm-Kl9">
+                                    <font key="font" metaFont="message" size="11"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <attributedString key="userComments">
+                                    <fragment content="DNL"/>
+                                </attributedString>
+                            </textField>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="33z-9y-Ayo">
+                                <rect key="frame" x="327" y="36" width="24" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="xmark.circle.fill" catalog="system" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="4Jz-wO-6ea">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="cancel:" target="5Jk-jk-MNo" id="QMb-Hc-FvB"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                    </view>
+                    <connections>
+                        <outlet property="cancelButton" destination="33z-9y-Ayo" id="ds0-7A-r61"/>
+                        <outlet property="messageField" destination="GQo-dT-H63" id="w3e-au-y5L"/>
+                        <outlet property="progressBar" destination="iaC-vQ-op6" id="xhL-Su-sd1"/>
+                        <outlet property="titleField" destination="fTe-6L-iD5" id="LqK-Xa-27c"/>
+                    </connections>
+                </viewController>
+                <customObject id="Yku-vJ-JWB" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-221.5" y="1562"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="xmark.circle.fill" catalog="system" width="15" height="15"/>
+    </resources>
+</document>
