@@ -66,7 +66,13 @@ extension UnsplashFilter
 		
 		var localizedName:String
 		{
-			self.rawValue
+			switch self
+			{
+				case .any : return "Any"
+				case .landscape : return "Horizontal"
+				case .portrait : return "Vertical"
+				case .squarish : return "Square"
+			}
 		}
 		
 		static var allValues:[String]
@@ -104,7 +110,21 @@ extension UnsplashFilter
 		
 		var localizedName:String
 		{
-			self.rawValue
+			switch self
+			{
+				case .any : return "Any"
+				case .black_and_white : return "B&W"
+				case .black : return "Dark"
+				case .white : return "Bright"
+				case .yellow : return "Yellow"
+				case .orange : return "Orange"
+				case .red : return "Red"
+				case .purple : return "Purple"
+				case .magenta : return "Pink"
+				case .green : return "Green"
+				case .teal : return "Teal"
+				case .blue : return "Blue"
+			}
 		}
 		
 		var color:SwiftUI.Color

@@ -40,6 +40,35 @@ open class UnsplashContainer : Container
 	
 	let _unsplashData = UnsplashData()
 	
+	public typealias SaveContainerHandler = (UnsplashContainer)->Void
+	
+	let saveHandler:SaveContainerHandler?
+	
+	
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	/// Creates a new Container for the folder at the specified URL
+	
+	public required init(identifier:String, icon:String, name:String, saveHandler:SaveContainerHandler? = nil, removeHandler:((Container)->Void)? = nil)
+	{
+		self.saveHandler = saveHandler
+
+		super.init(
+			identifier: identifier,
+			icon: icon,
+			name: name,
+			data: self._unsplashData,
+			loadHandler: Self.loadContents,
+			removeHandler: removeHandler)
+		
+		self.observers += NotificationCenter.default.publisher(for:didScrollToEndNotification, object:self).sink
+		{
+			[weak self] _ in self?.load(with:nil)
+		}
+	}
+
+
 	// Unsplash Container can never be expanded, as they do not have any sub-containers
 	
 	override var canExpand: Bool
@@ -48,23 +77,7 @@ open class UnsplashContainer : Container
 	}
 	
 
-	/// Creates a new Container for the folder at the specified URL
-	
-	public required init()
-	{
-		super.init(
-			identifier: "UnsplashSource:Search",
-			icon: "magnifyingglass",
-			name: "Search",
-			data: self._unsplashData,
-			loadHandler: Self.loadContents,
-			removeHandler: nil)
-			
-		self.observers += NotificationCenter.default.publisher(for:didScrollToEndNotification, object:self).sink
-		{
-			[weak self] _ in self?.load(with:nil)
-		}
-	}
+//----------------------------------------------------------------------------------------------------------------------
 
 
 	/// Loads the (shallow) contents of this folder
@@ -110,6 +123,9 @@ open class UnsplashContainer : Container
 	}
 	
 	
+//----------------------------------------------------------------------------------------------------------------------
+
+
 	/// Returns an array of UnsplashPhotos for the specified search string and page number
 
 	private class func photos(for filter:UnsplashFilter, page:Int) async throws -> [UnsplashPhoto]
@@ -174,6 +190,49 @@ open class UnsplashContainer : Container
 		}
 		
 		return uniquePhotos
+	}
+	
+	
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	var filterData:Data?
+	{
+		get
+		{
+			guard let unsplashData = self.data as? UnsplashData else { return nil }
+			let filter = unsplashData.filter
+			let data = try? JSONEncoder().encode(filter)
+			return data
+		}
+		
+		set
+		{
+			guard let data = newValue else { return }
+			guard let unsplashData = self.data as? UnsplashData else { return }
+			guard let filter = try? JSONDecoder().decode(UnsplashFilter.self, from:data) else { return }
+			unsplashData.filter = filter
+		}
+	}
+
+
+	var description:String
+	{
+		guard let filter = self.filter as? UnsplashFilter else { return "" }
+		return Self.description(with:filter)
+	}
+
+
+	class func description(with filter:UnsplashFilter) -> String
+	{
+		let searchString = filter.searchString
+		let orientation = filter.orientation?.localizedName ?? ""
+		let color = filter.color?.localizedName ?? ""
+
+		var description = searchString
+		if !orientation.isEmpty { description += ", \(orientation)" }
+		if !color.isEmpty { description += ", \(color)" }
+		return description
 	}
 }
 

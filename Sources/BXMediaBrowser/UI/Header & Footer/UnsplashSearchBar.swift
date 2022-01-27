@@ -59,38 +59,74 @@ public struct UnsplashSearchBar : View
 		self.filterData.didChange = self.updateFilter
 	}
 	
+	var unsplashContainer:UnsplashContainer?
+	{
+		selectedContainer as? UnsplashContainer
+	}
+	
+	var saveHandler:UnsplashContainer.SaveContainerHandler?
+	{
+		self.unsplashContainer?.saveHandler
+	}
+	
+	var isSaveEnabled:Bool
+	{
+		!self.filterData.searchString.isEmpty
+	}
+	
+	var description:String
+	{
+		self.unsplashContainer?.description ?? ""
+	}
+	
 	// View
 	
 	public var body: some View
     {
 		HStack
 		{
-			TextField("Search", text:self.$filterData.searchString)
+			if let container = self.unsplashContainer, let saveHandler = self.saveHandler
 			{
-				self.updateFilter()
-			}
-			.textFieldStyle(RoundedBorderTextFieldStyle())
-			.frame(maxWidth:300)
-			
-			Spacer()
-			
-			Picker("Orientation:", selection: self.$filterData.orientation)
-			{
-				ForEach(UnsplashFilter.Orientation.allValues, id:\.self)
+				TextField("Search", text:self.$filterData.searchString)
 				{
-					Text($0)
+					self.updateFilter()
 				}
-            }
-			.pickerStyle(.menu)
+				.textFieldStyle(RoundedBorderTextFieldStyle())
+				.frame(maxWidth:300)
+				
+				Spacer()
+				
+				Picker("Orientation:", selection: self.$filterData.orientation)
+				{
+					ForEach(UnsplashFilter.Orientation.allValues, id:\.self)
+					{
+						Text($0)
+					}
+				}
+				.pickerStyle(.menu)
 
-			Picker("Color:", selection: self.$filterData.color)
-			{
-				ForEach(UnsplashFilter.Color.allIdentifiers, id:\.self)
+				Picker("Color:", selection: self.$filterData.color)
 				{
-					Text($0)
+					ForEach(UnsplashFilter.Color.allIdentifiers, id:\.self)
+					{
+						Text($0)
+					}
 				}
-           }
-			.pickerStyle(.menu)
+				.pickerStyle(.menu)
+				
+				Button("Save")
+				{
+					saveHandler(container)
+				}
+				.disabled(!isSaveEnabled)
+			}
+			else
+			{
+				Text(description)
+					.centerAligned()
+					.frame(height:20)
+			}
+			
 		}
 		.padding(10)
     }

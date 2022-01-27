@@ -38,6 +38,9 @@ open class UnsplashSource : Source, AccessControl
 	static let identifier = "UnsplashSource:"
 	
 	
+//----------------------------------------------------------------------------------------------------------------------
+
+
 	/// Creates a new Source for local file system directories
 	
 	public init()
@@ -45,6 +48,9 @@ open class UnsplashSource : Source, AccessControl
 		super.init(identifier:Self.identifier, name:"Unsplash")
 		self.loader = Loader(identifier:self.identifier, loadHandler:self.loadContainers)
 	}
+
+
+//----------------------------------------------------------------------------------------------------------------------
 
 
 	/// Loads the top-level containers of this source.
@@ -55,27 +61,81 @@ open class UnsplashSource : Source, AccessControl
 	{
 		var containers:[Container] = []
 		
-		containers += UnsplashContainer()
+		// Add Live Search
+		
+		containers += UnsplashContainer(identifier:"UnsplashSource:Search", icon:"magnifyingglass", name:"Search", saveHandler:
+		{
+			[weak self] in self?.saveContainer($0)
+		})
 
+		// Add Saved Searches
+		
+		if let savedFilterDatas = sourceState?[Self.savedFilterDatasKey] as? [Data]
+		{
+			for filterData in savedFilterDatas
+			{
+				guard let filter = try? JSONDecoder().decode(UnsplashFilter.self, from:filterData) else { continue }
+				guard let container = self.createContainer(with:filter) else { continue }
+				containers += container
+			}
+		}
+		
 		return containers
+	}
+	
+	
+	/// Creates a new "saved" copy of the live search container
+	
+	func saveContainer(_ liveSearchContainer:UnsplashContainer)
+	{
+		guard let filter = liveSearchContainer.filter as? UnsplashFilter else { return }
+		guard let savedContainer = self.createContainer(with:filter) else { return }
+		self.addContainer(savedContainer)
+	}
+
+
+	/// Creates a new "saved" UnsplashContainer with the specified filter
+	
+	func createContainer(with filter:UnsplashFilter) -> UnsplashContainer?
+	{
+		guard !filter.searchString.isEmpty else { return nil }
+
+		let searchString = filter.searchString
+		let orientation = filter.orientation?.rawValue ?? ""
+		let color = filter.color?.rawValue ?? ""
+		let identifier = "UnsplashSource:\(searchString)/\(orientation)/\(color)".replacingOccurrences(of:" ", with:"-")
+		let name = UnsplashContainer.description(with:filter)
+		
+		let container = UnsplashContainer(identifier:identifier, icon:"rectangle.stack", name:name, removeHandler:
+		{
+			[weak self] in self?.removeContainer($0)
+		})
+
+		container.filter = filter
+		return container
 	}
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	/// Returns the archived filterData of all saved Containers
+	
 	override public func state() async -> [String:Any]
 	{
 		var state = await super.state()
 		
-//		let bookmarks = await self.containers
-//			.compactMap { $0.data as? URL }
-//			.compactMap { try? $0.bookmarkData() }
-//
-//		state[Self.bookmarksKey] = bookmarks
+		let savedFilterDatas = await self.containers
+			.compactMap { $0 as? UnsplashContainer }
+			.filter { $0.saveHandler == nil }
+			.compactMap { $0.filterData }
+
+		state[Self.savedFilterDatasKey] = savedFilterDatas
 
 		return state
 	}
+
+	internal static var savedFilterDatasKey:String { "savedFilterDatas" }
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -87,8 +147,6 @@ open class UnsplashSource : Source, AccessControl
 	{
 		completionHandler(hasAccess)
 	}
-
-
 }
 
 
