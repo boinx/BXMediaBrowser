@@ -209,10 +209,19 @@ extension Object
 				
 				let task = Task<URL,Swift.Error>
 				{
-					let url:URL = try await self.downloadFileHandler(identifier,data)
-					self._localFileURL = url
-					self._downloadFileTask = nil
-					return url
+					do
+					{
+						let url:URL = try await self.downloadFileHandler(identifier,data)
+						self._localFileURL = url
+						self._downloadFileTask = nil
+						return url
+					}
+					catch let error
+					{
+						self._localFileURL = nil
+						self._downloadFileTask = nil
+						throw error
+					}
 				}
 				
 				self._downloadFileTask = task
