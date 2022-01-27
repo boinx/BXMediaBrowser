@@ -7,10 +7,12 @@ let package = Package(
 
     name: "BXMediaBrowser",
     
+    // Deployment targets for each supported platform
+    
     platforms:
     [
-		.macOS(.v12),
-		.iOS(.v13)
+		.macOS(.v12), 	// TODO: We need to go back as far as Catalina
+		.iOS(.v13)		// First version of iOS that supported SwiftUI
     ],
     
 	// Products define the executables and libraries a package produces, and make them visible to other packages
