@@ -254,7 +254,14 @@ extension MusicContainer
 	
 	class func artists(with allMediaItems:[ITLibMediaItem]) -> [ITLibArtist]
 	{
-		let tracksByArtist = Dictionary(grouping:allMediaItems, by: { $0.artist })
+		let tracks = allMediaItems.filter
+		{
+			(track:ITLibMediaItem)->Bool in
+			guard let name = track.artist?.name else { return false }
+			return !name.isEmpty
+		}
+		
+		let tracksByArtist = Dictionary(grouping:tracks, by:{ $0.artist })
 		let artists = tracksByArtist.keys.compactMap { $0 }
 		return artists.sorted { ($0.name ?? "") < ($1.name ?? "") }
 	}
@@ -264,7 +271,14 @@ extension MusicContainer
 	
 	class func albums(with allMediaItems:[ITLibMediaItem]) -> [ITLibAlbum]
 	{
-		let tracksByAlbum = Dictionary(grouping:allMediaItems, by: { $0.album })
+		let tracks = allMediaItems.filter
+		{
+			(track:ITLibMediaItem)->Bool in
+			guard let title = track.album.title else { return false }
+			return !title.isEmpty
+		}
+		
+		let tracksByAlbum = Dictionary(grouping:tracks, by:{ $0.album })
 		let albums = tracksByAlbum.keys
 		return albums.sorted { ($0.title ?? "") < ($1.title ?? "") }
 	}
