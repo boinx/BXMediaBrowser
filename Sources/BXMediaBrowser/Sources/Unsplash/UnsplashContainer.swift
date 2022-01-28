@@ -53,6 +53,8 @@ open class UnsplashContainer : Container
 	
 	public required init(identifier:String, icon:String, name:String, saveHandler:SaveContainerHandler? = nil, removeHandler:((Container)->Void)? = nil)
 	{
+		UnsplashSource.log.verbose {"\(Self.self).\(#function) \(identifier)"}
+
 		self.saveHandler = saveHandler
 
 		super.init(
@@ -85,6 +87,8 @@ open class UnsplashContainer : Container
 	
 	class func loadContents(for identifier:String, data:Any, filter:Any?) async throws -> Loader.Contents
 	{
+		UnsplashSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
+
 		let containers:[Container] = []
 		var objects:[Object] = []
 		
@@ -96,7 +100,7 @@ open class UnsplashContainer : Container
 		{
 			unsplashData.page = 0
 			unsplashData.photos = []
-			print("UnsplashContainer: clear search results")
+			UnsplashSource.log.verbose {"    clear search results"}
 		}
 		
 		// Append the next page of search results
@@ -106,7 +110,7 @@ open class UnsplashContainer : Container
 			unsplashData.page += 1
 			unsplashData.filter = unplashFilter
 			unsplashData.photos += try await self.photos(for:unplashFilter, page:unsplashData.page)
-			print("UnsplashContainer: appending page \(unsplashData.page)")
+			UnsplashSource.log.verbose {"    appending page \(unsplashData.page)"}
 		}
 		
 		// Remove potential duplicates, as that would cause serious issues with NSDiffableDataSource

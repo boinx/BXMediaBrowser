@@ -103,7 +103,7 @@ extension Library
 	{
 		Task
 		{
-			Swift.print("\(Self.self).\(#function)")
+			BXMediaBrowser.logDataModel.debug {"\(Self.self).\(#function) \(identifier)"}
 			let state = await self.state()
 			self.saveState(state)
 		}

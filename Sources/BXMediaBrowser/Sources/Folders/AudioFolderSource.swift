@@ -72,6 +72,8 @@ open class AudioFile : FolderObject
 	
 	override open class func loadThumbnail(for identifier:String, data:Any) async throws -> CGImage
 	{
+		FolderSource.log.verbose {"\(Self.self).\(#function) \(identifier)"}
+
 		guard let url = data as? URL else { throw Error.loadThumbnailFailed }
 		guard url.exists else { throw Error.loadThumbnailFailed }
 		
@@ -85,6 +87,8 @@ open class AudioFile : FolderObject
 	
 	override open class func loadMetadata(for identifier:String, data:Any) async throws -> [String:Any]
 	{
+		FolderSource.log.verbose {"\(Self.self).\(#function) \(identifier)"}
+
 		guard let url = data as? URL else { throw Error.loadMetadataFailed }
 		guard url.exists else { throw Error.loadMetadataFailed }
 		

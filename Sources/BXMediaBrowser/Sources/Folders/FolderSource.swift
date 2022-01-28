@@ -44,6 +44,7 @@ open class FolderSource : Source, AccessControl
 	
 	public init()
 	{
+		FolderSource.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
 		super.init(identifier:Self.identifier, name:"Finder")
 		self.loader = Loader(identifier:self.identifier, loadHandler:self.loadContainers)
 	}
@@ -73,10 +74,12 @@ open class FolderSource : Source, AccessControl
 	
 	private func loadContainers(with sourceState:[String:Any]? = nil) async throws -> [Container]
 	{
-		var containers:[Container] = []
+		FolderSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
 		
 		// Load stored bookmarks from state. Convert each bookmark to a folder url. If the folder
 		// still exists, then create a FolderContainer for it.
+
+		var containers:[Container] = []
 		
 		if let bookmarks = sourceState?[Self.bookmarksKey] as? [Data]
 		{
@@ -101,7 +104,9 @@ open class FolderSource : Source, AccessControl
 	
 	open func createContainer(for url:URL) throws -> Container?
 	{
-		FolderContainer(url:url)
+		FolderSource.log.verbose {"\(Self.self).\(#function) \(url)"}
+
+		return FolderContainer(url:url)
 		{
 			[weak self] in self?.removeContainer($0)
 		}
@@ -138,6 +143,23 @@ open class FolderSource : Source, AccessControl
 	}
 
 
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	public static var log:BXLogger =
+	{
+		()->BXLogger in
+		
+		var logger = BXLogger()
+
+		logger.addDestination
+		{
+			(level:BXLogger.Level,string:String)->() in
+			BXMediaBrowser.log.print(level:level, force:true) { string }
+		}
+		
+		return logger
+	}()
 }
 
 

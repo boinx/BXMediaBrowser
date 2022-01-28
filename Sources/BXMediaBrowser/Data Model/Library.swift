@@ -64,6 +64,8 @@ open class Library : ObservableObject, StateSaving
 	
 	public init(identifier:String)
 	{
+		BXMediaBrowser.logDataModel.verbose {"\(Self.self).\(#function) \(identifier)"}
+		
 		self.identifier = identifier
 
 		self.stateSaver.saveStateHandler =
@@ -91,6 +93,8 @@ open class Library : ObservableObject, StateSaving
 	
 	public func load(with libraryState:[String:Any]? = nil)
 	{
+		BXMediaBrowser.logDataModel.verbose {"\(Self.self).\(#function) \(identifier)"}
+
 		// Restore the selectedContainer. Please note that loading the library is an async operation.
 		// we do not know when the Container in question will be created. For this reason we will
 		// listen to the Container.didCreateNotification and check if the identifier matches the one
@@ -134,7 +138,8 @@ open class Library : ObservableObject, StateSaving
 	
 	open func saveState(_ state:[String:Any])
 	{
-		Swift.print("\(Self.self).\(#function)")
+		BXMediaBrowser.logDataModel.debug {"\(Self.self).\(#function) \(identifier)"}
+
 		UserDefaults.standard.set(state, forKey:stateKey)
 	}
 

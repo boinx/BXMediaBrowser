@@ -71,6 +71,8 @@ open class UnsplashObject : Object
 	
 	open class func loadMetadata(for identifier:String, data:Any) async throws -> [String:Any]
 	{
+		UnsplashSource.log.verbose {"\(Self.self).\(#function) \(identifier)"}
+
 		guard let photo = data as? UnsplashPhoto else { throw Error.loadMetadataFailed }
 
 		var metadata:[String:Any] = [:]
@@ -141,6 +143,8 @@ open class UnsplashObject : Object
 	
 	open class func downloadFile(for identifier:String, data:Any) async throws -> URL
 	{
+		UnsplashSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
+
 		let remoteURL = try remoteURL(for:identifier, data:data)
 		let localURL = try await URLSession.shared.downloadFile(from:remoteURL)
 		TempFilePool.shared.register(localURL)

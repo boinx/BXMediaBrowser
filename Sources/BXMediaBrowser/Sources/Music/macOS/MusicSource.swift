@@ -82,6 +82,8 @@ public class MusicSource : Source, AccessControl
 	
 	public init(allowedMediaKinds:[ITLibMediaItemMediaKind] = [.kindSong])
 	{
+		MusicSource.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
+
 		// Configure the Source
 		
 		super.init(identifier:Self.identifier, icon:Self.icon, name:"Music")
@@ -131,7 +133,7 @@ public class MusicSource : Source, AccessControl
 	
 	private func reload()
 	{
-		print("\(Self.self).\(#function)")
+		MusicSource.log.debug {"\(Self.self).\(#function) \(Self.identifier)"}
 
 		Task
 		{
@@ -160,7 +162,7 @@ public class MusicSource : Source, AccessControl
 	
 	private class func loadContainers(with sourceState:[String:Any]? = nil) async throws -> [Container]
 	{
-		Swift.print("Loading \(identifier)")
+		MusicSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
 		var containers:[Container] = []
 		
@@ -188,6 +190,8 @@ public class MusicSource : Source, AccessControl
 	
 	class func makeMusicContainer(identifier:String, icon:String?, name:String, data:MusicContainer.MusicData) -> MusicContainer
 	{
+		MusicSource.log.verbose {"\(Self.self).\(#function) \(identifier)"}
+
 		if let container = Self.cachedContainers[identifier]
 		{
 			container.data = data
@@ -231,6 +235,25 @@ public class MusicSource : Source, AccessControl
 			return object
 		}
 	}
+	
+	
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	public static var log:BXLogger =
+	{
+		()->BXLogger in
+		
+		var logger = BXLogger()
+
+		logger.addDestination
+		{
+			(level:BXLogger.Level,string:String)->() in
+			BXMediaBrowser.log.print(level:level, force:true) { string }
+		}
+		
+		return logger
+	}()
 }
 	
 	

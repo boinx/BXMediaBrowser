@@ -120,6 +120,8 @@ open class Container : ObservableObject, Identifiable, StateSaving
 	
 	public init(identifier:String, icon:String? = nil, name:String, data:Any, loadHandler:@escaping Container.Loader.LoadHandler, removeHandler:((Container)->Void)? = nil)
 	{
+		BXMediaBrowser.logDataModel.verbose {"\(Self.self).\(#function) \(identifier)"}
+
 		self.identifier = identifier
 		self.data = data
 		self.icon = icon
@@ -178,7 +180,7 @@ open class Container : ObservableObject, Identifiable, StateSaving
 	
 	public func load(with containerState:[String:Any]? = nil)
 	{
-//		Swift.print("Loading \"\(name)\" - \(identifier)")
+		BXMediaBrowser.logDataModel.debug {"\(Self.self).\(#function) \(identifier)"}
 
 		self.loadTask?.cancel()
 		self.loadTask = nil
@@ -211,10 +213,10 @@ open class Container : ObservableObject, Identifiable, StateSaving
 				// Get new list of (sub)containers and objects
 				
 				let (containers,objects) = try await self.loader.contents(with:data, filter:filter)
-//				let names1 = containers.map { $0.name }.joined(separator:", ")
-//				let names2 = objects.map { $0.name }.joined(separator:", ")
-//				Swift.print("    containers = \(names1)")
-//				Swift.print("    objects = \(names2)")
+				let containerNames = containers.map { $0.name }.joined(separator:", ")
+				let objectNames = objects.map { $0.name }.joined(separator:", ")
+				BXMediaBrowser.logDataModel.verbose {"    containers = \(containerNames)"}
+				BXMediaBrowser.logDataModel.verbose {"    objects = \(objectNames)"}
 				
 				// Check if this container should be expanded
 				
@@ -246,7 +248,7 @@ open class Container : ObservableObject, Identifiable, StateSaving
 					self.loadTask = nil
 				}
 			}
-			catch //let error
+			catch let error
 			{
 				await MainActor.run
 				{
@@ -254,7 +256,7 @@ open class Container : ObservableObject, Identifiable, StateSaving
 					self.isLoaded = false
 				}
 				
-//				Swift.print("    ERROR \(error)")
+				BXMediaBrowser.logDataModel.error {"ERROR \(error)"}
 			}
 		}
 	}

@@ -46,6 +46,7 @@ open class UnsplashSource : Source, AccessControl
 	
 	public init()
 	{
+		UnsplashSource.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
 		super.init(identifier:Self.identifier, name:"Unsplash")
 		self.loader = Loader(identifier:self.identifier, loadHandler:self.loadContainers)
 	}
@@ -60,6 +61,8 @@ open class UnsplashSource : Source, AccessControl
 	
 	private func loadContainers(with sourceState:[String:Any]? = nil) async throws -> [Container]
 	{
+		UnsplashSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
+
 		var containers:[Container] = []
 		
 		// Add Live Search
@@ -89,6 +92,8 @@ open class UnsplashSource : Source, AccessControl
 	
 	func saveContainer(_ liveSearchContainer:UnsplashContainer)
 	{
+		UnsplashSource.log.debug {"\(Self.self).\(#function)"}
+
 		guard let filter = liveSearchContainer.filter as? UnsplashFilter else { return }
 		guard let savedContainer = self.createContainer(with:filter) else { return }
 		self.addContainer(savedContainer)
@@ -148,6 +153,25 @@ open class UnsplashSource : Source, AccessControl
 	{
 		completionHandler(hasAccess)
 	}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	public static var log:BXLogger =
+	{
+		()->BXLogger in
+		
+		var logger = BXLogger()
+
+		logger.addDestination
+		{
+			(level:BXLogger.Level,string:String)->() in
+			BXMediaBrowser.log.print(level:level, force:true) { string }
+		}
+		
+		return logger
+	}()
 }
 
 

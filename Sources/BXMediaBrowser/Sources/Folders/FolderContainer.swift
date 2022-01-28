@@ -74,6 +74,8 @@ open class FolderContainer : Container
 	
 	class func loadContents(for identifier:String, data:Any, filter:Any?) async throws -> Loader.Contents
 	{
+		FolderSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
+
 		var containers:[Container] = []
 		var objects:[Object] = []
 		

@@ -57,6 +57,8 @@ public class PhotosSource : Source, AccessControl
 	
 	public init()
 	{
+		PhotosSource.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
+
 		super.init(identifier:Self.identifier, icon:Self.icon, name:"Photos")
 		self.loader = Loader(identifier:self.identifier, loadHandler:self.loadContainers)
 
@@ -121,7 +123,7 @@ public class PhotosSource : Source, AccessControl
 	
 	private func loadContainers(with sourceState:[String:Any]? = nil) async throws -> [Container]
 	{
-		Swift.print("Loading \"\(name)\" - \(identifier)")
+		PhotosSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
 		var containers:[Container] = []
 		
@@ -169,6 +171,25 @@ public class PhotosSource : Source, AccessControl
 		
 		return containers
 	}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	public static var log:BXLogger =
+	{
+		()->BXLogger in
+		
+		var logger = BXLogger()
+
+		logger.addDestination
+		{
+			(level:BXLogger.Level,string:String)->() in
+			BXMediaBrowser.log.print(level:level, force:true) { string }
+		}
+		
+		return logger
+	}()
 }
 
 

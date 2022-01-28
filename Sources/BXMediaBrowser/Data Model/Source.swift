@@ -66,6 +66,8 @@ open class Source : ObservableObject, Identifiable, StateSaving
 	
 	public init(identifier:String, icon:CGImage? = nil, name:String)
 	{
+		BXMediaBrowser.logDataModel.verbose {"\(Self.self).\(#function) \(identifier)"}
+
 		self.identifier = identifier
 		self.icon = icon
 		self.name = name
@@ -86,7 +88,7 @@ open class Source : ObservableObject, Identifiable, StateSaving
 	
 	public func load(with sourceState:[String:Any]? = nil)
 	{
-//		Swift.print("Loading \"\(name)\" - \(identifier)")
+		BXMediaBrowser.logDataModel.debug {"\(Self.self).\(#function) \(identifier)"}
 
 		self.loadTask?.cancel()
 		self.loadTask = nil
@@ -105,8 +107,8 @@ open class Source : ObservableObject, Identifiable, StateSaving
 				// Get new list of containers
 				
 				let containers = try await self.loader.containers(with:sourceState)
-//				let names = containers.map { $0.name }.joined(separator:", ")
-//				Swift.print("    containers = \(names)")
+				let names = containers.map { $0.name }.joined(separator:", ")
+				BXMediaBrowser.logDataModel.verbose {"    containers = \(names)"}
 
 				let isExpanded = sourceState?[isExpandedKey] as? Bool ?? false
 
@@ -144,7 +146,7 @@ open class Source : ObservableObject, Identifiable, StateSaving
 					self.isLoaded = false
 				}
 
-				Swift.print("    ERROR \(error)")
+				BXMediaBrowser.logDataModel.error {"ERROR \(error)"}
 			}
 		}
 	}

@@ -37,6 +37,8 @@ open class FolderObject : Object
 	
 	public init(url:URL)
 	{
+		FolderSource.log.verbose {"\(Self.self).\(#function) url = \(url)"}
+
 		super.init(
 			identifier: FolderSource.identifier(for:url),
 			name: url.lastPathComponent,
@@ -51,6 +53,8 @@ open class FolderObject : Object
 	
 	open class func loadThumbnail(for identifier:String, data:Any) async throws -> CGImage
 	{
+		FolderSource.log.verbose {"\(Self.self).\(#function) \(identifier)"}
+
 		guard let url = data as? URL else { throw Error.loadThumbnailFailed }
 		guard url.exists else { throw Error.loadThumbnailFailed }
 		
@@ -72,6 +76,8 @@ open class FolderObject : Object
 	
 	open class func loadMetadata(for identifier:String, data:Any) async throws -> [String:Any]
 	{
+		FolderSource.log.verbose {"\(Self.self).\(#function) \(identifier)"}
+
 		guard let url = data as? URL else { throw Error.loadMetadataFailed }
 		guard url.exists else { throw Error.loadMetadataFailed }
 
@@ -100,6 +106,8 @@ open class FolderObject : Object
 	
 	open class func downloadFile(for identifier:String, data:Any) async throws -> URL
 	{
+		FolderSource.log.verbose {"\(Self.self).\(#function) \(identifier)"}
+
 		guard let url = data as? URL else { throw Error.downloadFileFailed }
 		guard url.exists else { throw Error.downloadFileFailed }
 		return url

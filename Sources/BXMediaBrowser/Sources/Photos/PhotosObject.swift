@@ -68,7 +68,9 @@ public class PhotosObject : Object
 	
 	class func loadThumbnail(for identifier:String, data:Any) async throws -> CGImage
 	{
-        try await withCheckedThrowingContinuation
+		PhotosSource.log.verbose {"\(Self.self).\(#function) \(identifier)"}
+
+        return try await withCheckedThrowingContinuation
         {
 			continuation in
 
@@ -101,6 +103,8 @@ public class PhotosObject : Object
 	
 	class func loadMetadata(for identifier:String, data:Any) async throws -> [String:Any]
 	{
+		PhotosSource.log.verbose {"\(Self.self).\(#function) \(identifier)"}
+
 		var metadata:[String:Any] = [:]
 		
 		guard let asset = data as? PHAsset else
@@ -177,6 +181,8 @@ public class PhotosObject : Object
 	
 	class func downloadFile(for identifier:String, data:Any) async throws -> URL
 	{
+		PhotosSource.log.verbose {"\(Self.self).\(#function) \(identifier)"}
+
 		guard let asset = data as? PHAsset else { throw Object.Error.downloadFileFailed }
 		
 		if asset.mediaType == .image
