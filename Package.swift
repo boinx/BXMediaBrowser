@@ -27,6 +27,7 @@ let package = Package(
     dependencies:
     [
         .package(url:"git@github.com:boinx/BXSwiftUtils.git", .branch("master")),
+        .package(url:"git@github.com:boinx/BXSwiftUI.git", .branch("master")),
     ],
     
 	// Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -34,9 +35,7 @@ let package = Package(
 
     targets:
     [
-        .target(name:"BXMediaBrowser", dependencies:["BXSwiftUtils"]), //,
-//            resources: [.process("Sources/BXMediaBrowser/UI/ImageThumbnailCell.xib")]),
-            
+        .target(name:"BXMediaBrowser", dependencies:["BXSwiftUtils","BXSwiftUI"]),
         .testTarget(name:"BXMediaBrowserTests", dependencies:["BXMediaBrowser"]),
     ]
 )

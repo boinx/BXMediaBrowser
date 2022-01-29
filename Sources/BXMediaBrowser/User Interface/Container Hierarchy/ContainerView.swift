@@ -23,6 +23,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 
+import BXSwiftUI
 import SwiftUI
 
 
@@ -51,12 +52,10 @@ public struct ContainerView : View
 	
 	public var body: some View
     {
-//		print("ContainerView.body \(container.identifier)    name = \"\(container.name)\"    ptr = \(Unmanaged.passUnretained(container).toOpaque())")
-		
 		let icon = container.icon ?? "folder"
 		
 		return BXDisclosureView(isExpanded:self.$container.isExpanded,
-		
+
 			header:
 			{
 				// Container name
@@ -65,7 +64,7 @@ public struct ContainerView : View
 				{
 					if container.canExpand
 					{
-						BXDisclosureButton("", isExpanded:self.$container.isExpanded)
+						CustomDisclosureButton(icon:nil, label:"", isExpanded:self.$container.isExpanded)
 							.frame(width:10)
 					}
 					else
@@ -74,16 +73,16 @@ public struct ContainerView : View
 							.frame(width:10)
 					}
 					
-					Image(systemName:icon)
+					SwiftUI.Image(systemName:icon)
 						.frame(minWidth:16, alignment:.center)
 						
 					Text(container.name)
 						.lineLimit(1)
 						.truncationMode(.tail)
 						.padding(.trailing,-15)
-						
+
 					Spacer()
-					
+
 					if container.isLoading
 					{
 						BXSpinningWheel(size:.small)
@@ -91,7 +90,7 @@ public struct ContainerView : View
 					}
 					else if let removeHandler = container.removeHandler
 					{
-						Image(systemName:"minus.circle").onTapGesture
+						SwiftUI.Image(systemName:"minus.circle").onTapGesture
 						{
 							removeHandler(container)
 						}

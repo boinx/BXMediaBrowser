@@ -26,6 +26,7 @@
 #if os(macOS)
 
 import BXSwiftUtils
+import BXSwiftUI
 import AppKit
 
 

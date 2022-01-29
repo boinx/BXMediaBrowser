@@ -23,6 +23,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 
+import BXSwiftUI
 import SwiftUI
 
 
@@ -55,7 +56,7 @@ public struct SourceView : View
 		
 			header:
 			{
-				BXDisclosureButton(source.name, icon:source.icon, isExpanded:self.$source.isExpanded)
+				CustomDisclosureButton(icon:source.icon, label:source.name, isExpanded:self.$source.isExpanded)
 					.leftAligned()
 					.font(.system(size:13))
 					.padding(.vertical,2)
