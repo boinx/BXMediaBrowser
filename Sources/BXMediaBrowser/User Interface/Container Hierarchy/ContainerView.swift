@@ -54,7 +54,7 @@ public struct ContainerView : View
     {
 		let icon = container.icon ?? "folder"
 		
-		return BXDisclosureView(isExpanded:self.$container.isExpanded,
+		return BXDisclosureView(isExpanded:self.$container.isExpanded, spacing:0,
 
 			header:
 			{

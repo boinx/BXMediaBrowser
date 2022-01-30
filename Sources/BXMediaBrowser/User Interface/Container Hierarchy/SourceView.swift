@@ -52,7 +52,7 @@ public struct SourceView : View
 	
 	public var body: some View
     {
-		BXDisclosureView(isExpanded:self.$source.isExpanded,
+		BXDisclosureView(isExpanded:self.$source.isExpanded, spacing:0,
 		
 			header:
 			{
