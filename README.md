@@ -10,6 +10,13 @@ BXMediaBrowser is written in Swift and uses Swift 5.5 concurrency features like 
 
 All model classes conform to ObservableObject to be SwiftUI compatible. They also conform to Hashable, so that they can be used with the modern diffable data sources APIs. Here is a list of the data model classes and how they relate to each other:
 
+BXMediaBrowser.Library
+	[BXMediaBrowser.Section]
+		[BXMediaBrowser.Source]
+			[BXMediaBrowser.Container]			IMBNode				e.g. Album, Playlist, Folder
+				[BXMediaBrowser.Container]		IMBNode
+				[BXMediaBrowser.Object]			IMBObject			e.g. Image, Video, Audio file
+
 ### BXMediaBrowser.Library	
 
 The Library is the root object in the model graph. It contains an array of Sections
@@ -24,17 +31,11 @@ Source is the abstract base class for providing access to media files. Concrete 
 
 ### BXMediaBrowser.Container
 
-A Container has a list of Objects. It can also have a list of sub-containers. That way tree-like hierarchies can be represented. Depending on the Source that created a Container, a Container can represent a folder, an album or collection, or a playlist.
+A Container has a list of Objects. It can also have a list of sub-containers. That way tree-like hierarchies can be represented. Depending on the Source that created a Container, a Container can represent a folder, an album, a collection, a playlist, etc.
 
 ### BXMediaBrowser.Object
 
 An Object represents a single media file. This can be an image, video, or audio file, depending on the Source that created this Object.
 
-BXMediaBrowser.Library
-	[BXMediaBrowser.Section]
-		[BXMediaBrowser.Source]
-			[BXMediaBrowser.Container]			IMBNode				e.g. Album, Playlist, Folder
-				[BXMediaBrowser.Container]		IMBNode
-				[BXMediaBrowser.Object]			IMBObject			e.g. Image, Video, Audio file
 
 ## 2) The User Interface Components
