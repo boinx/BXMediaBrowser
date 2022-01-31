@@ -58,7 +58,19 @@ public protocol ViewFactoryAPI
 {
 	/// Returns the View for the specifed model object
 
-	func containerView(for model:Any) -> AnyView
+	func libraryView(for library:Library) -> AnyView
+
+	/// Returns the View for the specifed model object
+
+	func sectionView(for section:Section) -> AnyView
+
+	/// Returns the View for the specifed model object
+
+	func sourceView(for source:Source) -> AnyView
+
+	/// Returns the View for the specifed model object
+
+	func containerView(for container:Container) -> AnyView
 
 	/// Returns a header view that is appropriate for the currently selected Container of the Library
 
@@ -70,7 +82,7 @@ public protocol ViewFactoryAPI
 
 	/// Provides context menu items for the specified model instance
 
-	func contextMenu(for model:Any) -> AnyView
+	func containerContextMenu(for container:Container) -> AnyView
 
 	/// Returns the type of ObjectCell subclass to be used for the specified Container
 
@@ -85,24 +97,39 @@ open class ViewFactory : ViewFactoryAPI
 {
 	public init() { }
 
-	open func containerView(for model:Any) -> AnyView
+	open func libraryView(for library:Library) -> AnyView
 	{
-		typeErasedView( Self.defaultContainerView(for:model) )
+		typeErase( Self.defaultLibraryView(for:library) )
+	}
+	
+	open func sectionView(for section:Section) -> AnyView
+	{
+		typeErase( Self.defaultSectionView(for:section) )
+	}
+	
+	open func sourceView(for source:Source) -> AnyView
+	{
+		typeErase( Self.defaultSourceView(for:source) )
+	}
+	
+	open func containerView(for container:Container) -> AnyView
+	{
+		typeErase( Self.defaultContainerView(for:container) )
 	}
 	
 	open func objectsHeaderView(for library:Library) -> AnyView
 	{
-		typeErasedView( Self.defaultHeaderView(for:library) )
+		typeErase( Self.defaultHeaderView(for:library) )
 	}
 
 	open func objectsFooterView(for library:Library) -> AnyView
 	{
-		typeErasedView( Self.defaultFooterView(for:library) )
+		typeErase( Self.defaultFooterView(for:library) )
 	}
 
-	open func contextMenu(for model:Any) -> AnyView
+	open func containerContextMenu(for container:Container) -> AnyView
 	{
-		typeErasedView( Self.defaultContextMenu(for:model) )
+		typeErase( Self.defaultContainerContextMenu(for:container) )
 	}
 
 	open func objectCellType(for container:Container?) -> ObjectCell.Type
@@ -117,7 +144,7 @@ open class ViewFactory : ViewFactoryAPI
 
 public extension ViewFactory
 {
-	func typeErasedView<V:View>(_ content:V) -> AnyView
+	func typeErase<V:View>(_ content:V) -> AnyView
 	{
 		AnyView(Group
 		{
@@ -126,31 +153,40 @@ public extension ViewFactory
 	}
 	
 	
-	@ViewBuilder class func defaultContainerView(for model:Any) -> some View
+	@ViewBuilder class func defaultLibraryView(for library:Library) -> some View
 	{
-		if let container = model as? FolderContainer
-		{
-			FolderContainerView(with:container)
-		}
-		else if let container = model as? Container
-		{
-			ContainerView(with:container)
-		}
-		else if let source = model as? FolderSource
+		LibraryView(with:library)
+	}
+
+
+	@ViewBuilder class func defaultSectionView(for section:Section) -> some View
+	{
+		SectionView(with:section)
+	}
+
+
+	@ViewBuilder class func defaultSourceView(for source:Source) -> some View
+	{
+		if source is FolderSource
 		{
 			FolderSourceView(with:source)
 		}
-		else if let source = model as? Source
+		else
 		{
 			SourceView(with:source)
 		}
-		else if let section = model as? Section
+	}
+
+
+	@ViewBuilder class func defaultContainerView(for container:Container) -> some View
+	{
+		if container is FolderContainer
 		{
-			SectionView(with:section)
+			FolderContainerView(with:container)
 		}
-		else if let library = model as? Library
+		else
 		{
-			LibraryView(with:library)
+			ContainerView(with:container)
 		}
 	}
 
@@ -185,29 +221,26 @@ public extension ViewFactory
 	}
 
 
-	@ViewBuilder class func defaultContextMenu(for model:Any) -> some View
+	@ViewBuilder class func defaultContainerContextMenu(for container:Container) -> some View
 	{
-		if let container = model as? Container
+		if let folderContainer = container as? FolderContainer
 		{
-			if let folderContainer = model as? FolderContainer
+			Button("Reveal in Finder")
 			{
-				Button("Reveal in Finder")
-				{
-					folderContainer.revealInFinder()
-				}
+				folderContainer.revealInFinder()
 			}
+		}
+		
+		Button("Reload")
+		{
+			container.load()
+		}
 			
-			Button("Reload")
+		if let removeHandler = container.removeHandler
+		{
+			Button("Remove")
 			{
-				container.load()
-			}
-				
-			if let removeHandler = container.removeHandler
-			{
-				Button("Remove")
-				{
-					removeHandler(container)
-				}
+				removeHandler(container)
 			}
 		}
 	}

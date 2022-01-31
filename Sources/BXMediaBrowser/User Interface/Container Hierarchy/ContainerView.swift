@@ -134,7 +134,7 @@ public struct ContainerView : View
 			
 			.contextMenu
 			{
-				viewFactory.contextMenu(for:container)
+				viewFactory.containerContextMenu(for:container)
 			}
 			
 			// Whenever the current state changes, save it to persistent storage

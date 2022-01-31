@@ -58,7 +58,7 @@ public struct LibraryView : View
 			{
 				if SectionView.shouldDisplay($0)
 				{
-					viewFactory.containerView(for:$0)
+					viewFactory.sectionView(for:$0)
 				}
 			}
 		}

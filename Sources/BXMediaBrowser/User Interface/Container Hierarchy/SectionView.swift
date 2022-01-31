@@ -82,7 +82,7 @@ public struct SectionView : View
 			
 			ForEach(section.sources)
 			{
-				viewFactory.containerView(for:$0)
+				viewFactory.sourceView(for:$0)
 			}
 		}
 		
