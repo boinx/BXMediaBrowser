@@ -84,7 +84,8 @@ public struct CollectionView<Cell:ObjectCell> : NSViewRepresentable
         let nib = NSNib(nibNamed:name, bundle:bundle)
         
         collectionView.register(nib, forItemWithIdentifier:identifier)
-        collectionView.collectionViewLayout = self.createLayout()
+        let (layout,_) = self.createLayout(for:collectionView)
+        collectionView.collectionViewLayout = layout
         
         // Configure selection handling
         
@@ -122,11 +123,32 @@ public struct CollectionView<Cell:ObjectCell> : NSViewRepresentable
 	public func updateNSView(_ scrollView:NSScrollView, context:Context)
 	{
 		guard let collectionView = scrollView.documentView as? NSCollectionView else { return }
-		collectionView.collectionViewLayout = self.createLayout()
 
-		context.coordinator.cellType = self.cellType 	// Must update this first
 		context.coordinator.library = self.library
+
+		context.coordinator.updateLayoutHandler =
+		{
+			let pos = self.saveScrollPos(for:collectionView)
+			defer { self.restoreScrollPos(for:collectionView, with:pos) }
+			
+			let (layout,columns) = self.createLayout(for:collectionView)
+			let needsAnimation = false //context.coordinator.columnCount != columns
+			context.coordinator.columnCount = columns
+			
+			if needsAnimation
+			{
+				collectionView.animator().collectionViewLayout = layout
+			}
+			else
+			{
+				collectionView.collectionViewLayout = layout
+			}
+		}
+		
+		context.coordinator.updateLayoutHandler?()
+		context.coordinator.cellType = self.cellType 	// Must update this first
 		context.coordinator.container = self.container	// because this line already triggers reload of NSCollectionView
+		
 	}
 	
 	/// Creates the Coordinator which provides persistant state to this view
@@ -141,21 +163,28 @@ public struct CollectionView<Cell:ObjectCell> : NSViewRepresentable
 //----------------------------------------------------------------------------------------------------------------------
 
 
-// MARK: -
+// MARK: - Setup
 	
 extension CollectionView
 {
 	/// Creates a NSCollectionViewCompositionalLayout that looks similar to regular flow layout
 	
-    private func createLayout() -> NSCollectionViewLayout
+    private func createLayout(for collectionView:NSCollectionView) -> (NSCollectionViewLayout,Int)
     {
 		let w:CGFloat = cellType.width
 		let h:CGFloat = cellType.height
 		let d:CGFloat = cellType.spacing
-		let width:NSCollectionLayoutDimension = w>0 ? .absolute(w) : .fractionalWidth(1.0)
-		let height:NSCollectionLayoutDimension = .absolute(h)
+		let ratio = w / h
 		
-        let itemSize = NSCollectionLayoutSize(widthDimension:width, heightDimension:height)
+		let rowWidth = max(0.0, collectionView.bounds.width - 2*d)
+		let scale = self.library?.uiState.thumbnailScale ?? 0.4
+		
+		let cellWidth = (scale * rowWidth).clipped(to:0...rowWidth)
+		let cellHeight = cellWidth / ratio
+		
+		let width:NSCollectionLayoutDimension = w>0 ? .absolute(cellWidth) : .fractionalWidth(1.0)
+		let height:NSCollectionLayoutDimension = w>0 ? .absolute(cellHeight) : .absolute(h)
+		let itemSize = NSCollectionLayoutSize(widthDimension:width, heightDimension:height)
         let item = NSCollectionLayoutItem(layoutSize:itemSize)
 
         let groupSize = NSCollectionLayoutSize(widthDimension:.fractionalWidth(1.0), heightDimension:height)
@@ -166,7 +195,9 @@ extension CollectionView
         section.contentInsets = NSDirectionalEdgeInsets(top:d, leading:d, bottom:d, trailing:d)
         section.interGroupSpacing = d
         
-        return NSCollectionViewCompositionalLayout(section:section)
+        let layout = NSCollectionViewCompositionalLayout(section:section)
+		let columns = Int((rowWidth+d) / (cellWidth+d))
+		return (layout,columns)
     }
 
 
@@ -273,24 +304,56 @@ extension CollectionView
 	
 		@MainActor var cellType:Cell.Type
 	
+		/// This handler is called when the layout needs to be recalculated
+		
+		@MainActor var updateLayoutHandler:(()->Void)? = nil
+
 		/// The dataSource accesses the Objects of the Container
 		
 		var dataSource: NSCollectionViewDiffableDataSource<Int,Object>! = nil
+		
+		/// The number of cells that fit inside a single row
+		
+		var columnCount = 0
+		
+		/// Set this property to true if data model changes should be animated in the view (e.g. objects inserted or deleted)
 		
 		private var shouldAnimate = false
 		
 		/// References to internal subscriptions
 		
-		private var observers:[Any] = []
+		private var layoutObserver:Any? = nil
+		private var dataSourceObserver:Any? = nil
 		
-		/// Creates a Coordinator
-		
-        init(container:Container?, cellType:Cell.Type)
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+ 		// MARK: - Setup
+ 		
+ 		
+        init(library:Library?, container:Container?, cellType:Cell.Type)
         {
+			self.library = library
 			self.container = container
 			self.cellType = cellType
+			super.init()
         }
-		
+
+		@MainActor func updateLayout()
+		{
+			guard let state = self.library?.uiState else { return }
+			
+			self.layoutObserver = state.$thumbnailScale
+				.throttle(for:0.02, scheduler:DispatchQueue.main, latest:true)
+				.sink
+				{
+					[weak self] _ in
+					self?.shouldAnimate = true
+					self?.updateLayoutHandler?()
+				}
+		}
+
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -301,12 +364,10 @@ extension CollectionView
 		
 		@MainActor func updateDataSource()
 		{
-			self.observers = []
-			
 			if let container = self.container
 			{
-				self.observers += container.$objects
-					.debounce(for:0.05, scheduler:RunLoop.main)
+				self.dataSourceObserver = container.$objects
+					.debounce(for:0.05, scheduler:DispatchQueue.main)
 					.sink
 					{
 						[weak self] _ in

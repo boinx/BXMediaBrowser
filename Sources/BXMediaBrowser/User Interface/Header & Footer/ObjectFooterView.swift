@@ -34,7 +34,7 @@ public struct ObjectFooterView : View
 {
 	// Model
 	
-	@ObservedObject var library:Library
+	@ObservedObject var uiState:UIState
 	@ObservedObject var container:Container
 	
 	// View
@@ -43,7 +43,7 @@ public struct ObjectFooterView : View
     {
 		HStack
 		{
-			Slider(value:self.$library.uiState.thumbnailScale, in:0.1...1.0)
+			Slider(value:self.$uiState.thumbnailScale, in:0.1...1.0)
 				.controlSize(.mini)
 				.frame(width:120)
 			
