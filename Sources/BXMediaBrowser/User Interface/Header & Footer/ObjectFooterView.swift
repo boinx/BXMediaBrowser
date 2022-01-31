@@ -34,9 +34,8 @@ public struct ObjectFooterView : View
 {
 	// Model
 	
-	@ObservedObject var selectedContainer:Container
-
-	@State private var size = 0.3
+	@ObservedObject var library:Library
+	@ObservedObject var container:Container
 	
 	// View
 	
@@ -44,15 +43,15 @@ public struct ObjectFooterView : View
     {
 		HStack
 		{
-			Text(selectedContainer.itemCountDescription)
+			Slider(value:self.$library.uiState.thumbnailScale, in:0.1...1.0)
+				.controlSize(.mini)
+				.frame(width:120)
 			
 			Spacer()
 			
-//			BXSlider(value:self.$size, in:0.2...5.0, response:.linear)
-			Slider(value:self.$size, in:0.1...1.0)
-				.frame(width:120)
+			Text(container.itemCountDescription)
+				.controlSize(.small)
 		}
-		.controlSize(.small)
 		.padding(.horizontal,20)
 		.padding(.vertical,2)
     }
