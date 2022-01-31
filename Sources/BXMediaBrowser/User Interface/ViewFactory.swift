@@ -32,135 +32,123 @@ import SwiftUI
 /// The ViewFactory protocol defines the API for creating views for the BXMediaBrowser UI. By providing
 /// a custom implementation and injecting it into the environment, the BXMediaBrowser can be customized.
 
-public protocol ViewFactory
+open class ViewFactory
 {
+	public init()
+	{
+
+	}
+
 	/// Returns the View for the specifed model object
 	
-	func containerView(for model:Any) -> AnyView
+	open func containerView(for model:Any) -> some View
+	{
+		Group
+		{
+			if let container = model as? FolderContainer
+			{
+				FolderContainerView(with:container)
+			}
+			else if let container = model as? Container
+			{
+				ContainerView(with:container)
+			}
+			else if let source = model as? FolderSource
+			{
+				FolderSourceView(with:source)
+			}
+			else if let source = model as? Source
+			{
+				SourceView(with:source)
+			}
+			else if let section = model as? Section
+			{
+				SectionView(with:section)
+			}
+			else if let library = model as? Library
+			{
+				LibraryView(with:library)
+			}
+		}
+	}
+	
 	
 	/// Returns a header view that is appropriate for the currently selected Container of the Library
 	
-	func objectsHeaderView(for library:Library) -> AnyView
+	open func objectsHeaderView(for library:Library) -> some View
+	{
+		Group
+		{
+			if let container = library.selectedContainer as? UnsplashContainer
+			{
+				UnsplashSearchBar(with:container)
+			}
+			else if let container = library.selectedContainer
+			{
+				SearchBar(with:container)
+			}
+			else
+			{
+				EmptyView()
+			}
+		}
+	}
+	
 	
 	/// Returns a footer view that is appropriate for the currently selected Container of the Library
 	
-	func objectsFooterView(for library:Library) -> AnyView
+	open func objectsFooterView(for library:Library) -> some View
+	{
+		Group
+		{
+			if let container = library.selectedContainer
+			{
+				ObjectFooterView(selectedContainer:container)
+			}
+			else
+			{
+				EmptyView()
+			}
+		}
+	}
+	
+	
+	/// Provides context menu items for the specified model instance
+	
+	open func contextMenu(for model:Any) -> some View
+	{
+		Group
+		{
+			if let container = model as? Container
+			{
+				if let folderContainer = model as? FolderContainer
+				{
+					Button("Reveal in Finder")
+					{
+						folderContainer.revealInFinder()
+					}
+				}
+				
+				Button("Reload")
+				{
+					container.load()
+				}
+					
+				if let removeHandler = container.removeHandler
+				{
+					Button("Remove")
+					{
+						removeHandler(container)
+					}
+				}
+			}
+		}
+	}
+	
 	
 	/// Returns the type of ObjectCell subclass to be used for the specified Container
 
-	func objectCellType(for container:Container?) -> ObjectCell.Type
-}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-public struct DefaultViewFactory : ViewFactory
-{
-	// Create the View and wrap it in a type-erased AnyView
-	
-	public func containerView(for model:Any) -> AnyView
-	{
-		let view = Self.defaultContainerView(for:model)
-		return AnyView(view)
-	}
-
-
-	/// This function creates the built-in default Views for the Container view hierarchy
-	
-	@ViewBuilder static public func defaultContainerView(for model:Any) -> some View
-	{
-		if let container = model as? FolderContainer
-		{
-			FolderContainerView(with:container)
-		}
-		else if let container = model as? Container
-		{
-			ContainerView(with:container)
-		}
-		else if let source = model as? FolderSource
-		{
-			FolderSourceView(with:source)
-		}
-		else if let source = model as? Source
-		{
-			SourceView(with:source)
-		}
-		else if let section = model as? Section
-		{
-			SectionView(with:section)
-		}
-		else if let library = model as? Library
-		{
-			LibraryView(with:library)
-		}
-	}
-	
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	/// Returns a header view that is appropriate for the currently selected Container of the Library
-	
-	public func objectsHeaderView(for library:Library) -> AnyView
-	{
-		let view = Self.defaultObjectsHeaderView(for:library)
-		return AnyView(view)
-	}
-	
-	/// This function creates the built-in default Views for the Object browser header
-	
-	@ViewBuilder static public func defaultObjectsHeaderView(for library:Library) -> some View
-	{
-		if let container = library.selectedContainer as? UnsplashContainer
-		{
-			UnsplashSearchBar(with:container)
-		}
-		else if let container = library.selectedContainer
-		{
-			SearchBar(with:container)
-		}
-		else
-		{
-			EmptyView()
-		}
-	}
-	
-	
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	/// Returns a footer view that is appropriate for the currently selected Container
-	
-	public func objectsFooterView(for library:Library) -> AnyView
-	{
-		let view = Self.defaultObjectsFooterView(for:library)
-		return AnyView(view)
-	}
-	
-	/// This function creates the built-in default Views for the Object browser footer
-	
-	@ViewBuilder static public func defaultObjectsFooterView(for library:Library) -> some View
-	{
-		EmptyView()
-	}
-	
-	
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	/// Returns the type of ObjectCell subclass to be used for the specified Container.
-	///
-	/// This factory method is only needed by the CollectionView.
-	
-	public func objectCellType(for container:Container?) -> ObjectCell.Type
-	{
-		Self.defaultObjectCellType(for:container)
-	}
-
-	/// Returns the type of ObjectCell subclass to be used for the specified Container
-	
-	public static func defaultObjectCellType(for container:Container?) -> ObjectCell.Type
+	open func objectCellType(for container:Container?) -> ObjectCell.Type
 	{
 		// For some Container subclasses we want custom ObjectCells
 		
@@ -205,11 +193,11 @@ public extension EnvironmentValues
     }
 }
 
-/// If no ViewFactory was injected into the environment, the DefaultViewFactory will be used instead
+/// If no ViewFactory was injected into the environment, the default ViewFactory will be used instead
 
 struct ViewFactoryKey : EnvironmentKey
 {
-    static let defaultValue:ViewFactory = DefaultViewFactory()
+    static let defaultValue:ViewFactory = ViewFactory()
 }
 
 
