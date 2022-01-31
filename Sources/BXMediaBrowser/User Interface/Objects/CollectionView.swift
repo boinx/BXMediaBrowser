@@ -45,6 +45,10 @@ public struct CollectionView<Cell:ObjectCell> : NSViewRepresentable
 	
 	public typealias NSViewType = NSScrollView
 	
+	/// The Library has properties that may affect the display of this view
+	
+	private var library:Library? = nil
+	
 	/// The objects of this Container are displayed in the NSCollectionView
 	
 	private var container:Container? = nil
@@ -59,8 +63,9 @@ public struct CollectionView<Cell:ObjectCell> : NSViewRepresentable
 
 	/// Creates CollectionView with the specified Container and cell type
 	
-	public init(container:Container?, cellType:Cell.Type)
+	public init(for library:Library?, container:Container?, cellType:Cell.Type)
 	{
+		self.library = library
 		self.container = container
 		self.cellType = cellType
 	}
@@ -120,6 +125,7 @@ public struct CollectionView<Cell:ObjectCell> : NSViewRepresentable
 		collectionView.collectionViewLayout = self.createLayout()
 
 		context.coordinator.cellType = self.cellType 	// Must update this first
+		context.coordinator.library = self.library
 		context.coordinator.container = self.container	// because this line already triggers reload of NSCollectionView
 	}
 	
@@ -127,7 +133,7 @@ public struct CollectionView<Cell:ObjectCell> : NSViewRepresentable
 	
 	public func makeCoordinator() -> Coordinator
     {
-        return Coordinator(container:container, cellType:cellType)
+        return Coordinator(library:library, container:container, cellType:cellType)
     }
 }
 
@@ -196,6 +202,7 @@ extension CollectionView
 {
 	public class Coordinator : NSObject, NSCollectionViewDelegate
     {
+		@MainActor var library:Library? = nil
 		/// The Container is the data model for the NSCollectionView
 		
 		@MainActor var container:Container? = nil
