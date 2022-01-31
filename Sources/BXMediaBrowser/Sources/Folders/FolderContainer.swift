@@ -181,6 +181,19 @@ open class FolderContainer : Container
 			return FolderObject(url:url)
 		}
 	}
+	
+	
+	/// Reveals the folder in the Finder
+	
+	open func revealInFinder()
+	{
+		guard let url = data as? URL else { return }
+		guard url.exists else { return }
+		
+		#if os(macOS)
+		NSWorkspace.shared.selectFile(url.path, inFileViewerRootedAtPath:url.path)
+		#endif
+	}
 }
 
 

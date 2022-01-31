@@ -130,6 +130,13 @@ public struct ContainerView : View
 			})
 			.id(container.identifier)
 			
+			// Display an optional context menu when right-clicking
+			
+			.contextMenu
+			{
+				viewFactory.contextMenu(for:container)
+			}
+			
 			// Whenever the current state changes, save it to persistent storage
 		
 			.onReceive(container.$isExpanded)
