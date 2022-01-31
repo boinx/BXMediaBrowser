@@ -74,11 +74,11 @@ public protocol ViewFactoryAPI
 
 	/// Returns a header view that is appropriate for the currently selected Container of the Library
 
-	func objectsHeaderView(for library:Library) -> AnyView
+	func objectsHeaderView(for library:Library, container:Container?) -> AnyView
 
 	/// Returns a footer view that is appropriate for the currently selected Container of the Library
 
-	func objectsFooterView(for library:Library) -> AnyView
+	func objectsFooterView(for library:Library, container:Container?) -> AnyView
 
 	/// Provides context menu items for the specified model instance
 
@@ -117,14 +117,14 @@ open class ViewFactory : ViewFactoryAPI
 		typeErase( Self.defaultContainerView(for:container) )
 	}
 	
-	open func objectsHeaderView(for library:Library) -> AnyView
+	open func objectsHeaderView(for library:Library, container:Container?) -> AnyView
 	{
-		typeErase( Self.defaultHeaderView(for:library) )
+		typeErase( Self.defaultHeaderView(for:library, container:container) )
 	}
 
-	open func objectsFooterView(for library:Library) -> AnyView
+	open func objectsFooterView(for library:Library, container:Container?) -> AnyView
 	{
-		typeErase( Self.defaultFooterView(for:library) )
+		typeErase( Self.defaultFooterView(for:library, container:container) )
 	}
 
 	open func containerContextMenu(for container:Container) -> AnyView
@@ -191,13 +191,13 @@ public extension ViewFactory
 	}
 
 
-	@ViewBuilder class func defaultHeaderView(for library:Library) -> some View
+	@ViewBuilder class func defaultHeaderView(for library:Library, container:Container?) -> some View
 	{
-		if let container = library.selectedContainer as? UnsplashContainer
+		if let container = container as? UnsplashContainer
 		{
 			UnsplashSearchBar(with:container)
 		}
-		else if let container = library.selectedContainer
+		else if let container = container
 		{
 			SearchBar(with:container)
 		}
@@ -208,11 +208,11 @@ public extension ViewFactory
 	}
 
 
-	@ViewBuilder class func defaultFooterView(for library:Library) -> some View
+	@ViewBuilder class func defaultFooterView(for library:Library, container:Container?) -> some View
 	{
-		if let container = library.selectedContainer
+		if let container = container
 		{
-			ObjectFooterView(library:library, container:container)
+			ObjectFooterView(uiState:library.uiState, container:container)
 		}
 		else
 		{
