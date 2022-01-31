@@ -350,6 +350,21 @@ open class Container : ObservableObject, Identifiable, StateSaving
 	/// because it will never have any sub-containers.
 	
 	@MainActor var canExpand:Bool { true }
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - Info
+	
+	/// Returns a description of the contents of this Container
+	
+    @MainActor var itemCountDescription:String
+    {
+		let n = self.objects.count
+		let str = n.localizedItemsString
+		return str
+    }
 }
 
 

@@ -60,6 +60,13 @@ open class AudioFolderContainer : FolderContainer
 		guard url.isAudioFile else { return nil }
 		return AudioFile(url:url)
 	}
+
+    @MainActor override var itemCountDescription:String
+    {
+		let n = self.objects.count
+		let str = n.localizedFilesString
+		return str
+    }
 }
 
 

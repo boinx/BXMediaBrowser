@@ -213,6 +213,14 @@ public class MusicContainer : Container
 			self.load()
 		}
 	}
+
+
+    @MainActor override var itemCountDescription:String
+    {
+		let n = self.objects.count
+		let str = n.localizedFilesString
+		return str
+    }
 }
 
 

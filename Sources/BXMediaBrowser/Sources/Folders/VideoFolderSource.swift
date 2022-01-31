@@ -59,6 +59,13 @@ open class VideoFolderContainer : FolderContainer
 		guard url.isVideoFile else { return nil }
 		return VideoFile(url:url)
 	}
+
+    @MainActor override var itemCountDescription:String
+    {
+		let n = self.objects.count
+		let str = n.localizedVideosString
+		return str
+    }
 }
 
 

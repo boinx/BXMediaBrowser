@@ -239,6 +239,16 @@ open class UnsplashContainer : Container
 		if !color.isEmpty { description += ", \(color)" }
 		return description
 	}
+
+
+	/// Returns a description of the contents of this Container
+	
+    @MainActor override var itemCountDescription:String
+    {
+		let n = self.objects.count
+		let str = n.localizedImagesString
+		return str
+    }
 }
 
 

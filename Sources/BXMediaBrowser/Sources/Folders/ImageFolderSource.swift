@@ -61,6 +61,13 @@ open class ImageFolderContainer : FolderContainer
 		guard url.isImageFile else { return nil }
 		return ImageFile(url:url)
 	}
+
+    @MainActor override var itemCountDescription:String
+    {
+		let n = self.objects.count
+		let str = n.localizedImagesString
+		return str
+    }
 }
 
 
