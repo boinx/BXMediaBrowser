@@ -26,6 +26,12 @@
 import BXSwiftUtils
 import Foundation
 
+#if os(macOS)
+import AppKit
+#elseif os(iOS)
+import UIKit
+#endif
+
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -65,7 +71,7 @@ open class UnsplashContainer : Container
 			loadHandler: Self.loadContents,
 			removeHandler: removeHandler)
 		
-		self.observers += NotificationCenter.default.publisher(for:didScrollToEndNotification, object:self).sink
+		self.observers += NotificationCenter.default.publisher(for:NSCollectionView.didScrollToEnd, object:self).sink
 		{
 			[weak self] _ in self?.load(with:nil)
 		}

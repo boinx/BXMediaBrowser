@@ -196,13 +196,68 @@ extension CollectionView
 //----------------------------------------------------------------------------------------------------------------------
 
 
-// MARK: -
+// MARK: - Scrolling
+
+extension CollectionView
+{
+    /// Saves the current scroll position, returning a tuple with the current bounds and visibleRect
+	
+    func saveScrollPos(for collectionView:NSCollectionView) -> (CGRect,CGRect)
+    {
+		let bounds = collectionView.bounds
+		let visible = collectionView.visibleRect
+		return (bounds,visible)
+    }
+    
+    
+    /// Restores the scroll position with the tuple of the old bounds and visibleRect.
+	///
+	/// This function tries to keep the visible cells centered, while the thumbnail scale is changing.
+	
+    func restoreScrollPos(for collectionView:NSCollectionView, with old:(CGRect,CGRect))
+    {
+		let oldBounds = old.0
+		let oldVisible = old.1
+		let oldY = oldVisible.midY
+		let oldH = oldBounds.height
+		guard oldH > 0.0 else { return }
+
+		let fraction = (oldY - oldBounds.minY) / oldH
+		let newBounds = collectionView.bounds
+		var newVisible = collectionView.visibleRect
+		let newY = newBounds.minY + fraction * newBounds.height
+		newVisible.origin.y = newY - 0.5 * newVisible.height
+		
+		collectionView.scroll(newVisible.origin)
+    }
+}
+
+
+extension NSCollectionView
+{
+	public static let didScrollToEnd = NSNotification.Name("NSCollectionView.didScrollToEnd")
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+// MARK: - Coordinator
 	
 extension CollectionView
 {
 	public class Coordinator : NSObject, NSCollectionViewDelegate
     {
+		/// Reference to the owning Library
+		
 		@MainActor var library:Library? = nil
+		{
+			didSet
+			{
+				self.updateLayout()
+			}
+		}
+		
 		/// The Container is the data model for the NSCollectionView
 		
 		@MainActor var container:Container? = nil
@@ -311,7 +366,7 @@ extension CollectionView
 			
 			if i == j
 			{
-				NotificationCenter.default.post(name:didScrollToEndNotification, object:self.container)
+				NotificationCenter.default.post(name:NSCollectionView.didScrollToEnd, object:self.container)
 			}
 		}
 
@@ -381,12 +436,6 @@ extension CollectionView
 		}
 	}
 }
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-public let didScrollToEndNotification = NSNotification.Name("CollectionView.didScrollToEnd")
 
 
 //----------------------------------------------------------------------------------------------------------------------
