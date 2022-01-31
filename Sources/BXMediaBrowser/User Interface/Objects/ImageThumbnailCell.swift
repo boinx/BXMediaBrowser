@@ -60,6 +60,7 @@ public class ImageThumbnailCell : ObjectCell
 			let h = thumbnail.height
 			let size = CGSize(width:w, height:h)
 			self.imageView?.image = NSImage(cgImage:thumbnail, size:size)
+			self.imageView?.imageScaling = .scaleProportionallyUpOrDown
 		}
 	
 		self.textField?.stringValue = object.name
