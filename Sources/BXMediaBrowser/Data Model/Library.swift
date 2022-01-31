@@ -54,6 +54,10 @@ open class Library : ObservableObject, StateSaving
 	
 	internal let stateSaver = StateSaver()
 	
+	/// This helper object contains properties that are needed by the UI
+	
+	public var uiState = UIState()
+	
 	
 //----------------------------------------------------------------------------------------------------------------------
 
