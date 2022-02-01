@@ -32,7 +32,7 @@ import BXSwiftUtils
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public class ObjectCell : NSCollectionViewItem
+public class ObjectViewController : NSCollectionViewItem
 {
 	/// The data model for this cell
 	
@@ -102,6 +102,7 @@ public class ObjectCell : NSCollectionViewItem
 
 
 	// MARK: - Setup
+	
 	
 	func reset()
 	{

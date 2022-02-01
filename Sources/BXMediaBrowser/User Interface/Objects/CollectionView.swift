@@ -35,7 +35,7 @@ import AppKit
 
 /// This subclass of NSCollectionView can display the Objects of a Container
 
-public struct CollectionView<Cell:ObjectCell> : NSViewRepresentable
+public struct CollectionView<Cell:ObjectViewController> : NSViewRepresentable
 {
 	// This NSViewRepresentable doesn't return a single view, but a whole hierarchy:
 	//
@@ -407,7 +407,7 @@ extension CollectionView
 			
 			// Configure the cell with the model object
 			
-			if let cell = item as? ObjectCell
+			if let cell = item as? ObjectViewController
 			{
 				cell.object = object
 			}

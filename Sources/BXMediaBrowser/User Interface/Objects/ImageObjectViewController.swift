@@ -31,11 +31,11 @@ import AppKit
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public class ImageThumbnailCell : ObjectCell
+public class ImageObjectViewController : ObjectViewController
 {
     override class var identifier:NSUserInterfaceItemIdentifier
     {
-    	NSUserInterfaceItemIdentifier("BXMediaBrowser.ImageThumbnailCell")
+    	NSUserInterfaceItemIdentifier("BXMediaBrowser.ImageObjectViewController")
 	}
 	
 	override class var width:CGFloat { 120 }
@@ -94,6 +94,44 @@ public class ImageThumbnailCell : ObjectCell
 			layer.borderColor = isHilited ? NSColor.systemYellow.cgColor : NSColor.clear.cgColor
 		}
     }
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+// We do not want cell selection or drag & drop to work when clicking on the transparent cell background.
+// Only the visible part of the thumbnail, should be the active area. For this reason we need to override
+// hit-testing for the root view of the cell.
+
+// Inspired by https://developer.apple.com/forums/thread/30023 and
+// https://stackoverflow.com/questions/48765128/drag-selecting-in-nscollectionview-from-inside-of-items
+
+class ImageThumbnailView : ObjectView
+{
+	override func hitTest(_ point:NSPoint) -> NSView?
+	{
+		let view = super.hitTest(point)
+		
+		// The NSImageView spans the entire area of the cell, but the thumbnail itself does not (due to different
+		// aspect ratio it is fitted inside) so check the first subview of NSImageView (which displays the image
+		// itself). Hopefully this woon't break in future OS releases.
+		
+		if let imageView = view as? NSImageView, let thumbnail = imageView.subviews.first
+		{
+			let p = thumbnail.convert(point, from:self.superview)
+			if !NSPointInRect(p,thumbnail.bounds) { return nil }
+		}
+		
+		// Exclude the textfield from hit testing
+		
+		if view is NSTextField
+		{
+			return nil
+		}
+		
+		return view
+	}
 }
 
 

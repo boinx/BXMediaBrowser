@@ -32,7 +32,7 @@ import AppKit
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public class AudioCell : ObjectCell
+public class AudioObjectViewController : ObjectViewController
 {
 	// Outlets
 	
@@ -48,7 +48,7 @@ public class AudioCell : ObjectCell
 
     override class var identifier:NSUserInterfaceItemIdentifier
     {
-    	NSUserInterfaceItemIdentifier("BXMediaBrowser.AudioCell")
+    	NSUserInterfaceItemIdentifier("BXMediaBrowser.AudioObjectViewController")
 	}
 	
 	override class var width:CGFloat { 0 } // 0 means full width of view

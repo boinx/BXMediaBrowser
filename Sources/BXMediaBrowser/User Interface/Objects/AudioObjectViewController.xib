@@ -6,7 +6,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="AudioCell" customModule="BXMediaBrowser">
+        <customObject id="-2" userLabel="File's Owner" customClass="AudioObjectViewController" customModule="BXMediaBrowser">
             <connections>
                 <outlet property="button" destination="HhY-OB-dx8" id="hhU-g9-vjD"/>
                 <outlet property="durationField" destination="ika-N4-OOh" id="LbO-1y-8xr"/>
@@ -24,18 +24,6 @@
             <rect key="frame" x="0.0" y="0.0" width="946" height="46"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rdh-yM-tEI">
-                    <rect key="frame" x="71" y="24" width="777" height="16"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="16" id="4aj-VI-nCy"/>
-                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="16" id="88s-re-rzC"/>
-                    </constraints>
-                    <textFieldCell key="cell" lineBreakMode="clipping" enabled="NO" allowsUndo="NO" alignment="left" id="d5C-U7-nd7">
-                        <font key="font" metaFont="system"/>
-                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="HhY-OB-dx8">
                     <rect key="frame" x="8" y="3" width="27.5" height="40"/>
                     <constraints>
@@ -48,13 +36,22 @@
                         <imageReference key="image" image="play.fill" catalog="system" symbolScale="large"/>
                     </buttonCell>
                 </button>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="SmP-5w-hYd">
-                    <rect key="frame" x="71" y="6" width="797" height="14"/>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9gO-LH-lBt">
+                    <rect key="frame" x="37" y="7" width="32" height="32"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="14" id="JfI-hG-CYy"/>
+                        <constraint firstAttribute="height" constant="32" id="h5Q-R2-Gns"/>
+                        <constraint firstAttribute="width" constant="32" id="vh6-JW-SJ4"/>
                     </constraints>
-                    <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" enabled="NO" alignment="left" id="4JS-T1-aLl">
-                        <font key="font" metaFont="smallSystem"/>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="MwA-gR-zyV"/>
+                </imageView>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rdh-yM-tEI">
+                    <rect key="frame" x="71" y="24" width="777" height="16"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="16" id="4aj-VI-nCy"/>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="16" id="88s-re-rzC"/>
+                    </constraints>
+                    <textFieldCell key="cell" lineBreakMode="clipping" enabled="NO" allowsUndo="NO" alignment="left" id="d5C-U7-nd7">
+                        <font key="font" metaFont="system"/>
                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
@@ -71,14 +68,17 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9gO-LH-lBt">
-                    <rect key="frame" x="37" y="7" width="32" height="32"/>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="SmP-5w-hYd">
+                    <rect key="frame" x="71" y="6" width="797" height="14"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="32" id="h5Q-R2-Gns"/>
-                        <constraint firstAttribute="width" constant="32" id="vh6-JW-SJ4"/>
+                        <constraint firstAttribute="height" constant="14" id="JfI-hG-CYy"/>
                     </constraints>
-                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="MwA-gR-zyV"/>
-                </imageView>
+                    <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" enabled="NO" alignment="left" id="4JS-T1-aLl">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="YMH-1S-sgr">
                     <rect key="frame" x="872" y="6" width="56" height="14"/>
                     <constraints>

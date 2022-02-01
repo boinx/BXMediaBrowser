@@ -5,7 +5,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="ImageThumbnailCell" customModule="BXMediaBrowser">
+        <customObject id="-2" userLabel="File's Owner" customClass="ImageObjectViewController" customModule="BXMediaBrowser">
             <connections>
                 <outlet property="imageView" destination="BQT-g2-Zqo" id="WCB-FM-pe3"/>
                 <outlet property="textField" destination="Rdh-yM-tEI" id="jwC-v4-uzl"/>
@@ -14,7 +14,7 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customView id="HUS-pi-5U0">
+        <customView id="HUS-pi-5U0" customClass="ImageThumbnailView" customModule="BXMediaBrowser">
             <rect key="frame" x="0.0" y="0.0" width="120" height="96"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
