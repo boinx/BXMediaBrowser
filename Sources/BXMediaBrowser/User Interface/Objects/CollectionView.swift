@@ -176,10 +176,10 @@ extension CollectionView
 		let d:CGFloat = cellType.spacing
 		let ratio = w / h
 		
-		let rowWidth = max(0.0, collectionView.bounds.width - 2*d)
+		let rowWidth = max(0.0, collectionView.bounds.width - d)
 		let scale = self.library?.uiState.thumbnailScale ?? 0.4
 		
-		let cellWidth = (scale * rowWidth).clipped(to:0...rowWidth)
+		let cellWidth = (scale * rowWidth - d).clipped(to:0...rowWidth)
 		let cellHeight = cellWidth / ratio
 		
 		let width:NSCollectionLayoutDimension = w>0 ? .absolute(cellWidth) : .fractionalWidth(1.0)
@@ -196,7 +196,7 @@ extension CollectionView
         section.interGroupSpacing = d
         
         let layout = NSCollectionViewCompositionalLayout(section:section)
-		let columns = Int((rowWidth+d) / (cellWidth+d))
+		let columns = Int(rowWidth / (cellWidth+d))
 		return (layout,columns)
     }
 

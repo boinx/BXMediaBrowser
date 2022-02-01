@@ -33,7 +33,7 @@ open class UIState : ObservableObject
 {
 	/// This scale affects the display size of Object cells in a CollectionView
 	
-	@Published public var thumbnailScale:Double = 0.4
+	@Published public var thumbnailScale:Double = 0.25
 }
 
 
