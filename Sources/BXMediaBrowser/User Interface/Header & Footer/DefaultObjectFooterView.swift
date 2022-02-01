@@ -49,7 +49,9 @@ public struct DefaultObjectFooterView : View
 			
 			Spacer()
 			
-			Text(container.itemCountDescription)
+			// Object count
+			
+			Text(container.objectCountDescription)
 				.controlSize(.small)
 		}
 		.padding(.horizontal,20)

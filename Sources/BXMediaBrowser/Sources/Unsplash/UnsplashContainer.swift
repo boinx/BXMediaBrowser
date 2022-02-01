@@ -249,7 +249,7 @@ open class UnsplashContainer : Container
 
 	/// Returns a description of the contents of this Container
 	
-    @MainActor override var itemCountDescription:String
+    @MainActor override var objectCountDescription:String
     {
 		let n = self.objects.count
 		let str = n.localizedImagesString

@@ -359,7 +359,7 @@ open class Container : ObservableObject, Identifiable, StateSaving
 	
 	/// Returns a description of the contents of this Container
 	
-    @MainActor var itemCountDescription:String
+    @MainActor var objectCountDescription:String
     {
 		let n = self.objects.count
 		let str = n.localizedItemsString
