@@ -104,14 +104,14 @@ public class ObjectViewController : NSCollectionViewItem
 	// MARK: - Setup
 	
 	
-	func reset()
+	open func reset()
 	{
 		self.imageView?.image = nil
 		self.textField?.stringValue = ""
 	}
 	
 	
-	func setup()
+	open func setup()
 	{
 		guard let object = object else { return }
 
@@ -130,6 +130,16 @@ public class ObjectViewController : NSCollectionViewItem
 				_ in
 				self.redraw()
 			}
+		
+		// Configure context menu
+		
+		if let objectView = self.view as? ObjectView
+		{
+			objectView.contextMenuFactory =
+			{
+				[weak self] in self?.buildContextMenu(for:objectView, object:object)
+			}
+		}
 	}
 	
 
@@ -149,11 +159,59 @@ public class ObjectViewController : NSCollectionViewItem
 
 	// MARK: - Drawing
 	
+	
 	/// Redraws the cell
 	
-	func redraw()
+	open func redraw()
 	{
 		// To be overridden in subclasses
+	}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - Event Handling
+	
+	
+	open func buildContextMenu(for view:NSView, object:Object) -> NSMenu?
+	{
+		let menu = NSMenu()
+		
+		self.addMenuItem(menu:menu, title:"Get Info")
+		{
+			NSSound.beep()
+		}
+			
+		self.addMenuItem(menu:menu, title:"Quick Look")
+		{
+			NSSound.beep()
+		}
+			
+		if let folderObject = object as? FolderObject
+		{
+			self.addMenuItem(menu:menu, title:"Reveal in Finder")
+			{
+				folderObject.revealInFinder()
+			}
+		}
+		
+		return menu
+	}
+
+
+	func addMenuItem(menu:NSMenu?, title:String, action:@escaping ()->Void)
+	{
+		guard let menu = menu else { return }
+		
+		let wrapper = ActionWrapper(action:action)
+		
+		let item = NSMenuItem(title:title, action:nil, keyEquivalent:"")
+		item.representedObject = wrapper
+		item.target = wrapper
+		item.action = #selector(ActionWrapper.execute(_:))
+		
+		menu.addItem(item)
 	}
 }
 

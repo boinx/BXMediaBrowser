@@ -30,7 +30,7 @@ import SwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public struct ObjectFooterView : View
+public struct DefaultObjectFooterView : View
 {
 	// Model
 	

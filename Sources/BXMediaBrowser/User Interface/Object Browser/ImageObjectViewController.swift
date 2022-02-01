@@ -50,7 +50,7 @@ public class ImageObjectViewController : ObjectViewController
 
 	/// Redraws the cell by updating the thumbnail and name
 	
-	override func redraw()
+	override public func redraw()
 	{
 		guard let object = object else { return }
 

@@ -56,8 +56,8 @@ public struct CollectionView<Cell:ObjectViewController> : NSViewRepresentable
 	/// The class type of the Object cell to be displayed in this NSCollectionView
 	
 	private let cellType:Cell.Type
-	
-	
+
+
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -303,7 +303,7 @@ extension CollectionView
 		/// The class type of the Object cell to be displayed in this NSCollectionView
 	
 		@MainActor var cellType:Cell.Type
-	
+
 		/// This handler is called when the layout needs to be recalculated
 		
 		@MainActor var updateLayoutHandler:(()->Void)? = nil
@@ -337,6 +337,7 @@ extension CollectionView
 			self.library = library
 			self.container = container
 			self.cellType = cellType
+			
 			super.init()
         }
 

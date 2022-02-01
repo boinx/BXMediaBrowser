@@ -61,7 +61,7 @@ public class AudioObjectViewController : ObjectViewController
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	override func redraw()
+	override open func redraw()
 	{
 		guard let object = object else { return }
 		guard let metadata = object.metadata else { return }
