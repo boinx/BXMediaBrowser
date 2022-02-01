@@ -191,7 +191,7 @@ open class FolderContainer : Container
 		guard url.exists else { return }
 		
 		#if os(macOS)
-		NSWorkspace.shared.selectFile(url.path, inFileViewerRootedAtPath:url.path)
+		NSWorkspace.shared.selectFile(url.path, inFileViewerRootedAtPath:url.deletingLastPathComponent().path)
 		#endif
 	}
 }
