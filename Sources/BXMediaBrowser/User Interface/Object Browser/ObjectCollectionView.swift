@@ -35,7 +35,7 @@ import AppKit
 
 /// This subclass of NSCollectionView can display the Objects of a Container
 
-public struct CollectionView<Cell:ObjectViewController> : NSViewRepresentable
+public struct ObjectCollectionView<Cell:ObjectViewController> : NSViewRepresentable
 {
 	// This NSViewRepresentable doesn't return a single view, but a whole hierarchy:
 	//
@@ -61,7 +61,7 @@ public struct CollectionView<Cell:ObjectViewController> : NSViewRepresentable
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	/// Creates CollectionView with the specified Container and cell type
+	/// Creates ObjectCollectionView with the specified Container and cell type
 	
 	public init(for library:Library?, container:Container?, cellType:Cell.Type)
 	{
@@ -168,7 +168,7 @@ public struct CollectionView<Cell:ObjectViewController> : NSViewRepresentable
 
 // MARK: - Setup
 	
-extension CollectionView
+extension ObjectCollectionView
 {
 	/// Creates a NSCollectionViewCompositionalLayout that looks similar to regular flow layout
 	
@@ -239,7 +239,7 @@ extension CollectionView
 
 // MARK: - Scrolling
 
-extension CollectionView
+extension ObjectCollectionView
 {
     /// Saves the current scroll position, returning a tuple with the current bounds and visibleRect
 	
@@ -285,7 +285,7 @@ extension NSCollectionView
 
 // MARK: - Coordinator
 	
-extension CollectionView
+extension ObjectCollectionView
 {
 	public class Coordinator : NSObject, NSCollectionViewDelegate
     {
@@ -427,7 +427,7 @@ extension CollectionView
 		}
 		
 		
-		/// Once the user scrolls down near the bottom of the CollectionView, then send out a notification that
+		/// Once the user scrolls down near the bottom of the ObjectCollectionView, then send out a notification that
 		/// can trigger certain actions (like reloading the Container).
 		
 		@MainActor public func collectionView(_ collectionView:NSCollectionView, willDisplay item:NSCollectionViewItem, forRepresentedObjectAt indexPath:IndexPath)
