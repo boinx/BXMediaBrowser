@@ -134,7 +134,7 @@ open class ViewFactory : ViewFactoryAPI
 
 	open func objectViewControllerType(for container:Container?) -> ObjectViewController.Type
 	{
-		Self.defaultObjectCellType(for:container)
+		Self.defaultObjectViewControllerType(for:container)
 	}
 }
 
@@ -212,7 +212,7 @@ public extension ViewFactory
 	{
 		if let container = container
 		{
-			ObjectFooterView(uiState:library.uiState, container:container)
+			DefaultObjectFooterView(uiState:library.uiState, container:container)
 		}
 		else
 		{

@@ -43,6 +43,8 @@ public struct DefaultObjectFooterView : View
     {
 		HStack
 		{
+			// Thumbnail size
+			
 			Slider(value:self.$uiState.thumbnailScale, in:0.1...1.0)
 				.controlSize(.mini)
 				.frame(width:120)
