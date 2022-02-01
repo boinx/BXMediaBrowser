@@ -86,7 +86,7 @@ public protocol ViewFactoryAPI
 
 	/// Returns the type of ObjectViewController subclass to be used for the specified Container
 
-	func objectCellType(for container:Container?) -> ObjectViewController.Type
+	func objectViewControllerType(for container:Container?) -> ObjectViewController.Type
 }
 
 
@@ -132,7 +132,7 @@ open class ViewFactory : ViewFactoryAPI
 		typeErase( Self.defaultContainerContextMenu(for:container) )
 	}
 
-	open func objectCellType(for container:Container?) -> ObjectViewController.Type
+	open func objectViewControllerType(for container:Container?) -> ObjectViewController.Type
 	{
 		Self.defaultObjectCellType(for:container)
 	}
@@ -246,17 +246,13 @@ public extension ViewFactory
 	}
 
 
-	class func defaultObjectCellType(for container:Container?) -> ObjectViewController.Type
+	class func defaultObjectViewControllerType(for container:Container?) -> ObjectViewController.Type
 	{
-		// For some Container subclasses we want custom ObjectCells
+		// For some Container types we want custom ObjectViewControllers
 		
 		if let container = container
 		{
-			if container is VideoFolderContainer
-			{
-	//			return ImageObjectViewController.self
-			}
-			else if container is AudioFolderContainer
+			if container is AudioFolderContainer
 			{
 				return AudioObjectViewController.self
 			}
@@ -264,23 +260,19 @@ public extension ViewFactory
 			{
 				return AudioObjectViewController.self
 			}
-			else if container is PhotosContainer
-			{
-	//			return ImageObjectViewController.self
-			}
+//			else if container is VideoFolderContainer
+//			{
+//				return VideoObjectViewController.self
+//			}
+//			else if container is PhotosContainer
+//			{
+//				return ImageObjectViewController.self
+//			}
 		}
 		
 		// Default is a ImageObjectViewController
 		
 		return ImageObjectViewController.self
-	}
-	
-			}
-		}
-		
-		// Default is a ImageThumbnailCell
-		
-		return ImageThumbnailCell.self
 	}
 }
 
