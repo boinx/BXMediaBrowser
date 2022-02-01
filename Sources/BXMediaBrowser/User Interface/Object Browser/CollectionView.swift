@@ -53,7 +53,7 @@ public struct CollectionView<Cell:ObjectViewController> : NSViewRepresentable
 	
 	private var container:Container? = nil
 	
-	/// The class type of the Object cell to be displayed in this NSCollectionView
+	/// The class type of the ObjectViewController to be displayed in this NSCollectionView
 	
 	private let cellType:Cell.Type
 
@@ -146,8 +146,11 @@ public struct CollectionView<Cell:ObjectViewController> : NSViewRepresentable
 		}
 		
 		context.coordinator.updateLayoutHandler?()
-		context.coordinator.cellType = self.cellType 	// Must update this first
-		context.coordinator.container = self.container	// because this line already triggers reload of NSCollectionView
+		context.coordinator.cellType = self.cellType
+		
+		// Setting the Container triggers reload of NSCollectionView of the datasource, so this must be done last
+		
+		context.coordinator.container = self.container
 		
 	}
 	
@@ -176,24 +179,31 @@ extension CollectionView
 		let d:CGFloat = cellType.spacing
 		let ratio = w / h
 		
-		let rowWidth = max(0.0, collectionView.bounds.width - d)
+		let rowWidth = max(1.0, collectionView.bounds.width - d)
 		let scale = self.library?.uiState.thumbnailScale ?? 0.4
 		
-		let cellWidth = (scale * rowWidth - d).clipped(to:0...rowWidth)
-		let cellHeight = cellWidth / ratio
+		// Item (cell)
 		
+		let cellWidth = (scale * rowWidth - d).clipped(to:1.0...rowWidth)
+		let cellHeight = cellWidth / ratio
 		let width:NSCollectionLayoutDimension = w>0 ? .absolute(cellWidth) : .fractionalWidth(1.0)
 		let height:NSCollectionLayoutDimension = w>0 ? .absolute(cellHeight) : .absolute(h)
 		let itemSize = NSCollectionLayoutSize(widthDimension:width, heightDimension:height)
         let item = NSCollectionLayoutItem(layoutSize:itemSize)
 
+		// Group (row)
+		
         let groupSize = NSCollectionLayoutSize(widthDimension:.fractionalWidth(1.0), heightDimension:height)
         let group = NSCollectionLayoutGroup.horizontal(layoutSize:groupSize, subitems:[item])
 		group.interItemSpacing = .fixed(d)
 		
+		// Section
+		
         let section = NSCollectionLayoutSection(group:group)
         section.contentInsets = NSDirectionalEdgeInsets(top:d, leading:d, bottom:d, trailing:d)
         section.interGroupSpacing = d
+        
+        // View
         
         let layout = NSCollectionViewCompositionalLayout(section:section)
 		let columns = Int(rowWidth / (cellWidth+d))
