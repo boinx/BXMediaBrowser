@@ -25,8 +25,10 @@
 
 #if os(macOS)
 
-import AppKit
 import BXSwiftUtils
+import BXSwiftUI
+import SwiftUI
+import AppKit
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -174,18 +176,20 @@ public class ObjectViewController : NSCollectionViewItem
 	// MARK: - Event Handling
 	
 	
+	/// Builds a context menu for the specified view and Object
+	
 	open func buildContextMenu(for view:NSView, object:Object) -> NSMenu?
 	{
 		let menu = NSMenu()
 		
 		self.addMenuItem(menu:menu, title:"Get Info")
 		{
-			NSSound.beep()
+			[weak self] in self?.getInfo()
 		}
 			
 		self.addMenuItem(menu:menu, title:"Quick Look")
 		{
-			NSSound.beep()
+			[weak self] in self?.quickLook()
 		}
 			
 		if let folderObject = object as? FolderObject
@@ -200,6 +204,8 @@ public class ObjectViewController : NSCollectionViewItem
 	}
 
 
+	/// Adds a new menu item with the specified title and action
+	
 	func addMenuItem(menu:NSMenu?, title:String, action:@escaping ()->Void)
 	{
 		guard let menu = menu else { return }
@@ -212,6 +218,30 @@ public class ObjectViewController : NSCollectionViewItem
 		item.action = #selector(ActionWrapper.execute(_:))
 		
 		menu.addItem(item)
+	}
+	
+	
+	func getInfo()
+	{
+		// Choose the area of this cell where to display the popover
+		
+		let rootView = self.imageView?.subviews.first ?? self.view
+		let rect = rootView.bounds.insetBy(dx:20, dy:20)
+
+		// Create the info view
+		
+		let infoView = ObjectInfoView(with:object)
+		
+		// Wrap it a popover and display it
+		
+		let popover = BXPopover(with:infoView, style:.system, colorScheme:.light)
+		popover.show(relativeTo:rect, of:rootView, preferredEdge:.maxY)
+	}
+	
+	
+	func quickLook()
+	{
+		NSSound.beep()
 	}
 }
 
