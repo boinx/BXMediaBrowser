@@ -62,12 +62,16 @@ public struct ObjectInfoView : View
 					{
 						BXGridCell(0)
 						{
-							Text(line.0).bold()
+							Text(line.0)
+								.bold()
 						}
 						
 						BXGridCell(1)
 						{
 							Text(line.1)
+								.truncationMode(.tail)
+//								.leftAligned()
+								.frame(minWidth:50, maxWidth:200, alignment:.leading)
 						}
 					}
 				}
@@ -75,7 +79,7 @@ public struct ObjectInfoView : View
 			.controlSize(.small)
 			.padding(12)
 		}
-		.frame(maxWidth:320, maxHeight:400)
+		.frame(minWidth:160, maxWidth:320, minHeight:60, maxHeight:200)
     }
     
     @MainActor var metadataArray:[(String,String)]
