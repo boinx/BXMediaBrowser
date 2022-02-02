@@ -24,6 +24,8 @@
 
 
 import SwiftUI
+import BXSwiftUtils
+import UniformTypeIdentifiers
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -162,7 +164,14 @@ open class Object : NSObject, ObservableObject, Identifiable
 	
 	var localFileUTI:String
 	{
-		return kUTTypeFileURL as String // To be overridden by subclasses
+		if #available(macOS 12, *)
+		{
+			return UTType.fileURL.identifier
+		}
+		else
+		{
+			return kUTTypeFileURL as String // To be overridden by subclasses
+		}
 	}
 	
 	
@@ -175,6 +184,26 @@ open class Object : NSObject, ObservableObject, Identifiable
 			try await self.loader.localURL
 		}
 	}
+	
+	
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	/// Tranforms the metadata dictionary into an order list of human readable information (with optional click actions)
+	
+	@MainActor var localizedMetadata:[ObjectMetadataEntry]
+    {
+		let dict = self.metadata ?? [:]
+		var array:[ObjectMetadataEntry] = []
+		
+		for (key,value) in dict
+		{
+			array += ObjectMetadataEntry(label:key, value:"\(value)")
+		}
+		
+		return array
+    }
+
 }
 	
 	

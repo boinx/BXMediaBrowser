@@ -31,13 +31,25 @@ import SwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
+/// This struct contains the information for a single line in the ObjectInfoView
+
+struct ObjectMetadataEntry : Identifiable
+{
+	let id = UUID().uuidString
+	var label:String
+	var value:String
+	var action:(()->Void)? = nil
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
 public struct ObjectInfoView : View
 {
 	// Model
 	
 	@ObservedObject var object:Object
-	
-	@State private var isLoading = false
 	
 	// Init
 	
@@ -50,50 +62,73 @@ public struct ObjectInfoView : View
 	
 	public var body: some View
     {
-		ScrollView([.horizontal,.vertical])
+		BXGrid(columnCount:2, spacing:CGSize(8,4))
 		{
-			BXGrid(columnCount:2)
+			ForEach(object.localizedMetadata)
 			{
-				ForEach(metadataArray, id:\.self.0)
+				entry in
+				
+				BXGridRow
 				{
-					line in
-					
-					BXGridRow
+					BXGridCell(0, alignment:.trailing)
 					{
-						BXGridCell(0)
-						{
-							Text(line.0)
-								.bold()
-						}
-						
-						BXGridCell(1)
-						{
-							Text(line.1)
-								.truncationMode(.tail)
-//								.leftAligned()
-								.frame(minWidth:50, maxWidth:200, alignment:.leading)
-						}
+						Text(entry.label)
+							.bold()
+					}
+					
+					BXGridCell(1, alignment:.leading)
+					{
+						Text(entry.value)
+							.linkStyle(entry.action)
+							.onOptionalTapGesture(entry.action)
+							.lineLimit(nil)
+//							.fixedSize(horizontal:ftruealse, vertical:true)
+							.frame(maxWidth:180, alignment:.leading)
 					}
 				}
 			}
-			.controlSize(.small)
-			.padding(12)
 		}
-		.frame(minWidth:160, maxWidth:320, minHeight:60, maxHeight:200)
+		.controlSize(.small)
+		.foregroundColor(.primary)
+		.padding(12)
     }
-    
-    @MainActor var metadataArray:[(String,String)]
-    {
-		let dict = object.metadata ?? [:]
-		var array:[(String,String)] = []
-		
-		for (key,value) in dict
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+fileprivate extension View
+{
+	@ViewBuilder func onOptionalTapGesture(_ action:(()->Void)?) -> some View
+	{
+		if let action = action
 		{
-			array += ("\(key)","\(value)")
+			self.onTapGesture(perform:action)
 		}
-		
-		return array
-    }
+		else
+		{
+			self
+		}
+	}
+}
+
+
+fileprivate extension Text
+{
+	@ViewBuilder func linkStyle(_ action:(()->Void)?) -> some View
+	{
+		if action != nil
+		{
+			self
+				.underline()
+				.foregroundColor(.accentColor)
+		}
+		else
+		{
+			self
+		}
+	}
 }
 
 

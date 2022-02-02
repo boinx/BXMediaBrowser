@@ -130,8 +130,70 @@ open class ImageFile : FolderObject
 	
 	override var localFileUTI:String
 	{
-		return kUTTypeImage as String
+		if #available(macOS 11,*)
+		{
+			return UTType.image.identifier
+		}
+		else
+		{
+			return kUTTypeImage as String
+		}
 	}
+
+
+	/// Tranforms the metadata dictionary into an order list of human readable information (with optional click actions)
+	
+	@MainActor override var localizedMetadata:[ObjectMetadataEntry]
+    {
+		let metadata = self.metadata ?? [:]
+		let exif = metadata["{Exif}"] as? [String:Any] ?? [:]
+		var array:[ObjectMetadataEntry] = []
+		
+		array += ObjectMetadataEntry(label:"Name", value:"\(self.name)", action:{ [weak self] in self?.revealInFinder() })
+
+		if let w = metadata["PixelWidth"] as? Int, let h = metadata["PixelHeight"] as? Int
+		{
+			array += ObjectMetadataEntry(label:"Image Size", value:"\(w) × \(h) Pixels")
+		}
+		
+		if let value = metadata["fileSize"] as? Int
+		{
+			array += ObjectMetadataEntry(label:"File Size", value:value.fileSizeDescription)
+		}
+	
+		if let value = exif["ApertureValue"] as? Double
+		{
+			array += ObjectMetadataEntry(label:"Aperture", value:"f\(value)")
+		}
+	
+		if let value = exif["ExposureTime"] as? Double
+		{
+			array += ObjectMetadataEntry(label:"Exposure Time", value:"\(value)s")
+		}
+	
+		if let value = exif["FocalLenIn35mmFilm"] as? Int
+		{
+			array += ObjectMetadataEntry(label:"Focal Length", value:"\(value)mm")
+		}
+		
+		if let value = metadata["ProfileName"] as? String
+		{
+			array += ObjectMetadataEntry(label:"Color Space", value:value)
+		}
+
+		if let value = exif["DateTimeOriginal"] as? String, let date = value.date
+		{
+			array += ObjectMetadataEntry(label:"Capture Date", value:String(with:date))
+		}
+		else if let value = metadata["creationDate"] as? Date
+		{
+			array += ObjectMetadataEntry(label:"Creation Date", value:String(with:value))
+		}
+		
+		return array
+    }
+
+
 }
 
 

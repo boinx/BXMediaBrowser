@@ -23,8 +23,10 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 
+import BXSwiftUtils
 import Foundation
 import ImageIO
+import AppKit
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -79,20 +81,85 @@ open class UnsplashObject : Object
 		
 		metadata["PixelWidth"] = photo.width
 		metadata["PixelHeight"] = photo.height
+		metadata["creationDate"] = photo.created_at
+		metadata["created_at"] = photo.created_at
 		metadata["description"] = photo.description
+		metadata["location"] = photo.location
 		metadata["urls"] = photo.urls
 		metadata["public_domain"] = photo.public_domain
 		metadata["user"] = photo.user
-
-		if let created_at = photo.created_at //, let creationDate = DateFormatter().date(from:created_at)
-		{
-			metadata["creationDate"] = created_at
-		}
 		
 		return metadata
 	}
 
 
+	/// Tranforms the metadata dictionary into an order list of human readable information (with optional click actions)
+	
+	@MainActor override var localizedMetadata:[ObjectMetadataEntry]
+    {
+		guard let photo = data as? UnsplashPhoto else { return [] }
+		let user = photo.user
+		let links = photo.links
+		let exif = photo.exif
+		let location = photo.location
+		let metadata = self.metadata ?? [:]
+		
+		let openPhotoPage =
+		{
+			guard let str = links.html else { return }
+			guard let url = URL(string:str) else { return }
+			NSWorkspace.shared.open(url)
+		}
+		
+		var array:[ObjectMetadataEntry] = []
+		
+		array += ObjectMetadataEntry(label:"Photo", value:"\(photo.id)", action:openPhotoPage)
+
+		array += ObjectMetadataEntry(label:"Photographer", value:user.displayName, action:user.openProfileURL)
+		
+		array += ObjectMetadataEntry(label:"Image Size", value:"\(photo.width) × \(photo.height) Pixels")
+		
+		if let date = photo.created_at?.date
+		{
+			array += ObjectMetadataEntry(label:"Capture Date", value:String(with:date))
+		}
+		else if let value = metadata["creationDate"] as? Date
+		{
+			array += ObjectMetadataEntry(label:"Creation Date", value:String(with:value))
+		}
+
+		if let exif = exif
+		{
+			array += ObjectMetadataEntry(label:"Aperture", value:"f\(exif.aperture)")
+			array += ObjectMetadataEntry(label:"Exposure Time", value:"\(exif.exposure_time)s")
+			array += ObjectMetadataEntry(label:"Focal Length", value:"\(exif.focal_length)mm")
+		}
+		
+		if let location = location
+		{
+			if let city = location.city, let country = location.country
+			{
+				array += ObjectMetadataEntry(label:"Location", value:"\(city), \(country)")
+			}
+			else if let city = location.city
+			{
+				array += ObjectMetadataEntry(label:"Location", value:city)
+			}
+			else if let country = location.country
+			{
+				array += ObjectMetadataEntry(label:"Location", value:country)
+			}
+		}
+		
+		if let description = photo.description
+		{
+			array += ObjectMetadataEntry(label:"Description", value:description.trimmingCharacters(in:.whitespacesAndNewlines))
+		}
+		
+		return array
+    }
+    
+    
 //----------------------------------------------------------------------------------------------------------------------
 
 

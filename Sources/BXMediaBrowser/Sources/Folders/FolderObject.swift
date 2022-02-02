@@ -72,6 +72,9 @@ open class FolderObject : Object
 	}
 
 
+//----------------------------------------------------------------------------------------------------------------------
+
+
 	/// Loads the metadata dictionary for the specified local file URL
 	
 	open class func loadMetadata(for identifier:String, data:Any) async throws -> [String:Any]
@@ -102,6 +105,34 @@ open class FolderObject : Object
 	}
 
 
+	/// Tranforms the metadata dictionary into an order list of human readable information (with optional click actions)
+	
+	@MainActor override var localizedMetadata:[ObjectMetadataEntry]
+    {
+		let dict = self.metadata ?? [:]
+		var array:[ObjectMetadataEntry] = []
+		
+		array += ObjectMetadataEntry(label:"Name", value:"\(self.name) ➜", action:{ [weak self] in self?.revealInFinder() })
+		
+		if let value = dict["fileSize"] as? Int
+		{
+			array += ObjectMetadataEntry(label:"File Size", value:value.fileSizeDescription)
+		}
+		
+		if let value = dict["creationDate"] as? Date
+		{
+			array += ObjectMetadataEntry(label:"Creation Date", value:String(with:value))
+		}
+		
+		if let value = dict["modificationDate"] as? Date
+		{
+			array += ObjectMetadataEntry(label:"Modification Date", value:String(with:value))
+		}
+		
+		return array
+    }
+
+
 	/// Since we are already dealing with a local media file, this function simply returns the specified file URL
 	
 	open class func downloadFile(for identifier:String, data:Any) async throws -> URL
@@ -122,6 +153,8 @@ open class FolderObject : Object
 		return url.lastPathComponent
 	}
 	
+	
+	/// Reveal the media file in the Finder
 	
 	public func revealInFinder()
 	{
