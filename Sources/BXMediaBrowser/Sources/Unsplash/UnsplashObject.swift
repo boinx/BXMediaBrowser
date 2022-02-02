@@ -130,8 +130,8 @@ open class UnsplashObject : Object
 
 		if let exif = exif
 		{
-			array += ObjectMetadataEntry(label:"Aperture", value:"f\(exif.aperture)")
-			array += ObjectMetadataEntry(label:"Exposure Time", value:"\(exif.exposure_time)s")
+			array += ObjectMetadataEntry(label:"Aperture", value:"f\(exif.aperture.string())")
+			array += ObjectMetadataEntry(label:"Exposure Time", value:"\(exif.exposure_time.string())s")
 			array += ObjectMetadataEntry(label:"Focal Length", value:"\(exif.focal_length)mm")
 		}
 		

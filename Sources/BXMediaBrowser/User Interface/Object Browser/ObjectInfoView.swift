@@ -82,9 +82,11 @@ public struct ObjectInfoView : View
 							.linkStyle(entry.action)
 							.onOptionalTapGesture(entry.action)
 							.lineLimit(nil)
-//							.fixedSize(horizontal:ftruealse, vertical:true)
-							.frame(maxWidth:180, alignment:.leading)
+//							.border(Color.green)
+							.frame(minWidth:20, idealWidth:60, maxWidth:180, alignment:.leading)
 					}
+//					.frame(minWidth:20, idealWidth:60, maxWidth:180, alignment:.leading)
+//					.border(Color.red)
 				}
 			}
 		}

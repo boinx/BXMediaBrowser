@@ -112,7 +112,7 @@ open class FolderObject : Object
 		let dict = self.metadata ?? [:]
 		var array:[ObjectMetadataEntry] = []
 		
-		array += ObjectMetadataEntry(label:"Name", value:"\(self.name) ➜", action:{ [weak self] in self?.revealInFinder() })
+		array += ObjectMetadataEntry(label:"File", value:"\(self.name) ➜", action:{ [weak self] in self?.revealInFinder() })
 		
 		if let value = dict["fileSize"] as? Int
 		{

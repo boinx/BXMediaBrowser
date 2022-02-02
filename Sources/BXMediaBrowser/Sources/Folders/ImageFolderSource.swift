@@ -24,6 +24,7 @@
 
 
 import BXSwiftUtils
+import BXSwiftUI
 import Foundation
 import QuartzCore
 import UniformTypeIdentifiers
@@ -149,26 +150,26 @@ open class ImageFile : FolderObject
 		let exif = metadata["{Exif}"] as? [String:Any] ?? [:]
 		var array:[ObjectMetadataEntry] = []
 		
-		array += ObjectMetadataEntry(label:"Name", value:"\(self.name)", action:{ [weak self] in self?.revealInFinder() })
+		array += ObjectMetadataEntry(label:"File", value:"\(self.name)", action:{ [weak self] in self?.revealInFinder() })
 
 		if let w = metadata["PixelWidth"] as? Int, let h = metadata["PixelHeight"] as? Int
 		{
 			array += ObjectMetadataEntry(label:"Image Size", value:"\(w) × \(h) Pixels")
 		}
 		
-		if let value = metadata["fileSize"] as? Int
+		if let value = metadata["fileSize"] as? Int, let str = Formatter.fileSizeFormatter.string(for:value)
 		{
-			array += ObjectMetadataEntry(label:"File Size", value:value.fileSizeDescription)
+			array += ObjectMetadataEntry(label:"File Size", value:str) // value.fileSizeDescription)
 		}
 	
-		if let value = exif["ApertureValue"] as? Double
+		if let value = exif["ApertureValue"] as? Double, let str = Formatter.singleDigitFormatter.string(for:value)
 		{
-			array += ObjectMetadataEntry(label:"Aperture", value:"f\(value)")
+			array += ObjectMetadataEntry(label:"Aperture", value:"f\(str)")
 		}
 	
-		if let value = exif["ExposureTime"] as? Double
+		if let value = exif["ExposureTime"] as? Double, let str = Formatter.exposureTimeFormatter.string(for:value)
 		{
-			array += ObjectMetadataEntry(label:"Exposure Time", value:"\(value)s")
+			array += ObjectMetadataEntry(label:"Exposure Time", value:str)
 		}
 	
 		if let value = exif["FocalLenIn35mmFilm"] as? Int
