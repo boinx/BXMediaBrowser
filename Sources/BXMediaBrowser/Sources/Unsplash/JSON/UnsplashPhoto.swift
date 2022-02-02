@@ -13,7 +13,9 @@ public struct UnsplashPhoto : Codable
     public let width:Int
     public let urls:[String:URL]
     public let description:String?
-
+	public let public_domain:Bool?
+	public let user:UnsplashUser
+	
 	private enum CodingKeys : String,CodingKey
     {
         case id
@@ -22,6 +24,8 @@ public struct UnsplashPhoto : Codable
         case width
         case urls
         case description
+        case public_domain
+        case user
     }
 
     // Not included in Codable

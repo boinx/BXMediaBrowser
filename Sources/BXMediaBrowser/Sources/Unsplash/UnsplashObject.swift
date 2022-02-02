@@ -79,10 +79,14 @@ open class UnsplashObject : Object
 		
 		metadata["PixelWidth"] = photo.width
 		metadata["PixelHeight"] = photo.height
+		metadata["description"] = photo.description
+		metadata["urls"] = photo.urls
+		metadata["public_domain"] = photo.public_domain
+		metadata["user"] = photo.user
 
-		if let created_at = photo.created_at, let creationDate = DateFormatter().date(from:created_at)
+		if let created_at = photo.created_at //, let creationDate = DateFormatter().date(from:created_at)
 		{
-			metadata["creationDate"] = creationDate
+			metadata["creationDate"] = created_at
 		}
 		
 		return metadata
