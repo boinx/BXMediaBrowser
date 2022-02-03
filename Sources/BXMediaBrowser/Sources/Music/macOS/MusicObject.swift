@@ -213,6 +213,25 @@ public class MusicObject : Object
 		return url
 	}
 	
+
+	/// Returns the URL for QLPreviewPanel
+	
+	override public var previewItemURL:URL!
+    {
+		guard let item = data as? ITLibMediaItem else { return nil }
+		guard let url = item.location else { return nil }
+		return url
+    }
+    
+    
+    /// Reveals the local audio file in the Finder
+	
+    func revealInFinder()
+    {
+		guard let url = self.previewItemURL else { return }
+		guard url.exists else { return }
+		NSWorkspace.shared.selectFile(url.path, inFileViewerRootedAtPath:url.deletingLastPathComponent().path)
+    }
 }
 
 
