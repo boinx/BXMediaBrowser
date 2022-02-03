@@ -223,8 +223,6 @@ open class UnsplashObject : Object
 	}
 
 
-	
-	
 	/// Returns the URL for QLPreviewPanel
 	
 	override public var previewItemURL:URL!
