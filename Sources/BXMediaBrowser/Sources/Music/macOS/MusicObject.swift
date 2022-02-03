@@ -116,6 +116,53 @@ public class MusicObject : Object
 	}
 
 
+	/// Tranforms the metadata dictionary into an order list of human readable information (with optional click actions)
+	
+	@MainActor override var localizedMetadata:[ObjectMetadataEntry]
+    {
+//		guard let item = data as? ITLibMediaItem else { return [] }
+		let metadata = self.metadata ?? [:]
+		var array:[ObjectMetadataEntry] = []
+		
+		if let name = metadata[kMDItemTitle as String] as? String, !name.isEmpty
+		{
+			array += ObjectMetadataEntry(label:"Song", value:name, action:{ [weak self] in self?.revealInFinder() })
+		}
+		
+		if let duration = metadata[kMDItemDurationSeconds as String] as? Double
+		{
+			array += ObjectMetadataEntry(label:"Duration", value:duration.shortTimecodeString())
+		}
+		
+		if let artists = metadata[kMDItemAuthors as String] as? [String], !artists.isEmpty
+		{
+			array += ObjectMetadataEntry(label:"Artist", value:artists.joined(separator:"\n"))
+		}
+		
+		if let composer = metadata[kMDItemComposer as String] as? String, !composer.isEmpty
+		{
+			array += ObjectMetadataEntry(label:"Composer", value:composer)
+		}
+		
+		if let album = metadata[kMDItemAlbum as String] as? String, !album.isEmpty
+		{
+			array += ObjectMetadataEntry(label:"Album", value:album)
+		}
+		
+		if let genre = metadata[kMDItemMusicalGenre as String] as? String, !genre.isEmpty
+		{
+			array += ObjectMetadataEntry(label:"Genre", value:genre)
+		}
+		
+		if let value = metadata[kMDItemFSSize as String] as? Int, let str = Formatter.fileSizeFormatter.string(for:value)
+		{
+			array += ObjectMetadataEntry(label:"File Size", value:str) // value.fileSizeDescription)
+		}
+		
+		return array
+    }
+
+
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -123,12 +170,27 @@ public class MusicObject : Object
 	
 	override var localFileUTI:String
 	{
-		guard let item = data as? ITLibMediaItem else { return kUTTypeAudio as String }
-		guard let url = item.location else { return kUTTypeAudio as String }
+		guard let item = data as? ITLibMediaItem else { return audioUTI }
+		guard let url = item.location else { return audioUTI }
 		return url.uti ?? ""
 	}
 
 
+	/// Returns the default UTI for audio file (if nothing more specific could be determined)
+
+	var audioUTI:String
+	{
+		if #available(macOS 11,*)
+		{
+			return UTType.audio.identifier
+		}
+		else
+		{
+			return kUTTypeAudio as String
+		}
+	}
+	
+	
 	/// Returns the filename of the local file
 	
 	override var localFileName:String
