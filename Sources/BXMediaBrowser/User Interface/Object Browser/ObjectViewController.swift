@@ -237,11 +237,13 @@ public class ObjectViewController : NSCollectionViewItem
 		
 		let rootView = self.imageView?.subviews.first ?? self.view
 		let rect = rootView.bounds.insetBy(dx:20, dy:20)
-
+		let colorScheme = view.effectiveAppearance.colorScheme
+		
 		// Create the info view
 		
 		let infoView = ObjectInfoView(with:object)
-		
+			.environment(\.colorScheme,colorScheme)
+			
 		// Wrap it a popover and display it
 		
 		let popover = BXPopover(with:infoView, style:.system, colorScheme:.light)
