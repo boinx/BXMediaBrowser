@@ -221,6 +221,18 @@ open class UnsplashObject : Object
 		TempFilePool.shared.register(localURL)
 		return localURL
 	}
+
+
+	
+	
+	/// Returns the URL for QLPreviewPanel
+	
+	override public var previewItemURL:URL!
+    {
+		guard let photo = data as? UnsplashPhoto else { return nil }
+		guard let remoteURL = photo.urls["regular"] else { return nil }
+		return remoteURL
+    }
 }
 
 

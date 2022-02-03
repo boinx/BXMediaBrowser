@@ -28,6 +28,7 @@
 import BXSwiftUtils
 import SwiftUI
 import AppKit
+import QuickLookUI
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -74,8 +75,8 @@ public struct ObjectCollectionView<Cell:ObjectViewController> : NSViewRepresenta
 	
 	public func makeNSView(context:Context) -> NSScrollView
 	{
-		let collectionView = NSCollectionView(frame:.zero)
-		
+		let collectionView = QuicklookCollectionView(frame:.zero)
+ 		
 		// Configure layout
 		
 		let identifier = self.cellType.identifier
@@ -122,8 +123,8 @@ public struct ObjectCollectionView<Cell:ObjectViewController> : NSViewRepresenta
 	
 	public func updateNSView(_ scrollView:NSScrollView, context:Context)
 	{
-		guard let collectionView = scrollView.documentView as? NSCollectionView else { return }
-
+		guard let collectionView = scrollView.documentView as? QuicklookCollectionView else { return }
+		
 		context.coordinator.library = self.library
 
 		context.coordinator.updateLayoutHandler =
@@ -158,7 +159,7 @@ public struct ObjectCollectionView<Cell:ObjectViewController> : NSViewRepresenta
 	
 	public func makeCoordinator() -> Coordinator
     {
-        return Coordinator(library:library, container:container, cellType:cellType)
+		return Coordinator(library:library, container:container, cellType:cellType)
     }
 }
 
@@ -506,6 +507,11 @@ extension ObjectCollectionView
 		{
 			return self.container?.fileDropDestination?.collectionView(collectionView, acceptDrop:draggingInfo, indexPath:indexPath, dropOperation:dropOperation) ?? false
 		}
+		
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
 	}
 }
 
@@ -513,5 +519,102 @@ extension ObjectCollectionView
 //----------------------------------------------------------------------------------------------------------------------
 
 
+// MARK: - QuickLook
+
+
+class QuicklookCollectionView : NSCollectionView, QLPreviewPanelDataSource , QLPreviewPanelDelegate
+{
+	override public func keyDown(with event:NSEvent)
+	{
+		if event.charactersIgnoringModifiers == " "
+		{
+			self.quickLook()
+		}
+		else
+		{
+			super.keyDown(with:event)
+		}
+	}
+	
+	func quickLook()
+	{
+		guard let panel = QLPreviewPanel.shared() else { return }
+		
+        if !panel.isVisible
+        {
+             panel.makeKeyAndOrderFront(nil)
+        }
+        else
+        {
+			panel.orderOut(nil)
+        }
+	}
+
+	override public func acceptsPreviewPanelControl(_ panel:QLPreviewPanel!) -> Bool
+	{
+        return true
+	}
+
+    override public func beginPreviewPanelControl(_ panel:QLPreviewPanel!)
+    {
+        panel.dataSource = self
+        panel.delegate = self
+    }
+
+    override public func endPreviewPanelControl(_ panel: QLPreviewPanel!)
+    {
+        panel.dataSource = nil
+        panel.delegate = nil
+    }
+    
+	public func numberOfPreviewItems(in panel: QLPreviewPanel!) -> Int
+	{
+		self.selectionIndexPaths.count
+	}
+	
+	public func previewPanel(_ panel:QLPreviewPanel!, previewItemAt index:Int) -> QLPreviewItem!
+	{
+		let indexPaths = Array(self.selectionIndexPaths).sorted()
+		let indexPath = indexPaths[index]
+		guard let objectViewController = self.item(at:indexPath) as? ObjectViewController else { return nil }
+		return objectViewController
+	}
+
+	public func previewPanel(_ panel:QLPreviewPanel!, sourceFrameOnScreenFor item:QLPreviewItem!) -> NSRect
+	{
+		guard let objectViewController = item as? ObjectViewController else { return .zero }
+		return objectViewController.previewScreenRect
+	}
+	
+	public func previewPanel(_ panel:QLPreviewPanel!, transitionImageFor item:QLPreviewItem!, contentRect:UnsafeMutablePointer<NSRect>!) -> Any!
+	{
+		guard let objectViewController = item as? ObjectViewController else { return nil }
+		return objectViewController.previewTransitionImage
+	}
+	
+	public func previewPanel(_ panel:QLPreviewPanel!, handle event:NSEvent!) -> Bool
+	{
+		if self.selectionIndexPaths.count == 1
+		{
+			if event.type == .keyDown
+			{
+				self.keyDown(with:event)
+				panel.reloadData()
+				return true
+			}
+			else if event.type == .keyUp
+			{
+				self.keyUp(with:event)
+				panel.reloadData()
+				return true
+			}
+		}
+		
+		return false
+	}
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
 #endif
 

@@ -165,6 +165,14 @@ open class FolderObject : Object
 		NSWorkspace.shared.selectFile(url.path, inFileViewerRootedAtPath:url.deletingLastPathComponent().path)
 		#endif
 	}
+	
+	
+	/// Returns the URL for QLPreviewPanel
+	
+	override public var previewItemURL:URL!
+    {
+		return self.data as? URL
+    }
 }
 
 

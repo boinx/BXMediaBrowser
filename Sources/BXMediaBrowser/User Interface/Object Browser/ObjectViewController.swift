@@ -29,6 +29,7 @@ import BXSwiftUtils
 import BXSwiftUI
 import SwiftUI
 import AppKit
+import QuickLookUI
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -221,6 +222,8 @@ public class ObjectViewController : NSCollectionViewItem
 	}
 	
 	
+	/// Shows the "Get Info" popover anchored on the view of this cell
+	
 	func getInfo()
 	{
 		// Choose the area of this cell where to display the popover
@@ -239,9 +242,45 @@ public class ObjectViewController : NSCollectionViewItem
 	}
 	
 	
+	/// Toggles the Quicklook panel for this NSCollectionView
+	
 	func quickLook()
 	{
-		NSSound.beep()
+		guard let collectionView = self.collectionView as? QuicklookCollectionView else { return }
+		collectionView.quickLook()
+	}
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+extension ObjectViewController : QLPreviewItem
+{
+	@MainActor public var previewItemURL:URL!
+    {
+		self.object.previewItemURL
+    }
+
+	@MainActor public var previewItemTitle:String!
+    {
+		self.object.name
+    }
+
+	@MainActor public var previewScreenRect:NSRect
+	{
+		guard let view = self.imageView?.subviews.first else { return .zero }
+		guard let window = view.window else { return .zero }
+		let localRect = view.bounds
+		let windowRect = view.convert(localRect, to:nil)
+		let screenRect = window.convertToScreen(windowRect)
+		return screenRect
+	}
+	
+	@MainActor public var previewTransitionImage:Any!
+	{
+		guard let thumbnail = self.object.thumbnailImage else { return nil }
+		return NSImage(cgImage:thumbnail, size:.zero)
 	}
 }
 
