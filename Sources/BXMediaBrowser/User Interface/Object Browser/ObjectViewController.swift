@@ -200,6 +200,13 @@ public class ObjectViewController : NSCollectionViewItem
 				folderObject.revealInFinder()
 			}
 		}
+		else if let musicObject = object as? MusicObject, musicObject.previewItemURL != nil
+		{
+			self.addMenuItem(menu:menu, title:"Reveal in Finder")
+			{
+				musicObject.revealInFinder()
+			}
+		}
 		
 		return menu
 	}
