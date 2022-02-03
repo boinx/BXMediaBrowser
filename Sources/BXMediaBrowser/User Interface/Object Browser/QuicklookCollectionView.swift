@@ -153,13 +153,11 @@ class QuicklookCollectionView : NSCollectionView, QLPreviewPanelDataSource , QLP
 			if event.type == .keyDown
 			{
 				self.keyDown(with:event)
-				panel.reloadData()
 				return true
 			}
 			else if event.type == .keyUp
 			{
 				self.keyUp(with:event)
-				panel.reloadData()
 				return true
 			}
 		}

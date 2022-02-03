@@ -444,6 +444,17 @@ extension ObjectCollectionView
 		}
 
 
+		// After changed the selection, the QLPreviewPanel should be updated (if currently open)
+		
+		@MainActor public func collectionView(_ collectionView:NSCollectionView, didSelectItemsAt indexPaths:Set<IndexPath>)
+		{
+			if let panel = QLPreviewPanel.shared(), panel.isVisible
+			{
+				panel.reloadData()
+			}
+		}
+		
+		
 //----------------------------------------------------------------------------------------------------------------------
 
 
