@@ -210,9 +210,17 @@ public extension ViewFactory
 
 	@ViewBuilder class func defaultFooterView(for library:Library, container:Container?) -> some View
 	{
-		if let container = container
+		if let container = container as? AudioFolderContainer
 		{
-			DefaultObjectFooterView(uiState:library.uiState, container:container)
+			AudioObjectFooterView(container:container)
+		}
+		else if let container = container as? MusicContainer
+		{
+			AudioObjectFooterView(container:container)
+		}
+		else if let container = container
+		{
+			DefaultObjectFooterView(container:container, uiState:library.uiState)
 		}
 		else
 		{

@@ -30,12 +30,11 @@ import SwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public struct DefaultObjectFooterView : View
+public struct AudioObjectFooterView : View
 {
 	// Model
 	
 	@ObservedObject var container:Container
-	@ObservedObject var uiState:UIState
 	
 	// View
 	
@@ -45,9 +44,7 @@ public struct DefaultObjectFooterView : View
 		{
 			// Thumbnail size
 			
-			Slider(value:self.$uiState.thumbnailScale, in:0.1...1.0)
-				.controlSize(.mini)
-				.frame(width:120)
+			Text("▶︎ Audio Player")
 			
 			Spacer()
 			
@@ -57,7 +54,7 @@ public struct DefaultObjectFooterView : View
 				.controlSize(.small)
 		}
 		.padding(.horizontal,20)
-		.padding(.vertical,2)
+		.padding(.vertical,8)
     }
 }
 

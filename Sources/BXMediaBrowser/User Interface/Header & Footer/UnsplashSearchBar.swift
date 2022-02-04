@@ -129,7 +129,8 @@ public struct UnsplashSearchBar : View
 			}
 			
 		}
-		.padding(10)
+		.padding(.horizontal,20)
+		.padding(.vertical,10)
     }
     
     func updateFilter()

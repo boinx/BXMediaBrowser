@@ -55,8 +55,9 @@ public struct SearchBar : View
 		TextField("Search", text:binding) //self.$selectedContainer.filterString)
 			.frame(maxWidth:300)
 			.textFieldStyle(RoundedBorderTextFieldStyle())
-			.padding(10)
-			.centerAligned()
+			.padding(.horizontal,20)
+			.padding(.vertical,10)
+			.leftAligned()
     }
 }
 
