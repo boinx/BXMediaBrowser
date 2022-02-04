@@ -27,7 +27,6 @@ import BXSwiftUtils
 import BXSwiftUI
 import Foundation
 import QuartzCore
-import UniformTypeIdentifiers
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -131,14 +130,8 @@ open class ImageFile : FolderObject
 	
 	override var localFileUTI:String
 	{
-		if #available(macOS 11,*)
-		{
-			return UTType.image.identifier
-		}
-		else
-		{
-			return kUTTypeImage as String
-		}
+		guard let url = data as? URL else { return String.imageUTI }
+		return url.uti ?? String.imageUTI
 	}
 
 
@@ -146,11 +139,12 @@ open class ImageFile : FolderObject
 	
 	@MainActor override var localizedMetadata:[ObjectMetadataEntry]
     {
+		guard let url = data as? URL else { return [] }
 		let metadata = self.metadata ?? [:]
 		let exif = metadata["{Exif}"] as? [String:Any] ?? [:]
 		var array:[ObjectMetadataEntry] = []
 		
-		array += ObjectMetadataEntry(label:"File", value:"\(self.name)", action:{ [weak self] in self?.revealInFinder() })
+		array += ObjectMetadataEntry(label:"File", value:"\(self.name)", action:url.reveal)
 
 		if let w = metadata["PixelWidth"] as? Int, let h = metadata["PixelHeight"] as? Int
 		{

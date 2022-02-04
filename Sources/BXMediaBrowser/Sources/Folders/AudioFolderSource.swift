@@ -26,8 +26,12 @@
 import BXSwiftUtils
 import Foundation
 import QuartzCore
-import UniformTypeIdentifiers
+
+#if os(macOS)
 import AppKit
+#else
+import UIKit
+#endif
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -112,13 +116,74 @@ open class AudioFile : FolderObject
 	}
 
 	
+	/// Tranforms the metadata dictionary into an order list of human readable information (with optional click actions)
+	
+	@MainActor override var localizedMetadata:[ObjectMetadataEntry]
+    {
+		guard let url = data as? URL else { return [] }
+		let metadata = self.metadata ?? [:]
+		var array:[ObjectMetadataEntry] = []
+		
+		if let name = metadata[kMDItemTitle as String] as? String, !name.isEmpty
+		{
+			array += ObjectMetadataEntry(label:"Song", value:name, action:url.reveal)
+		}
+		
+		if let album = metadata[kMDItemAlbum as String] as? String, !album.isEmpty
+		{
+			array += ObjectMetadataEntry(label:"Album", value:album)
+		}
+		
+		if let artists = metadata[kMDItemAuthors as String] as? [String], !artists.isEmpty
+		{
+			array += ObjectMetadataEntry(label:"Artist", value:artists.joined(separator:"\n"))
+		}
+		
+		if let composer = metadata[kMDItemComposer as String] as? String, !composer.isEmpty
+		{
+			array += ObjectMetadataEntry(label:"Composer", value:composer)
+		}
+		
+		if let album = metadata[kMDItemAlbum as String] as? String, !album.isEmpty
+		{
+			array += ObjectMetadataEntry(label:"Album", value:album)
+		}
+		
+		if let genre = metadata[kMDItemMusicalGenre as String] as? String, !genre.isEmpty
+		{
+			array += ObjectMetadataEntry(label:"Genre", value:genre)
+		}
+		
+		if let duration = metadata[kMDItemDurationSeconds as String] as? Double
+		{
+			array += ObjectMetadataEntry(label:"Duration", value:duration.shortTimecodeString())
+		}
+		
+		if let value = metadata[kMDItemFSSize as String] as? Int, let str = Formatter.fileSizeFormatter.string(for:value)
+		{
+			array += ObjectMetadataEntry(label:"File Size", value:str)
+		}
+
+		if let value = metadata[kMDItemTempo as String] as? Double, let str = Formatter.singleDigitFormatter.string(for:value)
+		{
+			array += ObjectMetadataEntry(label:"Tempo", value:"\(str) BPM")
+		}
+
+		if let value = metadata[kMDItemWhereFroms as String] as? [String], let str = value.first, let url = URL(string:str)
+		{
+			array += ObjectMetadataEntry(label:"URL", value:str, action:url.open)
+		}
+		
+		return array
+    }
+    
+    
 	/// Returns the UTI of the promised image file
 	
 	override var localFileUTI:String
 	{
-		let audioUTI = kUTTypeAudio as String
-		guard let url = data as? URL else { return audioUTI }
-		return url.uti ?? audioUTI
+		guard let url = data as? URL else { return String.audioUTI }
+		return url.uti ?? String.audioUTI
 	}
 }
 

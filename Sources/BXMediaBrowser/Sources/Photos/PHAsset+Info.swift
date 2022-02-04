@@ -57,14 +57,14 @@ extension PHAsset
 		
 		if self.mediaType == .video
 		{
-			return kUTTypeMovie as String
+			return String.movieUTI
 		}
 		else if self.mediaType == .audio
 		{
-			return kUTTypeAudio as String
+			return String.audioUTI
 		}
 		
-		return kUTTypeImage as String
+		return String.imageUTI
     }
 
 

@@ -151,7 +151,7 @@ public class PhotosObject : Object
 	
 	override var localFileUTI:String
 	{
-		guard let asset = data as? PHAsset else { return "public.image" }
+		guard let asset = data as? PHAsset else { return String.imageUTI }
 		return asset.uti
 	}
 

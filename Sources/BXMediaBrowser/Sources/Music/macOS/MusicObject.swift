@@ -170,27 +170,12 @@ public class MusicObject : Object
 	
 	override var localFileUTI:String
 	{
-		guard let item = data as? ITLibMediaItem else { return audioUTI }
-		guard let url = item.location else { return audioUTI }
-		return url.uti ?? ""
+		guard let item = data as? ITLibMediaItem else { return String.audioUTI }
+		guard let url = item.location else { return String.audioUTI }
+		return url.uti ?? String.audioUTI
 	}
 
 
-	/// Returns the default UTI for audio file (if nothing more specific could be determined)
-
-	var audioUTI:String
-	{
-		if #available(macOS 11,*)
-		{
-			return UTType.audio.identifier
-		}
-		else
-		{
-			return kUTTypeAudio as String
-		}
-	}
-	
-	
 	/// Returns the filename of the local file
 	
 	override var localFileName:String
@@ -201,10 +186,8 @@ public class MusicObject : Object
 	}
 	
 	
-	// Request the URL of an Object. Apple really doesn't want us to work with URLs of PHAssets, so we have to resort
-	// to various tricks. In case of an image we'll pretend to want edit an image file in-place to get the URL. In the
-	// case of a video, we'll pretend we want to play an AVURLAsset with an AVPlayer.
-	// Taken from https://stackoverflow.com/questions/38183613/how-to-get-url-for-a-phasset
+	/// Returns the local file URL. If this file is only in the cloud this function throws an error,
+	/// because the iTunesLibrary API doesn't support downloading the audio file.
 	
 	class func downloadFile(for identifier:String, data:Any) async throws -> URL
 	{

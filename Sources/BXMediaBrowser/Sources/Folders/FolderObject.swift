@@ -109,10 +109,11 @@ open class FolderObject : Object
 	
 	@MainActor override var localizedMetadata:[ObjectMetadataEntry]
     {
+		guard let url = data as? URL else { return  [] }
 		let dict = self.metadata ?? [:]
 		var array:[ObjectMetadataEntry] = []
 		
-		array += ObjectMetadataEntry(label:"File", value:self.name, action:{ [weak self] in self?.revealInFinder() })
+		array += ObjectMetadataEntry(label:"File", value:self.name, action:url.reveal)
 		
 		if let value = dict["fileSize"] as? Int
 		{
@@ -159,11 +160,7 @@ open class FolderObject : Object
 	public func revealInFinder()
 	{
 		guard let url = data as? URL else { return }
-		guard url.exists else { return }
-		
-		#if os(macOS)
-		NSWorkspace.shared.selectFile(url.path, inFileViewerRootedAtPath:url.deletingLastPathComponent().path)
-		#endif
+		url.reveal()
 	}
 	
 	

@@ -24,9 +24,9 @@
 
 
 import BXSwiftUtils
+import AVFoundation
+import QuickLook
 import Foundation
-import QuartzCore
-import UniformTypeIdentifiers
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -84,18 +84,36 @@ open class VideoFile : FolderObject
 
 		guard let url = data as? URL else { throw Error.loadThumbnailFailed }
 		guard url.exists else { throw Error.loadThumbnailFailed }
+		let size = CGSize(256,256)
 
-		let options:[CFString:AnyObject] =
-		[
-			kCGImageSourceCreateThumbnailFromImageIfAbsent : kCFBooleanTrue,
-			kCGImageSourceCreateThumbnailFromImageAlways : kCFBooleanFalse,
-			kCGImageSourceThumbnailMaxPixelSize : NSNumber(value:256.0),
-			kCGImageSourceCreateThumbnailWithTransform : kCFBooleanTrue
-		]
-
-		guard let source = CGImageSourceCreateWithURL(url as CFURL,nil) else { throw Error.loadThumbnailFailed }
-		guard let thumbnail = CGImageSourceCreateThumbnailAtIndex(source,0,options as CFDictionary) else { throw Error.loadThumbnailFailed }
-		return thumbnail
+		// Try with AVAssetImageGenerator
+		
+		do
+		{
+			let asset = AVURLAsset(url:url)
+			let duration = asset.duration.seconds
+			let posterFrame = 0.5 * duration
+			let time = CMTime(seconds:posterFrame, preferredTimescale:600)
+			
+			let generator = AVAssetImageGenerator(asset:asset)
+			generator.appliesPreferredTrackTransform = true
+			generator.maximumSize = size
+			
+			let thumbnail = try generator.copyCGImage(at:time, actualTime:nil)
+			return thumbnail
+		}
+		
+		// Use QuickLook as fallback solution
+		
+		catch let error
+		{
+			if let image = QLThumbnailImageCreate(kCFAllocatorDefault, url as CFURL, size, nil)?.takeRetainedValue()
+			{
+				return image
+			}
+			
+			throw error
+		}
 	}
 
 
@@ -110,27 +128,70 @@ open class VideoFile : FolderObject
 		
 		var metadata = try await super.loadMetadata(for:identifier, data:data)
 		
-		if let source = CGImageSourceCreateWithURL(url as CFURL,nil),
-		   let properties = CGImageSourceCopyPropertiesAtIndex(source,0,nil),
-		   let dict = properties as? [String:Any]
+		let videoInfo = url.videoMetadata
+		
+		for (key,value) in videoInfo
 		{
-			for (key,value) in dict
-			{
-				metadata[key] = value
-			}
+			metadata[key as String] = value
 		}
 		
 		return metadata
 	}
 
 	
+	/// Tranforms the metadata dictionary into an order list of human readable information (with optional click actions)
+	
+	@MainActor override var localizedMetadata:[ObjectMetadataEntry]
+    {
+		guard let url = data as? URL else { return [] }
+		let metadata = self.metadata ?? [:]
+		var array:[ObjectMetadataEntry] = []
+		
+		array += ObjectMetadataEntry(label:"File", value:self.name, action:url.reveal)
+		
+		if let kind = metadata[kMDItemKind as String] as? String, !kind.isEmpty
+		{
+			array += ObjectMetadataEntry(label:"Kind", value:kind)
+		}
+
+		if let w = metadata[kMDItemPixelWidth as String] as? Int, let h = metadata[kMDItemPixelHeight as String] as? Int
+		{
+			array += ObjectMetadataEntry(label:"Video Size", value:"\(w) × \(h) Pixels")
+		}
+		
+		if let duration = metadata[kMDItemDurationSeconds as String] as? Double
+		{
+			array += ObjectMetadataEntry(label:"Duration", value:duration.shortTimecodeString())
+		}
+		
+		if let value = metadata[kMDItemFSSize as String] as? Int, let str = Formatter.fileSizeFormatter.string(for:value)
+		{
+			array += ObjectMetadataEntry(label:"File Size", value:str)
+		}
+		
+		if let codecs = metadata[kMDItemCodecs as String] as? [String], !codecs.isEmpty
+		{
+			array += ObjectMetadataEntry(label:"Codecs", value:codecs.joined(separator:", "))
+		}
+		
+		if let value = metadata["creationDate"] as? Date
+		{
+			array += ObjectMetadataEntry(label:"Creation Date", value:String(with:value))
+		}
+		
+		return array
+    }
+
+
 	/// Returns the UTI of the promised image file
 	
 	override var localFileUTI:String
 	{
-		return kUTTypeMovie as String
+		guard let url = data as? URL else { return String.movieUTI }
+		return url.uti ?? String.movieUTI
 	}
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
+

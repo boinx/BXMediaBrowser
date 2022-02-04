@@ -99,21 +99,12 @@ extension UnsplashUser
     
     func openProfileURL()
 	{
-		Self.openURL(self.profileURL)
+		self.profileURL?.open()
 	}
 
     func openPortfolioURL()
 	{
-		Self.openURL(self.portfolio_url)
-	}
-
-    static func openURL(_ url:URL?)
-	{
-		guard let url = url else { return }
-		#if os(macOS)
-		NSWorkspace.shared.open(url)
-		#else
-		#endif
+		self.portfolio_url?.open()
 	}
 }
 

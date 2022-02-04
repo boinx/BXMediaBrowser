@@ -108,7 +108,7 @@ open class UnsplashObject : Object
 		{
 			guard let str = links.html else { return }
 			guard let url = URL(string:str) else { return }
-			NSWorkspace.shared.open(url)
+			url.open()
 		}
 		
 		var array:[ObjectMetadataEntry] = []
