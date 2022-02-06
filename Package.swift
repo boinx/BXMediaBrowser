@@ -11,8 +11,8 @@ let package = Package(
     
     platforms:
     [
-		.macOS(.v12), 	// TODO: We need to go back as far as Catalina
-		.iOS(.v13)		// First version of iOS that supported SwiftUI
+		.macOS("10.15.2"), 	// First version that has reasonable SwiftUI support, NSCollectionViewDiffableDataSource
+		.iOS("13.2")		// First version that has reasonable SwiftUI support
     ],
     
 	// Products define the executables and libraries a package produces, and make them visible to other packages
