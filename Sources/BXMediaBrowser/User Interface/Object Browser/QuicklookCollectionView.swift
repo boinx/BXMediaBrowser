@@ -34,6 +34,21 @@ import QuickLookUI
 
 class QuicklookCollectionView : NSCollectionView, QLPreviewPanelDataSource , QLPreviewPanelDelegate
 {
+	/// If the specified item isn't selected, it will be selected on the fly. This is helpful for context menu clicks.
+	
+	func selectItemIfNeeded(_ item:NSCollectionViewItem)
+	{
+		guard let indexPath = self.indexPath(for:item) else { return }
+		
+		if !self.selectionIndexPaths.contains(indexPath)
+		{
+			let indexPaths = Set([indexPath])
+			self.selectionIndexPaths = indexPaths
+			self.delegate?.collectionView?(self, didSelectItemsAt:indexPaths)
+		}
+	}
+
+
 	// Pressing the spacebar key toggles the QLPreviewPanel
 	
 	override public func keyDown(with event:NSEvent)
@@ -53,16 +68,17 @@ class QuicklookCollectionView : NSCollectionView, QLPreviewPanelDataSource , QLP
 	
 	func quickLook()
 	{
+		guard !self.selectionIndexPaths.isEmpty else { return }
 		guard let panel = QLPreviewPanel.shared() else { return }
 		
         if !panel.isVisible
         {
              panel.makeKeyAndOrderFront(nil)
         }
-        else
-        {
-			panel.orderOut(nil)
-        }
+//        else
+//        {
+//			panel.orderOut(nil)
+//        }
 	}
 
 

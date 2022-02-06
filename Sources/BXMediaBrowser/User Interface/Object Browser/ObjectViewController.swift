@@ -140,7 +140,11 @@ public class ObjectViewController : NSCollectionViewItem
 		{
 			objectView.contextMenuFactory =
 			{
-				[weak self] in self?.buildContextMenu(for:objectView, object:object)
+				[weak self] in
+				guard let self = self else { return nil }
+				guard let collectionView = self.collectionView as? QuicklookCollectionView else { return nil }
+				collectionView.selectItemIfNeeded(self)
+				return self.buildContextMenu(for:objectView, object:object)
 			}
 		}
 	}

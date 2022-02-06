@@ -452,6 +452,14 @@ extension ObjectCollectionView
 			{
 				panel.reloadData()
 			}
+			
+			if let indexPath = collectionView.selectionIndexPaths.first,
+			   let item = collectionView.item(at:indexPath) as? ObjectViewController,
+			   let object = item.object,
+			   let url = object.previewItemURL
+			{
+				NotificationCenter.default.post(name: NSNotification.Name("selectedObjectURL"), object:url)
+			}
 		}
 		
 		
