@@ -88,10 +88,7 @@ open class FolderContainer : Container
 		
 		// Get the folder contents and sort them like the Finder would
 		
-		let filenames = try FileManager.default
-			.contentsOfDirectory(atPath:folderURL.path)
-			.sorted(using:.localizedStandard)
-		
+		let filenames = try self.filenames(in:folderURL)
 		let searchString = (filter as? String)?.lowercased() ?? ""
 		
 		// Go through all items
@@ -136,6 +133,24 @@ open class FolderContainer : Container
 		}
 		
 		return (containers,objects)
+	}
+	
+	
+	/// Returns the names of all files inside this folder
+	
+	class func filenames(in folderURL:URL) throws -> [String]
+	{
+		if #available(macOS 12,*)
+		{
+			return try FileManager.default
+				.contentsOfDirectory(atPath:folderURL.path)
+				.sorted(using:.localizedStandard)
+		}
+		else
+		{
+			return try FileManager.default
+				.contentsOfDirectory(atPath:folderURL.path)
+		}
 	}
 	
 	

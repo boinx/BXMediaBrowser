@@ -112,7 +112,14 @@ public struct SectionView : View
 			_ in library.saveState()
 		}
     }
-   
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+extension SectionView
+{
     public static func shouldDisplay(_ section:Section) -> Bool
     {
 		!section.sources.isEmpty || section.addSourceHandler != nil

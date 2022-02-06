@@ -52,41 +52,23 @@ public struct ContainerView : View
 	
 	public var body: some View
     {
-		let icon = container.icon ?? "folder"
-		
 		return BXDisclosureView(isExpanded:self.$container.isExpanded, spacing:0,
 
 			header:
 			{
-				// Container name
-				
 				HStack(spacing:4)
 				{
-					if container.canExpand
-					{
-						CustomDisclosureButton(icon:nil, label:"", isExpanded:self.$container.isExpanded)
-							.frame(width:10)
-					}
-					else
-					{
-						Spacer()
-							.frame(width:10)
-					}
-					
-					SwiftUI.Image(systemName:icon)
-						.frame(minWidth:16, alignment:.center)
-						
-					Text(container.name)
-						.lineLimit(1)
-						.truncationMode(.tail)
-						.padding(.trailing,-15)
+					// Container name
+				
+					containerName()
 
 					Spacer()
 
+					// Optional loading spinner
+					
 					if container.isLoading
 					{
-						BXSpinningWheel(size:.small)
-							.colorScheme(.dark)
+						BXSpinningWheel(size:.small).colorScheme(.dark)
 					}
 					
 					// Optional remove button
@@ -145,7 +127,51 @@ public struct ContainerView : View
 			}
     }
     
-    // Subcontainers are loaded lazily when expanding this Container
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+extension ContainerView
+{
+    
+    @ViewBuilder func containerName() -> some View
+    {
+		let icon = container.icon ?? "folder"
+		
+		// Disclosure button is only visible if this Container has any sub-containers
+		
+		if container.canExpand
+		{
+			CustomDisclosureButton(icon:nil, label:"", isExpanded:self.$container.isExpanded)
+				.frame(width:10)
+		}
+		else
+		{
+			Spacer().frame(width:10)
+		}
+		
+		// Container icon
+		
+		if #available(macOS 11.0, iOS 13, *)
+		{
+			SwiftUI.Image(systemName:icon)
+				.frame(minWidth:16, alignment:.center)
+		}
+		else
+		{
+			Text("📁")
+				.frame(minWidth:16, alignment:.center)
+		}
+		
+		// Container name
+		
+		Text(container.name)
+			.lineLimit(1)
+			.truncationMode(.tail)
+			.padding(.trailing,-15)
+    }
     
     
 	/// Builds a button to remove this Container
@@ -169,6 +195,7 @@ public struct ContainerView : View
 	}
 
 
+    /// Triggers loading of this container. Can be called when expanding the Container
     
     func loadIfNeeded()
     {
@@ -177,7 +204,8 @@ public struct ContainerView : View
 			container.load()
 		}
     }
-    
+
+
 	// The selected container row is hilighted. Please note that the highlight is made wider and offset,
 	// to compensate for the insets of expanded disclosure views. We want the color highlight to go
 	// from edge to edge.
@@ -205,5 +233,3 @@ public struct ContainerView : View
 
 
 //----------------------------------------------------------------------------------------------------------------------
-
-
