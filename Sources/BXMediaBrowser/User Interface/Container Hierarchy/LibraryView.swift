@@ -52,7 +52,7 @@ public struct LibraryView : View
 	
 	public var body: some View
     {
-		LazyVStack(alignment:.leading, spacing:4)
+		BestVStack(alignment:.leading, spacing:4)
 		{
 			ForEach(library.sections)
 			{
@@ -62,10 +62,7 @@ public struct LibraryView : View
 				}
 			}
 		}
-		
-		// Pass Library reference down the view hierarchy. This is needed for setting the selected Container.
-		
- 		.environmentObject(library)
+		.environmentObject(library)	// Pass Library reference down the view hierarchy. This is needed for setting the selected Container.
     }
 }
 

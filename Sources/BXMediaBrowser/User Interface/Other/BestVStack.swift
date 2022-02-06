@@ -29,83 +29,41 @@ import SwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-/// This view displays a single Section within a LibaryView
+/// BestVStack resolves to a LazyVStack (if available) or to a (less efficient) VStack as a fallback
 
-public struct SectionView : View
+public struct BestVStack<Content:View> : View
 {
-	// Model
+	private var alignment:HorizontalAlignment
+	private var spacing:CGFloat?
+	private var content:()->Content
 	
-	@ObservedObject var section:Section
-	
-	// Environment
-	
-	@EnvironmentObject var library:Library
-	@Environment(\.viewFactory) private var viewFactory
-
 	// Init
 	
-	public init(with section:Section)
+    public init(alignment:HorizontalAlignment = .center, spacing:CGFloat? = nil, @ViewBuilder content:@escaping ()->Content)
 	{
-		self.section = section
+		self.alignment = alignment
+		self.spacing = spacing
+		self.content = content
 	}
 	
 	// View
 	
 	public var body: some View
     {
-		BestVStack(alignment:.leading, spacing:4)
+		if #available(macOS 11, iOS 14, *)
 		{
-			// Section name is optional
-			
-			if let name = section.name
+			LazyVStack(alignment:alignment, spacing:spacing)
 			{
-				HStack
-				{
-					Text(name.uppercased()).font(.system(size:11))
-						.opacity(0.6)
-						
-					Spacer()
-				
-					// The optional + button will be displayed if a handler was provided
-					
-					if let addSourceHandler = section.addSourceHandler
-					{
-						Image(systemName:"plus.circle").onTapGesture
-						{
-							addSourceHandler(section)
-						}
-					}
-				}
-			}
-			
-			// Display list of Sources
-			
-			ForEach(section.sources)
-			{
-				viewFactory.sourceView(for:$0)
+				content()
 			}
 		}
-		
-		// Layout
-		
-		.padding(.horizontal)
-		.padding(.bottom,12)
-		
-		// Apply id to optimize view hierarchy rebuilding
-		
-		.id(section.identifier)
-
-		// Whenever the current state changes, save it to persistent storage
-		
-		.onReceive(section.$sources)
+		else
 		{
-			_ in library.saveState()
+			VStack(alignment:alignment, spacing:spacing)
+			{
+				content()
+			}
 		}
-    }
-   
-    public static func shouldDisplay(_ section:Section) -> Bool
-    {
-		!section.sources.isEmpty || section.addSourceHandler != nil
     }
 }
 
