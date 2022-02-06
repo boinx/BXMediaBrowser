@@ -53,8 +53,8 @@ public struct UnsplashSearchBar : View
 		if let filter = selectedContainer.filter as? UnsplashFilter
 		{
 			self.filterData.searchString = filter.searchString
-			self.filterData.orientation = filter.orientation?.rawValue ?? ""
-			self.filterData.color = filter.color?.rawValue ?? ""
+			self.filterData.orientation = filter.orientation ?? .any
+			self.filterData.color = filter.color ?? .any
 		}
 		
 		self.filterData.didChange = self.updateFilter
@@ -95,25 +95,10 @@ public struct UnsplashSearchBar : View
 				.textFieldStyle(RoundedBorderTextFieldStyle())
 				.frame(maxWidth:300)
 				
-				Spacer()
+				UnsplashOrientationView(filter:self.filterData)
+				UnsplashColorView(filter:self.filterData)
 				
-				Picker("Orientation:", selection: self.$filterData.orientation)
-				{
-					ForEach(UnsplashFilter.Orientation.allValues, id:\.self)
-					{
-						Text($0)
-					}
-				}
-				.pickerStyle(.menu)
-
-				Picker("Color:", selection: self.$filterData.color)
-				{
-					ForEach(UnsplashFilter.Color.allIdentifiers, id:\.self)
-					{
-						Text($0)
-					}
-				}
-				.pickerStyle(.menu)
+				Spacer()
 				
 				Button("Save")
 				{
@@ -133,15 +118,17 @@ public struct UnsplashSearchBar : View
 		.padding(.vertical,10)
     }
     
+    /// This function is called whenever a filter parameter in the search bar was changed
+	
     func updateFilter()
     {
 		let searchString = self.filterData.searchString
-		
-		var orientation = UnsplashFilter.Orientation(rawValue: self.filterData.orientation)
-		if self.filterData.orientation == "" { orientation = nil }
 
-		var color = UnsplashFilter.Color(rawValue: self.filterData.color)
-		if self.filterData.color == "" { color = nil }
+		var orientation:UnsplashFilter.Orientation?  = self.filterData.orientation
+		if orientation == .any { orientation = nil }
+
+		var color:UnsplashFilter.Color? = self.filterData.color
+		if color == .any { color = nil }
 		
 		self.selectedContainer.filter = UnsplashFilter(
 			searchString:searchString,
@@ -154,18 +141,51 @@ public struct UnsplashSearchBar : View
 //----------------------------------------------------------------------------------------------------------------------
 
 
-struct UnsplashColorButton : View
+struct UnsplashOrientationView : View
 {
-	var color:UnsplashFilter.Color
-	var action:(UnsplashFilter.Color)->Void
+	@ObservedObject var filter:UnsplashFilterData
 	
 	var body: some View
 	{
-		color.color
-			.frame(width:16, height:16)
-			.cornerRadius(8)
-			.overlay( Circle().strokeBorder(Color.primary, lineWidth:0.5, antialiased:true) )
-			.onTapGesture { action(color) }
+			MenuButton(self.filter.orientation.localizedName)
+			{
+				ForEach(UnsplashFilter.Orientation.allCases, id:\.self)
+				{
+					value in
+					
+					Button(value.localizedName)
+					{
+						self.filter.orientation = value
+					}
+				}
+			}
+			.fixedSize()
+	}
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+struct UnsplashColorView : View
+{
+	@ObservedObject var filter:UnsplashFilterData
+	
+	var body: some View
+	{
+		MenuButton(self.filter.color.localizedName)
+		{
+			ForEach(UnsplashFilter.Color.allCases, id:\.self)
+			{
+				color in
+				
+				Button(action:{ self.filter.color = color })
+				{
+					Text(color.localizedName)
+				}
+			}
+		}
+		.fixedSize()
 	}
 }
 
@@ -177,12 +197,12 @@ class UnsplashFilterData : ObservableObject
 {
 	@Published var searchString:String = ""
 
-	@Published var orientation:String = ""
+	@Published var orientation:UnsplashFilter.Orientation = .any
 	{
 		didSet { self.didChange() }
 	}
 	
-	@Published var color:String = ""
+	@Published var color:UnsplashFilter.Color = .any
 	{
 		didSet { self.didChange() }
 	}
