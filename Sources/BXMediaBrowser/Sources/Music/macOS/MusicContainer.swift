@@ -139,7 +139,15 @@ public class MusicContainer : Container
 			
 				for playlist in playlists
 				{
-					guard !playlist.isPrimary else { continue }
+					if #available(macOS 12,*)
+					{
+						guard !playlist.isPrimary else { continue }
+					}
+					else
+					{
+						guard !playlist.isMaster else { continue }
+					}
+					
 					let kind = playlist.kind
 					let distinguishedKind = playlist.distinguishedKind
 					

@@ -140,7 +140,7 @@ extension UnsplashFilter
 				case .purple : return .purple
 				case .magenta : return .pink
 				case .green : return .green
-				case .teal : return .teal
+				case .teal : return SwiftUI.Color(red:0.0, green:0.66, blue:0.66)
 				case .blue : return .blue
 				default: return .clear
 			}
