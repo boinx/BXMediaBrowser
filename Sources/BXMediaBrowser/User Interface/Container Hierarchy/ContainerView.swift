@@ -88,12 +88,12 @@ public struct ContainerView : View
 						BXSpinningWheel(size:.small)
 							.colorScheme(.dark)
 					}
+					
+					// Optional remove button
+					
 					else if let removeHandler = container.removeHandler
 					{
-						SwiftUI.Image(systemName:"minus.circle").onTapGesture
-						{
-							removeHandler(container)
-						}
+						self.removeButton(for:removeHandler)
 					}
 				}
 				.font(.system(size:13))
@@ -146,6 +146,29 @@ public struct ContainerView : View
     }
     
     // Subcontainers are loaded lazily when expanding this Container
+    
+    
+	/// Builds a button to remove this Container
+	
+	@ViewBuilder func removeButton(for removeHandler:@escaping (Container)->Void) -> some View
+	{
+		if #available(macOS 11.0, iOS 13, *)
+		{
+			SwiftUI.Image(systemName:"minus.circle").onTapGesture
+			{
+				removeHandler(container)
+			}
+		}
+		else
+		{
+			Text("⊖").onTapGesture
+			{
+				removeHandler(container)
+			}
+		}
+	}
+
+
     
     func loadIfNeeded()
     {
