@@ -58,7 +58,7 @@ open class UnsplashObject : Object
 		guard let photo = data as? UnsplashPhoto else { throw Error.loadThumbnailFailed }
 		guard let url = photo.urls["thumb"] else { throw Error.loadThumbnailFailed }
 		
-		let (data,_) = try await URLSession.shared.data(from:url)
+		let data = try await URLSession.shared.data(with:url)
 		guard let source = CGImageSourceCreateWithData(data as CFData,nil) else { throw Error.loadThumbnailFailed }
 		guard let image = CGImageSourceCreateImageAtIndex(source,0,nil) else { throw Error.loadThumbnailFailed }
 		

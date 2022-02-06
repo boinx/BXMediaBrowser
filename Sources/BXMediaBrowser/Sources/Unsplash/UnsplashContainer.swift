@@ -173,7 +173,7 @@ open class UnsplashContainer : Container
 		
 		// Perform the online search
 		
-		let (data,_) = try await URLSession.shared.data(for:request)
+		let data = try await URLSession.shared.data(with:request)
 		
 		// Decode returned JSON to array of UnsplashPhoto
 		

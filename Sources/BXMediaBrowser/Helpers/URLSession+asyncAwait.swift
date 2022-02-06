@@ -19,7 +19,7 @@ extension URLSession
 //	@available(macOS, deprecated:12.0, message:"Use the built-in API instead")
 //	@available(iOS, deprecated:15.0, message:"Use the built-in API instead")
 
-    public func data(from url:URL, delegate:URLSessionTaskDelegate? = nil) async throws -> Data
+    public func data(with url:URL, delegate:URLSessionTaskDelegate? = nil) async throws -> Data
     {
         try await withCheckedThrowingContinuation
         {
@@ -38,7 +38,11 @@ extension URLSession
                 continuation.resume(returning:(data))
             }
 
-			task.delegate = delegate
+			if #available(macOS 12.0, *)
+			{
+				task.delegate = delegate
+			}
+			
             task.resume()
         }
     }
@@ -50,7 +54,7 @@ extension URLSession
 //	@available(macOS, deprecated:12.0, message:"Use the built-in API instead")
 //	@available(iOS, deprecated:15.0, message:"Use the built-in API instead")
 
-    public func data(for request:URLRequest, delegate:URLSessionTaskDelegate? = nil) async throws -> Data
+    public func data(with request:URLRequest, delegate:URLSessionTaskDelegate? = nil) async throws -> Data
     {
         try await withCheckedThrowingContinuation
         {
@@ -69,7 +73,11 @@ extension URLSession
                 continuation.resume(returning:(data))
             }
 
-			task.delegate = delegate
+			if #available(macOS 12.0, *)
+			{
+				task.delegate = delegate
+			}
+			
             task.resume()
         }
     }
@@ -108,7 +116,10 @@ extension URLSession
 				continuation.resume(returning:(tmpURL2))
 			}
 
-			task.delegate = delegate
+			if #available(macOS 12.0, *)
+			{
+				task.delegate = delegate
+			}
 			
 			// If Progress.current is nil, this means that we didn't see the parent Progress object, because it
 			// was created in a different thread (most likely the main thread). In this case we try to attach
