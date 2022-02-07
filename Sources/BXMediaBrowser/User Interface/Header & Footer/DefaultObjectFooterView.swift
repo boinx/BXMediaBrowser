@@ -45,7 +45,7 @@ public struct DefaultObjectFooterView : View
 		{
 			// Thumbnail size
 			
-			Slider(value:self.$uiState.thumbnailScale, in:0.1...1.0)
+			Slider(value:self.sliderResponse, in:0.3...1.0)
 				.controlSize(.mini)
 				.frame(width:120)
 			
@@ -53,11 +53,18 @@ public struct DefaultObjectFooterView : View
 			
 			// Object count
 			
-			Text(container.objectCountDescription)
+			Text(container.localizedObjectCount)
 				.controlSize(.small)
 		}
 		.padding(.horizontal,20)
 		.padding(.vertical,2)
+    }
+    
+    var sliderResponse:Binding<Double>
+    {
+		Binding<Double>(
+			get:{ pow(self.uiState.thumbnailScale,0.5) },
+			set:{ self.uiState.thumbnailScale = pow($0,2) })
     }
 }
 
