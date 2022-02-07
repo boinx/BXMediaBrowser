@@ -101,7 +101,7 @@ public struct ContainerView : View
 			{
 				// Subcontainers
 				
-				BestVStack(alignment:.leading, spacing:0)
+				EfficientVStack(alignment:.leading, spacing:0)
 				{
 					ForEach(container.containers)
 					{

@@ -52,7 +52,7 @@ public struct LibraryView : View
 	
 	public var body: some View
     {
-		BestVStack(alignment:.leading, spacing:4)
+		EfficientVStack(alignment:.leading, spacing:4)
 		{
 			ForEach(library.sections)
 			{

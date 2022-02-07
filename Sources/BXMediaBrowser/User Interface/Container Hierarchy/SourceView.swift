@@ -64,7 +64,7 @@ public struct SourceView : View
 			
 			body:
 			{
-				BestVStack(alignment:.leading, spacing:2)
+				EfficientVStack(alignment:.leading, spacing:2)
 				{
 					ForEach(source.containers)
 					{

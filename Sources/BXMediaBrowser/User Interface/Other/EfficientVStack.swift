@@ -29,9 +29,9 @@ import SwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-/// BestVStack resolves to a LazyVStack (if available) or to a (less efficient) VStack as a fallback
+/// EfficientVStack resolves to a LazyVStack (if available) or to a (less efficient) VStack as a fallback
 
-public struct BestVStack<Content:View> : View
+public struct EfficientVStack<Content:View> : View
 {
 	private var alignment:HorizontalAlignment
 	private var spacing:CGFloat?

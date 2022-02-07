@@ -53,7 +53,7 @@ public struct SectionView : View
 	
 	public var body: some View
     {
-		BestVStack(alignment:.leading, spacing:4)
+		EfficientVStack(alignment:.leading, spacing:4)
 		{
 			// Section name is optional
 			
