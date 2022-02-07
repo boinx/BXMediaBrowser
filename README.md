@@ -10,12 +10,12 @@ BXMediaBrowser is written in Swift and uses Swift 5.5 concurrency features like 
 
 All model classes conform to ObservableObject to be SwiftUI compatible. They also conform to Hashable, so that they can be used with the modern diffable data sources APIs. Here is a list of the data model classes and how they relate to each other:
 
-BXMediaBrowser.Library
-	[BXMediaBrowser.Section]
-		[BXMediaBrowser.Source]
-			[BXMediaBrowser.Container]			IMBNode				e.g. Album, Playlist, Folder
+BXMediaBrowser.Library							IMBLibraryController
+	[BXMediaBrowser.Section]					-
+		[BXMediaBrowser.Source]					IMBParser
+			[BXMediaBrowser.Container]			IMBNode					e.g. Album, Playlist, Folder
 				[BXMediaBrowser.Container]		IMBNode
-				[BXMediaBrowser.Object]			IMBObject			e.g. Image, Video, Audio file
+				[BXMediaBrowser.Object]			IMBObject				e.g. Image, Video, Audio file
 
 ### BXMediaBrowser.Library	
 
