@@ -55,7 +55,7 @@ public struct AudioObjectFooterView : View
 			
 			// Object count
 			
-			Text(container.objectCountDescription)
+			Text(container.localizedObjectCount)
 				.controlSize(.small)
 		}
 		.padding(.horizontal,20)
