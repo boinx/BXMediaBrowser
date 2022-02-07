@@ -59,15 +59,6 @@ public struct FolderSourceView : View
 		}
 		.id(source.identifier)
 		.padding(.top,2)
-		.onAppear { self.loadIfNeeded() }
-    }
-    
-    func loadIfNeeded()
-    {
-		if !source.isLoaded && !source.isLoading
-		{
-			source.load()
-		}
     }
 }
 

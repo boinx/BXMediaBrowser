@@ -72,7 +72,6 @@ public struct SourceView : View
 					}
 				}
 				.padding(.leading,20)
-				.onAppear { self.loadIfNeeded() }
 			})
 //			.id(source.identifier)
 			
@@ -86,14 +85,6 @@ public struct SourceView : View
 			{
 				_ in library.saveState()
 			}
-    }
-    
-    func loadIfNeeded()
-    {
-		if !source.isLoaded && !source.isLoading
-		{
-			source.load()
-		}
     }
 }
 
