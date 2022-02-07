@@ -23,48 +23,47 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 
-import BXSwiftUtils
+#if os(macOS)
+import AppKit
+#else
+import UIKit
+#endif
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-/// Provides logging for all BXMediaBrowser related code
-
-public var log:BXLogger =
+extension URL
 {
-	()->BXLogger in
-	
-	var logger = BXLogger()
-
-	logger.addDestination
+	public func open()
 	{
-		(level:BXLogger.Level,string:String)->() in
-		BXSwiftUtils.log.print(level:level, force:true) { string }
+		#if os(macOS)
+		
+		NSWorkspace.shared.open(self)
+		
+		#else
+		
+		#warning("TODO: implement")
+		
+		#endif
 	}
 	
-	return logger
-}()
-
-
-/// Provides logging for the data model related code
-
-public var logDataModel:BXLogger =
-{
-	()->BXLogger in
-	
-	var logger = BXLogger()
-
-	logger.addDestination
+	public func reveal()
 	{
-		(level:BXLogger.Level,string:String)->() in
-		BXMediaBrowser.log.print(level:level, force:true) { string }
+		guard self.exists else { return }
+		
+		#if os(macOS)
+		
+		NSWorkspace.shared.selectFile(self.path, inFileViewerRootedAtPath:self.deletingLastPathComponent().path)
+
+		#else
+		
+		#warning("TODO: implement")
+
+		#endif
 	}
-	
-	return logger
-}()
+}
 
 
 //----------------------------------------------------------------------------------------------------------------------
-
 

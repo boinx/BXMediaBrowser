@@ -33,7 +33,7 @@ import AppKit
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public class FileDropDestination : NSObject,NSDraggingDestination
+public class FileDropDestination : NSObject, NSDraggingDestination
 {
 	/// Dropped files will be copied to this destination folder
 	
@@ -187,11 +187,11 @@ public class FileDropDestination : NSObject,NSDraggingDestination
 			
 			if let error = error
 			{
-				print("\(Self.self).\(#function) ERROR \(error)")
+				logDragAndDrop.error {"\(Self.self).\(#function) ERROR \(error)"}
 			}
 			else
 			{
-				print("\(Self.self).\(#function) RECEIVED \(url)")
+				logDragAndDrop.debug {"\(Self.self).\(#function) RECEIVED \(url)"}
 			}
 		}
 	}
@@ -207,7 +207,7 @@ public class FileDropDestination : NSObject,NSDraggingDestination
 		Progress.globalParent?.addChild(childProgress, withPendingUnitCount:1)
 		defer { childProgress.completedUnitCount = 1 }
 		
-		// Copy the file to the folder
+		// Link or copy the file to the folder
 		
 		let dstURL = self.folderURL.appendingPathComponent(srcURL.lastPathComponent)
 		
@@ -223,7 +223,7 @@ public class FileDropDestination : NSObject,NSDraggingDestination
 			}
 			catch
 			{
-				print("\(Self.self).\(#function) ERROR \(error)")
+				logDragAndDrop.error {"\(Self.self).\(#function) ERROR \(error)"}
 			}
 		}
 	}
@@ -292,7 +292,7 @@ public class FileDropDestination : NSObject,NSDraggingDestination
 				BXProgressWindowController.shared.show()
 			}
 
-			print("\(Self.self).\(#function)   progress = \(percent)%   duration = \(dt)s")
+			logDragAndDrop.verbose {"\(Self.self).\(#function)   progress = \(percent)%   duration = \(dt)s"}
 		}
 	}
 	
@@ -303,7 +303,7 @@ public class FileDropDestination : NSObject,NSDraggingDestination
 	{
 		DispatchQueue.main.async
 		{
-			print("\(Self.self).\(#function)")
+			logDragAndDrop.debug {"\(Self.self).\(#function)"}
 			
 			BXProgressWindowController.shared.hide()
 		
@@ -318,6 +318,7 @@ public class FileDropDestination : NSObject,NSDraggingDestination
 	
 	public func cancel()
 	{
+		logDragAndDrop.debug {"\(Self.self).\(#function)"}
 		self.progress?.cancel()
 	}
 }

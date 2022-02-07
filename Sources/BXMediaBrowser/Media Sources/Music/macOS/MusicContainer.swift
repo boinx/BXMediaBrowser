@@ -223,7 +223,7 @@ public class MusicContainer : Container
 	}
 
 
-    @MainActor override var objectCountDescription:String
+    @MainActor override var localizedObjectCount:String
     {
 		let n = self.objects.count
 		let str = n.localizedFilesString

@@ -206,11 +206,11 @@ public class PhotosContainer : Container
 			}
 		}
 		
-		//
+		// Not sure how to deal with this case
 		
 		else if let collection = data as? PHCollection
 		{
-			print("hmmm")
+			PhotosSource.log.error {"\(Self.self).\(#function) ERROR encountered abstract PHCollection"}
 		}
 		
 		// Datatype not determined yet, so get it from a PHFetchResult
@@ -239,7 +239,7 @@ public class PhotosContainer : Container
 				}
 				else
 				{
-					print("\(item)")
+					PhotosSource.log.error {"\(Self.self).\(#function) ERROR unknown data type \(item)"}
 				}
 			}
 		}
@@ -277,7 +277,7 @@ public class PhotosContainer : Container
 
 	/// Returns a description of the contents of this Container
 	
-    @MainActor override var objectCountDescription:String
+    @MainActor override var localizedObjectCount:String
     {
 		let n = self.objects.count
 		let str = n.localizedImagesString

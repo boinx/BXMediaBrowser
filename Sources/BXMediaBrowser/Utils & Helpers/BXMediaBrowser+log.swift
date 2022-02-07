@@ -23,18 +23,64 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 
-import SwiftUI
+import BXSwiftUtils
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-open class UIState : ObservableObject
+/// Provides logging for all BXMediaBrowser related code
+
+public var log:BXLogger =
 {
-	/// This scale affects the display size of Object cells in a CollectionView
+	()->BXLogger in
 	
-	@Published public var thumbnailScale:Double = 0.25
-}
+	var logger = BXLogger()
+
+	logger.addDestination
+	{
+		(level:BXLogger.Level,string:String)->() in
+		BXSwiftUtils.log.print(level:level, force:true) { string }
+	}
+	
+	return logger
+}()
+
+
+/// Provides logging for the data model related code
+
+public var logDataModel:BXLogger =
+{
+	()->BXLogger in
+	
+	var logger = BXLogger()
+
+	logger.addDestination
+	{
+		(level:BXLogger.Level,string:String)->() in
+		BXMediaBrowser.log.print(level:level, force:true) { string }
+	}
+	
+	return logger
+}()
+
+
+/// Provides logging for drag & drop related code
+
+public var logDragAndDrop:BXLogger =
+{
+	()->BXLogger in
+	
+	var logger = BXLogger()
+
+	logger.addDestination
+	{
+		(level:BXLogger.Level,string:String)->() in
+		BXMediaBrowser.log.print(level:level, force:true) { string }
+	}
+	
+	return logger
+}()
 
 
 //----------------------------------------------------------------------------------------------------------------------

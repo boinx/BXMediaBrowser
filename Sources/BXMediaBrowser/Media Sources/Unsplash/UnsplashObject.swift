@@ -193,7 +193,7 @@ open class UnsplashObject : Object
 		}
 		catch let error
 		{
-			print("\(Self.self).\(#function) ERROR \(error)")
+			logDataModel.error {"\(Self.self).\(#function) ERROR \(error)"}
 		}
 		
 		return "\(name).\(ext)"

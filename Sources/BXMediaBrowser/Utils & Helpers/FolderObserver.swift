@@ -36,7 +36,7 @@ public class FolderObserver : NSObject
     private let url: URL
     
     /// An externally supplied closure that will be called when the directory (or its contents) is modififed
-	///
+	
 	public var folderDidChange:(() -> Void)? = nil
 	
 	/// A file descriptor for the monitored directory

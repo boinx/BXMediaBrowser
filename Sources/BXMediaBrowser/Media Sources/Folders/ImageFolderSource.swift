@@ -62,7 +62,7 @@ open class ImageFolderContainer : FolderContainer
 		return ImageFile(url:url)
 	}
 
-    @MainActor override var objectCountDescription:String
+    @MainActor override var localizedObjectCount:String
     {
 		let n = self.objects.count
 		let str = n.localizedImagesString
