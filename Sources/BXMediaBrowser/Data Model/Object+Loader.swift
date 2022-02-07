@@ -61,7 +61,7 @@ extension Object
 
 		public func purge() async
 		{
-//			Swift.print("Purging data for \(identifier)")
+			logDataModel.verbose {"Purging data for \(identifier)"}
 			self._thumbnailImage = nil
 			self._metadata = nil
 		}
@@ -97,8 +97,8 @@ extension Object
 
 				let task = Task<CGImage,Swift.Error>
 				{
-//					Swift.print("Loading thumbnail for \(identifier)")
-
+					logDataModel.verbose {"Loading thumbnail for \(identifier)"}
+					
 					let image = try await self.loadThumbnailHandler(identifier,data)
 					self._thumbnailImage = image
 					self._loadThumbnailTask = nil
@@ -153,7 +153,7 @@ extension Object
 				
 				let task = Task<[String:Any],Swift.Error>
 				{
-//					Swift.print("Loading metadata for \(identifier)")
+					logDataModel.verbose {"Loading metadate for \(identifier)"}
 					
 					let metadata:[String:Any] = try await self.loadMetadataHandler(identifier,data)
 					self._metadata = metadata
@@ -165,10 +165,6 @@ extension Object
 				return try await task.value
 			}
 		}
-		
-		/// Returns true if the metadata is currently being loaded. Can be used to display progress info like a spinning wheel.
-		
-		public var isLoadingMetadata:Bool { _loadMetadataTask != nil }
 
 		/// The cached metadata dictionary
 		
@@ -177,6 +173,10 @@ extension Object
 		/// The currently running task to load the metadata
 		
 		private var _loadMetadataTask:Task<[String:Any],Swift.Error>? = nil
+		
+		/// Returns true if the metadata is currently being loaded. Can be used to display progress info like a spinning wheel.
+		
+		public var isLoadingMetadata:Bool { _loadMetadataTask != nil }
 		
 	
 //----------------------------------------------------------------------------------------------------------------------

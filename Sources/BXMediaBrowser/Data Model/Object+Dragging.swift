@@ -80,7 +80,7 @@ extension Object : NSFilePromiseProviderDelegate
 				}
 				catch let error
 				{
-					print("\(Self.self).\(#function) ERROR \(error)")
+					logDragAndDrop.error {"\(Self.self).\(#function) ERROR \(error)"}
 				}
 			}
 			
