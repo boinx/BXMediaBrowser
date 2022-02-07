@@ -23,42 +23,19 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 
-import BXSwiftUI
 import SwiftUI
-
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public struct DefaultObjectFooterView : View
+extension Library
 {
-	// Model
-	
-	@ObservedObject var container:Container
-	@ObservedObject var uiState:Library.UIState
-	
-	// View
-	
-	public var body: some View
-    {
-		HStack
-		{
-			// Thumbnail size
-			
-			Slider(value:self.$uiState.thumbnailScale, in:0.1...1.0)
-				.controlSize(.mini)
-				.frame(width:120)
-			
-			Spacer()
-			
-			// Object count
-			
-			Text(container.objectCountDescription)
-				.controlSize(.small)
-		}
-		.padding(.horizontal,20)
-		.padding(.vertical,2)
-    }
+	open class UIState : ObservableObject
+	{
+		/// This scale affects the display size of Object cells in a CollectionView
+		
+		@Published public var thumbnailScale:Double = 0.25
+	}
 }
 
 
