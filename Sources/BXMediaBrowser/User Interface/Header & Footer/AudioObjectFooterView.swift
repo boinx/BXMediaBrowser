@@ -46,10 +46,10 @@ public struct AudioObjectFooterView : View
 		{
 			// Thumbnail size
 			
-//			Text("▶︎ Audio Player")
+			Text("▶︎ Audio Player")
 
-			AudioPlayerView(url:nil)
-				.frame(height:22)
+//			AudioPlayerView(url:nil)
+//				.frame(height:20)
 			
 			Spacer()
 			
@@ -151,3 +151,6 @@ public struct AudioPlayerView : NSViewRepresentable
 	}
 	
 }
+
+
+//----------------------------------------------------------------------------------------------------------------------
