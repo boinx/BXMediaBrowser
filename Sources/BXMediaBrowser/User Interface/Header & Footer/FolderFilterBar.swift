@@ -30,7 +30,7 @@ import SwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public struct FolderSearchBar : View
+public struct FolderFilterBar : View
 {
 	// Model
 	
@@ -49,20 +49,18 @@ public struct FolderSearchBar : View
 	
 	public var body: some View
     {
-//		let binding = Binding<String>(
-//			get:{ self.selectedContainer.filter as? String ?? "" },
-//			set:{ self.selectedContainer.filter = $0 }
-//		)
-	
 		HStack
 		{
-			TextField("Search", text:self.$filter.searchString) //self.$selectedContainer.filterString)
+			// Search field
+			
+			TextField("Search", text:self.$filter.searchString)
 				.frame(maxWidth:300)
 				.textFieldStyle(RoundedBorderTextFieldStyle())
-//				.leftAligned()
 
 			Spacer()
 
+			// Sort order
+			
 			MenuButton(self.filter.sortOrder.localizedName)
 			{
 				ForEach(FolderFilter.sortOrderCases, id:\.self)

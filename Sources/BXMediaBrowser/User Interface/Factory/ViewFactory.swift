@@ -195,11 +195,11 @@ public extension ViewFactory
 	{
 		if let container = container as? UnsplashContainer
 		{
-			UnsplashSearchBar(with:container)
+			UnsplashFilterBar(with:container)
 		}
 		else if let container = container as? FolderContainer, let filter = container.filter as? FolderFilter
 		{
-			FolderSearchBar(with:container, filter:filter)
+			FolderFilterBar(with:container, filter:filter)
 		}
 		else if let container = container
 		{

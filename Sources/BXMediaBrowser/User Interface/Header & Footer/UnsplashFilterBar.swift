@@ -30,7 +30,7 @@ import SwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public struct UnsplashSearchBar : View
+public struct UnsplashFilterBar : View
 {
 	// Model
 	
@@ -147,19 +147,19 @@ struct UnsplashOrientationView : View
 	
 	var body: some View
 	{
-			MenuButton(self.filter.orientation.localizedName)
+		MenuButton(self.filter.orientation.localizedName)
+		{
+			ForEach(UnsplashFilter.Orientation.allCases, id:\.self)
 			{
-				ForEach(UnsplashFilter.Orientation.allCases, id:\.self)
+				value in
+				
+				Button(value.localizedName)
 				{
-					value in
-					
-					Button(value.localizedName)
-					{
-						self.filter.orientation = value
-					}
+					self.filter.orientation = value
 				}
 			}
-			.fixedSize()
+		}
+		.fixedSize()
 	}
 }
 
