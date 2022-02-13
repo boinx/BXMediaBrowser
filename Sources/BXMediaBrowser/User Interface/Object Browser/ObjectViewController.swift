@@ -126,14 +126,18 @@ public class ObjectViewController : NSCollectionViewItem
 		
 		self.observers = []
 		
-		self.observers += object.$thumbnailImage
-			.receive(on:RunLoop.main)
-			.sink
-			{
-				_ in
-				self.redraw()
-			}
+		self.observers += object.$thumbnailImage.receive(on:RunLoop.main).sink
+		{
+			[weak self] _ in self?.redraw()
+		}
 		
+		// When statistics for our object change also redraw
+		
+		self.observers += NotificationCenter.default.publisher(for:StatisticsController.didChangeNotification, object:object).sink
+		{
+			[weak self] _ in self?.redraw()
+		}
+			
 		// Configure context menu
 		
 		if let objectView = self.view as? ObjectView

@@ -181,7 +181,9 @@ open class Object : NSObject, ObservableObject, Identifiable
 	{
 		get async throws
 		{
-			try await self.loader.localURL
+			let url = try await self.loader.localURL
+			await StatisticsController.shared.incrementUseCount(for:self)
+			return url
 		}
 	}
 	

@@ -26,6 +26,7 @@
 #if os(macOS)
 
 import AppKit
+import BXSwiftUI
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -33,6 +34,10 @@ import AppKit
 
 public class ImageObjectViewController : ObjectViewController
 {
+	@IBOutlet var ratingView:NSImageView?
+	
+	@IBOutlet var useCountView:NSImageView?
+
     override class var identifier:NSUserInterfaceItemIdentifier
     {
     	NSUserInterfaceItemIdentifier("BXMediaBrowser.ImageObjectViewController")
@@ -48,22 +53,60 @@ public class ImageObjectViewController : ObjectViewController
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	override open func setup()
+	{
+		super.setup()
+		
+//		let appearance = self.view.effectiveAppearance
+//		let isDarkMode = appearance.isDarkMode
+//		let strokeColor = isDarkMode ? NSColor.white.withAlphaComponent(0.2) : NSColor.black.withAlphaComponent(0.2)
+//
+//		let layer = self.imageView?.subviews.first?.layer
+//		layer?.borderColor = strokeColor.cgColor
+//		layer?.borderWidth = 1.0
+
+		self.imageView?.imageScaling = .scaleProportionallyUpOrDown
+		self.useCountView?.imageScaling = .scaleProportionallyUpOrDown
+		self.ratingView?.imageScaling = .scaleProportionallyUpOrDown
+	}
+	
+	
 	/// Redraws the cell by updating the thumbnail and name
 	
 	override public func redraw()
 	{
 		guard let object = object else { return }
 
+		// Thumbnail
+		
 		if let thumbnail = object.thumbnailImage
 		{
 			let w = thumbnail.width
 			let h = thumbnail.height
 			let size = CGSize(width:w, height:h)
 			self.imageView?.image = NSImage(cgImage:thumbnail, size:size)
-			self.imageView?.imageScaling = .scaleProportionallyUpOrDown
 		}
 	
+		// Name
+		
 		self.textField?.stringValue = object.name
+		
+		if #available(macOS 11, *)
+		{
+			// Use count badge
+			
+			let n = StatisticsController.shared.useCount(for:object)
+			let useCountImage = n>0 ? NSImage(systemSymbolName:"\(n).circle.fill", accessibilityDescription:nil) : nil
+			self.useCountView?.image = useCountImage
+			self.useCountView?.contentTintColor = NSColor.systemGreen
+			
+			// Rating badge
+			
+			let rating = StatisticsController.shared.rating(for:object)
+			let ratingImage = /*rating>0 ?*/ NSImage(systemSymbolName:"star.fill", accessibilityDescription:nil) /*: nil*/
+			self.ratingView?.image = ratingImage
+			self.ratingView?.contentTintColor = NSColor.systemYellow
+		}
 	}
 	
 	
@@ -90,9 +133,16 @@ public class ImageObjectViewController : ObjectViewController
 
 		if let layer = self.imageView?.subviews.first?.layer
 		{
-			layer.borderWidth = isHilited ? 4.0 : 0.0
-			layer.borderColor = isHilited ? NSColor.systemYellow.cgColor : NSColor.clear.cgColor
+			layer.borderWidth = isHilited ? 4.0 : 1.0
+			layer.borderColor = isHilited ? NSColor.systemYellow.cgColor : self.strokeColor.cgColor
 		}
+    }
+    
+    private var strokeColor:NSColor
+    {
+		self.view.effectiveAppearance.isDarkMode ?
+			NSColor.white.withAlphaComponent(0.2) :
+			NSColor.black.withAlphaComponent(0.2)
     }
 }
 
