@@ -118,14 +118,15 @@ open class Container : ObservableObject, Identifiable, StateSaving
 	
 	/// Creates a new Container
 	
-	public init(identifier:String, icon:String? = nil, name:String, data:Any, loadHandler:@escaping Container.Loader.LoadHandler, removeHandler:((Container)->Void)? = nil)
+	public init(identifier:String, icon:String? = nil, name:String, data:Any, filter:Any? = nil, loadHandler:@escaping Container.Loader.LoadHandler, removeHandler:((Container)->Void)? = nil)
 	{
 		BXMediaBrowser.logDataModel.verbose {"\(Self.self).\(#function) \(identifier)"}
 
 		self.identifier = identifier
-		self.data = data
 		self.icon = icon
 		self.name = name
+		self.data = data
+		self.filter = filter
 		self.loader = Container.Loader(identifier:identifier, loadHandler:loadHandler)
 		self.removeHandler = removeHandler
 		

@@ -46,6 +46,7 @@ open class FolderContainer : Container
 			identifier: FolderSource.identifier(for:url),
 			name: url.lastPathComponent,
 			data: url,
+			filter: FolderFilter(),
 			loadHandler: Self.loadContents,
 			removeHandler: removeHandler)
 			
@@ -60,15 +61,6 @@ open class FolderContainer : Container
 	}
 
 
-	/// Reloads this Container when the filter changes
-	
-	override open func setupFilterObserver()
-	{
-		self.filter = FolderFilter() // Must be set BEFORE calling super!
-		super.setupFilterObserver()
-	}
-	
-	
 	// This container can be expanded if it has subfolders
 	
 	override var canExpand: Bool
