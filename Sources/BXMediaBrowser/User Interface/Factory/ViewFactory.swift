@@ -197,6 +197,10 @@ public extension ViewFactory
 		{
 			UnsplashSearchBar(with:container)
 		}
+		else if let container = container as? FolderContainer, let filter = container.filter as? FolderFilter
+		{
+			FolderSearchBar(with:container, filter:filter)
+		}
 		else if let container = container
 		{
 			SearchBar(with:container)

@@ -60,6 +60,15 @@ open class FolderContainer : Container
 	}
 
 
+	/// Reloads this Container when the filter changes
+	
+	override open func setupFilterObserver()
+	{
+		self.filter = FolderFilter() // Must be set BEFORE calling super!
+		super.setupFilterObserver()
+	}
+	
+	
 	// This container can be expanded if it has subfolders
 	
 	override var canExpand: Bool
@@ -85,11 +94,12 @@ open class FolderContainer : Container
 		guard folderURL.exists else { throw Error.notFound }
 		guard folderURL.isDirectory else { throw Error.notFound }
 		guard folderURL.isReadable else { throw Error.accessDenied }
+		guard let filter = filter as? FolderFilter else { throw Error.loadContentsFailed }
 		
 		// Get the folder contents and sort them like the Finder would
 		
 		let filenames = try self.filenames(in:folderURL)
-		let searchString = (filter as? String)?.lowercased() ?? ""
+		let searchString = filter.searchString.lowercased()
 		
 		// Go through all items
 		
@@ -131,6 +141,13 @@ open class FolderContainer : Container
 				}
 			}
 		}
+		
+		// Sort according to specified sort order
+		
+		let sortOrder = filter.sortOrder
+		objects.sort(by:sortOrder.compare)
+		
+		// Return contents
 		
 		return (containers,objects)
 	}

@@ -144,21 +144,30 @@ open class Container : ObservableObject, Identifiable, StateSaving
 
 	/// Reloads this Container when the filter changes
 	
-	private func setupFilterObserver()
+	open func setupFilterObserver()
 	{
+		// Reload Container when filter is completely replaced
+		
 		self.observers += self.$filter
 			.dropFirst(1)
 			.debounce(for:0.25, scheduler:RunLoop.main)
 			.sink
 			{
-				[weak self] _ in
-				guard let self = self else { return }
-				
-				DispatchQueue.main.async
-				{
-					self.load()
-				}
+				[weak self] _ in self?.load()
 			}
+		
+		// Also reload Container when a published property of an ObservableFilter has changed
+		
+		if let filter = self.filter as? Object.Filter
+		{
+			self.observers += filter
+				.objectWillChange
+				.debounce(for:0.25, scheduler:RunLoop.main)
+				.sink
+				{
+					[weak self] _ in self?.load()
+				}
+		}
 	}
 	
 	
