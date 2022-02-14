@@ -197,18 +197,16 @@ extension Object.Filter.SortOrder
 	public static func sortAlphabeticalAscending(_ object1:Object,_ object2:Object) -> Bool
 	{
 		let name1 = object1.name as NSString
-		let name2 = object2.name //as NSString
+		let name2 = object2.name
 		return name1.localizedStandardCompare(name2) == .orderedAscending
-//		return name1 < name2
 	}
 	
 	
 	public static func sortAlphabeticalDescending(_ object1:Object,_ object2:Object) -> Bool
 	{
 		let name1 = object1.name as NSString
-		let name2 = object2.name //as NSString
+		let name2 = object2.name
 		return name1.localizedStandardCompare(name2) == .orderedDescending
-//		return name1 > name2
 	}
 	
 	
