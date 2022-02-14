@@ -94,8 +94,8 @@ open class UnsplashSource : Source, AccessControl
 	{
 		UnsplashSource.log.debug {"\(Self.self).\(#function)"}
 
-		guard let filter = liveSearchContainer.filter as? UnsplashFilter else { return }
-		guard let savedContainer = self.createContainer(with:filter) else { return }
+		guard let liveFilter = liveSearchContainer.filter as? UnsplashFilter else { return }
+		guard let savedContainer = self.createContainer(with:liveFilter.copy) else { return }
 		self.addContainer(savedContainer)
 	}
 
@@ -107,8 +107,8 @@ open class UnsplashSource : Source, AccessControl
 		guard !filter.searchString.isEmpty else { return nil }
 
 		let searchString = filter.searchString
-		let orientation = filter.orientation?.rawValue ?? ""
-		let color = filter.color?.rawValue ?? ""
+		let orientation = filter.orientation.rawValue
+		let color = filter.color.rawValue
 		let identifier = "UnsplashSource:\(searchString)/\(orientation)/\(color)".replacingOccurrences(of:" ", with:"-")
 		let name = UnsplashContainer.description(with:filter)
 		

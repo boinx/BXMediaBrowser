@@ -193,9 +193,9 @@ public extension ViewFactory
 
 	@ViewBuilder class func defaultHeaderView(for library:Library, container:Container?) -> some View
 	{
-		if let container = container as? UnsplashContainer
+		if let container = container as? UnsplashContainer, let filter = container.filter as? UnsplashFilter
 		{
-			UnsplashFilterBar(with:container)
+			UnsplashFilterBar(with:container, filter:filter)
 		}
 		else if let container = container as? FolderContainer, let filter = container.filter as? FolderFilter
 		{

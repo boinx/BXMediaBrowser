@@ -31,19 +31,74 @@ import SwiftUI
 
 /// This struct bundles all parameters for a photo search on Unsplash.com
 
-public struct UnsplashFilter : Equatable,Codable
+public class UnsplashFilter : Object.Filter, Codable
 {
 	/// The search string for looking up images on Unsplash.com
 	
-	public var searchString:String = ""
+	@Published public var searchString:String = ""
 	
 	/// If non-nil then search results will be restricted to the specified Orientation
 	
-	public var orientation:Orientation? = nil
+	@Published public var orientation:Orientation = .any
 	
 	/// If non-nil then search results will be restricted to the specified Color style
 	
-	public var color:Color? = nil
+	@Published public var color:Color = .any
+
+	// To make the compiler happy, we have to have a public init here
+	
+	override public init()
+	{
+		super.init()
+	}
+	
+	// Unfortunately the Codable stuff cannot be put in an extension:
+	
+	private enum Key : String, CodingKey
+	{
+		case searchString
+		case orientation
+		case color
+	}
+
+	public func encode(to encoder:Encoder) throws
+	{
+		var container = encoder.container(keyedBy:Key.self)
+		try container.encode(self.searchString, forKey:.searchString)
+		try container.encode(self.orientation, forKey:.orientation)
+		try container.encode(self.color, forKey:.color)
+	}
+
+	public required init(from decoder:Decoder) throws
+	{
+		let container = try decoder.container(keyedBy:Key.self)
+		self.searchString  = try container.decode(String.self, forKey:.searchString)
+		self.orientation  = try container.decode(Orientation.self, forKey:.orientation)
+		self.color  = try container.decode(Color.self, forKey:.color)
+	}
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+extension UnsplashFilter : Equatable
+{
+	public static func == (lhs:UnsplashFilter, rhs:UnsplashFilter) -> Bool
+	{
+		lhs.searchString == rhs.searchString &&
+		lhs.orientation == rhs.orientation &&
+		lhs.color == rhs.color
+	}
+
+	public var copy: UnsplashFilter
+	{
+		let copy = UnsplashFilter()
+		copy.searchString = self.searchString
+		copy.orientation = self.orientation
+		copy.color = self.color
+		return copy
+	}
 }
 
 
@@ -52,7 +107,7 @@ public struct UnsplashFilter : Equatable,Codable
 
 extension UnsplashFilter
 {
-	public enum Orientation : String,Equatable,CaseIterable,Codable
+	public enum Orientation : String, CaseIterable, Equatable, Codable
 	{
 		case any = ""
 		case landscape
@@ -64,20 +119,20 @@ extension UnsplashFilter
 			self.rawValue
 		}
 		
+		static var allIdentifiers:[String]
+		{
+			self.allCases.map { $0.rawValue }
+		}
+		
 		var localizedName:String
 		{
 			switch self
 			{
-				case .any : return "Any"
-				case .landscape : return "Horizontal"
-				case .portrait : return "Vertical"
-				case .squarish : return "Square"
+				case .any : 		return "Any"
+				case .landscape : 	return "Horizontal"
+				case .portrait : 	return "Vertical"
+				case .squarish : 	return "Square"
 			}
-		}
-		
-		static var allValues:[String]
-		{
-			self.allCases.map { $0.rawValue }
 		}
 	}
 }
@@ -88,7 +143,7 @@ extension UnsplashFilter
 
 extension UnsplashFilter
 {
-	public enum Color : String,Equatable,CaseIterable,Codable
+	public enum Color : String, CaseIterable, Equatable, Codable
 	{
 		case any = ""
 		case black_and_white
@@ -108,22 +163,27 @@ extension UnsplashFilter
 			self.rawValue
 		}
 		
+		static var allIdentifiers:[String]
+		{
+			self.allCases.map { $0.identifier }
+		}
+		
 		var localizedName:String
 		{
 			switch self
 			{
-				case .any : return "Any"
+				case .any : 			return "Any"
 				case .black_and_white : return "B&W"
-				case .black : return "Dark"
-				case .white : return "Bright"
-				case .yellow : return "Yellow"
-				case .orange : return "Orange"
-				case .red : return "Red"
-				case .purple : return "Purple"
-				case .magenta : return "Pink"
-				case .green : return "Green"
-				case .teal : return "Teal"
-				case .blue : return "Blue"
+				case .black : 			return "Dark"
+				case .white : 			return "Bright"
+				case .yellow : 			return "Yellow"
+				case .orange : 			return "Orange"
+				case .red : 			return "Red"
+				case .purple : 			return "Purple"
+				case .magenta : 		return "Pink"
+				case .green : 			return "Green"
+				case .teal : 			return "Teal"
+				case .blue : 			return "Blue"
 			}
 		}
 		
@@ -132,23 +192,18 @@ extension UnsplashFilter
 			switch self
 			{
 				case .black_and_white : return .gray
-				case .black : return .black
-				case .white : return .white
-				case .yellow : return .yellow
-				case .orange : return .orange
-				case .red : return .red
-				case .purple : return .purple
-				case .magenta : return .pink
-				case .green : return .green
-				case .teal : return SwiftUI.Color(red:0.0, green:0.66, blue:0.66)
-				case .blue : return .blue
-				default: return .clear
+				case .black : 			return .black
+				case .white : 			return .white
+				case .yellow : 			return .yellow
+				case .orange : 			return .orange
+				case .red : 			return .red
+				case .purple : 			return .purple
+				case .magenta : 		return .pink
+				case .green : 			return .green
+				case .teal : 			return SwiftUI.Color(red:0.0, green:0.66, blue:0.66)
+				case .blue : 			return .blue
+				default: 				return .clear
 			}
-		}
-		
-		static var allIdentifiers:[String]
-		{
-			self.allCases.map { $0.identifier }
 		}
 	}
 }

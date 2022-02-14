@@ -35,29 +35,32 @@ public struct UnsplashFilterBar : View
 	// Model
 	
 	@ObservedObject var selectedContainer:Container
+	@ObservedObject var filter:UnsplashFilter
+	@State private var searchString:String = ""
 	
 	// For some reason having more than one @State var crashes SwiftUI here, so we'll bundle the three needed
 	// properties in a helper class called UsplashFilterData. Seems to be a functioning workaround for now.
 	
-//	@State private var searchString:String = ""
 //	@State private var orientation:String = ""
 //	@State private var color:String = ""
-	@State private var filterData = UnsplashFilterData()
+//	@State private var filterData = UnsplashFilterData()
 	
 	// Init
 	
-	public init(with selectedContainer:Container)
+	public init(with selectedContainer:Container, filter:UnsplashFilter)
 	{
 		self.selectedContainer = selectedContainer
+		self.filter = filter
+		self.searchString = filter.searchString
 		
-		if let filter = selectedContainer.filter as? UnsplashFilter
-		{
-			self.filterData.searchString = filter.searchString
-			self.filterData.orientation = filter.orientation ?? .any
-			self.filterData.color = filter.color ?? .any
-		}
-		
-		self.filterData.didChange = self.updateFilter
+//		if let filter = selectedContainer.filter as? UnsplashFilter
+//		{
+//			self.filterData.searchString = filter.searchString
+//			self.filterData.orientation = filter.orientation ?? .any
+//			self.filterData.color = filter.color ?? .any
+//		}
+//
+//		self.filterData.didChange = self.updateFilter
 	}
 	
 	var unsplashContainer:UnsplashContainer?
@@ -72,7 +75,7 @@ public struct UnsplashFilterBar : View
 	
 	var isSaveEnabled:Bool
 	{
-		!self.filterData.searchString.isEmpty
+		!self.searchString.isEmpty
 	}
 	
 	var description:String
@@ -88,15 +91,15 @@ public struct UnsplashFilterBar : View
 		{
 			if let container = self.unsplashContainer, let saveHandler = self.saveHandler
 			{
-				TextField("Search", text:self.$filterData.searchString)
+				TextField("Search", text:self.$searchString)
 				{
-					self.updateFilter()
+					self.filter.searchString = self.searchString
 				}
 				.textFieldStyle(RoundedBorderTextFieldStyle())
 				.frame(maxWidth:300)
 				
-				UnsplashOrientationView(filter:self.filterData)
-				UnsplashColorView(filter:self.filterData)
+				UnsplashOrientationView(filter:filter)
+				UnsplashColorView(filter:filter)
 				
 				Spacer()
 				
@@ -120,21 +123,21 @@ public struct UnsplashFilterBar : View
     
     /// This function is called whenever a filter parameter in the search bar was changed
 	
-    func updateFilter()
-    {
-		let searchString = self.filterData.searchString
-
-		var orientation:UnsplashFilter.Orientation?  = self.filterData.orientation
-		if orientation == .any { orientation = nil }
-
-		var color:UnsplashFilter.Color? = self.filterData.color
-		if color == .any { color = nil }
-		
-		self.selectedContainer.filter = UnsplashFilter(
-			searchString:searchString,
-			orientation:orientation,
-			color:color)
-    }
+//    func updateFilter()
+//    {
+//		let searchString = self.filterData.searchString
+//
+//		var orientation:UnsplashFilter.Orientation?  = self.filterData.orientation
+//		if orientation == .any { orientation = nil }
+//
+//		var color:UnsplashFilter.Color? = self.filterData.color
+//		if color == .any { color = nil }
+//
+//		self.selectedContainer.filter = UnsplashFilter(
+//			searchString:searchString,
+//			orientation:orientation,
+//			color:color)
+//    }
 }
 
 
@@ -143,7 +146,7 @@ public struct UnsplashFilterBar : View
 
 struct UnsplashOrientationView : View
 {
-	@ObservedObject var filter:UnsplashFilterData
+	@ObservedObject var filter:UnsplashFilter
 	
 	var body: some View
 	{
@@ -169,7 +172,7 @@ struct UnsplashOrientationView : View
 
 struct UnsplashColorView : View
 {
-	@ObservedObject var filter:UnsplashFilterData
+	@ObservedObject var filter:UnsplashFilter
 	
 	var body: some View
 	{
@@ -193,22 +196,22 @@ struct UnsplashColorView : View
 //----------------------------------------------------------------------------------------------------------------------
 
 
-class UnsplashFilterData : ObservableObject
-{
-	@Published var searchString:String = ""
-
-	@Published var orientation:UnsplashFilter.Orientation = .any
-	{
-		didSet { self.didChange() }
-	}
-	
-	@Published var color:UnsplashFilter.Color = .any
-	{
-		didSet { self.didChange() }
-	}
-	
-	var didChange:()->Void = { }
-}
+//class UnsplashFilterData : ObservableObject
+//{
+//	@Published var searchString:String = ""
+//
+//	@Published var orientation:UnsplashFilter.Orientation = .any
+//	{
+//		didSet { self.didChange() }
+//	}
+//	
+//	@Published var color:UnsplashFilter.Color = .any
+//	{
+//		didSet { self.didChange() }
+//	}
+//	
+//	var didChange:()->Void = { }
+//}
 
 
 //----------------------------------------------------------------------------------------------------------------------

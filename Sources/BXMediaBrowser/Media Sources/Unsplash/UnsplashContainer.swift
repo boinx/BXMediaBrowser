@@ -40,12 +40,10 @@ open class UnsplashContainer : Container
 {
 	class UnsplashData
 	{
-		var filter = UnsplashFilter()
+		var lastUsedFilter = UnsplashFilter()
 		var page = 0
 		var photos:[UnsplashPhoto] = []
 	}
-	
-	let _unsplashData = UnsplashData()
 	
 	public typealias SaveContainerHandler = (UnsplashContainer)->Void
 	
@@ -67,7 +65,8 @@ open class UnsplashContainer : Container
 			identifier: identifier,
 			icon: icon,
 			name: name,
-			data: self._unsplashData,
+			data: UnsplashData(),
+			filter: UnsplashFilter(),
 			loadHandler: Self.loadContents,
 			removeHandler: removeHandler)
 		
@@ -99,23 +98,26 @@ open class UnsplashContainer : Container
 		var objects:[Object] = []
 		
 		guard let unsplashData = data as? UnsplashData else { return (containers,objects) }
+		guard let unsplashFilter = filter as? UnsplashFilter else { return (containers,objects) }
 		
-		// If the search string has changed, then clear the results
+		// If the search string has changed, then clear the results and store the new filter 
 		
-		if (filter as? UnsplashFilter) != unsplashData.filter
+		if unsplashFilter != unsplashData.lastUsedFilter
 		{
 			unsplashData.page = 0
 			unsplashData.photos = []
+			unsplashData.lastUsedFilter.searchString = unsplashFilter.searchString
+			unsplashData.lastUsedFilter.orientation = unsplashFilter.orientation
+			unsplashData.lastUsedFilter.color = unsplashFilter.color
 			UnsplashSource.log.verbose {"    clear search results"}
 		}
 		
 		// Append the next page of search results
 			
-		if let unplashFilter = filter as? UnsplashFilter, !unplashFilter.searchString.isEmpty
+		if !unsplashFilter.searchString.isEmpty
 		{
 			unsplashData.page += 1
-			unsplashData.filter = unplashFilter
-			unsplashData.photos += try await self.photos(for:unplashFilter, page:unsplashData.page)
+			unsplashData.photos += try await self.photos(for:unsplashFilter, page:unsplashData.page)
 			UnsplashSource.log.verbose {"    appending page \(unsplashData.page)"}
 		}
 		
@@ -155,14 +157,14 @@ open class UnsplashContainer : Container
 			URLQueryItem(name:"per_page", value:"30")
 		]
 		
-		if let orientation = filter.orientation
+		if filter.orientation != .any
 		{
-			urlComponents.queryItems?.append(URLQueryItem(name:"orientation", value:orientation.rawValue))
+			urlComponents.queryItems?.append(URLQueryItem(name:"orientation", value:filter.orientation.rawValue))
 		}
 		
-		if let color = filter.color
+		if filter.color != .any
 		{
-			urlComponents.queryItems?.append(URLQueryItem(name:"color", value:color.rawValue))
+			urlComponents.queryItems?.append(URLQueryItem(name:"color", value:filter.color.rawValue))
 		}
 		
 		guard let url = urlComponents.url else { throw Error.loadContentsFailed }
@@ -207,12 +209,14 @@ open class UnsplashContainer : Container
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	/// Encodes/decodes a UnsplashFilter from Data
+	
 	var filterData:Data?
 	{
 		get
 		{
 			guard let unsplashData = self.data as? UnsplashData else { return nil }
-			let filter = unsplashData.filter
+			let filter = unsplashData.lastUsedFilter
 			let data = try? JSONEncoder().encode(filter)
 			return data
 		}
@@ -222,30 +226,31 @@ open class UnsplashContainer : Container
 			guard let data = newValue else { return }
 			guard let unsplashData = self.data as? UnsplashData else { return }
 			guard let filter = try? JSONDecoder().decode(UnsplashFilter.self, from:data) else { return }
-			unsplashData.filter = filter
+			unsplashData.lastUsedFilter = filter
 		}
 	}
 
-
+	/// Returns a textual description of the filter params (for displaying in the UI)
+	
 	var description:String
 	{
 		guard let filter = self.filter as? UnsplashFilter else { return "" }
 		return Self.description(with:filter)
 	}
 
+	/// Returns a textual description of the filter params (for displaying in the UI)
 
 	class func description(with filter:UnsplashFilter) -> String
 	{
 		let searchString = filter.searchString
-		let orientation = filter.orientation?.localizedName ?? ""
-		let color = filter.color?.localizedName ?? ""
+		let orientation = filter.orientation != .any ? filter.orientation.localizedName : ""
+		let color = filter.color != .any ? filter.color.localizedName : ""
 
 		var description = searchString
 		if !orientation.isEmpty { description += ", \(orientation)" }
 		if !color.isEmpty { description += ", \(color)" }
 		return description
 	}
-
 
 	/// Returns a description of the contents of this Container
 	
