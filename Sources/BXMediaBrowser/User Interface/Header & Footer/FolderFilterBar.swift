@@ -39,7 +39,7 @@ public struct FolderFilterBar : View
 	
 	// Init
 	
-	public init(with selectedContainer:Container , filter:FolderFilter)
+	public init(with selectedContainer:Container, filter:FolderFilter)
 	{
 		self.selectedContainer = selectedContainer
 		self.filter = filter
