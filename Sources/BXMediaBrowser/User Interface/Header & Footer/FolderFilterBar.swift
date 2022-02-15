@@ -62,6 +62,8 @@ public struct FolderFilterBar : View
 
 			// Sort order
 			
+			Text("Sort by:")
+			
 			MenuButton(sortController.kind.localizedName)
 			{
 				ForEach(sortController.allowedSortKinds, id:\.self)
