@@ -47,6 +47,16 @@ open class FolderSource : Source, AccessControl
 		FolderSource.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
 		super.init(identifier:Self.identifier, name:"Finder")
 		self.loader = Loader(identifier:self.identifier, loadHandler:self.loadContainers)
+		
+		SortController.shared.register(
+			kind: .alphabetical,
+			ascendingComparator: SortController.compareAlphabeticalAscending,
+			descendingComparator: SortController.compareAlphabeticalDescending)
+		
+		SortController.shared.register(
+			kind: .creationDate,
+			ascendingComparator: SortController.compareCreationDateAscending,
+			descendingComparator: SortController.compareCreationDateDescending)
 	}
 
 
@@ -160,6 +170,64 @@ open class FolderSource : Source, AccessControl
 		
 		return logger
 	}()
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+extension SortController.Kind
+{
+	public static let alphabetical = "alphabetical"
+}
+
+
+extension SortController
+{
+	public static func compareAlphabeticalAscending(_ object1:Object,_ object2:Object) -> Bool
+	{
+		let name1 = object1.name as NSString
+		let name2 = object2.name
+		return name1.localizedStandardCompare(name2) == .orderedAscending
+	}
+	
+	public static func compareAlphabeticalDescending(_ object1:Object,_ object2:Object) -> Bool
+	{
+		let name1 = object1.name as NSString
+		let name2 = object2.name
+		return name1.localizedStandardCompare(name2) == .orderedDescending
+	}
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+extension SortController.Kind
+{
+	public static let creationDate = "creationDate"
+}
+
+
+extension SortController
+{
+	public static func compareCreationDateAscending(_ object1:Object,_ object2:Object) -> Bool
+	{
+		guard let url1 = object1.data as? URL else { return false }
+		guard let url2 = object2.data as? URL else { return false }
+		guard let date1 = url1.creationDate else { return false }
+		guard let date2 = url2.creationDate else { return false }
+		return date1 < date2
+	}
+	
+	public static func compareCreationDateDescending(_ object1:Object,_ object2:Object) -> Bool
+	{
+		guard let url1 = object1.data as? URL else { return false }
+		guard let url2 = object2.data as? URL else { return false }
+		guard let date1 = url1.creationDate else { return false }
+		guard let date2 = url2.creationDate else { return false }
+		return date1 > date2
+	}
 }
 
 

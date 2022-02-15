@@ -136,8 +136,8 @@ open class FolderContainer : Container
 		
 		// Sort according to specified sort order
 		
-		let sortOrder = filter.sortOrder
-		objects.sort(by:sortOrder.compare)
+		let comparator = SortController.shared.currentComparator
+		objects.sort(by:comparator)
 		
 		// Return contents
 		
@@ -218,6 +218,20 @@ open class FolderContainer : Container
 		NSWorkspace.shared.selectFile(url.path, inFileViewerRootedAtPath:url.deletingLastPathComponent().path)
 		#endif
 	}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - Sorting
+	
+	/// This property determines in which group the shared sort parameters are stored
+	
+	override open var sortGroupKey:String { "FolderContainer" }
+	
+	/// Returns the list of allowed sort Kinds for this Container
+		
+	override open var allowedSortKinds:[SortController.Kind] { [.alphabetical,.creationDate] }
 }
 
 

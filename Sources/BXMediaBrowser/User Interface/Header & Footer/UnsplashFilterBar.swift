@@ -36,6 +36,7 @@ public struct UnsplashFilterBar : View
 	
 	@ObservedObject var selectedContainer:Container
 	@ObservedObject var filter:UnsplashFilter
+	@EnvironmentObject var sortController:SortController
 	@State private var searchString:String = ""
 	
 	// For some reason having more than one @State var crashes SwiftUI here, so we'll bundle the three needed

@@ -46,8 +46,16 @@ open class Library : ObservableObject, StateSaving
 	
 	@Published public var selectedContainer:Container? = nil
 	{
-		willSet { selectedContainer?.purgeCachedDataOfObjects() }
-		didSet { selectedContainer?.cancelPurgeCachedDataOfObjects() }
+		willSet
+		{
+			selectedContainer?.purgeCachedDataOfObjects()
+		}
+		
+		didSet
+		{
+			selectedContainer?.cancelPurgeCachedDataOfObjects()
+			SortController.shared.currentContainer = selectedContainer
+		}
 	}
 	
 	/// Internal helper object that coordinates library state saving

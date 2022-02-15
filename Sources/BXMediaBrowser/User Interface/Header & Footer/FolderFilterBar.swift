@@ -36,6 +36,7 @@ public struct FolderFilterBar : View
 	
 	@ObservedObject var selectedContainer:Container
 	@ObservedObject var filter:FolderFilter
+	@EnvironmentObject var sortController:SortController
 	
 	// Init
 	
@@ -61,22 +62,36 @@ public struct FolderFilterBar : View
 
 			// Sort order
 			
-			MenuButton(self.filter.sortOrder.localizedName)
+			MenuButton(sortController.kind.localizedName)
 			{
-				ForEach(FolderFilter.sortOrderCases, id:\.self)
+				ForEach(sortController.allowedSortKinds, id:\.self)
 				{
-					value in
+					kind in
 					
-					Button(value.localizedName)
+					Button(kind.localizedName)
 					{
-						self.filter.sortOrder = value
+						sortController.kind = kind
 					}
 				}
 			}
 			.fixedSize()
+			
+			if #available(macOS 11, iOS 13, *)
+			{
+				SwiftUI.Image(systemName:directionIcon)
+					.onTapGesture
+					{
+						sortController.toggleDirection()
+					}
+			}
 		}
 		.padding(.horizontal,20)
 		.padding(.vertical,10)
+    }
+    
+    var directionIcon:String
+    {
+		sortController.direction == .ascending ? "chevron.up" : "chevron.down"
     }
 }
 

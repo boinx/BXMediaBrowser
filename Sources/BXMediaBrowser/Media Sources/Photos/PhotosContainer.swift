@@ -283,6 +283,20 @@ public class PhotosContainer : Container
 		let str = n.localizedImagesString
 		return str
     }
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - Sorting
+	
+	/// This property determines in which group the shared sort parameters are stored
+	
+	override open var sortGroupKey:String { "PhotosContainer" }
+	
+	/// Returns the list of allowed sort Kinds for this Container
+		
+	override open var allowedSortKinds:[SortController.Kind] { [.creationDate] }
 }
 
 

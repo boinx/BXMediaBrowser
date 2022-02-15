@@ -365,6 +365,20 @@ open class Container : ObservableObject, Identifiable, StateSaving
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: - Sorting
+	
+	/// This property determines in which group the shared sort parameters are stored
+	
+	open var sortGroupKey:String { "Container" }
+	
+	/// Returns the list of allowed sort Kinds for this Container
+		
+	open var allowedSortKinds:[SortController.Kind] { [.alphabetical] }
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
 	// MARK: - Info
 	
 	/// Returns a description of the contents of this Container

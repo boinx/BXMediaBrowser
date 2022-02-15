@@ -229,6 +229,15 @@ public class MusicContainer : Container
 		let str = n.localizedFilesString
 		return str
     }
+
+
+	/// This property determines in which group the shared sort parameters are stored
+	
+	override open var sortGroupKey:String { "MusicContainer" }
+	
+	/// Returns the list of allowed sort Kinds for this Container
+		
+	override open var allowedSortKinds:[SortController.Kind] { [] }
 }
 
 

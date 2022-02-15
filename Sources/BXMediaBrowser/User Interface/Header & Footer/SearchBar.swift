@@ -35,6 +35,7 @@ public struct SearchBar : View
 	// Model
 	
 	@ObservedObject var selectedContainer:Container
+	@EnvironmentObject var sortController:SortController
 	
 	// Init
 	
