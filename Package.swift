@@ -6,6 +6,7 @@ import PackageDescription
 let package = Package(
 
     name: "BXMediaBrowser",
+    defaultLocalization: "en",
     
     // Deployment targets for each supported platform
     
