@@ -382,8 +382,8 @@ extension ObjectCollectionView
 					.debounce(for:0.05, scheduler:DispatchQueue.main)
 					.sink
 					{
-						[weak self] _ in
-						self?.shouldAnimate = true
+						[weak self] objects in
+						self?.shouldAnimate = objects.count <= 1000
 						self?._updateDataSource()
 					}
 			}
