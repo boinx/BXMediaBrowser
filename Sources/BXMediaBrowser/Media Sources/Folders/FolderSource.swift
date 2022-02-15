@@ -50,13 +50,11 @@ open class FolderSource : Source, AccessControl
 		
 		SortController.shared.register(
 			kind: .alphabetical,
-			ascendingComparator: SortController.compareAlphabeticalAscending,
-			descendingComparator: SortController.compareAlphabeticalDescending)
+			comparator: SortController.compareAlphabetical)
 		
 		SortController.shared.register(
 			kind: .creationDate,
-			ascendingComparator: SortController.compareCreationDateAscending,
-			descendingComparator: SortController.compareCreationDateDescending)
+			comparator: SortController.compareCreationDate)
 	}
 
 
@@ -184,18 +182,11 @@ extension SortController.Kind
 
 extension SortController
 {
-	public static func compareAlphabeticalAscending(_ object1:Object,_ object2:Object) -> Bool
+	public static func compareAlphabetical(_ object1:Object,_ object2:Object) -> Bool
 	{
 		let name1 = object1.name as NSString
 		let name2 = object2.name
 		return name1.localizedStandardCompare(name2) == .orderedAscending
-	}
-	
-	public static func compareAlphabeticalDescending(_ object1:Object,_ object2:Object) -> Bool
-	{
-		let name1 = object1.name as NSString
-		let name2 = object2.name
-		return name1.localizedStandardCompare(name2) == .orderedDescending
 	}
 }
 
@@ -211,22 +202,13 @@ extension SortController.Kind
 
 extension SortController
 {
-	public static func compareCreationDateAscending(_ object1:Object,_ object2:Object) -> Bool
+	public static func compareCreationDate(_ object1:Object,_ object2:Object) -> Bool
 	{
 		guard let url1 = object1.data as? URL else { return false }
 		guard let url2 = object2.data as? URL else { return false }
 		guard let date1 = url1.creationDate else { return false }
 		guard let date2 = url2.creationDate else { return false }
 		return date1 < date2
-	}
-	
-	public static func compareCreationDateDescending(_ object1:Object,_ object2:Object) -> Bool
-	{
-		guard let url1 = object1.data as? URL else { return false }
-		guard let url2 = object2.data as? URL else { return false }
-		guard let date1 = url1.creationDate else { return false }
-		guard let date2 = url2.creationDate else { return false }
-		return date1 > date2
 	}
 }
 

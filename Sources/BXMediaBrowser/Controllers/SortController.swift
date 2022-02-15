@@ -51,6 +51,9 @@ public class SortController : ObservableObject
 		didSet { self.didSelectContainer() }
 	}
 	
+	/// This function is called when a Container is selected. In this case the current sorting Kind is validated
+	/// against the Kinds that are allowed by the Container.
+	
 	func didSelectContainer()
 	{
 		if !allowedSortKinds.contains(self.kind)
@@ -59,15 +62,21 @@ public class SortController : ObservableObject
 		}
 	}
 	
+	/// Returns the group key of the currentContainer. Sorting parameters are shared within a group.
+	
 	var sortGroupKey:String
 	{
 		currentContainer?.sortGroupKey ?? ""
 	}
 	
+	/// Returns the allowed sorting Kinds for the currentContainer.
+	
 	var allowedSortKinds:[Kind]
 	{
 		currentContainer?.allowedSortKinds ?? []
 	}
+	
+	/// Reloads the currentContainer. This function should be called whenever the sorting parameters have changed.
 	
 	func reloadCurrentContainer()
 	{
@@ -138,40 +147,39 @@ public class SortController : ObservableObject
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	/// A Comparator closure is reponsible for comparing two Object according to a metric that is useful for
+	/// A Comparator closure is reponsible for comparing two Objects according to a metric that is useful for
 	/// sorting a list of Objects.
 	
 	public typealias Comparator = (Object,Object) -> Bool
 
-
-	/// An Entry stores the localized name (for the sorting type) and two Comparator closures for ascending
-	/// and descending Directions.
-	
-	public struct Entry
-	{
-		var comparator:[Direction:Comparator]
-	}
-	
-	
 	/// Registers a new Comparator for the specified Kind
 	
-	public func register(kind:Kind, ascendingComparator:@escaping Comparator, descendingComparator:@escaping Comparator)
+	public func register(kind:Kind, comparator:@escaping Comparator)
 	{
-		self.entry[kind] = Entry(comparator:
-		[
-			.ascending:ascendingComparator,
-			.descending:descendingComparator
-		])
+		self.comparator[kind] = comparator
 	}
-	
 	
 	/// Returns the Comparator for the specified Kind
 	
 	public func comparator(for kind:Kind, direction:Direction) -> Comparator
 	{
-		guard let entry = self.entry[kind] else { return { _,_ in false } }
-		guard let comparator = entry.comparator[direction] else { return { _,_ in false } }
-		return comparator
+		guard let comparator = self.comparator[kind] else { return { _,_ in false } }
+		
+		// If the sorting direction is ascending, then return the Comparator directly
+		
+		if direction == .ascending
+		{
+			return comparator
+		}
+		
+		// Descending, then return an inverted Comparator
+		
+		let invertedComparator:Comparator =
+		{
+			!comparator($0,$1)
+		}
+		
+		return invertedComparator
 	}
 	
 	/// Returns the selected Comparator for the currentContainer
@@ -181,9 +189,9 @@ public class SortController : ObservableObject
 		self.comparator(for:kind, direction:direction)
 	}
 	
-	/// Stores the registered Entries by Kind
+	/// Stores the registered Comparators by Kind
 	
-	private var entry:[Kind:Entry] = [:]
+	private var comparator:[Kind:Comparator] = [:]
 }
 
 
