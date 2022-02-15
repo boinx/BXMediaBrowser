@@ -60,6 +60,7 @@ public class MusicContainer : Container
 			icon:icon,
 			name:name,
 			data:data,
+			filter:MusicFilter(),
 			loadHandler:Self.loadContents)
 	}
 	
@@ -92,6 +93,7 @@ public class MusicContainer : Container
 		var objects:[Object] = []
 		
 		guard let musicData = data as? MusicData else { throw Error.loadContentsFailed }
+		guard let musicFilter = filter as? MusicFilter else { throw Error.loadContentsFailed }
 		
 		switch musicData
 		{
@@ -208,6 +210,13 @@ public class MusicContainer : Container
 				}
 		}
 
+		// Sort according to specified sort order
+		
+		let comparator = SortController.shared.currentComparator
+		objects.sort(by:comparator)
+		
+		// Return contents
+		
 		return (containers,objects)
 	}
 
@@ -237,7 +246,7 @@ public class MusicContainer : Container
 	
 	/// Returns the list of allowed sort Kinds for this Container
 		
-	override open var allowedSortKinds:[SortController.Kind] { [] }
+	override open var allowedSortKinds:[SortController.Kind] { [.artist,.album,.genre,.duration] }
 }
 
 

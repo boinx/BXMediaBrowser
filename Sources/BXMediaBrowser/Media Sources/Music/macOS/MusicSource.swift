@@ -103,6 +103,24 @@ public class MusicSource : Source, AccessControl
 		{
 			[weak self] _ in self?.reload()
 		}
+
+		// Register sorting Kinds
+		
+		SortController.shared.register(
+			kind: .artist,
+			comparator: SortController.compareArtist)
+		
+		SortController.shared.register(
+			kind: .album,
+			comparator: SortController.compareAlbum)
+		
+		SortController.shared.register(
+			kind: .genre,
+			comparator: SortController.compareGenre)
+		
+		SortController.shared.register(
+			kind: .duration,
+			comparator: SortController.compareDuration)
 	}
 
 
@@ -257,6 +275,94 @@ public class MusicSource : Source, AccessControl
 }
 	
 	
+//----------------------------------------------------------------------------------------------------------------------
+
+
+extension SortController.Kind
+{
+	public static let artist = "artist"
+}
+
+
+extension SortController
+{
+	public static func compareArtist(_ object1:Object,_ object2:Object) -> Bool
+	{
+		guard let item1 = (object1 as? MusicObject)?.data as? ITLibMediaItem else { return false }
+		guard let item2 = (object2 as? MusicObject)?.data as? ITLibMediaItem else { return false }
+		let artist1 = item1.artist?.name ?? ""
+		let artist2 = item2.artist?.name ?? ""
+		return artist1 < artist2
+	}
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+extension SortController.Kind
+{
+	public static let album = "album"
+}
+
+
+extension SortController
+{
+	public static func compareAlbum(_ object1:Object,_ object2:Object) -> Bool
+	{
+		guard let item1 = (object1 as? MusicObject)?.data as? ITLibMediaItem else { return false }
+		guard let item2 = (object2 as? MusicObject)?.data as? ITLibMediaItem else { return false }
+		let album1 = item1.album.title ?? ""
+		let album2 = item2.album.title ?? ""
+		return album1 < album2
+	}
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+extension SortController.Kind
+{
+	public static let genre = "genre"
+}
+
+
+extension SortController
+{
+	public static func compareGenre(_ object1:Object,_ object2:Object) -> Bool
+	{
+		guard let item1 = (object1 as? MusicObject)?.data as? ITLibMediaItem else { return false }
+		guard let item2 = (object2 as? MusicObject)?.data as? ITLibMediaItem else { return false }
+		let genre1 = item1.genre
+		let genre2 = item2.genre
+		return genre1 < genre2
+	}
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+extension SortController.Kind
+{
+	public static let duration = "duration"
+}
+
+
+extension SortController
+{
+	public static func compareDuration(_ object1:Object,_ object2:Object) -> Bool
+	{
+		guard let item1 = (object1 as? MusicObject)?.data as? ITLibMediaItem else { return false }
+		guard let item2 = (object2 as? MusicObject)?.data as? ITLibMediaItem else { return false }
+		let totalTime1 = item1.totalTime
+		let totalTime2 = item2.totalTime
+		return totalTime1 < totalTime2
+	}
+}
+
+
 //----------------------------------------------------------------------------------------------------------------------
 
 
