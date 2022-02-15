@@ -34,20 +34,6 @@ open class FolderFilter : Object.Filter
 	/// The search string is used for Object filtering
 	
 	@Published var searchString:String = ""
-	
-	/// This property influences the sorting of the filtered list
-	
-	@Published var sortOrder:SortOrder = .alphabetical(direction:.ascending)
-
-	/// The list of supported SortOrders
-	
-	public static let sortOrderCases:[SortOrder] =
-	[
-		.alphabetical(direction:.ascending),
-		.alphabetical(direction:.descending),
-		.creationDate(direction:.ascending),
-		.creationDate(direction:.descending),
-	]
 }
 
 

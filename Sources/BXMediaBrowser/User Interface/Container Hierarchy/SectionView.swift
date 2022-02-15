@@ -72,7 +72,7 @@ public struct SectionView : View
 					{
 						if #available(macOS 11.0, iOS 13, *)
 						{
-							Image(systemName:"plus.circle").onTapGesture
+							SwiftUI.Image(systemName:"plus.circle").onTapGesture
 							{
 								addSourceHandler(section)
 							}
