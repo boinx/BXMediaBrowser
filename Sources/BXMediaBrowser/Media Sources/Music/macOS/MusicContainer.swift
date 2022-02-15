@@ -119,7 +119,8 @@ public class MusicContainer : Container
 						identifier:"MusicSource:Album:\(album.persistentID)",
 						icon:"square",
 						name:album.title ?? "Album",
-						data:.album(album:album, allMediaItems:allMediaItems))
+						data:.album(album:album, allMediaItems:allMediaItems),
+						allowedSortKinds:[.artist,.genre,.duration])
 				}
 			
 			// Loads the sub-containers for the top-level "Artists" folder
@@ -132,7 +133,8 @@ public class MusicContainer : Container
 						identifier:"MusicSource:Artist:\(artist.persistentID)",
 						icon:"person",
 						name:artist.name ?? "Artist",
-						data:.artist(artist:artist, allMediaItems:allMediaItems))
+						data:.artist(artist:artist, allMediaItems:allMediaItems),
+						allowedSortKinds:[.album,.genre,.duration])
 				}
 				
 			// Loads the sub-containers for a playlist folder
@@ -169,7 +171,8 @@ public class MusicContainer : Container
 								identifier:"MusicSource:Playlist:\(playlist.persistentID)",
 								icon:"folder",
 								name:playlist.name,
-								data:.playlistFolder(playlists:childPlaylists, allPlaylists:allPlaylists))
+								data:.playlistFolder(playlists:childPlaylists, allPlaylists:allPlaylists),
+								allowedSortKinds:[])
 					}
 				}
 				
@@ -246,7 +249,9 @@ public class MusicContainer : Container
 	
 	/// Returns the list of allowed sort Kinds for this Container
 		
-	override open var allowedSortKinds:[SortController.Kind] { [.artist,.album,.genre,.duration] }
+	override open var allowedSortKinds:[SortController.Kind] { _allowedSortKinds }
+	
+	internal var _allowedSortKinds:[SortController.Kind] = [.artist,.album,.genre,.duration]
 }
 
 
@@ -272,7 +277,8 @@ extension MusicContainer
 			identifier:"MusicSource:Playlist:\(playlist.persistentID)",
 			icon:icon,
 			name:playlist.name,
-			data:.playlist(playlist:playlist))
+			data:.playlist(playlist:playlist),
+			allowedSortKinds:[])
 	}
 
 	/// Returns an array of tracks sorted by name

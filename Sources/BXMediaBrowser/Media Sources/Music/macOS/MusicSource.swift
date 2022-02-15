@@ -191,11 +191,11 @@ public class MusicSource : Source, AccessControl
 		
 		containers += Self.makeMusicContainer(identifier:"MusicSource:Songs", icon:"music.note", name:"Songs", data:MusicContainer.MusicData.library(allMediaItems:allMediaItems))
 
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Artists", icon:"music.mic", name:"Artists", data:MusicContainer.MusicData.artistFolder(allMediaItems:allMediaItems))
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Artists", icon:"music.mic", name:"Artists", data:MusicContainer.MusicData.artistFolder(allMediaItems:allMediaItems), allowedSortKinds:[.album,.genre,.duration])
 
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Albums", icon:"square.stack", name:"Albums", data:MusicContainer.MusicData.albumFolder(allMediaItems:allMediaItems))
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Albums", icon:"square.stack", name:"Albums", data:MusicContainer.MusicData.albumFolder(allMediaItems:allMediaItems), allowedSortKinds:[.artist,.genre,.duration])
 
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Playlists", icon:"music.note.list", name:"Playlists", data:MusicContainer.MusicData.playlistFolder(playlists:topLevelPlaylists, allPlaylists:allPlaylists))
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Playlists", icon:"music.note.list", name:"Playlists", data:MusicContainer.MusicData.playlistFolder(playlists:topLevelPlaylists, allPlaylists:allPlaylists), allowedSortKinds:[])
 
 		return containers
 	}
@@ -206,7 +206,7 @@ public class MusicSource : Source, AccessControl
 
 	/// Tries to reuse an existing Container from the cache before creating a new one and storing it in the cache.
 	
-	class func makeMusicContainer(identifier:String, icon:String?, name:String, data:MusicContainer.MusicData) -> MusicContainer
+	class func makeMusicContainer(identifier:String, icon:String?, name:String, data:MusicContainer.MusicData, allowedSortKinds:[SortController.Kind] = [.artist,.album,.genre,.duration]) -> MusicContainer
 	{
 		MusicSource.log.verbose {"\(Self.self).\(#function) \(identifier)"}
 
@@ -228,7 +228,9 @@ public class MusicSource : Source, AccessControl
 				icon:icon,
 				name:name,
 				data:data)
-
+			
+			container._allowedSortKinds = allowedSortKinds
+			
 			Self.cachedContainers[identifier] = container
 
 			return container
