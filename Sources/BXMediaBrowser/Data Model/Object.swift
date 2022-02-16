@@ -31,7 +31,7 @@ import UniformTypeIdentifiers
 //----------------------------------------------------------------------------------------------------------------------
 
 
-open class Object : NSObject, ObservableObject, Identifiable
+open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 {
 	/// This unique identifier is persistent across application launches and should be able to locate an object again
 	
@@ -100,6 +100,9 @@ open class Object : NSObject, ObservableObject, Identifiable
 		
 		Task
 		{
+			let token = self.beginSignpost(in:"Object","load")
+			defer { self.endSignpost(with:token, in:"Object","load") }
+
 			let image = try? await self.loader.thumbnailImage
 			let metadata = try? await self.loader.metadata
 

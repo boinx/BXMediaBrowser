@@ -33,7 +33,7 @@ import SwiftUI
 /// A Container is the main data structure to create tree like graphs. Each Container has a list of sub-containers
 /// and a list of Objects (media files).
 
-open class Container : ObservableObject, Identifiable, StateSaving
+open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMixin
 {
 	/// The identifier specifies the location of a Container
 	
@@ -213,6 +213,9 @@ open class Container : ObservableObject, Identifiable, StateSaving
 		{
 			do
 			{
+				let token = self.beginSignpost(in:"Container","load")
+				defer { self.endSignpost(with:token, in:"Container","load") }
+		
 				// Show spinning wheel
 				
 				await MainActor.run
