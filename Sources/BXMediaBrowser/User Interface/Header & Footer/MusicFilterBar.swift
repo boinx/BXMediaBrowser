@@ -62,29 +62,35 @@ public struct MusicFilterBar : View
 
 			// Sort order
 			
-			Text("Sort by:")
-			
-			MenuButton(sortController.kind.localizedName)
+			if !selectedContainer.allowedSortKinds.isEmpty
 			{
-				ForEach(sortController.allowedSortKinds, id:\.self)
+				Text("Sort by:")
+				
+				MenuButton(sortController.kind.localizedName)
 				{
-					kind in
-					
-					Button(kind.localizedName)
+					ForEach(sortController.allowedSortKinds, id:\.self)
 					{
-						sortController.kind = kind
+						kind in
+						
+						Button(kind.localizedName)
+						{
+							sortController.kind = kind
+						}
 					}
 				}
-			}
-			.fixedSize()
-			
-			if #available(macOS 11, iOS 13, *)
-			{
-				SwiftUI.Image(systemName:directionIcon)
-					.onTapGesture
-					{
-						sortController.toggleDirection()
-					}
+				.fixedSize()
+				
+				if #available(macOS 11, iOS 13, *)
+				{
+					SwiftUI.Image(systemName:directionIcon)
+						.padding(.vertical,6)
+						.padding(.horizontal,2)
+						.contentShape(Rectangle())
+						.onTapGesture
+						{
+							sortController.toggleDirection()
+						}
+				}
 			}
 		}
 		.padding(.horizontal,20)

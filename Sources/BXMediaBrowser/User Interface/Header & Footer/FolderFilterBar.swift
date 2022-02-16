@@ -81,6 +81,9 @@ public struct FolderFilterBar : View
 			if #available(macOS 11, iOS 13, *)
 			{
 				SwiftUI.Image(systemName:directionIcon)
+					.padding(.vertical,6)
+					.padding(.horizontal,2)
+					.contentShape(Rectangle())
 					.onTapGesture
 					{
 						sortController.toggleDirection()
