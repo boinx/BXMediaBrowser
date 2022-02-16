@@ -151,10 +151,14 @@ public class MusicSource : Source, AccessControl
 	
 	private func reload()
 	{
-		MusicSource.log.debug {"\(Self.self).\(#function) \(Self.identifier)"}
-
 		Task
 		{
+			// Only reload if it was already loaded before
+			
+			guard await self.isLoaded else { return }
+			
+			MusicSource.log.debug {"\(Self.self).\(#function) \(Self.identifier)"}
+			
 			// First reload the ITLibrary. Unfortunately this has to be done manually and it is monolithic.
 			// We cannot detect granular changes to individual playlists.
 
