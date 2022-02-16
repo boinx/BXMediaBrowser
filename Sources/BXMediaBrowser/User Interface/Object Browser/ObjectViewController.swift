@@ -49,6 +49,10 @@ public class ObjectViewController : NSCollectionViewItem
 		}
 	}
 	
+	/// This externally supplied handler is called when the cell is double-clicked
+	
+	var doubleClickHandler:(()->Void)? = nil
+	
 	/// References to subscriptions
 	
 	var observers:[Any] = []
@@ -151,9 +155,22 @@ public class ObjectViewController : NSCollectionViewItem
 				return self.buildContextMenu(for:objectView, object:object)
 			}
 		}
+		
+		// Configure double-click
+		
+		self.setupDoubleClick()
 	}
 	
 
+	func setupDoubleClick()
+	{
+		let doubleClick = NSClickGestureRecognizer(target:self, action:#selector(onDoubleClick(_:)))
+		doubleClick.numberOfClicksRequired = 2
+		doubleClick.delaysPrimaryMouseButtonEvents = false
+		self.view.addGestureRecognizer(doubleClick)
+	}
+	
+	
 	/// Loads the Object thumbnail and metadata into memory
 	
     func loadIfNeeded()
@@ -266,10 +283,26 @@ public class ObjectViewController : NSCollectionViewItem
 		guard let collectionView = self.collectionView as? QuicklookCollectionView else { return }
 		collectionView.quickLook()
 	}
+	
+	
+	@IBAction func onDoubleClick(_ sender:Any?)
+	{
+		if let doubleClickHandler = self.doubleClickHandler
+		{
+			doubleClickHandler()
+		}
+		else
+		{
+			self.quickLook()
+		}
+	}
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
+
+
+// MARK: - QuickLook
 
 
 extension ObjectViewController : QLPreviewItem
