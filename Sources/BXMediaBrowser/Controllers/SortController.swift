@@ -30,7 +30,7 @@ import SwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public class SortController : ObservableObject
+public class SortController : ObservableObject, BXSignpostMixin
 {
 	public static let shared = SortController()
 	
@@ -43,10 +43,12 @@ public class SortController : ObservableObject
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: - Selected Container
+	
 	/// The currentContainer has properties like sortGroupKey or allowSortKinds that are needed to access the
 	/// appropriate sorting properties.
 	
-	@Published public var currentContainer:Container? = nil
+	@Published public var selectedContainer:Container? = nil
 	{
 		didSet { self.didSelectContainer() }
 	}
@@ -66,31 +68,33 @@ public class SortController : ObservableObject
 	
 	var sortGroupKey:String
 	{
-		currentContainer?.sortGroupKey ?? ""
+		selectedContainer?.sortGroupKey ?? ""
 	}
 	
 	/// Returns the allowed sorting Kinds for the currentContainer.
 	
 	var allowedSortKinds:[Kind]
 	{
-		currentContainer?.allowedSortKinds ?? []
+		selectedContainer?.allowedSortKinds ?? []
 	}
 	
-	/// Reloads the currentContainer. This function should be called whenever the sorting parameters have changed.
+	/// Reloads the selectedContainer. This function should be called whenever the sorting parameters have changed.
 	
 	func reloadCurrentContainer()
 	{
-		self.currentContainer?.load()
+		self.selectedContainer?.load()
 	}
 	
 	
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	/// The Kind is basically just an identifier string
+	// MARK: - Settings
 	
 	public typealias Kind = String
 
+	/// The kind determines how Objects are sorted
+	
 	public var kind:Kind
 	{
 		set
@@ -107,6 +111,9 @@ public class SortController : ObservableObject
 		}
 	}
 	
+	// Sorting Kind is stored in a dictionary, grouped by Container type. All Containers with the same
+	// sortGroupKey share their sorting settings.
+	
 	private var _kind:[String:Kind] = [:]
 
 
@@ -120,6 +127,8 @@ public class SortController : ObservableObject
 		case ascending
 		case descending
 	}
+	
+	/// The Direction determines whether Objects are sorted ascending or descending
 	
 	public var direction:Direction
 	{
@@ -136,34 +145,48 @@ public class SortController : ObservableObject
 		}
 	}
 	
+	// Sorting Direction is stored in a dictionary, grouped by Container type. All Containers with the same
+	// sortGroupKey share their sorting settings.
+	
+	private var _direction:[String:Direction] = [:]
+	
+	/// Toggles the current sorting Direction
+	
 	public func toggleDirection()
 	{
 		self.direction = direction == .ascending ? .descending : .ascending
 	}
 	
-	private var _direction:[String:Direction] = [:]
-	
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: - Sorting
+	
 	/// A Comparator closure is reponsible for comparing two Objects according to a metric that is useful for
 	/// sorting a list of Objects.
 	
 	public typealias Comparator = (Object,Object) -> Bool
 
+
+	/// Stores the registered Comparators by Kind
+	
+	private var _comparator:[Kind:Comparator] = [:]
+	
+	
 	/// Registers a new Comparator for the specified Kind
 	
 	public func register(kind:Kind, comparator:@escaping Comparator)
 	{
-		self.comparator[kind] = comparator
+		self._comparator[kind] = comparator
 	}
+	
 	
 	/// Returns the Comparator for the specified Kind
 	
 	public func comparator(for kind:Kind, direction:Direction) -> Comparator
 	{
-		guard let comparator = self.comparator[kind] else { return { _,_ in false } }
+		guard let comparator = self._comparator[kind] else { return { _,_ in false } }
 		
 		// If the sorting direction is ascending, then return the Comparator directly
 		
@@ -182,22 +205,31 @@ public class SortController : ObservableObject
 		return invertedComparator
 	}
 	
+	
 	/// Returns the selected Comparator for the currentContainer
 	
-	public var currentComparator:Comparator
+	public var comparator:Comparator
 	{
 		self.comparator(for:kind, direction:direction)
 	}
 	
-	/// Stores the registered Comparators by Kind
+	/// Sort the specified array of Objects according to the current settings
 	
-	private var comparator:[Kind:Comparator] = [:]
+	public func sort(_ objects:inout [Objects])
+	{
+		let token = self.beginSignpost(in:"SortController","sort")
+		defer { self.endSignpost(with:token, in:"SortController","sort") }
+		
+		objects.sort(by:comparator)
+	}
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
+// MARK: - Localization
+	
 extension SortController.Kind
 {
 	/// Returns a localized string for displaying the sorting Kind in the user interface

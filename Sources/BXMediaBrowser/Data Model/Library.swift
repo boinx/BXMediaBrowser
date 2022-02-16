@@ -54,7 +54,7 @@ open class Library : ObservableObject, StateSaving
 		didSet
 		{
 			selectedContainer?.cancelPurgeCachedDataOfObjects()
-			SortController.shared.currentContainer = selectedContainer
+			SortController.shared.selectedContainer = selectedContainer
 		}
 	}
 	

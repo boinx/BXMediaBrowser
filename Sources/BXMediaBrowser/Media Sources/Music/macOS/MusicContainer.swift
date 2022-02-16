@@ -25,8 +25,8 @@
 
 #if os(macOS)
 
-import BXSwiftUtils
 import iTunesLibrary
+import BXSwiftUtils
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -215,7 +215,7 @@ public class MusicContainer : Container
 
 		// Sort according to specified sort order
 		
-		let comparator = SortController.shared.currentComparator
+		let comparator = SortController.shared.comparator
 		objects.sort(by:comparator)
 		
 		// Return contents
