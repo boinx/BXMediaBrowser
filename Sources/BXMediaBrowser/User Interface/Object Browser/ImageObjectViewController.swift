@@ -68,6 +68,22 @@ public class ImageObjectViewController : ObjectViewController
 		self.imageView?.imageScaling = .scaleProportionallyUpOrDown
 		self.useCountView?.imageScaling = .scaleProportionallyUpOrDown
 		self.ratingView?.imageScaling = .scaleProportionallyUpOrDown
+		
+		guard let thumbnail = self.imageView?.subviews.first else { return }
+		guard let useCountView = useCountView else { return }
+		guard let ratingView = ratingView else { return }
+		
+		ratingView.translatesAutoresizingMaskIntoConstraints = false
+		ratingView.leftAnchor.constraint(equalTo:thumbnail.leftAnchor, constant:4).isActive = true
+		ratingView.topAnchor.constraint(equalTo:thumbnail.topAnchor, constant:4).isActive = true
+		ratingView.widthAnchor.constraint(equalToConstant:20).isActive = true
+		ratingView.heightAnchor.constraint(equalToConstant:20).isActive = true
+		
+		useCountView.translatesAutoresizingMaskIntoConstraints = false
+		useCountView.rightAnchor.constraint(equalTo:thumbnail.rightAnchor, constant:-4).isActive = true
+		useCountView.topAnchor.constraint(equalTo:thumbnail.topAnchor, constant:4).isActive = true
+		useCountView.widthAnchor.constraint(equalToConstant:20).isActive = true
+		useCountView.heightAnchor.constraint(equalToConstant:20).isActive = true
 	}
 	
 	
