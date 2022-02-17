@@ -184,9 +184,10 @@ public class SortController : ObservableObject, BXSignpostMixin
 	
 	/// Returns the Comparator for the specified Kind
 	
-	public func comparator(for kind:Kind, direction:Direction) -> Comparator
+	public func comparator(for kind:Kind, direction:Direction) -> Comparator?
 	{
-		guard let comparator = self._comparator[kind] else { return { _,_ in false } }
+		guard kind != .never else { return nil }
+		guard let comparator = self._comparator[kind] else { return nil }
 		
 		// If the sorting direction is ascending, then return the Comparator directly
 		
@@ -208,19 +209,22 @@ public class SortController : ObservableObject, BXSignpostMixin
 	
 	/// Returns the selected Comparator for the currentContainer
 	
-	public var comparator:Comparator
+	public var comparator:Comparator?
 	{
 		self.comparator(for:kind, direction:direction)
 	}
 	
 	/// Sort the specified array of Objects according to the current settings
 	
-	public func sort(_ objects:inout [Objects])
+	public func sort(_ objects:inout [Object])
 	{
 		let token = self.beginSignpost(in:"SortController","sort")
 		defer { self.endSignpost(with:token, in:"SortController","sort") }
 		
-		objects.sort(by:comparator)
+		if let comparator = self.comparator
+		{
+			objects.sort(by:comparator)
+		}
 	}
 }
 

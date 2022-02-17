@@ -136,8 +136,7 @@ open class FolderContainer : Container
 		
 		// Sort according to specified sort order
 		
-		let comparator = SortController.shared.comparator
-		objects.sort(by:comparator)
+		SortController.shared.sort(&objects)
 		
 		// Return contents
 		
