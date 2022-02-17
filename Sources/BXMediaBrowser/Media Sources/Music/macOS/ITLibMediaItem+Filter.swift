@@ -33,31 +33,43 @@ import iTunesLibrary
 
 extension ITLibMediaItem
 {
+	/// Returns true if any of the item properties contains the filter's searchString
+	
 	public func contains(_ filter:Any?) -> Bool
 	{
-		guard let str = filter as? String else { return true }
-		guard !str.isEmpty else { return true }
-		let searchString = str.lowercased()
+		guard let musicFilter = filter as? MusicFilter else { return true }
+		let searchString = musicFilter.searchString.lowercased()
+		guard !searchString.isEmpty else { return true }
 
+		// Check item name
+		
 		if self.title.lowercased().contains(searchString)
 		{
 			return true
 		}
+		
+		// Check artist name
 		
 		if let artist = self.artist, let name = artist.name, name.lowercased().contains(searchString)
 		{
 			return true
 		}
 		
+		// Check composer name
+		
 		if self.composer.lowercased().contains(searchString)
 		{
 			return true
 		}
 		
+		// Check album name
+		
 		if let album = self.album.title, album.lowercased().contains(searchString)
 		{
 			return true
 		}
+		
+		// Check genre name
 		
 		if self.genre.lowercased().contains(searchString)
 		{

@@ -193,11 +193,13 @@ public class MusicSource : Source, AccessControl
 		let allPlaylists = library.allPlaylists
 		let topLevelPlaylists = allPlaylists.filter { $0.parentID == nil }
 		
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Songs", icon:"music.note", name:"Songs", data:MusicContainer.MusicData.library(allMediaItems:allMediaItems))
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Songs", icon:"music.note", name:"Songs", data:MusicContainer.MusicData.library(allMediaItems:allMediaItems), allowedSortKinds:[.never,.artist,.album,.genre,.duration])
 
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Artists", icon:"music.mic", name:"Artists", data:MusicContainer.MusicData.artistFolder(allMediaItems:allMediaItems), allowedSortKinds:[.album,.genre,.duration])
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Artists", icon:"music.mic", name:"Artists", data:MusicContainer.MusicData.artistFolder(allMediaItems:allMediaItems), allowedSortKinds:[.never,.album,.genre,.duration])
 
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Albums", icon:"square.stack", name:"Albums", data:MusicContainer.MusicData.albumFolder(allMediaItems:allMediaItems), allowedSortKinds:[.artist,.genre,.duration])
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Albums", icon:"square.stack", name:"Albums", data:MusicContainer.MusicData.albumFolder(allMediaItems:allMediaItems), allowedSortKinds:[.never,.artist,.genre,.duration])
+
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Genres", icon:"guitars", name:"Genres", data:MusicContainer.MusicData.genreFolder(allMediaItems:allMediaItems), allowedSortKinds:[.never,.artist,.album,.duration])
 
 		containers += Self.makeMusicContainer(identifier:"MusicSource:Playlists", icon:"music.note.list", name:"Playlists", data:MusicContainer.MusicData.playlistFolder(playlists:topLevelPlaylists, allPlaylists:allPlaylists), allowedSortKinds:[])
 
@@ -210,7 +212,7 @@ public class MusicSource : Source, AccessControl
 
 	/// Tries to reuse an existing Container from the cache before creating a new one and storing it in the cache.
 	
-	class func makeMusicContainer(identifier:String, icon:String?, name:String, data:MusicContainer.MusicData, allowedSortKinds:[SortController.Kind] = [.artist,.album,.genre,.duration]) -> MusicContainer
+	class func makeMusicContainer(identifier:String, icon:String?, name:String, data:MusicContainer.MusicData, allowedSortKinds:[SortController.Kind]) -> MusicContainer
 	{
 		MusicSource.log.verbose {"\(Self.self).\(#function) \(identifier)"}
 
@@ -281,6 +283,24 @@ public class MusicSource : Source, AccessControl
 }
 	
 	
+//----------------------------------------------------------------------------------------------------------------------
+
+
+extension SortController.Kind
+{
+	public static let never = "never"
+}
+
+
+extension SortController
+{
+	public static func compareNever(_ object1:Object,_ object2:Object) -> Bool
+	{
+		false
+	}
+}
+
+
 //----------------------------------------------------------------------------------------------------------------------
 
 

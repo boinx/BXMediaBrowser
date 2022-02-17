@@ -39,11 +39,13 @@ public class MusicContainer : Container
 	public enum MusicData
 	{
 		case library(allMediaItems:[ITLibMediaItem])
-		case albumFolder(allMediaItems:[ITLibMediaItem])
 		case artistFolder(allMediaItems:[ITLibMediaItem])
+		case albumFolder(allMediaItems:[ITLibMediaItem])
+		case genreFolder(allMediaItems:[ITLibMediaItem])
 		case playlistFolder(playlists:[ITLibPlaylist], allPlaylists:[ITLibPlaylist])
-		case album(album:ITLibAlbum, allMediaItems:[ITLibMediaItem])
 		case artist(artist:ITLibArtist, allMediaItems:[ITLibMediaItem])
+		case album(album:ITLibAlbum, allMediaItems:[ITLibMediaItem])
+		case genre(genre:String, allMediaItems:[ITLibMediaItem])
 		case playlist(playlist:ITLibPlaylist)
 	}
 
@@ -76,6 +78,7 @@ public class MusicContainer : Container
 			case .library: return false
 			case .album: return false
 			case .artist: return false
+			case .genre: return false
 			case .playlist: return false
 			default: return true
 		}
@@ -93,7 +96,6 @@ public class MusicContainer : Container
 		var objects:[Object] = []
 		
 		guard let musicData = data as? MusicData else { throw Error.loadContentsFailed }
-		guard let musicFilter = filter as? MusicFilter else { throw Error.loadContentsFailed }
 		
 		switch musicData
 		{
@@ -109,20 +111,6 @@ public class MusicContainer : Container
 					}
 				}
 
-			// Loads the sub-containers for the top-level "Albums" folder
-			
-			case .albumFolder(let allMediaItems):
-			
-				for album in Self.albums(with:allMediaItems)
-				{
-					containers += MusicSource.makeMusicContainer(
-						identifier:"MusicSource:Album:\(album.persistentID)",
-						icon:"square",
-						name:album.title ?? "Album",
-						data:.album(album:album, allMediaItems:allMediaItems),
-						allowedSortKinds:[.artist,.genre,.duration])
-				}
-			
 			// Loads the sub-containers for the top-level "Artists" folder
 			
 			case .artistFolder(let allMediaItems):
@@ -134,9 +122,37 @@ public class MusicContainer : Container
 						icon:"person",
 						name:artist.name ?? "Artist",
 						data:.artist(artist:artist, allMediaItems:allMediaItems),
-						allowedSortKinds:[.album,.genre,.duration])
+						allowedSortKinds:[.never,.album,.genre,.duration])
 				}
 				
+			// Loads the sub-containers for the top-level "Albums" folder
+			
+			case .albumFolder(let allMediaItems):
+			
+				for album in Self.albums(with:allMediaItems)
+				{
+					containers += MusicSource.makeMusicContainer(
+						identifier:"MusicSource:Album:\(album.persistentID)",
+						icon:"square",
+						name:album.title ?? "Album",
+						data:.album(album:album, allMediaItems:allMediaItems),
+						allowedSortKinds:[.never,.artist,.genre,.duration])
+				}
+			
+			// Loads the sub-containers for the top-level "Genres" folder
+			
+			case .genreFolder(let allMediaItems):
+			
+				for genre in Self.genres(with:allMediaItems)
+				{
+					containers += MusicSource.makeMusicContainer(
+						identifier:"MusicSource:Genre:\(genre)",
+						icon:"music.note",
+						name:genre,
+						data:.genre(genre:genre, allMediaItems:allMediaItems),
+						allowedSortKinds:[.never,.artist,.album,.duration])
+				}
+			
 			// Loads the sub-containers for a playlist folder
 			
 			case .playlistFolder(let playlists, let allPlaylists):
@@ -176,6 +192,18 @@ public class MusicContainer : Container
 					}
 				}
 				
+			// Load the objects (tracks) of an artist
+			
+			case .artist(let artist, let allMediaItems):
+			
+				for item in Self.mediaItems(for:artist, allMediaItems:allMediaItems)
+				{
+					if item.contains(filter)
+					{
+						objects += MusicSource.makeMusicObject(with:item)
+					}
+				}
+
 			// Load the objects (tracks) of an album
 			
 			case .album(let album, let allMediaItems):
@@ -188,11 +216,11 @@ public class MusicContainer : Container
 					}
 				}
 
-			// Load the objects (tracks) of an artist
+			// Load the objects (tracks) of an album
 			
-			case .artist(let artist, let allMediaItems):
+			case .genre(let genre, let allMediaItems):
 			
-				for item in Self.mediaItems(for:artist, allMediaItems:allMediaItems)
+				for item in Self.mediaItems(for:genre, allMediaItems:allMediaItems)
 				{
 					if item.contains(filter)
 					{
@@ -250,7 +278,7 @@ public class MusicContainer : Container
 		
 	override open var allowedSortKinds:[SortController.Kind] { _allowedSortKinds }
 	
-	internal var _allowedSortKinds:[SortController.Kind] = [.artist,.album,.genre,.duration]
+	internal var _allowedSortKinds:[SortController.Kind] = [.never,.artist,.album,.genre,.duration]
 }
 
 
@@ -323,13 +351,14 @@ extension MusicContainer
 	}
 	
 	
-	/// Returns an array of tracks for the specified album (sorted by track number)
+	/// Returns a alphabetically sorted array of genres
 	
-	class func mediaItems(for album:ITLibAlbum, allMediaItems:[ITLibMediaItem]) -> [ITLibMediaItem]
+	class func genres(with allMediaItems:[ITLibMediaItem]) -> [String]
 	{
-		allMediaItems
-			.filter { $0.album == album }
-			.sorted { $0.trackNumber < $1.trackNumber }
+		var tracksByGenre = Dictionary(grouping:allMediaItems, by:{ $0.genre })
+		tracksByGenre[""] = nil
+		let genres = tracksByGenre.keys
+		return genres.sorted { $0 < $1 }
 	}
 	
 	
@@ -340,6 +369,25 @@ extension MusicContainer
 		allMediaItems
 			.filter { $0.artist == artist }
 			.sorted { $0.title < $1.title }
+	}
+	
+	
+	/// Returns an array of tracks for the specified album (pre-sorted by track number)
+	
+	class func mediaItems(for album:ITLibAlbum, allMediaItems:[ITLibMediaItem]) -> [ITLibMediaItem]
+	{
+		allMediaItems
+			.filter { $0.album == album }
+			.sorted { $0.trackNumber < $1.trackNumber }
+	}
+	
+	
+	/// Returns an array of tracks for the specified genre
+	
+	class func mediaItems(for genre:String, allMediaItems:[ITLibMediaItem]) -> [ITLibMediaItem]
+	{
+		allMediaItems
+			.filter { $0.genre == genre }
 	}
 	
 	
