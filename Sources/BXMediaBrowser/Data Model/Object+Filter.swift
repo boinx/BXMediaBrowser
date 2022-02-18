@@ -71,6 +71,15 @@ extension Object
 			self.searchString  = try container.decode(String.self, forKey:.searchString)
 			self.rating  = try container.decode(Int.self, forKey:.rating)
 		}
+		
+		/// Returns a copy of this Filter
+		
+		open func copy() throws -> Self
+		{
+			let data = try JSONEncoder().encode(self)
+			let copy = try JSONDecoder().decode(Self.self, from:data)
+			return copy
+		}
 	}
 }
 
