@@ -357,10 +357,6 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 
 	// MARK: - Sorting
 	
-	/// This property determines in which group the shared sort parameters are stored
-	
-	open var sortGroupKey:String { "Container" }
-	
 	/// Returns the list of allowed sort Kinds for this Container
 		
 	open var allowedSortTypes:[Object.Filter.SortType] { [.alphabetical] }
