@@ -36,7 +36,6 @@ public struct FolderFilterBar : View
 	
 	@ObservedObject var selectedContainer:Container
 	@ObservedObject var filter:FolderFilter
-	@EnvironmentObject var sortController:SortController
 	
 	// Init
 	
