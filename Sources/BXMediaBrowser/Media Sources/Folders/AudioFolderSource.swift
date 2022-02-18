@@ -41,9 +41,9 @@ open class AudioFolderSource : FolderSource
 {
 	/// Creates a Container for the folder at the specified URL
 	
-	override open func createContainer(for url:URL) throws -> Container?
+	override open func createContainer(for url:URL, filter:FolderFilter) throws -> Container?
 	{
-		AudioFolderContainer(url:url)
+		AudioFolderContainer(url:url, filter:filter)
 		{
 			[weak self] in self?.removeContainer($0)
 		}

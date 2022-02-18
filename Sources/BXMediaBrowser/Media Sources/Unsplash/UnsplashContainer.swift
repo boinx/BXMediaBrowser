@@ -55,7 +55,7 @@ open class UnsplashContainer : Container
 
 	/// Creates a new Container for the folder at the specified URL
 	
-	public required init(identifier:String, icon:String, name:String, saveHandler:SaveContainerHandler? = nil, removeHandler:((Container)->Void)? = nil)
+	public required init(identifier:String, icon:String, name:String, filter:UnsplashFilter, saveHandler:SaveContainerHandler? = nil, removeHandler:((Container)->Void)? = nil)
 	{
 		UnsplashSource.log.verbose {"\(Self.self).\(#function) \(identifier)"}
 
@@ -66,7 +66,7 @@ open class UnsplashContainer : Container
 			icon: icon,
 			name: name,
 			data: UnsplashData(),
-			filter: UnsplashFilter(),
+			filter: filter,
 			loadHandler: Self.loadContents,
 			removeHandler: removeHandler)
 		

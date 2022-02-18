@@ -47,8 +47,8 @@ open class UnsplashSource : Source, AccessControl
 	public init()
 	{
 		UnsplashSource.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
-		super.init(identifier:Self.identifier, name:"Unsplash")
-		self.loader = Loader(identifier:self.identifier, loadHandler:self.loadContainers)
+		super.init(identifier:Self.identifier, name:"Unsplash", filter:UnsplashFilter())
+		self.loader = Loader(loadHandler:self.loadContainers)
 	}
 
 
@@ -59,7 +59,7 @@ open class UnsplashSource : Source, AccessControl
 	///
 	/// Subclasses can override this function, e.g. to load top level folder from the preferences file
 	
-	private func loadContainers(with sourceState:[String:Any]? = nil) async throws -> [Container]
+	private func loadContainers(with sourceState:[String:Any]? = nil, filter:Object.Filter) async throws -> [Container]
 	{
 		UnsplashSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
@@ -67,7 +67,7 @@ open class UnsplashSource : Source, AccessControl
 		
 		// Add Live Search
 		
-		containers += UnsplashContainer(identifier:"UnsplashSource:Search", icon:"magnifyingglass", name:"Search", saveHandler:
+		containers += UnsplashContainer(identifier:"UnsplashSource:Search", icon:"magnifyingglass", name:"Search", filter:UnsplashFilter(), saveHandler:
 		{
 			[weak self] in self?.saveContainer($0)
 		})
@@ -112,13 +112,10 @@ open class UnsplashSource : Source, AccessControl
 		let identifier = "UnsplashSource:\(searchString)/\(orientation)/\(color)".replacingOccurrences(of:" ", with:"-")
 		let name = UnsplashContainer.description(with:filter)
 		
-		let container = UnsplashContainer(identifier:identifier, icon:"rectangle.stack", name:name, removeHandler:
+		return UnsplashContainer(identifier:identifier, icon:"rectangle.stack", name:name, filter:filter, removeHandler:
 		{
 			[weak self] in self?.removeContainer($0)
 		})
-
-		container.filter = filter
-		return container
 	}
 
 

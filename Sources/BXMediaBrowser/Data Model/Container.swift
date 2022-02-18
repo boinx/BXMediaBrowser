@@ -54,7 +54,7 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 	/// This info can be used for filtering the Objects of this Container. Filtering works differently for the
 	/// various sources, as different metadata can be used when filtering.
 	
-	@Published public var filter:Any? = nil
+	public let filter:Object.Filter
 	
 	/// The Loader is responsible for loading the contents of this Container
 	
@@ -118,7 +118,7 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 	
 	/// Creates a new Container
 	
-	public init(identifier:String, icon:String? = nil, name:String, data:Any, filter:Any? = nil, loadHandler:@escaping Container.Loader.LoadHandler, removeHandler:((Container)->Void)? = nil)
+	public init(identifier:String, icon:String? = nil, name:String, data:Any, filter:Object.Filter, loadHandler:@escaping Container.Loader.LoadHandler, removeHandler:((Container)->Void)? = nil)
 	{
 		BXMediaBrowser.logDataModel.verbose {"\(Self.self).\(#function) \(identifier)"}
 
@@ -147,28 +147,18 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 	
 	open func setupFilterObserver()
 	{
-		// Reload Container when filter is completely replaced
+		// Reload Container when any property of the Filter has changed
 		
-		self.observers += self.$filter
-			.dropFirst(1)
+		self.observers += filter
+			.objectWillChange
 			.debounce(for:0.25, scheduler:RunLoop.main)
 			.sink
 			{
-				[weak self] _ in self?.load()
+				[weak self] _ in
+				guard let self = self else { return }
+				guard self.isSelected else { return }
+				self.load()
 			}
-		
-		// Also reload Container when a published property of an ObservableFilter has changed
-		
-		if let filter = self.filter as? Object.Filter
-		{
-			self.observers += filter
-				.objectWillChange
-				.debounce(for:0.25, scheduler:RunLoop.main)
-				.sink
-				{
-					[weak self] _ in self?.load()
-				}
-		}
 	}
 	
 	

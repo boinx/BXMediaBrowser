@@ -45,8 +45,8 @@ open class FolderSource : Source, AccessControl
 	public init()
 	{
 		FolderSource.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
-		super.init(identifier:Self.identifier, name:"Finder")
-		self.loader = Loader(identifier:self.identifier, loadHandler:self.loadContainers)
+		super.init(identifier:Self.identifier, name:"Finder", filter:FolderFilter())
+		self.loader = Loader(loadHandler:self.loadContainers)
 		
 		SortController.shared.register(
 			kind: .alphabetical,
@@ -80,9 +80,11 @@ open class FolderSource : Source, AccessControl
 	///
 	/// Subclasses can override this function, e.g. to load top level folder from the preferences file
 	
-	private func loadContainers(with sourceState:[String:Any]? = nil) async throws -> [Container]
+	private func loadContainers(with sourceState:[String:Any]? = nil, filter:Object.Filter) async throws -> [Container]
 	{
 		FolderSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
+		
+		guard let filter = filter as? FolderFilter else { throw Container.Error.loadContentsFailed }
 		
 		// Load stored bookmarks from state. Convert each bookmark to a folder url. If the folder
 		// still exists, then create a FolderContainer for it.
@@ -98,7 +100,7 @@ open class FolderSource : Source, AccessControl
 				
 			for folderURL in folderURLs
 			{
-				let container = try self.createContainer(for:folderURL)
+				let container = try self.createContainer(for:folderURL, filter:filter)
 				containers += container
 			}
 		}
@@ -110,11 +112,11 @@ open class FolderSource : Source, AccessControl
 	/// Creates a Container for the folder at the specified URL. Subclasses can override this
 	/// function to filter out some directories or return more specific Container subclasses.
 	
-	open func createContainer(for url:URL) throws -> Container?
+	open func createContainer(for url:URL, filter:FolderFilter) throws -> Container?
 	{
 		FolderSource.log.verbose {"\(Self.self).\(#function) \(url)"}
 
-		return FolderContainer(url:url)
+		return FolderContainer(url:url, filter:filter)
 		{
 			[weak self] in self?.removeContainer($0)
 		}

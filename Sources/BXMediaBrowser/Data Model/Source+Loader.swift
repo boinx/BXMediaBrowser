@@ -33,24 +33,22 @@ extension Source
 {
 	public actor Loader
 	{
-		public typealias LoadHandler = ([String:Any]?) async throws -> [Container]
+		public typealias LoadHandler = ([String:Any]?,Object.Filter) async throws -> [Container]
 		
-		let identifier:String
 		let loadHandler:LoadHandler
 		
 		/// Creates the thread-safe Loader for a Source
 		
-		init(identifier:String, loadHandler:@escaping LoadHandler)
+		init(loadHandler:@escaping LoadHandler)
 		{
-			self.identifier = identifier
 			self.loadHandler = loadHandler
 		}
 		
 		/// Loads the top-level containers of this source
 		
-		public func containers(with sourceState:[String:Any]? = nil) async throws -> [Container]
+		public func containers(with sourceState:[String:Any]? = nil, filter:Object.Filter) async throws -> [Container]
 		{
-			try await self.loadHandler(sourceState)
+			try await self.loadHandler(sourceState,filter)
 		}
 	}
 }

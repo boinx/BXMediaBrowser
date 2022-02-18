@@ -38,7 +38,7 @@ open class FolderContainer : Container
 	
 	/// Creates a new Container for the folder at the specified URL
 	
-	public required init(url:URL, removeHandler:((Container)->Void)? = nil)
+	public required init(url:URL, filter:FolderFilter, removeHandler:((Container)->Void)? = nil)
 	{
 		self.folderObserver = FolderObserver(url:url)
 		
@@ -46,7 +46,7 @@ open class FolderContainer : Container
 			identifier: FolderSource.identifier(for:url),
 			name: url.lastPathComponent,
 			data: url,
-			filter: FolderFilter(),
+			filter: filter,
 			loadHandler: Self.loadContents,
 			removeHandler: removeHandler)
 			
@@ -73,7 +73,7 @@ open class FolderContainer : Container
 	
 	/// Loads the (shallow) contents of this folder
 	
-	class func loadContents(for identifier:String, data:Any, filter:Any?) async throws -> Loader.Contents
+	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
 	{
 		FolderSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
@@ -105,29 +105,27 @@ open class FolderContainer : Container
 			guard url.isReadable else { continue }
 			guard !url.isHidden else { continue }
 			
-			// Skip files that do not meet search criteria
-			
-			if !searchString.isEmpty
-			{
-				let filename = url.lastPathComponent
-				guard filename.lowercased().contains(searchString) else { continue }
-			}
-			
-			// For a directory, create a sub-container
+			// For a directory, create a Container
 			
 			if url.isDirectory && !url.isPackage
 			{
-				if let container = try? Self.createContainer(for:url)
+				if let container = try? Self.createContainer(for:url, filter:filter)
 				{
 					containers.append(container)
 				}
 			}
 			
-			// For a file create a file object
+			// If a file meets the filter criteria create an Object
 			
 			else
 			{
-				if let object = try? Self.createObject(for:url), StatisticsController.shared.isSufficientRating(for:object)
+				if !searchString.isEmpty
+				{
+					let filename = url.lastPathComponent
+					guard filename.lowercased().contains(searchString) else { continue }
+				}
+			
+				if let object = try? Self.createObject(for:url), StatisticsController.shared.rating(for:object) >= filter.rating
 				{
 					objects.append(object)
 				}
@@ -166,11 +164,11 @@ open class FolderContainer : Container
 	///
 	/// Subclasses can override this function to filter out some directories.
 	
-	open class func createContainer(for url:URL) throws -> Container?
+	open class func createContainer(for url:URL, filter:FolderFilter) throws -> Container?
 	{
 		guard url.exists else { throw Container.Error.notFound }
 		guard url.isDirectory else { throw Container.Error.notFound }
-		return Self.init(url:url)
+		return Self.init(url:url, filter:filter)
 	}
 
 

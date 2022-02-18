@@ -86,9 +86,9 @@ public class MusicSource : Source, AccessControl
 
 		// Configure the Source
 		
-		super.init(identifier:Self.identifier, icon:Self.icon, name:"Music")
+		super.init(identifier:Self.identifier, icon:Self.icon, name:"Music", filter:MusicFilter())
 		
-		self.loader = Loader(identifier:self.identifier, loadHandler:Self.loadContainers)
+		self.loader = Loader(loadHandler:Self.loadContainers)
 		
 		// Get reference to Music library
 		
@@ -182,7 +182,7 @@ public class MusicSource : Source, AccessControl
 	///
 	/// Subclasses can override this function, e.g. to load top level folder from the preferences file
 	
-	private class func loadContainers(with sourceState:[String:Any]? = nil) async throws -> [Container]
+	private class func loadContainers(with sourceState:[String:Any]? = nil, filter:Object.Filter) async throws -> [Container]
 	{
 		MusicSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
 

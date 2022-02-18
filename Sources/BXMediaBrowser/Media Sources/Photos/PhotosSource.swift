@@ -59,8 +59,8 @@ public class PhotosSource : Source, AccessControl
 	{
 		PhotosSource.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
 
-		super.init(identifier:Self.identifier, icon:Self.icon, name:"Photos")
-		self.loader = Loader(identifier:self.identifier, loadHandler:self.loadContainers)
+		super.init(identifier:Self.identifier, icon:Self.icon, name:"Photos", filter:Object.Filter())
+		self.loader = Loader(loadHandler:self.loadContainers)
 
 		// Make sure we can detect changes to the library
 	
@@ -121,7 +121,7 @@ public class PhotosSource : Source, AccessControl
 	///
 	/// Subclasses can override this function, e.g. to load top level folder from the preferences file
 	
-	private func loadContainers(with sourceState:[String:Any]? = nil) async throws -> [Container]
+	private func loadContainers(with sourceState:[String:Any]? = nil, filter:Object.Filter) async throws -> [Container]
 	{
 		PhotosSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
@@ -129,7 +129,7 @@ public class PhotosSource : Source, AccessControl
 		
 		// Library
 		
-		let library = PhotosContainer(mediaType:.image)
+		let library = PhotosContainer(mediaType:.image, filter:filter)
 		containers += library
 
 		// Smart Albums
@@ -156,7 +156,7 @@ public class PhotosSource : Source, AccessControl
 		for i in 0 ..< smartFolders.count
 		{
 			let smartFolder = smartFolders[i]
-			let container = PhotosContainer(with:smartFolder)
+			let container = PhotosContainer(with:smartFolder, filter:filter)
 			containers += container
 		}
 
@@ -165,7 +165,8 @@ public class PhotosSource : Source, AccessControl
 		let container = PhotosContainer(
 			with:PHCollectionList.fetchTopLevelUserCollections(with:nil),
 			identifier:"PhotosSource:Albums",
-			name:"Albums")
+			name:"Albums",
+			filter:filter)
 			
 		containers += container
 		

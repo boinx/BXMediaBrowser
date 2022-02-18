@@ -38,7 +38,7 @@ public class PhotosContainer : Container
 //----------------------------------------------------------------------------------------------------------------------
 
 
- 	public init(mediaType:PHAssetMediaType)
+ 	public init(mediaType:PHAssetMediaType, filter:Object.Filter)
 	{
 		let identifier = "PhotosSource:Library"
 		let icon = "photo.on.rectangle"
@@ -53,25 +53,27 @@ public class PhotosContainer : Container
 			icon:icon,
 			name:name,
 			data:assets,
+			filter:filter,
 			loadHandler:Self.loadContents)
 
 		self.commonInit()
 	}
 	
 
-  	public init(with albums:PHFetchResult<PHCollection>, identifier:String, name:String)
+  	public init(with albums:PHFetchResult<PHCollection>, identifier:String, name:String, filter:Object.Filter)
 	{
 		super.init(
 			identifier:identifier,
 			name:name,
 			data:albums,
+			filter:filter,
 			loadHandler:Self.loadContents)
 
 		self.commonInit()
 	}
 	
 	
-	public init(with collectionList:PHCollectionList)
+	public init(with collectionList:PHCollectionList, filter:Object.Filter)
 	{
 		let identifier = "PhotosSource:\(collectionList.localIdentifier)"
 		let name = collectionList.localizedTitle ?? "Album"
@@ -80,13 +82,14 @@ public class PhotosContainer : Container
 			identifier:identifier,
 			name:name,
 			data:collectionList,
+			filter:filter,
 			loadHandler:Self.loadContents)
 
 		self.commonInit()
 	}
 
 
-	public init(with assetCollection:PHAssetCollection)
+	public init(with assetCollection:PHAssetCollection, filter:Object.Filter)
 	{
 		let identifier = "PhotosSource:\(assetCollection.localIdentifier)"
 		let name = assetCollection.localizedTitle ?? "Album"
@@ -96,13 +99,14 @@ public class PhotosContainer : Container
 			icon:"rectangle.stack",
 			name:name,
 			data:assetCollection,
+			filter:filter,
 			loadHandler:Self.loadContents)
 
 		self.commonInit()
 	}
     
 
-	public init(with collection:PHCollection)
+	public init(with collection:PHCollection, filter:Object.Filter)
 	{
 		let identifier = "PhotosSource:\(collection.localIdentifier)"
 		let name = collection.localizedTitle ?? "Album"
@@ -111,6 +115,7 @@ public class PhotosContainer : Container
 			identifier:identifier,
 			name:name,
 			data:collection,
+			filter:filter,
 			loadHandler:Self.loadContents)
 
 		self.commonInit()
@@ -141,7 +146,7 @@ public class PhotosContainer : Container
 
 	/// Loads the (shallow) contents of this folder
 	
-	class func loadContents(for identifier:String, data:Any, filter:Any?) async throws -> Loader.Contents
+	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
 	{
 		PhotosSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
@@ -170,15 +175,15 @@ public class PhotosContainer : Container
 
 						if let collectionList = collection as? PHCollectionList
 						{
-							containers += PhotosContainer(with:collectionList)
+							containers += PhotosContainer(with:collectionList, filter:filter)
 						}
 						else if let assetCollection = collection as? PHAssetCollection
 						{
-							containers += PhotosContainer(with:assetCollection)
+							containers += PhotosContainer(with:assetCollection, filter:filter)
 						}
 						else if let collection = collection as? PHCollection
 						{
-							containers += PhotosContainer(with:collection)
+							containers += PhotosContainer(with:collection, filter:filter)
 						}
 					}
 				}
@@ -187,7 +192,7 @@ public class PhotosContainer : Container
 				
 				else if let assetCollection = collection as? PHAssetCollection
 				{
-					let container = PhotosContainer(with:assetCollection)
+					let container = PhotosContainer(with:assetCollection, filter:filter)
 					containers += container
 				}
 			}
@@ -223,15 +228,15 @@ public class PhotosContainer : Container
 				
 				if let collectionList = item as? PHCollectionList
 				{
-					containers += PhotosContainer(with:collectionList)
+					containers += PhotosContainer(with:collectionList, filter:filter)
 				}
 				else if let assetCollection = item as? PHAssetCollection
 				{
-					containers += PhotosContainer(with:assetCollection)
+					containers += PhotosContainer(with:assetCollection, filter:filter)
 				}
 				else if let collection = item as? PHCollection
 				{
-					containers += PhotosContainer(with:collection)
+					containers += PhotosContainer(with:collection, filter:filter)
 				}
 				else if let asset = item as? PHAsset
 				{

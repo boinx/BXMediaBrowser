@@ -47,7 +47,7 @@ extension Container
 		
 		/// The LoadHandler is a pure function closure that returns the Contents of a Container
 		
-		public typealias LoadHandler = (String,Any,Any?) async throws -> Contents
+		public typealias LoadHandler = (String,Any,Object.Filter) async throws -> Contents
 
 		/// Creates a new Container with an externally supplied closure to load the contents
 		
@@ -59,7 +59,7 @@ extension Container
 
 		/// Loads the contents of this container
 		
-		public func contents(with data:Any, filter:Any?) async throws -> Contents
+		public func contents(with data:Any, filter:Object.Filter) async throws -> Contents
 		{
 			try await self.loadHandler(identifier,data,filter)
 		}

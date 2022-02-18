@@ -34,6 +34,11 @@ open class Source : ObservableObject, Identifiable, StateSaving
 	public let identifier:String
 	public let icon:CGImage?
 	public let name:String
+	
+	/// Filtering is specific to a Source, but its settings is shared by all Container created by this source.
+	
+	public let filter:Object.Filter
+	
 	public var loader:Loader! = nil
 	
 	/// The list of top-level containers
@@ -64,13 +69,14 @@ open class Source : ObservableObject, Identifiable, StateSaving
 	
 	/// Creates a Source with the specified identifier and name
 	
-	public init(identifier:String, icon:CGImage? = nil, name:String)
+	public init(identifier:String, icon:CGImage? = nil, name:String, filter:Object.Filter)
 	{
 		BXMediaBrowser.logDataModel.verbose {"\(Self.self).\(#function) \(identifier)"}
 
 		self.identifier = identifier
 		self.icon = icon
 		self.name = name
+		self.filter = filter
 	}
 
 	// Required by the Identifiable protocol
@@ -106,7 +112,7 @@ open class Source : ObservableObject, Identifiable, StateSaving
 
 				// Get new list of containers
 				
-				let containers = try await self.loader.containers(with:sourceState)
+				let containers = try await self.loader.containers(with:sourceState, filter:filter)
 				let names = containers.map { $0.name }.joined(separator:", ")
 				BXMediaBrowser.logDataModel.verbose {"    containers = \(names)"}
 
