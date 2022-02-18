@@ -45,7 +45,11 @@ public class ObjectViewController : NSCollectionViewItem
 		{
 			self.reset()
 			self.setup()
-			self.redraw()
+			
+			DispatchQueue.main.asyncIfNeeded
+			{
+				self.redraw()
+			}
 		}
 	}
 	
@@ -137,14 +141,14 @@ public class ObjectViewController : NSCollectionViewItem
 		
 		self.observers += object.$thumbnailImage.receive(on:RunLoop.main).sink
 		{
-			[weak self] _ in self?.redraw()
+			[weak self] _ in DispatchQueue.main.asyncIfNeeded { self?.redraw() }
 		}
 		
 		// When statistics for our object change also redraw
 		
 		self.observers += NotificationCenter.default.publisher(for:StatisticsController.didChangeNotification, object:object).sink
 		{
-			[weak self] _ in self?.redraw()
+			[weak self] _ in DispatchQueue.main.asyncIfNeeded { self?.redraw() }
 		}
 			
 		// Configure context menu
