@@ -195,17 +195,21 @@ public class ObjectViewController : NSCollectionViewItem
 			set:{ self.object?.rating = $0 }
 		)
 		
-		self.textField?.isHidden = false
-		self.ratingView?.isHidden = true
+		self.showRatingControl(false)
 
 		(self.view as? ObjectView)?.mouseHoverHandler =
 		{
-			[weak self] isInside in
-			guard let self = self else { return }
-			let showRating = isInside || self.object.rating > 0
-			self.textField?.isHidden = showRating
-			self.ratingView?.isHidden = !showRating
+			[weak self] in self?.showRatingControl($0)
 		}
+	}
+	
+	/// Toggles between name field and rating control
+	
+	func showRatingControl(_ isInside:Bool)
+	{
+		let showRating = isInside || self.object.rating > 0
+		self.textField?.isHidden = showRating
+		self.ratingView?.isHidden = !showRating
 	}
 	
 	/// Loads the Object thumbnail and metadata into memory
