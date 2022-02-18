@@ -269,7 +269,14 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 					self.isLoaded = false
 				}
 				
-				BXMediaBrowser.logDataModel.error {"ERROR \(error)"}
+				if let error = error as? Container.Error, error == .loadContentsCancelled
+				{
+					BXMediaBrowser.logDataModel.warning {"ERROR \(error)"}
+				}
+				else
+				{
+					BXMediaBrowser.logDataModel.error {"ERROR \(error)"}
+				}
 			}
 		}
 	}
