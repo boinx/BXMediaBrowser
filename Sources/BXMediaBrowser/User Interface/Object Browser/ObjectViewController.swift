@@ -205,7 +205,7 @@ public class ObjectViewController : NSCollectionViewItem
 	
 	/// Toggles between name field and rating control
 	
-	func showRatingControl(_ isInside:Bool)
+	open func showRatingControl(_ isInside:Bool)
 	{
 		let showRating = isInside || self.object.rating > 0
 		self.textField?.isHidden = showRating

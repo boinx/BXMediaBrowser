@@ -36,7 +36,7 @@ public class AudioObjectViewController : ObjectViewController
 {
 	// Outlets
 	
-    @IBOutlet weak open var button: NSButton?
+//    @IBOutlet weak open var button: NSButton?
     @IBOutlet weak open var nameField: NSTextField?
     @IBOutlet weak open var metadataField: NSTextField?
     @IBOutlet weak open var durationField: NSTextField?
@@ -61,6 +61,15 @@ public class AudioObjectViewController : ObjectViewController
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	/// Toggles between name field and rating control
+	
+	override open func showRatingControl(_ isInside:Bool)
+	{
+		let showRating = isInside || self.object.rating > 0
+		self.textField?.isHidden = false
+		self.ratingView?.isHidden = !showRating
+	}
+	
 	override open func redraw()
 	{
 		guard let object = object else { return }
@@ -120,20 +129,20 @@ public class AudioObjectViewController : ObjectViewController
 		{
 			if object.isLocallyAvailable
 			{
-				self.button?.image = NSImage(systemSymbolName:"play", accessibilityDescription:nil)
+//				self.button?.image = NSImage(systemSymbolName:"play", accessibilityDescription:nil)
 				self.imageView?.alphaValue = 1.0
 				self.nameField?.alphaValue = 1.0
 			}
 			else if object.isDownloadable
 			{
-				self.button?.image = NSImage(systemSymbolName:"icloud.and.arrow.down", accessibilityDescription:nil)
-				self.imageView?.alphaValue = 0.5
+				self.imageView?.image = NSImage(systemSymbolName:"icloud.and.arrow.down", accessibilityDescription:nil)
+				self.imageView?.alphaValue = 1.0
 				self.nameField?.alphaValue = 0.5
 			}
 			else
 			{
-				self.button?.image = NSImage(systemSymbolName:"exclamationmark.icloud", accessibilityDescription:nil)
-				self.imageView?.alphaValue = 0.5
+				self.imageView?.image = NSImage(systemSymbolName:"exclamationmark.icloud", accessibilityDescription:nil)
+				self.imageView?.alphaValue = 1.0
 				self.nameField?.alphaValue = 0.5
 			}
 		}
@@ -141,14 +150,14 @@ public class AudioObjectViewController : ObjectViewController
 		{
 			if object.isLocallyAvailable
 			{
-				self.button?.image = NSImage(named:"icon-play")
+				self.imageView?.image = NSImage(named:"icon-play")
 				self.imageView?.alphaValue = 1.0
 				self.nameField?.alphaValue = 1.0
 			}
 			else
 			{
-				self.button?.image = NSImage(named:"icon-cloud")
-				self.imageView?.alphaValue = 0.5
+				self.imageView?.image = NSImage(named:"icon-cloud")
+				self.imageView?.alphaValue = 1.0
 				self.nameField?.alphaValue = 0.5
 			}
 		}
