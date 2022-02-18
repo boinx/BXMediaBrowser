@@ -173,6 +173,10 @@ extension Object.Filter
 
 extension Object.Filter.SortType
 {
+	/// Special SortType that does not modify the ordering of Objects
+	
+	public static let never = "never"
+
 	/// Returns a localized string for displaying the sorting Kind in the user interface
 	
 	public var localizedName:String
