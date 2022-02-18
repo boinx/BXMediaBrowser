@@ -25,6 +25,7 @@
 
 import BXSwiftUtils
 import Foundation
+import SwiftUI
 
 #if os(macOS)
 import AppKit
@@ -36,7 +37,7 @@ import UIKIt
 //----------------------------------------------------------------------------------------------------------------------
 
 
-@MainActor public class StatisticsController
+public class StatisticsController : ObservableObject
 {
 	/// The shared singleton instance of this controller
 	
