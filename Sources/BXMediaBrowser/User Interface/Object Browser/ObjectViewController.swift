@@ -53,6 +53,11 @@ public class ObjectViewController : NSCollectionViewItem
 	
 	var doubleClickHandler:(()->Void)? = nil
 	
+	// Outlets to subviews
+	
+	@IBOutlet var ratingView:ObjectRatingView?
+	@IBOutlet var useCountView:NSImageView?
+
 	/// References to subscriptions
 	
 	var observers:[Any] = []
@@ -159,9 +164,15 @@ public class ObjectViewController : NSCollectionViewItem
 		// Configure double-click
 		
 		self.setupDoubleClick()
+		
+		// Configure mouse over behavior for rating control
+		
+		self.setupRatingControl()
 	}
 	
 
+	/// A double-click on the thumbnail executes the externally supplied doubleClickHandler.
+	
 	func setupDoubleClick()
 	{
 		let doubleClick = NSClickGestureRecognizer(target:self, action:#selector(onDoubleClick(_:)))
@@ -170,6 +181,28 @@ public class ObjectViewController : NSCollectionViewItem
 		self.view.addGestureRecognizer(doubleClick)
 	}
 	
+	/// Configures behavior when mouse moves over this cell. Default implementation hides the textfield
+	/// (filename) and shows the 5-star rating control.
+	
+	func setupRatingControl()
+	{
+		self.ratingView?.rating = Binding<Int>(
+			get:{ self.object?.rating ?? 0 },
+			set:{ self.object?.rating = $0 }
+		)
+		
+		self.textField?.isHidden = false
+		self.ratingView?.isHidden = true
+
+		(self.view as? ObjectView)?.mouseHoverHandler =
+		{
+			[weak self] isInside in
+			guard let self = self else { return }
+			let showRating = isInside || self.object.rating > 0
+			self.textField?.isHidden = showRating
+			self.ratingView?.isHidden = !showRating
+		}
+	}
 	
 	/// Loads the Object thumbnail and metadata into memory
 	

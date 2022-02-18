@@ -34,7 +34,50 @@ import AppKit
 
 class ObjectView : NSView
 {
-	typealias ContextMenuFactory = ()->NSMenu?
+	// MARK: - Hovering
+
+
+	/// This externally supplied handler is called whenever the mosue enters or leaves this view
+	
+	public var mouseHoverHandler:((Bool)->Void)? = nil
+
+
+	// Whenever the view frame changes, update the tracking area to detect mouse enter end exit events
+	
+	override func updateTrackingAreas()
+	{
+		super.updateTrackingAreas()
+		
+		self.trackingAreas.forEach { self.removeTrackingArea($0) }
+		
+		self.addTrackingArea(NSTrackingArea(
+			rect: self.bounds,
+			options: [.mouseEnteredAndExited,.activeInActiveApp,.assumeInside],
+			owner: self,
+			userInfo: nil))
+	}
+	
+	// When the mouse enters, make this view visible
+	
+	override func mouseEntered(with event:NSEvent)
+	{
+		self.mouseHoverHandler?(true)
+	}
+	
+	// When the mosue exits, hide this view again
+	
+	override func mouseExited(with event:NSEvent)
+	{
+		self.mouseHoverHandler?(false)
+	}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - Context Menu
+	
+	typealias ContextMenuFactory = () -> NSMenu?
 	
 	/// This closure returns the context menu for a ObjectCell
 	
@@ -46,7 +89,7 @@ class ObjectView : NSView
 	{
 		self.contextMenuFactory?()
 	}
-	
+
 }
 
 
