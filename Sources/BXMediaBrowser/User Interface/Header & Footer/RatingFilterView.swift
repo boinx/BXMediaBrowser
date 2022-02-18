@@ -30,80 +30,92 @@ import SwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public struct MusicFilterBar : View
+public struct RatingFilterView : View
 {
-	// Model
+	private var rating:Binding<Int>
 	
-	@ObservedObject var selectedContainer:Container
-	@ObservedObject var filter:MusicFilter
-	@EnvironmentObject var sortController:SortController
-	@EnvironmentObject var statisticsController:StatisticsController
-
+	private var maxRating:Int
+	
+	@Environment(\.controlSize) private var controlSize
+	
+	var size:CGFloat
+	{
+		switch controlSize
+		{
+			case .small: return 12.0
+			case .mini: return 9.0
+			default: return 16.0
+		}
+	}
+	
 	// Init
 	
-	public init(with selectedContainer:Container, filter:MusicFilter)
+	public init(rating:Binding<Int>, maxRating:Int = 5)
 	{
-		self.selectedContainer = selectedContainer
-		self.filter = filter
+		self.rating = rating
+		self.maxRating = maxRating
 	}
 	
 	// View
 	
 	public var body: some View
     {
-		HStack
+		// Draw 5 stars
+		
+		HStack(spacing:2)
 		{
-			// Search field
-			
-			TextField("Search", text:self.$filter.searchString)
-				.frame(maxWidth:300)
-				.textFieldStyle(RoundedBorderTextFieldStyle())
-
-			RatingFilterView(rating:self.$statisticsController.ratingFilter)
-
-			Spacer()
-
-			// Sort order
-			
-			if !selectedContainer.allowedSortKinds.isEmpty
+			if #available(macOS 11, *)
 			{
-				Text("Sort by:")
-				
-				MenuButton(sortController.kind.localizedName)
+				ForEach(1..<maxRating+1)
 				{
-					ForEach(sortController.allowedSortKinds, id:\.self)
-					{
-						kind in
-						
-						Button(kind.localizedName)
-						{
-							sortController.kind = kind
-						}
-					}
-				}
-				.fixedSize()
-				
-				if #available(macOS 11, iOS 13, *)
-				{
-					SwiftUI.Image(systemName:directionIcon)
-						.padding(.vertical,6)
-						.padding(.horizontal,2)
-						.contentShape(Rectangle())
-						.onTapGesture
-						{
-							sortController.toggleDirection()
-						}
+					i in
+
+					SwiftUI.Image(systemName:icon(for:i))
+						.foregroundColor(color(for:i))
 				}
 			}
 		}
-		.padding(.horizontal,20)
-		.padding(.vertical,10)
-    }
-    
-    var directionIcon:String
+		
+		// On drag change the rating filter value
+		
+//		.contentShape(Rectangle())
+		.gesture( DragGesture(minimumDistance:0).onChanged
+		{
+			setRating(with:$0)
+		}
+		.onEnded
+		{
+			setRating(with:$0)
+		})
+	}
+	
+	/// Returns the icon name for the specified index
+	
+    func icon(for index:Int) -> String
     {
-		sortController.direction == .ascending ? "chevron.up" : "chevron.down"
+		let rating = self.rating.wrappedValue
+		let icon = index <= rating ? "star.fill" : "star"
+		return icon
     }
+
+	/// Returns the icon color for the specified index
+	
+    func color(for index:Int) -> Color
+    {
+		let rating = self.rating.wrappedValue
+		return index <= rating ? Color.yellow : Color.gray
+    }
+
+	/// Changes the rating filter value according to the mouse location
+	
+	func setRating(with drag:DragGesture.Value)
+	{
+		let w:CGFloat = CGFloat(maxRating) * size
+		let f = CGFloat(maxRating)
+		let x = drag.location.x + 12
+
+		self.rating.wrappedValue = Int(f*x/w)
+	}
 }
 
 
