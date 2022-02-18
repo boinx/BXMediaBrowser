@@ -165,6 +165,15 @@ extension Object.Filter
 			.descending :
 			.ascending
 	}
+
+	/// Compares Object ratings
+	
+	public static func compareRating(_ object1:Object,_ object2:Object) -> Bool
+	{
+		let rating1 = StatisticsController.shared.rating(for:object1)
+		let rating2 = StatisticsController.shared.rating(for:object2)
+		return rating1 < rating2
+	}
 }
 
 
@@ -176,6 +185,10 @@ extension Object.Filter.SortType
 	/// Special SortType that does not modify the ordering of Objects
 	
 	public static let never = "never"
+
+	/// Sort Object by rating
+	
+	public static let rating = "rating"
 
 	/// Returns a localized string for displaying the sorting Kind in the user interface
 	

@@ -124,7 +124,7 @@ public class MusicContainer : Container
 						name:artist.name ?? "Artist",
 						data:.artist(artist:artist, allMediaItems:allMediaItems),
 						filter:filter,
-						allowedSortTypes:[.never,.album,.genre,.duration])
+						allowedSortTypes:[.never,.album,.genre,.duration,.rating])
 				}
 				
 			// Loads the sub-containers for the top-level "Albums" folder
@@ -139,7 +139,7 @@ public class MusicContainer : Container
 						name:album.title ?? "Album",
 						data:.album(album:album, allMediaItems:allMediaItems),
 						filter:filter,
-						allowedSortTypes:[.never,.artist,.genre,.duration])
+						allowedSortTypes:[.never,.artist,.genre,.duration,.rating])
 				}
 			
 			// Loads the sub-containers for the top-level "Genres" folder
@@ -154,7 +154,7 @@ public class MusicContainer : Container
 						name:genre,
 						data:.genre(genre:genre, allMediaItems:allMediaItems),
 						filter:filter,
-						allowedSortTypes:[.never,.artist,.album,.duration])
+						allowedSortTypes:[.never,.artist,.album,.duration,.rating])
 				}
 			
 			// Loads the sub-containers for a playlist folder
@@ -283,7 +283,7 @@ public class MusicContainer : Container
 		
 	override open var allowedSortTypes:[Object.Filter.SortType] { _allowedSortTypes }
 	
-	internal var _allowedSortTypes:[Object.Filter.SortType] = [.never,.artist,.album,.genre,.duration]
+	internal var _allowedSortTypes:[Object.Filter.SortType] = [.never,.artist,.album,.genre,.duration,.rating]
 }
 
 

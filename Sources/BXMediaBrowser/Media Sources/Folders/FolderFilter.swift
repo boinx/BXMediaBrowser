@@ -45,6 +45,12 @@ open class FolderFilter : Object.Filter
 			if sortDirection == .ascending { return comparator }
 			return { !comparator($0,$1) }
 		}
+		else if sortType == .rating
+		{
+			let comparator = Self.compareRating
+			if sortDirection == .ascending { return comparator }
+			return { !comparator($0,$1) }
+		}
 		
 		return nil
 	}

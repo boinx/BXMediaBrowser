@@ -228,7 +228,7 @@ open class FolderContainer : Container
 	
 	/// Returns the list of allowed sort Kinds for this Container
 		
-	override open var allowedSortTypes:[Object.Filter.SortType] { [.alphabetical,.creationDate] }
+	override open var allowedSortTypes:[Object.Filter.SortType] { [.alphabetical,.creationDate,.rating] }
 }
 
 
