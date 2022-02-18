@@ -297,7 +297,7 @@ public class PhotosContainer : Container
 	
 	/// Returns the list of allowed sort Kinds for this Container
 		
-	override open var allowedSortTypes:[Object.Filter.SortType] { [.creationDate] }
+	override open var allowedSortTypes:[Object.Filter.SortType] { [.creationDate,.rating] }
 }
 
 

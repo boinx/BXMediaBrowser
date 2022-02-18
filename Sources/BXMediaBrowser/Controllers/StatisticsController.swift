@@ -53,6 +53,8 @@ public class StatisticsController : ObservableObject
 	
 	public static let didChangeNotification = Notification.Name("BXMediaBrowser.StatisticsController.didChange")
 	
+	public static let ratingNotification = Notification.Name("BXMediaBrowser.StatisticsController.rating")
+	
 	
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -146,6 +148,7 @@ public class StatisticsController : ObservableObject
 	{
 		self._rating[object.identifier] = rating
 		NotificationCenter.default.post(name: Self.didChangeNotification, object:object)
+		NotificationCenter.default.post(name: Self.ratingNotification, object:object)
 	}
 
 	/// Returns the rating for the specified Object

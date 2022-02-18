@@ -163,6 +163,19 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 				guard self.isSelected else { return }
 				self.load()
 			}
+
+		// If this container is set to sort by rating and an Object reating has changed, then also reload
+		
+		self.observers += NotificationCenter.default.publisher(for:StatisticsController.ratingNotification, object:nil)
+			.debounce(for:1.0, scheduler:RunLoop.main)
+			.sink
+			{
+				[weak self] _ in
+				guard let self = self else { return }
+				guard self.isSelected else { return }
+				guard self.filter.sortType == .rating else { return }
+				self.load()
+			}
 	}
 	
 	
