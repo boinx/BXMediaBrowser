@@ -36,8 +36,6 @@ public struct UnsplashFilterBar : View
 	
 	@ObservedObject var selectedContainer:Container
 	@ObservedObject var filter:UnsplashFilter
-	
-	@EnvironmentObject var sortController:SortController
 	@State private var searchString:String = ""
 	
 	// Init

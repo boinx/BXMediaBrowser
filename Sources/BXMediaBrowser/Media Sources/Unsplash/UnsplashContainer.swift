@@ -90,7 +90,7 @@ open class UnsplashContainer : Container
 
 	/// Loads the (shallow) contents of this folder
 	
-	class func loadContents(for identifier:String, data:Any, filter:Any?) async throws -> Loader.Contents
+	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
 	{
 		UnsplashSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
@@ -109,6 +109,7 @@ open class UnsplashContainer : Container
 			unsplashData.lastUsedFilter.searchString = unsplashFilter.searchString
 			unsplashData.lastUsedFilter.orientation = unsplashFilter.orientation
 			unsplashData.lastUsedFilter.color = unsplashFilter.color
+			unsplashData.lastUsedFilter.rating = unsplashFilter.rating
 			UnsplashSource.log.verbose {"    clear search results"}
 		}
 		
@@ -129,7 +130,12 @@ open class UnsplashContainer : Container
 		
 		for photo in photos
 		{
-			objects += UnsplashObject(with:photo)
+			let object = UnsplashObject(with:photo)
+			
+			if StatisticsController.shared.rating(for:object) >= filter.rating
+			{
+				objects += UnsplashObject(with:photo)
+			}
 		}
 		
 		return (containers,objects)

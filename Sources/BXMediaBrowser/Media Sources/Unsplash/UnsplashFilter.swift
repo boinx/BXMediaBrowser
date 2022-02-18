@@ -52,7 +52,6 @@ public class UnsplashFilter : Object.Filter //, Codable
 	
 	private enum Key : String, CodingKey
 	{
-		case searchString
 		case orientation
 		case color
 	}
@@ -62,7 +61,6 @@ public class UnsplashFilter : Object.Filter //, Codable
 		try super.encode(to:encoder)
 		
 		var container = encoder.container(keyedBy:Key.self)
-//		try container.encode(self.searchString, forKey:.searchString)
 		try container.encode(self.orientation, forKey:.orientation)
 		try container.encode(self.color, forKey:.color)
 	}
@@ -72,7 +70,6 @@ public class UnsplashFilter : Object.Filter //, Codable
 		try super.init(from:decoder)
 		
 		let container = try decoder.container(keyedBy:Key.self)
-//		self.searchString  = try container.decode(String.self, forKey:.searchString)
 		self.orientation  = try container.decode(Orientation.self, forKey:.orientation)
 		self.color  = try container.decode(Color.self, forKey:.color)
 	}
@@ -88,7 +85,8 @@ extension UnsplashFilter : Equatable
 	{
 		lhs.searchString == rhs.searchString &&
 		lhs.orientation == rhs.orientation &&
-		lhs.color == rhs.color
+		lhs.color == rhs.color &&
+		lhs.rating == rhs.rating
 	}
 
 	public var copy: UnsplashFilter
