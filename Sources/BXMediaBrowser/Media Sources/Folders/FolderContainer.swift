@@ -127,7 +127,7 @@ open class FolderContainer : Container
 			
 			else
 			{
-				if let object = try? Self.createObject(for:url)
+				if let object = try? Self.createObject(for:url), StatisticsController.shared.isSufficientRating(for:object)
 				{
 					objects.append(object)
 				}
