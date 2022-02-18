@@ -65,6 +65,8 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: - Creating
+	
 	public init(identifier:String, name:String, data:Any, loadThumbnailHandler:@escaping Object.Loader.LoadThumbnailHandler, loadMetadataHandler:@escaping Object.Loader.LoadMetadataHandler, downloadFileHandler:@escaping Object.Loader.DownloadFileHandler)
 	{
 		self.identifier = identifier
@@ -91,6 +93,8 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: - Loading
+	
 	public func load(_ completionHandler:(()->Void)? = nil)
 	{
 //		guard thumbnailImage == nil || metadata == nil else { return }
@@ -142,6 +146,24 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: - Metadata
+	
+	/// Transforms the metadata dictionary into an order list of human readable information (with optional click actions)
+	
+	@MainActor var localizedMetadata:[ObjectMetadataEntry]
+    {
+		let dict = self.metadata ?? [:]
+		var array:[ObjectMetadataEntry] = []
+		
+		for (key,value) in dict
+		{
+			array += ObjectMetadataEntry(label:key, value:"\(value)")
+		}
+		
+		return array
+    }
+
+
 	/// The rating value of this Object is stored by the StatisticsController, which takes care of persisting the values.
 	
 	@MainActor public var rating:Int
@@ -167,6 +189,13 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 		
 		get { StatisticsController.shared.useCount(for:self) }
 	}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - Media File Access
+	
 	/// Returns the filename of the local file. This property must be overridden by conrete subclasses to provide
 	/// the correct filename. In some cases (e.g. Photos.app) a filename is not available, so a generated name
 	/// must be used.
@@ -207,29 +236,10 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 		get async throws
 		{
 			let url = try await self.loader.localURL
-			await StatisticsController.shared.incrementUseCount(for:self)
+			StatisticsController.shared.incrementUseCount(for:self)
 			return url
 		}
 	}
-	
-	
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	/// Tranforms the metadata dictionary into an order list of human readable information (with optional click actions)
-	
-	@MainActor var localizedMetadata:[ObjectMetadataEntry]
-    {
-		let dict = self.metadata ?? [:]
-		var array:[ObjectMetadataEntry] = []
-		
-		for (key,value) in dict
-		{
-			array += ObjectMetadataEntry(label:key, value:"\(value)")
-		}
-		
-		return array
-    }
 
 }
 	
