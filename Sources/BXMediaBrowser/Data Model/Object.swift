@@ -61,10 +61,7 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 	@MainActor @Published public internal(set) var isDownloadable:Bool = false
 	@MainActor @Published public internal(set) var isStreaming:Bool = false
 	
-	@Published public var rating:Int = 0
-	@Published public var useCount:Int = 0
 	
-
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -145,6 +142,31 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	/// The rating value of this Object is stored by the StatisticsController, which takes care of persisting the values.
+	
+	@MainActor public var rating:Int
+	{
+		set
+		{
+			self.objectWillChange.send()
+			StatisticsController.shared.setRating(newValue, for:self)
+		}
+		
+		get { StatisticsController.shared.rating(for:self) }
+	}
+	
+	/// The useCount of this Object is stored by the StatisticsController, which takes care of persisting the values.
+	
+	@MainActor public var useCount:Int
+	{
+		set
+		{
+			self.objectWillChange.send()
+			StatisticsController.shared.setUseCount(newValue, for:self)
+		}
+		
+		get { StatisticsController.shared.useCount(for:self) }
+	}
 	/// Returns the filename of the local file. This property must be overridden by conrete subclasses to provide
 	/// the correct filename. In some cases (e.g. Photos.app) a filename is not available, so a generated name
 	/// must be used.
