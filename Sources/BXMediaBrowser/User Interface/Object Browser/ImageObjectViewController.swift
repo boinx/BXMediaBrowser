@@ -66,7 +66,6 @@ public class ImageObjectViewController : ObjectViewController
 		
 		guard let thumbnail = self.imageView?.subviews.first else { return }
 		guard let useCountView = useCountView else { return }
-		guard let ratingView = ratingView else { return }
 		
 		useCountView.translatesAutoresizingMaskIntoConstraints = false
 		useCountView.rightAnchor.constraint(equalTo:thumbnail.rightAnchor, constant:-4).isActive = true

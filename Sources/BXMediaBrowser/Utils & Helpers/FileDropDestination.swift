@@ -71,7 +71,7 @@ public class FileDropDestination : NSObject, NSDraggingDestination
 
 	/// Creates a new FileDropDestination
 	
-	init(folderURL:URL, cancelHandler:()->Void = {})
+	public init(folderURL:URL)
 	{
 		self.folderURL = folderURL
 	}
@@ -79,7 +79,7 @@ public class FileDropDestination : NSObject, NSDraggingDestination
 
 	/// Call this helper in the setup code of your view to configure it for receiving file drops
 	
-	class func registerDragTypes(for view:NSView)
+	public class func registerDragTypes(for view:NSView)
 	{
         view.registerForDraggedTypes(NSFilePromiseReceiver.readableDraggedTypes.map { NSPasteboard.PasteboardType($0) })
         view.registerForDraggedTypes([NSPasteboard.PasteboardType.fileURL])
@@ -103,16 +103,16 @@ public class FileDropDestination : NSObject, NSDraggingDestination
  		self.highlightDropTargetHandler?(false)
     }
 
-	public func concludeDragOperation(_ sender: NSDraggingInfo?)
-    {
- 		self.highlightDropTargetHandler?(false)
-    }
-
 	public func performDragOperation(_ sender:NSDraggingInfo) -> Bool
 	{
 		self.copyDroppedFiles(sender)
         return true
 	}
+
+	public func concludeDragOperation(_ sender: NSDraggingInfo?)
+    {
+ 		self.highlightDropTargetHandler?(false)
+    }
 
 
 //----------------------------------------------------------------------------------------------------------------------
