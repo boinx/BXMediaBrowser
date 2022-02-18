@@ -36,15 +36,9 @@ public struct UnsplashFilterBar : View
 	
 	@ObservedObject var selectedContainer:Container
 	@ObservedObject var filter:UnsplashFilter
+	
 	@EnvironmentObject var sortController:SortController
 	@State private var searchString:String = ""
-	
-	// For some reason having more than one @State var crashes SwiftUI here, so we'll bundle the three needed
-	// properties in a helper class called UsplashFilterData. Seems to be a functioning workaround for now.
-	
-//	@State private var orientation:String = ""
-//	@State private var color:String = ""
-//	@State private var filterData = UnsplashFilterData()
 	
 	// Init
 	
@@ -53,15 +47,6 @@ public struct UnsplashFilterBar : View
 		self.selectedContainer = selectedContainer
 		self.filter = filter
 		self.searchString = filter.searchString
-		
-//		if let filter = selectedContainer.filter as? UnsplashFilter
-//		{
-//			self.filterData.searchString = filter.searchString
-//			self.filterData.orientation = filter.orientation ?? .any
-//			self.filterData.color = filter.color ?? .any
-//		}
-//
-//		self.filterData.didChange = self.updateFilter
 	}
 	
 	var unsplashContainer:UnsplashContainer?
@@ -102,6 +87,8 @@ public struct UnsplashFilterBar : View
 				UnsplashOrientationView(filter:filter)
 				UnsplashColorView(filter:filter)
 				
+				RatingFilterView(rating:self.$filter.rating)
+
 				Spacer()
 				
 				Button("Save")
@@ -121,24 +108,6 @@ public struct UnsplashFilterBar : View
 		.padding(.horizontal,20)
 		.padding(.vertical,10)
     }
-    
-    /// This function is called whenever a filter parameter in the search bar was changed
-	
-//    func updateFilter()
-//    {
-//		let searchString = self.filterData.searchString
-//
-//		var orientation:UnsplashFilter.Orientation?  = self.filterData.orientation
-//		if orientation == .any { orientation = nil }
-//
-//		var color:UnsplashFilter.Color? = self.filterData.color
-//		if color == .any { color = nil }
-//
-//		self.selectedContainer.filter = UnsplashFilter(
-//			searchString:searchString,
-//			orientation:orientation,
-//			color:color)
-//    }
 }
 
 
@@ -192,27 +161,6 @@ struct UnsplashColorView : View
 		.fixedSize()
 	}
 }
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-//class UnsplashFilterData : ObservableObject
-//{
-//	@Published var searchString:String = ""
-//
-//	@Published var orientation:UnsplashFilter.Orientation = .any
-//	{
-//		didSet { self.didChange() }
-//	}
-//	
-//	@Published var color:UnsplashFilter.Color = .any
-//	{
-//		didSet { self.didChange() }
-//	}
-//	
-//	var didChange:()->Void = { }
-//}
 
 
 //----------------------------------------------------------------------------------------------------------------------

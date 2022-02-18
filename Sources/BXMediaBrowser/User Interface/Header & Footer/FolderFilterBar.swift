@@ -37,7 +37,6 @@ public struct FolderFilterBar : View
 	@ObservedObject var selectedContainer:Container
 	@ObservedObject var filter:FolderFilter
 	@EnvironmentObject var sortController:SortController
-	@EnvironmentObject var statisticsController:StatisticsController
 	
 	// Init
 	
@@ -59,11 +58,7 @@ public struct FolderFilterBar : View
 				.frame(maxWidth:300)
 				.textFieldStyle(RoundedBorderTextFieldStyle())
 
-			RatingFilterView(rating:self.$statisticsController.ratingFilter)
-				.onReceive(statisticsController.$ratingFilter)
-				{
-					_ in selectedContainer.load()
-				}
+			RatingFilterView(rating:self.$filter.rating)
 				
 			Spacer()
 

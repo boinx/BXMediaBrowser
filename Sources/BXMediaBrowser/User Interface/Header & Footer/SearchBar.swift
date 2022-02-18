@@ -49,8 +49,8 @@ public struct SearchBar : View
 	public var body: some View
     {
 		let binding = Binding<String>(
-			get:{ self.selectedContainer.filter as? String ?? "" },
-			set:{ self.selectedContainer.filter = $0 }
+			get:{ self.selectedContainer.filter.searchString },
+			set:{ self.selectedContainer.filter.searchString = $0 }
 		)
 		
 		TextField("Search", text:binding) //self.$selectedContainer.filterString)
