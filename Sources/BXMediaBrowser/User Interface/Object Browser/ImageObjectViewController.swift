@@ -53,14 +53,6 @@ public class ImageObjectViewController : ObjectViewController
 	{
 		super.setup()
 		
-//		let appearance = self.view.effectiveAppearance
-//		let isDarkMode = appearance.isDarkMode
-//		let strokeColor = isDarkMode ? NSColor.white.withAlphaComponent(0.2) : NSColor.black.withAlphaComponent(0.2)
-//
-//		let layer = self.imageView?.subviews.first?.layer
-//		layer?.borderColor = strokeColor.cgColor
-//		layer?.borderWidth = 1.0
-
 		self.textField?.lineBreakMode = .byTruncatingTail
 		self.imageView?.imageScaling = .scaleProportionallyUpOrDown
 		self.useCountView?.imageScaling = .scaleProportionallyUpOrDown
