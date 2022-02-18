@@ -81,6 +81,10 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 	
 	@MainActor @Published public private(set) var isLoaded = false
 	
+	/// Returns true if this container is currently selected, i.e. it is visible in the ObjectCollectionView
+	
+	@Published public var isSelected = false
+	
 	/// Returns true if this container is expanded in the view. This property should only be manipulated by the view.
 	
 	@Published public var isExpanded = false

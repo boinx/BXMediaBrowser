@@ -48,11 +48,13 @@ open class Library : ObservableObject, StateSaving
 	{
 		willSet
 		{
+			selectedContainer?.isSelected = false
 			selectedContainer?.purgeCachedDataOfObjects()
 		}
 		
 		didSet
 		{
+			selectedContainer?.isSelected = true
 			selectedContainer?.cancelPurgeCachedDataOfObjects()
 			SortController.shared.selectedContainer = selectedContainer
 		}
