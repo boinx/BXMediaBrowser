@@ -61,6 +61,7 @@ public class ImageObjectViewController : ObjectViewController
 //		layer?.borderColor = strokeColor.cgColor
 //		layer?.borderWidth = 1.0
 
+		self.textField?.lineBreakMode = .byTruncatingTail
 		self.imageView?.imageScaling = .scaleProportionallyUpOrDown
 		self.useCountView?.imageScaling = .scaleProportionallyUpOrDown
 		

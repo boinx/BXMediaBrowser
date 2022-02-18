@@ -40,7 +40,7 @@ open class UnsplashObject : Object
 	{
 		super.init(
 			identifier: "UnsplashSource:Photo:\(photo.id)",
-			name: photo.description ?? "Photo",
+			name: photo.description ?? "",
 			data: photo,
 			loadThumbnailHandler: Self.loadThumbnail,
 			loadMetadataHandler: Self.loadMetadata,
