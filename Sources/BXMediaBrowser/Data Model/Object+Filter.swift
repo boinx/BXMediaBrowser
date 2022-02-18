@@ -24,6 +24,7 @@
 
 
 import SwiftUI
+import BXSwiftUtils
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -36,43 +37,44 @@ extension Object
 	/// Commonly needed filtering properties are available in this base class. Create subclasses if you need
 	/// addtional filtering properties.
 	
-	open class Filter : ObservableObject, Codable
+	open class Filter : ObservableObject, Codable, BXSignpostMixin
 	{
+
 		/// The search string is used for Object filtering
 		
-		@Published var searchString:String = ""
+		@Published public var searchString:String = ""
 		
 		/// 5-Star rating value
 
-		@Published var rating:Int = 0
+		@Published public var rating:Int = 0
 
-		// To make the compiler happy, we have to have a public init here
+		/// The kind determines how Objects are sorted
+	
+		@Published public var sortType:SortType = .never
+
+		public typealias SortType = String
+
+		/// The SortDirection determines whether Objects are sorted ascending or descending
+	
+		@Published public var sortDirection:SortDirection = .ascending
+	
+		public enum SortDirection : Equatable, Hashable, Codable
+		{
+			case ascending
+			case descending
+		}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+		// MARK: -
+	
+		/// Creates a new Filter instance
 		
 		public init() { }
 
-		// Codable support
-		
-		private enum Key : String, CodingKey
-		{
-			case searchString
-			case rating
-		}
-
-		public func encode(to encoder:Encoder) throws
-		{
-			var container = encoder.container(keyedBy:Key.self)
-			try container.encode(self.searchString, forKey:.searchString)
-			try container.encode(self.rating, forKey:.rating)
-		}
-
-		public required init(from decoder:Decoder) throws
-		{
-			let container = try decoder.container(keyedBy:Key.self)
-			self.searchString  = try container.decode(String.self, forKey:.searchString)
-			self.rating  = try container.decode(Int.self, forKey:.rating)
-		}
-		
-		/// Returns a copy of this Filter
+		/// Returns a copy of this Filter instance
 		
 		open func copy() throws -> Self
 		{
@@ -80,9 +82,104 @@ extension Object
 			let copy = try JSONDecoder().decode(Self.self, from:data)
 			return copy
 		}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+		/// A ObjectComparator is a closure that determines if two Objects are ordered ascending (return true)
+		/// or descending (returns false).
+		
+		public typealias ObjectComparator = (Object,Object) -> Bool
+		
+		/// Returns the correct ObjectComparator for the specified Container. Subclasses should
+		/// override this method to return ObjectComparator depending on SortType and SortDirection.
+		
+		open var objectComparator : ObjectComparator?
+		{
+			return nil
+		}
+	
+	
+//----------------------------------------------------------------------------------------------------------------------
+
+
+		// MARK: -
+	
+		private enum Key : String, CodingKey
+		{
+			case searchString
+			case rating
+			case sortType
+			case sortDirection
+		}
+
+		public func encode(to encoder:Encoder) throws
+		{
+			var container = encoder.container(keyedBy:Key.self)
+			
+			try container.encode(self.searchString, forKey:.searchString)
+			try container.encode(self.rating, forKey:.rating)
+			try container.encode(self.sortType, forKey:.sortType)
+			try container.encode(self.sortDirection, forKey:.sortDirection)
+		}
+
+		public required init(from decoder:Decoder) throws
+		{
+			let container = try decoder.container(keyedBy:Key.self)
+			
+			self.searchString  = try container.decodeIfPresent(String.self, forKey:.searchString) ?? ""
+			self.rating  = try container.decodeIfPresent(Int.self, forKey:.rating) ?? 0
+			self.sortType  = try container.decodeIfPresent(SortType.self, forKey:.sortType) ?? .never
+			self.sortDirection  = try container.decodeIfPresent(SortDirection.self, forKey:.sortDirection) ?? .ascending
+		}
 	}
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
+
+// MARK: - Sorting
+	
+extension Object.Filter
+{
+	/// Sorts the specified array of Objects according to the current sorting parameters
+	
+	public func sort(_ objects:inout [Object])
+	{
+		let token = self.beginSignpost(in:"Object.Filter","sort")
+		defer { self.endSignpost(with:token, in:"Object.Filter","sort") }
+		
+		if let comparator = self.objectComparator
+		{
+			objects.sort(by:comparator)
+		}
+	}
+
+	/// Toggles the current SortDirection
+	
+	public func toggleSortDirection()
+	{
+		self.sortDirection = sortDirection == .ascending ?
+			.descending :
+			.ascending
+	}
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+extension Object.Filter.SortType
+{
+	/// Returns a localized string for displaying the sorting Kind in the user interface
+	
+	public var localizedName:String
+	{
+		NSLocalizedString(self, tableName:"SortController", bundle:Bundle.module, comment:"Sorting Kind Name")
+	}
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------

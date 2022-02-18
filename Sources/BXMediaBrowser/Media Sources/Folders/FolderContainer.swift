@@ -134,7 +134,7 @@ open class FolderContainer : Container
 		
 		// Sort according to specified sort order
 		
-		SortController.shared.sort(&objects)
+		filter.sort(&objects)
 		
 		// Return contents
 		
@@ -228,7 +228,7 @@ open class FolderContainer : Container
 	
 	/// Returns the list of allowed sort Kinds for this Container
 		
-	override open var allowedSortKinds:[SortController.Kind] { [.alphabetical,.creationDate] }
+	override open var allowedSortTypes:[Object.Filter.SortType] { [.alphabetical,.creationDate] }
 }
 
 

@@ -273,7 +273,7 @@ open class UnsplashContainer : Container
 	
 	/// Returns the list of allowed sort Kinds for this Container
 		
-	override open var allowedSortKinds:[SortController.Kind] { [] }
+	override open var allowedSortTypes:[Object.Filter.SortType] { [] }
 }
 
 

@@ -75,7 +75,7 @@ public class SortController : ObservableObject, BXSignpostMixin
 	
 	var allowedSortKinds:[Kind]
 	{
-		selectedContainer?.allowedSortKinds ?? []
+		selectedContainer?.allowedSortTypes ?? []
 	}
 	
 	/// Reloads the selectedContainer. This function should be called whenever the sorting parameters have changed.
@@ -234,15 +234,15 @@ public class SortController : ObservableObject, BXSignpostMixin
 
 // MARK: - Localization
 	
-extension SortController.Kind
-{
-	/// Returns a localized string for displaying the sorting Kind in the user interface
-	
-	public var localizedName:String
-	{
-		NSLocalizedString(self, tableName:"SortController", bundle:Bundle.module, comment:"Sorting Kind Name")
-	}
-}
+//extension SortController.Kind
+//{
+//	/// Returns a localized string for displaying the sorting Kind in the user interface
+//
+//	public var localizedName:String
+//	{
+//		NSLocalizedString(self, tableName:"SortController", bundle:Bundle.module, comment:"Sorting Kind Name")
+//	}
+//}
 
 
 //----------------------------------------------------------------------------------------------------------------------

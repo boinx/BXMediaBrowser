@@ -65,7 +65,7 @@ public struct MusicFilterBar : View
 
 			// Sort order
 			
-			if !selectedContainer.allowedSortKinds.isEmpty
+			if !selectedContainer.allowedSortTypes.isEmpty
 			{
 				Text("Sort by:")
 				

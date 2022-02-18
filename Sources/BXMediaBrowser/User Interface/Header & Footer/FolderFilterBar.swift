@@ -66,15 +66,15 @@ public struct FolderFilterBar : View
 			
 			Text("Sort by:")
 			
-			MenuButton(sortController.kind.localizedName)
+			MenuButton(filter.sortType.localizedName)
 			{
-				ForEach(sortController.allowedSortKinds, id:\.self)
+				ForEach(selectedContainer.allowedSortTypes, id:\.self)
 				{
-					kind in
+					sortType in
 					
-					Button(kind.localizedName)
+					Button(sortType.localizedName)
 					{
-						sortController.kind = kind
+						filter.sortType = sortType
 					}
 				}
 			}
@@ -88,7 +88,7 @@ public struct FolderFilterBar : View
 					.contentShape(Rectangle())
 					.onTapGesture
 					{
-						sortController.toggleDirection()
+						filter.toggleSortDirection()
 					}
 			}
 		}
@@ -98,7 +98,7 @@ public struct FolderFilterBar : View
     
     var directionIcon:String
     {
-		sortController.direction == .ascending ? "chevron.up" : "chevron.down"
+		filter.sortDirection == .ascending ? "chevron.up" : "chevron.down"
     }
 }
 

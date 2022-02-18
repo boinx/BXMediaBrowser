@@ -55,6 +55,7 @@ open class Library : ObservableObject, StateSaving
 		didSet
 		{
 			selectedContainer?.isSelected = true
+			selectedContainer?.validateSortType()
 			selectedContainer?.cancelPurgeCachedDataOfObjects()
 			SortController.shared.selectedContainer = selectedContainer
 		}

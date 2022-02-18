@@ -122,7 +122,7 @@ public class MusicContainer : Container
 						icon:"person",
 						name:artist.name ?? "Artist",
 						data:.artist(artist:artist, allMediaItems:allMediaItems),
-						allowedSortKinds:[.never,.album,.genre,.duration])
+						allowedSortTypes:[.never,.album,.genre,.duration])
 				}
 				
 			// Loads the sub-containers for the top-level "Albums" folder
@@ -136,7 +136,7 @@ public class MusicContainer : Container
 						icon:"square",
 						name:album.title ?? "Album",
 						data:.album(album:album, allMediaItems:allMediaItems),
-						allowedSortKinds:[.never,.artist,.genre,.duration])
+						allowedSortTypes:[.never,.artist,.genre,.duration])
 				}
 			
 			// Loads the sub-containers for the top-level "Genres" folder
@@ -150,7 +150,7 @@ public class MusicContainer : Container
 						icon:"music.note",
 						name:genre,
 						data:.genre(genre:genre, allMediaItems:allMediaItems),
-						allowedSortKinds:[.never,.artist,.album,.duration])
+						allowedSortTypes:[.never,.artist,.album,.duration])
 				}
 			
 			// Loads the sub-containers for a playlist folder
@@ -188,7 +188,7 @@ public class MusicContainer : Container
 								icon:"folder",
 								name:playlist.name,
 								data:.playlistFolder(playlists:childPlaylists, allPlaylists:allPlaylists),
-								allowedSortKinds:[])
+								allowedSortTypes:[])
 					}
 				}
 				
@@ -276,9 +276,9 @@ public class MusicContainer : Container
 	
 	/// Returns the list of allowed sort Kinds for this Container
 		
-	override open var allowedSortKinds:[SortController.Kind] { _allowedSortKinds }
+	override open var allowedSortTypes:[Object.Filter.SortType] { _allowedSortTypes }
 	
-	internal var _allowedSortKinds:[SortController.Kind] = [.never,.artist,.album,.genre,.duration]
+	internal var _allowedSortTypes:[Object.Filter.SortType] = [.never,.artist,.album,.genre,.duration]
 }
 
 
@@ -305,7 +305,7 @@ extension MusicContainer
 			icon:icon,
 			name:playlist.name,
 			data:.playlist(playlist:playlist),
-			allowedSortKinds:[])
+			allowedSortTypes:[])
 	}
 
 	/// Returns an array of tracks sorted by name

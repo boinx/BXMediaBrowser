@@ -363,9 +363,20 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 	
 	/// Returns the list of allowed sort Kinds for this Container
 		
-	open var allowedSortKinds:[SortController.Kind] { [.alphabetical] }
+	open var allowedSortTypes:[Object.Filter.SortType] { [.alphabetical] }
 
-
+	/// When the selected Container changes the current sortType needs to validated, because it might
+	/// not be usable anymore. In this case this function switches to the first available SortType.
+	
+	func validateSortType()
+	{
+		if !allowedSortTypes.contains(self.filter.sortType)
+		{
+			self.filter.sortType = allowedSortTypes.first ?? .never
+		}
+	}
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 

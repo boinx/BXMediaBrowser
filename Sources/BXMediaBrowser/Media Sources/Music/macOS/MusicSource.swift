@@ -193,15 +193,15 @@ public class MusicSource : Source, AccessControl
 		let allPlaylists = library.allPlaylists
 		let topLevelPlaylists = allPlaylists.filter { $0.parentID == nil }
 		
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Songs", icon:"music.note", name:"Songs", data:MusicContainer.MusicData.library(allMediaItems:allMediaItems), allowedSortKinds:[.never,.artist,.album,.genre,.duration])
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Songs", icon:"music.note", name:"Songs", data:MusicContainer.MusicData.library(allMediaItems:allMediaItems), allowedSortTypes:[.never,.artist,.album,.genre,.duration])
 
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Artists", icon:"music.mic", name:"Artists", data:MusicContainer.MusicData.artistFolder(allMediaItems:allMediaItems), allowedSortKinds:[.never,.album,.genre,.duration])
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Artists", icon:"music.mic", name:"Artists", data:MusicContainer.MusicData.artistFolder(allMediaItems:allMediaItems), allowedSortTypes:[.never,.album,.genre,.duration])
 
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Albums", icon:"square.stack", name:"Albums", data:MusicContainer.MusicData.albumFolder(allMediaItems:allMediaItems), allowedSortKinds:[.never,.artist,.genre,.duration])
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Albums", icon:"square.stack", name:"Albums", data:MusicContainer.MusicData.albumFolder(allMediaItems:allMediaItems), allowedSortTypes:[.never,.artist,.genre,.duration])
 
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Genres", icon:"guitars", name:"Genres", data:MusicContainer.MusicData.genreFolder(allMediaItems:allMediaItems), allowedSortKinds:[.never,.artist,.album,.duration])
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Genres", icon:"guitars", name:"Genres", data:MusicContainer.MusicData.genreFolder(allMediaItems:allMediaItems), allowedSortTypes:[.never,.artist,.album,.duration])
 
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Playlists", icon:"music.note.list", name:"Playlists", data:MusicContainer.MusicData.playlistFolder(playlists:topLevelPlaylists, allPlaylists:allPlaylists), allowedSortKinds:[])
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Playlists", icon:"music.note.list", name:"Playlists", data:MusicContainer.MusicData.playlistFolder(playlists:topLevelPlaylists, allPlaylists:allPlaylists), allowedSortTypes:[])
 
 		return containers
 	}
@@ -212,7 +212,7 @@ public class MusicSource : Source, AccessControl
 
 	/// Tries to reuse an existing Container from the cache before creating a new one and storing it in the cache.
 	
-	class func makeMusicContainer(identifier:String, icon:String?, name:String, data:MusicContainer.MusicData, allowedSortKinds:[SortController.Kind]) -> MusicContainer
+	class func makeMusicContainer(identifier:String, icon:String?, name:String, data:MusicContainer.MusicData, allowedSortTypes:[Object.Filter.SortType]) -> MusicContainer
 	{
 		MusicSource.log.verbose {"\(Self.self).\(#function) \(identifier)"}
 
@@ -235,7 +235,7 @@ public class MusicSource : Source, AccessControl
 				name:name,
 				data:data)
 			
-			container._allowedSortKinds = allowedSortKinds
+			container._allowedSortTypes = allowedSortTypes
 			
 			Self.cachedContainers[identifier] = container
 
