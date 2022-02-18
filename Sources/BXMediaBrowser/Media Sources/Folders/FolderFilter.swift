@@ -77,7 +77,6 @@ open class FolderFilter : Object.Filter
 extension Object.Filter.SortType
 {
 	public static let alphabetical = "alphabetical"
-	
 	public static let creationDate = "creationDate"
 }
 
