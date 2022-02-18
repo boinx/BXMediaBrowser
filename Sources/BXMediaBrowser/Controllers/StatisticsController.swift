@@ -152,7 +152,14 @@ public class StatisticsController : ObservableObject
 	
 	public func rating(for object:Object) -> Int
 	{
-		self._rating[object.identifier] ?? 0
+		self.rating(for:object.identifier)
+	}
+	
+	/// Returns the rating for the specified Object identifier
+	
+	public func rating(for identifier:String) -> Int
+	{
+		self._rating[identifier] ?? 0
 	}
 	
 	/// Storage for rating statistics
