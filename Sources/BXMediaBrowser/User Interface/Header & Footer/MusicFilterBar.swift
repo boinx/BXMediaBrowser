@@ -60,6 +60,10 @@ public struct MusicFilterBar : View
 				.textFieldStyle(RoundedBorderTextFieldStyle())
 
 			RatingFilterView(rating:self.$statisticsController.ratingFilter)
+				.onReceive(statisticsController.$ratingFilter)
+				{
+					_ in selectedContainer.load()
+				}
 
 			Spacer()
 
