@@ -34,10 +34,6 @@ import BXSwiftUI
 
 public class ImageObjectViewController : ObjectViewController
 {
-	@IBOutlet var ratingView:NSImageView?
-	
-	@IBOutlet var useCountView:NSImageView?
-
     override class var identifier:NSUserInterfaceItemIdentifier
     {
     	NSUserInterfaceItemIdentifier("BXMediaBrowser.ImageObjectViewController")
@@ -67,17 +63,10 @@ public class ImageObjectViewController : ObjectViewController
 
 		self.imageView?.imageScaling = .scaleProportionallyUpOrDown
 		self.useCountView?.imageScaling = .scaleProportionallyUpOrDown
-		self.ratingView?.imageScaling = .scaleProportionallyUpOrDown
 		
 		guard let thumbnail = self.imageView?.subviews.first else { return }
 		guard let useCountView = useCountView else { return }
 		guard let ratingView = ratingView else { return }
-		
-		ratingView.translatesAutoresizingMaskIntoConstraints = false
-		ratingView.leftAnchor.constraint(equalTo:thumbnail.leftAnchor, constant:4).isActive = true
-		ratingView.topAnchor.constraint(equalTo:thumbnail.topAnchor, constant:4).isActive = true
-		ratingView.widthAnchor.constraint(equalToConstant:20).isActive = true
-		ratingView.heightAnchor.constraint(equalToConstant:20).isActive = true
 		
 		useCountView.translatesAutoresizingMaskIntoConstraints = false
 		useCountView.rightAnchor.constraint(equalTo:thumbnail.rightAnchor, constant:-4).isActive = true
@@ -115,13 +104,6 @@ public class ImageObjectViewController : ObjectViewController
 			let useCountImage = n>0 ? NSImage(systemSymbolName:"\(n).circle.fill", accessibilityDescription:nil) : nil
 			self.useCountView?.image = useCountImage
 			self.useCountView?.contentTintColor = NSColor.systemGreen
-			
-			// Rating badge
-			
-			let rating = StatisticsController.shared.rating(for:object)
-			let ratingImage = /*rating>0 ?*/ NSImage(systemSymbolName:"star.fill", accessibilityDescription:nil) /*: nil*/
-			self.ratingView?.image = ratingImage
-			self.ratingView?.contentTintColor = NSColor.systemYellow
 		}
 	}
 	

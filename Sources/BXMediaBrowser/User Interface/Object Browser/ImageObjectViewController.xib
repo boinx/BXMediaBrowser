@@ -9,7 +9,7 @@
         <customObject id="-2" userLabel="File's Owner" customClass="ImageObjectViewController" customModule="BXMediaBrowser">
             <connections>
                 <outlet property="imageView" destination="BQT-g2-Zqo" id="WCB-FM-pe3"/>
-                <outlet property="ratingView" destination="VQB-Gi-MOs" id="qOc-f2-7AW"/>
+                <outlet property="ratingView" destination="fqQ-Fs-MnC" id="bVW-6e-6J0"/>
                 <outlet property="textField" destination="Rdh-yM-tEI" id="jwC-v4-uzl"/>
                 <outlet property="useCountView" destination="VE0-2j-XEE" id="CTa-Zf-qfg"/>
                 <outlet property="view" destination="HUS-pi-5U0" id="ONe-pe-1qO"/>
@@ -41,13 +41,17 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="xr1-rb-e9I"/>
                 </imageView>
-                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VQB-Gi-MOs">
-                    <rect key="frame" x="4" y="72" width="20" height="20"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="8cg-VH-V6g"/>
-                </imageView>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="fqQ-Fs-MnC" customClass="ObjectRatingView" customModule="BXMediaBrowser">
+                    <rect key="frame" x="20" y="0.0" width="80" height="16"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="80" id="VfP-sV-3gB"/>
+                        <constraint firstAttribute="height" constant="16" id="ikt-wN-Kvm"/>
+                    </constraints>
+                </customView>
             </subviews>
             <constraints>
+                <constraint firstItem="fqQ-Fs-MnC" firstAttribute="centerX" secondItem="HUS-pi-5U0" secondAttribute="centerX" id="49t-Na-x7Y"/>
+                <constraint firstAttribute="bottom" secondItem="fqQ-Fs-MnC" secondAttribute="bottom" id="6rz-oa-dSy"/>
                 <constraint firstItem="BQT-g2-Zqo" firstAttribute="top" secondItem="HUS-pi-5U0" secondAttribute="top" id="AJ3-jD-3Fb"/>
                 <constraint firstAttribute="trailing" secondItem="BQT-g2-Zqo" secondAttribute="trailing" id="KM8-Mv-oGS"/>
                 <constraint firstItem="BQT-g2-Zqo" firstAttribute="leading" secondItem="HUS-pi-5U0" secondAttribute="leading" id="KaJ-FX-VqM"/>
