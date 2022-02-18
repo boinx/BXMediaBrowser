@@ -35,169 +35,142 @@ import BXSwiftUtils
 
 class ObjectRatingView : NSView
 {
+	/// Binding to the rating property of the Object
+	
 	public var rating:Binding<Int> = Binding<Int>.constant(0)
+	
+	/// Determines how many stars will be drawn
+	
+	public var maxRating:Int = 5
+	
+	/// The size of the star image in pt
 	
 	public var size:CGFloat = 16
 	
-	
-//----------------------------------------------------------------------------------------------------------------------
-
-
-//	public override init(frame:NSRect)
-//	{
-//		super.init(frame:frame)
-//	}
-//	
-//	
-//	required init?(coder:NSCoder)
-//	{
-//		super.init(coder:coder)
-//	}
-	
-	
-//----------------------------------------------------------------------------------------------------------------------
-
-
-//	// Whenever the view frame changes, update the tracking area to detect mouse enter end exit events
-//
-//	override func updateTrackingAreas()
-//	{
-//		super.updateTrackingAreas()
-//
-//		self.trackingAreas.forEach { self.removeTrackingArea($0) }
-//
-//		self.addTrackingArea(NSTrackingArea(
-//			rect: self.bounds,
-//			options: [.mouseEnteredAndExited,.activeInActiveApp,.assumeInside],
-//			owner: self,
-//			userInfo: nil))
-//	}
-//
-//	// When the mouse enters, make this view visible
-//
-//	override func mouseEntered(with event:NSEvent)
-//	{
-//		self.isVisible = true
-//	}
-//
-//	// When the mosue exits, hide this view again
-//
-//	override func mouseExited(with event:NSEvent)
-//	{
-//		self.isVisible = false
-//	}
-//
-//	/// Sets the view visibility - i.e. unless the rating is larger than 0 -
-//	/// in that case it the view will always be visible!
-//
-//	var isVisible:Bool
-//	{
-//		set
-//		{
-//			let rating = self.rating.wrappedValue
-//
-//			if newValue || rating > 0
-//			{
-//				self.alphaValue = 1.0
-//			}
-//			else
-//			{
-//				self.alphaValue = 0.0
-//			}
-//		}
-//
-//		get
-//		{
-//			self.alphaValue > 0.0
-//		}
-//	}
-	
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: - Drawing
+	
+	
+	// When switching between light and dark mode, get rid of cached star icons
+	
+	override func viewDidChangeEffectiveAppearance()
+	{
+		super.viewDidChangeEffectiveAppearance()
+		Self._offImage = nil
+		Self._onImage = nil
+	}
+	
+	// Build the off-star icon lazily
+	
+	private var offImage:NSImage?
+	{
+		if Self._offImage == nil
+		{
+			Self._offImage = Self.image(systemName:"star", color:NSColor.lightGray)
+		}
+		
+		return Self._offImage
+	}
+	
+	private static var _offImage:NSImage? = nil
+
+	// Build the on-star icon lazily
+	
+	private var onImage:NSImage?
+	{
+		if Self._onImage == nil
+		{
+			Self._onImage = Self.image(systemName:"star.fill", color:NSColor.systemYellow)
+		}
+		
+		return Self._onImage
+	}
+	
+	private static var _onImage:NSImage? = nil
+	
+	/// Creates an icon image with the specified name and color
+	
+	class func image(systemName:String, color:NSColor) -> NSImage?
+	{
+		if #available(macOS 11, *)
+		{
+			guard let icon = NSImage(systemSymbolName:systemName, accessibilityDescription:nil) else { return nil }
+			guard let image = icon.copy() as? NSImage else { return nil }
+			
+			image.lockFocus()
+			defer { image.unlockFocus() }
+			
+			color.set()
+			let bounds = NSRect(origin:.zero, size:image.size)
+			bounds.fill(using:.sourceAtop)
+				
+			return image
+		}
+		else
+		{
+			return nil
+		}
+	}
+	
+	
+	// Draws 5 stars, filled or unfilled
+	
 	override func draw(_ rect:NSRect)
 	{
 		if #available(macOS 11, *)
 		{
-			let off = NSImage(systemSymbolName:"star", accessibilityDescription:nil)
-//			off?.tint = NSColor.controlColor
-			off?.isTemplate = true
-			
-			let on = NSImage(systemSymbolName:"star.fill", accessibilityDescription:nil)
-//			on?.tint = NSColor.systemYellow
-			on?.isTemplate = true
-			
 			let rating = self.rating.wrappedValue
 			var frame = CGRect(x:0, y:0, width:size, height:size)
 			
-			for i in 1...5
+			for i in 1...maxRating
 			{
 				frame.origin.x = CGFloat(i-1) * size
 				frame.origin.y = bounds.maxY - size
 
-				let image = i <= rating ? on : off
+				let image = i <= rating ? onImage : offImage
 				image?.draw(in:frame)
 			}
 		}
 	}
 	
 	
-//	let offImage:NSImage? =
-//	{
-//		if #available(macOS 11, *)
-//		{
-//			let off = NSImage(systemSymbolName:"star", accessibilityDescription:nil)
-//			off?.tint = NSColor.systemYellow
-//			off?.isTemplate = true
-//			return off
-//		}
-//
-//		return nil
-//	}()
-
-
-//	let onImage:NSImage? =
-//	{
-//		if #available(macOS 11, *)
-//		{
-//			let off = NSImage(systemSymbolName:"star.fill", accessibilityDescription:nil)
-//			off?.tint = NSColor.systemYellow
-//			off?.isTemplate = true
-//			return off
-//		}
-//
-//		return nil
-//	}()
-	
-
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: - Events
+	
 	override func mouseDown(with event:NSEvent)
 	{
-		var mouse = event.locationInWindow
-		mouse = self.convert(mouse, to:self)
-		self.setRating(for:mouse)
+		self.setRating(with:mouse(for:event))
 	}
 	
-	override func mouseMoved(with event:NSEvent)
+	override func mouseDragged(with event:NSEvent)
 	{
-		var mouse = event.locationInWindow
-		mouse = self.convert(mouse, to:self)
-		self.setRating(for:mouse)
+		self.setRating(with:mouse(for:event))
 	}
 	
 	override func mouseUp(with event:NSEvent)
 	{
-		var mouse = event.locationInWindow
-		mouse = self.convert(mouse, to:self)
-		self.setRating(for:mouse)
+		self.setRating(with:mouse(for:event))
 	}
 	
-	func setRating(for mouse:CGPoint)
+	/// Returns the mouse location in this view
+	
+	func mouse(for event:NSEvent) -> CGPoint
 	{
-		let i = Int(mouse.x / size)
+		let mouse = event.locationInWindow
+		return self.convert(mouse, from:nil)
+	}
+	
+	/// Sets rating depending on mouse location
+	
+	func setRating(with mouse:CGPoint)
+	{
+		let x = mouse.x + size
+		let i = Int(x/size)
 		self.rating.wrappedValue = i
 		self.needsDisplay = true
 	}
