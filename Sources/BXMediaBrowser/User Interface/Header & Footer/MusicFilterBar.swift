@@ -67,6 +67,9 @@ public struct MusicFilterBar : View
 			if !selectedContainer.allowedSortTypes.isEmpty
 			{
 				Text("Sort by:")
+					.lineLimit(1)
+					.truncationMode(.tail)
+					.layoutPriority(-1)
 				
 				MenuButton(filter.sortType.localizedName)
 				{
