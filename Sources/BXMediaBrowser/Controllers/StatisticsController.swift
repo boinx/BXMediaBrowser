@@ -90,14 +90,8 @@ import UIKIt
 	
 	@discardableResult public func incrementUseCount(for object:Object) -> Int
 	{
-		let identifier = object.identifier
-		
-		var n = useCount[identifier] ?? 0
-		n += 1
-		useCount[identifier] = n
-		
-		NotificationCenter.default.post(name: Self.didChangeNotification, object:object)
-		
+		let n = useCount(for:object) + 1
+		self.setUseCount(n, for:object)
 		return n
 	}
 
@@ -105,34 +99,38 @@ import UIKIt
 	
 	@discardableResult public func decrementUseCount(for object:Object) -> Int
 	{
-		let identifier = object.identifier
-		var n = useCount[identifier] ?? 0
-		
+		let n = useCount(for:object)
+
 		if n > 0
 		{
-			n -= 1
-			self.useCount[identifier] = n
+			self.setUseCount(n-1, for:object)
+			return n-1
 		}
 		else
 		{
-			self.useCount[identifier] = nil
+			self._useCount[object.identifier] = nil
+			return 0
 		}
-		
-		NotificationCenter.default.post(name: Self.didChangeNotification, object:object)
+	}
 
-		return n
+	/// Sets the useCount for the specified Object
+	
+	public func setUseCount(_ useCount:Int, for object:Object)
+	{
+		self._useCount[object.identifier] = useCount
+		NotificationCenter.default.post(name: Self.didChangeNotification, object:object)
 	}
 
 	/// Returns the use count for the specified Object
 	
 	public func useCount(for object:Object) -> Int
 	{
-		self.useCount[object.identifier] ?? 0
+		self._useCount[object.identifier] ?? 0
 	}
 	
 	/// Storage for use count statistics
 	
-	private var useCount:[String:Int] = [:]
+	private var _useCount:[String:Int] = [:]
 	
 	
 //----------------------------------------------------------------------------------------------------------------------
@@ -145,7 +143,7 @@ import UIKIt
 	
 	public func setRating(_ rating:Int, for object:Object)
 	{
-		self.rating[object.identifier] = rating
+		self._rating[object.identifier] = rating
 		NotificationCenter.default.post(name: Self.didChangeNotification, object:object)
 	}
 
@@ -153,14 +151,25 @@ import UIKIt
 	
 	public func rating(for object:Object) -> Int
 	{
-		self.rating[object.identifier] ?? 0
+		self._rating[object.identifier] ?? 0
 	}
 	
 	/// Storage for rating statistics
 	
-	private var rating:[String:Int] = [:]
+	private var _rating:[String:Int] = [:]
 	
+	/// The global rating filter value
+
+	@Published var ratingFilter:Int = 0
 	
+	/// Return true if the specified Object has a sufficient rating to be displayed
+	
+	public func isSufficientRating(for object:Object) -> Bool
+	{
+		rating(for:object) >= ratingFilter
+	}
+
+
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -171,16 +180,16 @@ import UIKIt
 	
 	public func load()
 	{
-		self.useCount = self.loadUseCountHandler()
-		self.rating = self.loadRatingHandler()
+		self._useCount = self.loadUseCountHandler()
+		self._rating = self.loadRatingHandler()
 	}
 
 	/// Saves statistics to storage
 	
 	public func save()
 	{
-		self.saveUseCountHandler(useCount)
-		self.saveRatingHandler(rating)
+		self.saveUseCountHandler(_useCount)
+		self.saveRatingHandler(_rating)
 	}
 	
 	/// An externally supplied handler that loads useCount statistics from storage.
