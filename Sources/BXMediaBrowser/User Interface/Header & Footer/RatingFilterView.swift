@@ -114,7 +114,7 @@ public struct RatingFilterView : View
 		let f = CGFloat(maxRating)
 		let x = drag.location.x + 12
 
-		self.rating.wrappedValue = Int(f*x/w)
+		self.rating.wrappedValue = Int(f*x/w).clipped(to:0...maxRating)
 	}
 }
 
