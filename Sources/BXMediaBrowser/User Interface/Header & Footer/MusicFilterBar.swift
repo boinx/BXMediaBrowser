@@ -36,7 +36,6 @@ public struct MusicFilterBar : View
 	
 	@ObservedObject var selectedContainer:Container
 	@ObservedObject var filter:MusicFilter
-	@EnvironmentObject var sortController:SortController
 	@EnvironmentObject var statisticsController:StatisticsController
 
 	// Init
@@ -69,15 +68,15 @@ public struct MusicFilterBar : View
 			{
 				Text("Sort by:")
 				
-				MenuButton(sortController.kind.localizedName)
+				MenuButton(filter.sortType.localizedName)
 				{
-					ForEach(sortController.allowedSortKinds, id:\.self)
+					ForEach(selectedContainer.allowedSortTypes, id:\.self)
 					{
-						kind in
+						sortType in
 						
-						Button(kind.localizedName)
+						Button(sortType.localizedName)
 						{
-							sortController.kind = kind
+							filter.sortType = sortType
 						}
 					}
 				}
@@ -91,7 +90,7 @@ public struct MusicFilterBar : View
 						.contentShape(Rectangle())
 						.onTapGesture
 						{
-							sortController.toggleDirection()
+							filter.toggleSortDirection()
 						}
 				}
 			}
@@ -102,7 +101,7 @@ public struct MusicFilterBar : View
     
     var directionIcon:String
     {
-		sortController.direction == .ascending ? "chevron.up" : "chevron.down"
+		filter.sortDirection == .ascending ? "chevron.up" : "chevron.down"
     }
 }
 

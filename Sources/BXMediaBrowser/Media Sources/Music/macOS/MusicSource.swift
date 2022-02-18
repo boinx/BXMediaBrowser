@@ -103,24 +103,6 @@ public class MusicSource : Source, AccessControl
 		{
 			[weak self] _ in self?.reload()
 		}
-
-		// Register sorting Kinds
-		
-		SortController.shared.register(
-			kind: .artist,
-			comparator: SortController.compareArtist)
-		
-		SortController.shared.register(
-			kind: .album,
-			comparator: SortController.compareAlbum)
-		
-		SortController.shared.register(
-			kind: .genre,
-			comparator: SortController.compareGenre)
-		
-		SortController.shared.register(
-			kind: .duration,
-			comparator: SortController.compareDuration)
 	}
 
 
@@ -186,22 +168,23 @@ public class MusicSource : Source, AccessControl
 	{
 		MusicSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
-		var containers:[Container] = []
+		guard let library = Self.library else { throw Container.Error.loadContentsFailed }
+		guard let filter = filter as? MusicFilter else { throw Container.Error.loadContentsFailed }
 		
-		guard let library = Self.library else { return containers }
 		let allMediaItems = library.allMediaItems.filter { Self.allowedMediaKinds.contains($0.mediaKind) }
 		let allPlaylists = library.allPlaylists
 		let topLevelPlaylists = allPlaylists.filter { $0.parentID == nil }
-		
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Songs", icon:"music.note", name:"Songs", data:MusicContainer.MusicData.library(allMediaItems:allMediaItems), allowedSortTypes:[.never,.artist,.album,.genre,.duration])
+		var containers:[Container] = []
+				
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Songs", icon:"music.note", name:"Songs", data:MusicContainer.MusicData.library(allMediaItems:allMediaItems), filter:filter, allowedSortTypes:[.never,.artist,.album,.genre,.duration])
 
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Artists", icon:"music.mic", name:"Artists", data:MusicContainer.MusicData.artistFolder(allMediaItems:allMediaItems), allowedSortTypes:[.never,.album,.genre,.duration])
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Artists", icon:"music.mic", name:"Artists", data:MusicContainer.MusicData.artistFolder(allMediaItems:allMediaItems), filter:filter, allowedSortTypes:[.never,.album,.genre,.duration])
 
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Albums", icon:"square.stack", name:"Albums", data:MusicContainer.MusicData.albumFolder(allMediaItems:allMediaItems), allowedSortTypes:[.never,.artist,.genre,.duration])
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Albums", icon:"square.stack", name:"Albums", data:MusicContainer.MusicData.albumFolder(allMediaItems:allMediaItems), filter:filter, allowedSortTypes:[.never,.artist,.genre,.duration])
 
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Genres", icon:"guitars", name:"Genres", data:MusicContainer.MusicData.genreFolder(allMediaItems:allMediaItems), allowedSortTypes:[.never,.artist,.album,.duration])
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Genres", icon:"guitars", name:"Genres", data:MusicContainer.MusicData.genreFolder(allMediaItems:allMediaItems), filter:filter, allowedSortTypes:[.never,.artist,.album,.duration])
 
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Playlists", icon:"music.note.list", name:"Playlists", data:MusicContainer.MusicData.playlistFolder(playlists:topLevelPlaylists, allPlaylists:allPlaylists), allowedSortTypes:[])
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Playlists", icon:"music.note.list", name:"Playlists", data:MusicContainer.MusicData.playlistFolder(playlists:topLevelPlaylists, allPlaylists:allPlaylists), filter:filter, allowedSortTypes:[])
 
 		return containers
 	}
@@ -212,7 +195,7 @@ public class MusicSource : Source, AccessControl
 
 	/// Tries to reuse an existing Container from the cache before creating a new one and storing it in the cache.
 	
-	class func makeMusicContainer(identifier:String, icon:String?, name:String, data:MusicContainer.MusicData, allowedSortTypes:[Object.Filter.SortType]) -> MusicContainer
+	class func makeMusicContainer(identifier:String, icon:String?, name:String, data:MusicContainer.MusicData, filter:MusicFilter, allowedSortTypes:[Object.Filter.SortType]) -> MusicContainer
 	{
 		MusicSource.log.verbose {"\(Self.self).\(#function) \(identifier)"}
 
@@ -233,7 +216,8 @@ public class MusicSource : Source, AccessControl
 				identifier:identifier,
 				icon:icon,
 				name:name,
-				data:data)
+				data:data,
+				filter:filter)
 			
 			container._allowedSortTypes = allowedSortTypes
 			
@@ -283,112 +267,6 @@ public class MusicSource : Source, AccessControl
 }
 	
 	
-//----------------------------------------------------------------------------------------------------------------------
-
-
-extension SortController.Kind
-{
-	public static let never = "never"
-}
-
-
-extension SortController
-{
-	public static func compareNever(_ object1:Object,_ object2:Object) -> Bool
-	{
-		false
-	}
-}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-extension SortController.Kind
-{
-	public static let artist = "artist"
-}
-
-
-extension SortController
-{
-	public static func compareArtist(_ object1:Object,_ object2:Object) -> Bool
-	{
-		guard let item1 = (object1 as? MusicObject)?.data as? ITLibMediaItem else { return false }
-		guard let item2 = (object2 as? MusicObject)?.data as? ITLibMediaItem else { return false }
-		let artist1 = item1.artist?.name ?? ""
-		let artist2 = item2.artist?.name ?? ""
-		return artist1 < artist2
-	}
-}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-extension SortController.Kind
-{
-	public static let album = "album"
-}
-
-
-extension SortController
-{
-	public static func compareAlbum(_ object1:Object,_ object2:Object) -> Bool
-	{
-		guard let item1 = (object1 as? MusicObject)?.data as? ITLibMediaItem else { return false }
-		guard let item2 = (object2 as? MusicObject)?.data as? ITLibMediaItem else { return false }
-		let album1 = item1.album.title ?? ""
-		let album2 = item2.album.title ?? ""
-		return album1 < album2
-	}
-}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-extension SortController.Kind
-{
-	public static let genre = "genre"
-}
-
-
-extension SortController
-{
-	public static func compareGenre(_ object1:Object,_ object2:Object) -> Bool
-	{
-		guard let item1 = (object1 as? MusicObject)?.data as? ITLibMediaItem else { return false }
-		guard let item2 = (object2 as? MusicObject)?.data as? ITLibMediaItem else { return false }
-		let genre1 = item1.genre
-		let genre2 = item2.genre
-		return genre1 < genre2
-	}
-}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-extension SortController.Kind
-{
-	public static let duration = "duration"
-}
-
-
-extension SortController
-{
-	public static func compareDuration(_ object1:Object,_ object2:Object) -> Bool
-	{
-		guard let item1 = (object1 as? MusicObject)?.data as? ITLibMediaItem else { return false }
-		guard let item2 = (object2 as? MusicObject)?.data as? ITLibMediaItem else { return false }
-		let totalTime1 = item1.totalTime
-		let totalTime2 = item2.totalTime
-		return totalTime1 < totalTime2
-	}
-}
-
-
 //----------------------------------------------------------------------------------------------------------------------
 
 

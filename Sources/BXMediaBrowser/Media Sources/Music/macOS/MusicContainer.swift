@@ -55,14 +55,14 @@ public class MusicContainer : Container
 
 	/// Creates a new MusicContainer. The data argument carries essential information about this Container
 	
- 	public init(identifier:String, icon:String?, name:String, data:MusicData)
+ 	public init(identifier:String, icon:String?, name:String, data:MusicData, filter:MusicFilter)
 	{
 		super.init(
 			identifier:identifier,
 			icon:icon,
 			name:name,
 			data:data,
-			filter:MusicFilter(),
+			filter:filter,
 			loadHandler:Self.loadContents)
 	}
 	
@@ -90,12 +90,13 @@ public class MusicContainer : Container
 
 	/// Loads the (shallow) contents of this folder
 	
-	class func loadContents(for identifier:String, data:Any, filter:Any?) async throws -> Loader.Contents
+	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
 	{
 		var containers:[Container] = []
 		var objects:[Object] = []
 		
 		guard let musicData = data as? MusicData else { throw Error.loadContentsFailed }
+		guard let filter = filter as? MusicFilter else { throw Error.loadContentsFailed }
 		
 		switch musicData
 		{
@@ -105,7 +106,7 @@ public class MusicContainer : Container
 
 				for item in Self.tracks(with:allMediaItems)
 				{
-					if item.contains(filter)
+					if filter.contains(item)
 					{
 						objects += MusicSource.makeMusicObject(with:item)
 					}
@@ -122,6 +123,7 @@ public class MusicContainer : Container
 						icon:"person",
 						name:artist.name ?? "Artist",
 						data:.artist(artist:artist, allMediaItems:allMediaItems),
+						filter:filter,
 						allowedSortTypes:[.never,.album,.genre,.duration])
 				}
 				
@@ -136,6 +138,7 @@ public class MusicContainer : Container
 						icon:"square",
 						name:album.title ?? "Album",
 						data:.album(album:album, allMediaItems:allMediaItems),
+						filter:filter,
 						allowedSortTypes:[.never,.artist,.genre,.duration])
 				}
 			
@@ -150,6 +153,7 @@ public class MusicContainer : Container
 						icon:"music.note",
 						name:genre,
 						data:.genre(genre:genre, allMediaItems:allMediaItems),
+						filter:filter,
 						allowedSortTypes:[.never,.artist,.album,.duration])
 				}
 			
@@ -173,11 +177,11 @@ public class MusicContainer : Container
 					
 					if kind == .regular	// Accept regular user playlists
 					{
-						containers += Self.container(for:playlist)
+						containers += Self.container(for:playlist, filter:filter)
 					}
 					else if kind == .smart && distinguishedKind == .kindNone // Accept user smart playlists
 					{
-						containers += Self.container(for:playlist)
+						containers += Self.container(for:playlist, filter:filter)
 					}
 					else if kind == .folder	// Accept sub-folders
 					{
@@ -188,6 +192,7 @@ public class MusicContainer : Container
 								icon:"folder",
 								name:playlist.name,
 								data:.playlistFolder(playlists:childPlaylists, allPlaylists:allPlaylists),
+								filter:filter,
 								allowedSortTypes:[])
 					}
 				}
@@ -198,7 +203,7 @@ public class MusicContainer : Container
 			
 				for item in Self.mediaItems(for:artist, allMediaItems:allMediaItems)
 				{
-					if item.contains(filter)
+					if filter.contains(item)
 					{
 						objects += MusicSource.makeMusicObject(with:item)
 					}
@@ -210,7 +215,7 @@ public class MusicContainer : Container
 			
 				for item in Self.mediaItems(for:album, allMediaItems:allMediaItems)
 				{
-					if item.contains(filter)
+					if filter.contains(item)
 					{
 						objects += MusicSource.makeMusicObject(with:item)
 					}
@@ -222,7 +227,7 @@ public class MusicContainer : Container
 			
 				for item in Self.mediaItems(for:genre, allMediaItems:allMediaItems)
 				{
-					if item.contains(filter)
+					if filter.contains(item)
 					{
 						objects += MusicSource.makeMusicObject(with:item)
 					}
@@ -234,7 +239,7 @@ public class MusicContainer : Container
 			
 				for item in playlist.items
 				{
-					if item.contains(filter)
+					if filter.contains(item)
 					{
 						objects += MusicSource.makeMusicObject(with:item)
 					}
@@ -243,7 +248,7 @@ public class MusicContainer : Container
 
 		// Sort according to specified sort order
 		
-		SortController.shared.sort(&objects)
+		filter.sort(&objects)
 		
 		// Return contents
 		
@@ -289,7 +294,7 @@ extension MusicContainer
 {
 	/// Creates a Container for the specified playlist
 	
-	class func container(for playlist:ITLibPlaylist) -> MusicContainer
+	class func container(for playlist:ITLibPlaylist, filter:MusicFilter) -> MusicContainer
 	{
 		var icon = "music.note.list"
 		
@@ -305,6 +310,7 @@ extension MusicContainer
 			icon:icon,
 			name:playlist.name,
 			data:.playlist(playlist:playlist),
+			filter:filter,
 			allowedSortTypes:[])
 	}
 
