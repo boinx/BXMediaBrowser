@@ -35,9 +35,44 @@ extension Object
 	///
 	/// Create a contrete subclass that has published properties.
 	
-	open class Filter : ObservableObject
+	open class Filter : ObservableObject, Codable
 	{
+		/// The search string is used for Object filtering
+		
+		@Published var searchString:String = ""
+		
+		/// 5-Star rating value
 
+		@Published var rating:Int = 0
+
+		// To make the compiler happy, we have to have a public init here
+		
+		public init()
+		{
+
+		}
+
+		// Unfortunately the Codable stuff cannot be put in an extension:
+		
+		private enum Key : String, CodingKey
+		{
+			case searchString
+			case rating
+		}
+
+		public func encode(to encoder:Encoder) throws
+		{
+			var container = encoder.container(keyedBy:Key.self)
+			try container.encode(self.searchString, forKey:.searchString)
+			try container.encode(self.rating, forKey:.rating)
+		}
+
+		public required init(from decoder:Decoder) throws
+		{
+			let container = try decoder.container(keyedBy:Key.self)
+			self.searchString  = try container.decode(String.self, forKey:.searchString)
+			self.rating  = try container.decode(Int.self, forKey:.rating)
+		}
 	}
 }
 

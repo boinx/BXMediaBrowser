@@ -31,9 +31,7 @@ import SwiftUI
 
 open class FolderFilter : Object.Filter
 {
-	/// The search string is used for Object filtering
-	
-	@Published var searchString:String = ""
+
 }
 
 

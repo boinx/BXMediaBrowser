@@ -31,12 +31,8 @@ import SwiftUI
 
 /// This struct bundles all parameters for a photo search on Unsplash.com
 
-public class UnsplashFilter : Object.Filter, Codable
+public class UnsplashFilter : Object.Filter //, Codable
 {
-	/// The search string for looking up images on Unsplash.com
-	
-	@Published public var searchString:String = ""
-	
 	/// If non-nil then search results will be restricted to the specified Orientation
 	
 	@Published public var orientation:Orientation = .any
@@ -61,18 +57,22 @@ public class UnsplashFilter : Object.Filter, Codable
 		case color
 	}
 
-	public func encode(to encoder:Encoder) throws
+	override public func encode(to encoder:Encoder) throws
 	{
+		try super.encode(to:encoder)
+		
 		var container = encoder.container(keyedBy:Key.self)
-		try container.encode(self.searchString, forKey:.searchString)
+//		try container.encode(self.searchString, forKey:.searchString)
 		try container.encode(self.orientation, forKey:.orientation)
 		try container.encode(self.color, forKey:.color)
 	}
 
 	public required init(from decoder:Decoder) throws
 	{
+		try super.init(from:decoder)
+		
 		let container = try decoder.container(keyedBy:Key.self)
-		self.searchString  = try container.decode(String.self, forKey:.searchString)
+//		self.searchString  = try container.decode(String.self, forKey:.searchString)
 		self.orientation  = try container.decode(Orientation.self, forKey:.orientation)
 		self.color  = try container.decode(Color.self, forKey:.color)
 	}
