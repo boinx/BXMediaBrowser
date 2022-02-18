@@ -271,20 +271,6 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 		}
 	}
 	
-
-//	func container(for identifier:String) async -> Container?
-//	{
-//		for container in await containers
-//		{
-//			if container.identifier == identifier
-//			{
-//				return container
-//			}
-//		}
-//		
-//		return nil
-//	}
-	
 	
 //----------------------------------------------------------------------------------------------------------------------
 

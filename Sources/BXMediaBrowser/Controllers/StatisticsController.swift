@@ -158,17 +158,6 @@ public class StatisticsController : ObservableObject
 	/// Storage for rating statistics
 	
 	private var _rating:[String:Int] = [:]
-	
-	/// The global rating filter value
-
-	@Published var ratingFilter:Int = 0
-	
-	/// Return true if the specified Object has a sufficient rating to be displayed
-	
-	public func isSufficientRating(for object:Object) -> Bool
-	{
-		rating(for:object) >= ratingFilter
-	}
 
 
 //----------------------------------------------------------------------------------------------------------------------

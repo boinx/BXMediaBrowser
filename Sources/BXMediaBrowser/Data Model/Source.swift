@@ -31,13 +31,23 @@ import SwiftUI
 
 open class Source : ObservableObject, Identifiable, StateSaving
 {
+	/// A unique (and persistent) identifier for this Source
+	
 	public let identifier:String
+	
+	/// Usually the icon of the application that manages the media objects
+	
 	public let icon:CGImage?
+	
+	/// The name of this source, usually the name of an application or an internet service
+	
 	public let name:String
 	
 	/// Filtering is specific to a Source, but its settings is shared by all Container created by this source.
 	
 	public let filter:Object.Filter
+	
+	/// The Loader is a helper actor that is responsible for loading the top-level Containers
 	
 	public var loader:Loader! = nil
 	
@@ -156,20 +166,6 @@ open class Source : ObservableObject, Identifiable, StateSaving
 			}
 		}
 	}
-	
-
-//	func container(for identifier:String) async -> Container?
-//	{
-//		for container in await containers
-//		{
-//			if container.identifier == identifier
-//			{
-//				return container
-//			}
-//		}
-//
-//		return nil
-//	}
 	
 	
 //----------------------------------------------------------------------------------------------------------------------

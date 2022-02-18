@@ -33,7 +33,8 @@ extension Object
 {
 	/// An Filter is an abstract base class that can be used for filtering a list of Objects in a Container.
 	///
-	/// Create a contrete subclass that has published properties.
+	/// Commonly needed filtering properties are available in this base class. Create subclasses if you need
+	/// addtional filtering properties.
 	
 	open class Filter : ObservableObject, Codable
 	{
@@ -47,12 +48,9 @@ extension Object
 
 		// To make the compiler happy, we have to have a public init here
 		
-		public init()
-		{
+		public init() { }
 
-		}
-
-		// Unfortunately the Codable stuff cannot be put in an extension:
+		// Codable support
 		
 		private enum Key : String, CodingKey
 		{
@@ -78,3 +76,4 @@ extension Object
 
 
 //----------------------------------------------------------------------------------------------------------------------
+
