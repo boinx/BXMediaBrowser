@@ -38,7 +38,7 @@
                         <constraint firstAttribute="height" constant="16" id="4aj-VI-nCy"/>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="16" id="88s-re-rzC"/>
                         <constraint firstAttribute="height" relation="lessThanOrEqual" constant="16" id="hfU-hE-OVg"/>
-                        <constraint firstAttribute="width" priority="750" constant="120" id="lto-1M-zff"/>
+                        <constraint firstAttribute="width" priority="750" constant="32" id="lto-1M-zff"/>
                     </constraints>
                     <textFieldCell key="cell" lineBreakMode="clipping" enabled="NO" allowsUndo="NO" alignment="left" id="d5C-U7-nd7">
                         <font key="font" metaFont="system"/>
@@ -47,9 +47,9 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="1000" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ika-N4-OOh">
-                    <rect key="frame" x="864" y="24" width="64" height="16"/>
+                    <rect key="frame" x="924" y="24" width="4" height="16"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="60" id="HYb-f8-IKI"/>
+                        <constraint firstAttribute="width" priority="750" constant="60" id="HYb-f8-IKI"/>
                         <constraint firstAttribute="height" constant="16" id="cFT-tL-YC5"/>
                     </constraints>
                     <textFieldCell key="cell" lineBreakMode="clipping" enabled="NO" allowsUndo="NO" alignment="right" id="CIA-rv-VfZ">
@@ -59,7 +59,7 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="SmP-5w-hYd">
-                    <rect key="frame" x="40" y="6" width="828" height="14"/>
+                    <rect key="frame" x="40" y="6" width="880" height="14"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="14" id="JfI-hG-CYy"/>
                     </constraints>
@@ -69,8 +69,8 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="YMH-1S-sgr">
-                    <rect key="frame" x="872" y="6" width="56" height="14"/>
+                <textField horizontalHuggingPriority="1000" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" alphaValue="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="YMH-1S-sgr">
+                    <rect key="frame" x="924" y="6" width="4" height="14"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="14" id="ZrJ-Bf-YBg"/>
                         <constraint firstAttribute="width" priority="750" constant="52" id="uTU-al-6qD"/>
@@ -81,11 +81,11 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <customView translatesAutoresizingMaskIntoConstraints="NO" id="It7-Sh-m5m" customClass="ObjectRatingView" customModule="BXMediaBrowser">
-                    <rect key="frame" x="48" y="24" width="90" height="16"/>
+                <customView horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="It7-Sh-m5m" customClass="ObjectRatingView" customModule="BXMediaBrowser">
+                    <rect key="frame" x="46" y="24" width="90" height="16"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="90" id="B3q-Jh-3je"/>
-                        <constraint firstAttribute="height" constant="16" id="rWc-7t-lZo"/>
+                        <constraint firstAttribute="width" priority="750" constant="90" id="B3q-Jh-3je"/>
+                        <constraint firstAttribute="height" priority="750" constant="16" id="rWc-7t-lZo"/>
                     </constraints>
                 </customView>
             </subviews>
@@ -100,7 +100,7 @@
                 <constraint firstAttribute="trailing" secondItem="ika-N4-OOh" secondAttribute="trailing" constant="20" symbolic="YES" id="WrS-gn-Rke"/>
                 <constraint firstItem="SmP-5w-hYd" firstAttribute="leading" secondItem="9gO-LH-lBt" secondAttribute="trailing" constant="4" id="cgV-KT-w9F"/>
                 <constraint firstItem="Rdh-yM-tEI" firstAttribute="leading" secondItem="9gO-LH-lBt" secondAttribute="trailing" constant="4" id="ckd-lL-yMc"/>
-                <constraint firstItem="It7-Sh-m5m" firstAttribute="leading" secondItem="Rdh-yM-tEI" secondAttribute="trailing" constant="6" id="fG6-LI-k6w"/>
+                <constraint firstItem="It7-Sh-m5m" firstAttribute="leading" secondItem="Rdh-yM-tEI" secondAttribute="trailing" constant="4" id="fG6-LI-k6w"/>
                 <constraint firstItem="9gO-LH-lBt" firstAttribute="leading" secondItem="HUS-pi-5U0" secondAttribute="leading" constant="6" id="hMe-jo-VVy"/>
                 <constraint firstItem="SmP-5w-hYd" firstAttribute="top" secondItem="Rdh-yM-tEI" secondAttribute="bottom" constant="4" id="imc-ld-70R"/>
                 <constraint firstItem="YMH-1S-sgr" firstAttribute="leading" secondItem="SmP-5w-hYd" secondAttribute="trailing" constant="8" symbolic="YES" id="rwE-1D-Qq0"/>

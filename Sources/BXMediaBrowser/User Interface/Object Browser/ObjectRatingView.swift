@@ -54,6 +54,19 @@ class ObjectRatingView : NSView
 	// MARK: - Drawing
 	
 	
+	// Override intrinsicContentSize to improve auto-layout
+	
+	override var intrinsicContentSize: NSSize
+	{
+		guard !isHidden else { return .zero }
+		return CGSize(CGFloat(maxRating)*size,size)
+	}
+	
+	override var isHidden: Bool
+	{
+		didSet { self.invalidateIntrinsicContentSize() }
+	}
+	
 	// When switching between light and dark mode, get rid of cached star icons
 	
 	override func viewDidChangeEffectiveAppearance()
