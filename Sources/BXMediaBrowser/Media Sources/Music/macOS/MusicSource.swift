@@ -232,7 +232,7 @@ public class MusicSource : Source, AccessControl
 	
 	class func makeMusicObject(with item:ITLibMediaItem) -> MusicObject
 	{
-		let identifier = "MusicSource:ITLibMediaItem:\(item.persistentID)"
+		let identifier = objectIdentifier(with:item)
 
 		if let object = Self.cachedObjects[identifier]
 		{
@@ -244,6 +244,11 @@ public class MusicSource : Source, AccessControl
 			Self.cachedObjects[identifier] = object
 			return object
 		}
+	}
+	
+	class func objectIdentifier(with item:ITLibMediaItem) -> String
+	{
+		"MusicSource:ITLibMediaItem:\(item.persistentID)"
 	}
 	
 	

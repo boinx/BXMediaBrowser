@@ -37,6 +37,13 @@ open class MusicFilter : Object.Filter
 	
 	public func contains(_ item:ITLibMediaItem) -> Bool
 	{
+		// Is rating suffcient?
+		
+		let identifier = MusicSource.objectIdentifier(with:item)
+		guard StatisticsController.shared.rating(for:identifier) >= self.rating else { return false }
+		
+		// Empty search string will accept all items
+		
 		let searchString = self.searchString.lowercased()
 		guard !searchString.isEmpty else { return true }
 
