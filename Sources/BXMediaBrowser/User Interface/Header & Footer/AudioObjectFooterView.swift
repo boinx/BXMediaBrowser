@@ -44,17 +44,8 @@ public struct AudioObjectFooterView : View
     {
 		HStack
 		{
-			// Thumbnail size
-			
-			Text("▶︎ Audio Player")
+			AudioPlayerView()
 
-//			AudioPlayerView(url:nil)
-//				.frame(height:20)
-			
-			Spacer()
-			
-			// Object count
-			
 			Text(container.localizedObjectCount)
 				.controlSize(.small)
 		}
@@ -67,89 +58,86 @@ public struct AudioObjectFooterView : View
 //----------------------------------------------------------------------------------------------------------------------
 
 
-/// This subclass of NSCollectionView can display the Objects of a Container
-
-public struct AudioPlayerView : NSViewRepresentable
+public struct AudioPlayerView : View
 {
-	// This NSViewRepresentable doesn't return a single view, but a whole hierarchy:
-	//
-	// 	 NSScrollView
-	//	    NSClipView
-	//	       NSCollectionView
+	@StateObject var controller = AudioPlayerController()
 	
-	public typealias NSViewType = AVPlayerView
-
-	private var url:URL? = nil
+	// View
+	
+	public var body: some View
+    {
+		HStack
+		{
+			if #available(macOS 11, *)
+			{
+				SwiftUI.Image(systemName:iconName).onTapGesture
+				{
+					self.controller.toggle()
+				}
+			}
+				
+			Text(controller.currentTime.shortTimecodeString())
+				.frame(width:54, alignment:.leading)
+//				.border(Color.red)
+				
+			TimeSlider(fraction:self.$controller.fraction)
+				.frame(height:12)
+//				.border(Color.red)
+		}
+		
+    }
+    
+    public var iconName:String
+    {
+		controller.isPlaying ? "pause.fill" : "play.fill"
+    }
+}
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	/// Creates ObjectCollectionView with the specified Container and cell type
+public struct TimeSlider : View
+{
+	@Binding var fraction:Double
 	
-	public init(url:URL? = nil)
-	{
-		self.url = url
-	}
-	
-	/// Builds a view hierarchy with a NSScrollView and a NSCollectionView inside
-	
-	public func makeNSView(context:Context) -> AVPlayerView
-	{
-		let playerView = AVPlayerView(frame:.zero)
-		context.coordinator.player = playerView.player
-//		playerView.controlsStyle = .floating
-		return playerView
-	}
-	
-	
-	// The selected Container has changed, pass it on to the Coordinator
-	
-	public func updateNSView(_ playerView:AVPlayerView, context:Context)
-	{
-//		if let url = self.url
-//		{
-//			let item = AVPlayerItem(url:url)
-//			playerView.player?.replaceCurrentItem(with:item)
-//		}
-//		else
-//		{
-//			playerView.player?.replaceCurrentItem(with:nil)
-//		}
-	}
-
-	/// Creates the Coordinator which provides persistant state to this view
-
-	public func makeCoordinator() -> Coordinator
+	public var body: some View
     {
-		return Coordinator()
-    }
-
-
-	public class Coordinator : NSObject
-    {
-		var player:AVPlayer? = nil
-		var observers:[Any] = []
-		
-		override init()
+		GeometryReader
 		{
-			super.init()
-
-			self.observers += NotificationCenter.default.publisher(for:NSNotification.Name("selectedObjectURL"), object:nil).sink
+			geometry in
+			
+			ZStack(alignment:.leading)
 			{
-				if let url = $0.object as? URL
-				{
-					let item = AVPlayerItem(url:url)
-					self.player?.replaceCurrentItem(with:item)
-				}
-				else
-				{
-					self.player?.replaceCurrentItem(with:nil)
-				}
+				self.trackColor.frame(height:2)
+				self.thumbColor.frame(width:2).offset(x:offset(for:geometry), y:0)
 			}
+			.contentShape(Rectangle())
+			.gesture(DragGesture(minimumDistance:0.0).onChanged
+			{
+				let fraction = $0.location.x / geometry.size.width
+				self.fraction = fraction
+			})
 		}
+		
+    }
+    
+    func offset(for geometry:GeometryProxy) -> CGFloat
+    {
+		let W = geometry.size.width - 2
+		let w = W * self.fraction
+		return w
+    }
+    
+    var trackColor:Color
+    {
+		Color.primary.opacity(0.2)
 	}
 	
+	var thumbColor:Color
+	{
+		Color.primary
+	}
 }
 
 
