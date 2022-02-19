@@ -145,6 +145,14 @@ open class MusicFilter : Object.Filter
 		guard let item2 = (object2 as? MusicObject)?.data as? ITLibMediaItem else { return false }
 		let album1 = item1.album.title ?? ""
 		let album2 = item2.album.title ?? ""
+		
+		if album1 == album2
+		{
+			let track1 = item1.trackNumber
+			let track2 = item2.trackNumber
+			return track1 < track2
+		}
+		
 		return album1 < album2
 	}
 
