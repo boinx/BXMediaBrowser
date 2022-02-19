@@ -86,6 +86,9 @@ public struct AudioPlayerView : View
 				.frame(height:12)
 //				.border(Color.red)
 		}
+		.reducedOpacityWhenDisabled()
+		.enabled(controller.isEnabled)
+		
 		
     }
     
