@@ -49,6 +49,11 @@ open class FolderObject : Object
 	}
 
 
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: -
+
 	/// Creates a thumbnail image for the specified local file URL
 	
 	open class func loadThumbnail(for identifier:String, data:Any) async throws -> CGImage
@@ -70,9 +75,6 @@ open class FolderObject : Object
         guard let thumbnail = ref?.takeUnretainedValue() else { throw Error.loadThumbnailFailed }
 		return thumbnail
 	}
-
-
-//----------------------------------------------------------------------------------------------------------------------
 
 
 	/// Loads the metadata dictionary for the specified local file URL
@@ -134,6 +136,11 @@ open class FolderObject : Object
     }
 
 
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: -
+
 	/// Since we are already dealing with a local media file, this function simply returns the specified file URL
 	
 	open class func downloadFile(for identifier:String, data:Any) async throws -> URL
@@ -146,21 +153,20 @@ open class FolderObject : Object
 	}
 
 
+	// Return the URL to the media file
+	
+	open var url:URL?
+	{
+		data as? URL
+	}
+	
+	
 	// Since the file is already local we can get its filename
 	
 	override var localFileName:String
 	{
-		guard let url = data as? URL else { return super.localFileName }
+		guard let url = self.url else { return super.localFileName }
 		return url.lastPathComponent
-	}
-	
-	
-	/// Reveal the media file in the Finder
-	
-	public func revealInFinder()
-	{
-		guard let url = data as? URL else { return }
-		url.reveal()
 	}
 	
 	
@@ -168,8 +174,22 @@ open class FolderObject : Object
 	
 	override public var previewItemURL:URL!
     {
-		return self.data as? URL
+		self.url
     }
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: -
+
+	/// Reveal the media file in the Finder
+	
+	public func revealInFinder()
+	{
+		guard let url = data as? URL else { return }
+		url.reveal()
+	}
 }
 
 
