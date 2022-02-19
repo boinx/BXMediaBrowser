@@ -70,10 +70,12 @@ public struct AudioPlayerView : View
 		{
 			if #available(macOS 11, *)
 			{
-				SwiftUI.Image(systemName:iconName).onTapGesture
-				{
-					self.controller.toggle()
-				}
+				SwiftUI.Image(systemName:iconName)
+					.contentShape(Rectangle().inset(by:-6))
+					.onTapGesture
+					{
+						self.controller.toggle()
+					}
 			}
 				
 			Text(controller.currentTime.shortTimecodeString())
