@@ -277,6 +277,12 @@ extension ObjectCollectionView
 
 extension NSCollectionView
 {
+	/// This notification is sent when an Object is selected
+		
+	public static let didSelectURL = NSNotification.Name("NSCollectionView.didSelectURL")
+
+	/// This notification is sent when the user scrolls down to the bottom
+		
 	public static let didScrollToEnd = NSNotification.Name("NSCollectionView.didScrollToEnd")
 }
 
@@ -443,21 +449,40 @@ extension ObjectCollectionView
 			}
 		}
 
+		// When the selection changes, update the Quicklook preview panel and the AudioPlayerController
+		
 		@MainActor public func collectionView(_ collectionView:NSCollectionView, didSelectItemsAt indexPaths:Set<IndexPath>)
 		{
-			// After changed the selection, the QLPreviewPanel should be updated (if currently open)
-		
-			if let panel = QLPreviewPanel.shared(), panel.isVisible
-			{
-				panel.reloadData()
-			}
+			self.updatePreviewPanel()
 			
 			if let indexPath = collectionView.selectionIndexPaths.first,
 			   let item = collectionView.item(at:indexPath) as? ObjectViewController,
 			   let object = item.object,
 			   let url = object.previewItemURL
 			{
-				NotificationCenter.default.post(name: NSNotification.Name("selectedObjectURL"), object:url)
+				NotificationCenter.default.post(name: NSCollectionView.didSelectURL, object:url)
+			}
+		}
+		
+		@MainActor public func collectionView(_ collectionView:NSCollectionView, didDeselectItemsAt indexPaths:Set<IndexPath>)
+		{
+			DispatchQueue.main.async
+			{
+				if collectionView.selectionIndexPaths.isEmpty
+				{
+					self.updatePreviewPanel()
+					NotificationCenter.default.post(name: NSCollectionView.didSelectURL, object:nil)
+				}
+			}
+		}
+		
+		// After changing the selection, the QLPreviewPanel should be updated (if currently open)
+		
+		func updatePreviewPanel()
+		{
+			if let panel = QLPreviewPanel.shared(), panel.isVisible
+			{
+				panel.reloadData()
 			}
 		}
 		
