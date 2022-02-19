@@ -76,7 +76,7 @@ public class AudioObjectViewController : ObjectViewController
 		guard let metadata = object.metadata else { return }
 		
 		let title = metadata[kMDItemTitle as String] as? String
-		let authors = metadata[kMDItemTitle as String] as? [String]
+		let authors = metadata[kMDItemAuthors as String] as? [String]
 		let composer = metadata[kMDItemComposer as String] as? String
 		let album = metadata[kMDItemAlbum as String] as? String
 		let genre = metadata[kMDItemMusicalGenre as String] as? String
@@ -192,6 +192,7 @@ public class AudioObjectViewController : ObjectViewController
 		nameField?.textColor = textColor
 		metadataField?.textColor = textColor
 		durationField?.textColor = textColor
+		sizeField?.textColor = textColor
     }
 }
 
