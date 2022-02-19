@@ -277,9 +277,9 @@ extension ObjectCollectionView
 
 extension NSCollectionView
 {
-	/// This notification is sent when an Object is selected
+	/// This notification is sent when Objects are selected
 		
-	public static let didSelectURL = NSNotification.Name("NSCollectionView.didSelectURL")
+	public static let didSelectObjects = NSNotification.Name("NSCollectionView.didSelectObjects")
 
 	/// This notification is sent when the user scrolls down to the bottom
 		
@@ -449,20 +449,16 @@ extension ObjectCollectionView
 			}
 		}
 
-		// When the selection changes, update the Quicklook preview panel and the AudioPlayerController
+		// When the selection was changed, update the Quicklook preview panel and notify others
 		
 		@MainActor public func collectionView(_ collectionView:NSCollectionView, didSelectItemsAt indexPaths:Set<IndexPath>)
 		{
 			self.updatePreviewPanel()
-			
-			if let indexPath = collectionView.selectionIndexPaths.first,
-			   let item = collectionView.item(at:indexPath) as? ObjectViewController,
-			   let object = item.object,
-			   let url = object.previewItemURL
-			{
-				NotificationCenter.default.post(name: NSCollectionView.didSelectURL, object:url)
-			}
+			self.sendDidSelectObjectsNotification(for:collectionView)
 		}
+		
+		// Unfortunately the deselect gets called before the select, so we have to delay and check again
+		// if we got a new selection, before sending any notifications that announces the delesecting.
 		
 		@MainActor public func collectionView(_ collectionView:NSCollectionView, didDeselectItemsAt indexPaths:Set<IndexPath>)
 		{
@@ -471,7 +467,7 @@ extension ObjectCollectionView
 				if collectionView.selectionIndexPaths.isEmpty
 				{
 					self.updatePreviewPanel()
-					NotificationCenter.default.post(name: NSCollectionView.didSelectURL, object:nil)
+					self.sendDidSelectObjectsNotification(for:collectionView)
 				}
 			}
 		}
@@ -483,6 +479,24 @@ extension ObjectCollectionView
 			if let panel = QLPreviewPanel.shared(), panel.isVisible
 			{
 				panel.reloadData()
+			}
+		}
+		
+		/// Sends a notification announcing which Objects have been selected
+		
+		func sendDidSelectObjectsNotification(for collectionView:NSCollectionView)
+		{
+			let objects = collectionView.selectionIndexPaths
+				.compactMap { collectionView.item(at:$0) as? ObjectViewController }
+				.compactMap { $0.object }
+			
+			if objects.isEmpty
+			{
+				NotificationCenter.default.post(name: NSCollectionView.didSelectObjects, object:nil)
+			}
+			else
+			{
+				NotificationCenter.default.post(name: NSCollectionView.didSelectObjects, object:objects)
 			}
 		}
 		

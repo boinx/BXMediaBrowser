@@ -46,9 +46,23 @@ public class AudioPlayerController : NSObject, ObservableObject, AVAudioPlayerDe
 	{
 		super.init()
 		
-		self.urlObserver = NotificationCenter.default.publisher(for:NSCollectionView.didSelectURL, object:nil).sink
+		self.urlObserver = NotificationCenter.default.publisher(for:NSCollectionView.didSelectObjects, object:nil).sink
 		{
-			[weak self] in self?.url = $0.object as? URL
+			[weak self] in
+			let objects = $0.object as? [Object] ?? []
+			self?.updateURL(with:objects)
+		}
+	}
+	
+	private func updateURL(with objects:[Object])
+	{
+		if objects.count == 1, let object = objects.first, let url = object.previewItemURL
+		{
+			self.url = url
+		}
+		else
+		{
+			self.url = nil
 		}
 	}
 	
