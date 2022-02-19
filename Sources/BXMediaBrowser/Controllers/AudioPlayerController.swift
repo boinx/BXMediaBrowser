@@ -23,7 +23,6 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 
-import BXSwiftUI
 import SwiftUI
 import AVKit
 
@@ -31,87 +30,132 @@ import AVKit
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public class AudioPlayerController : ObservableObject
+public class AudioPlayerController : NSObject, ObservableObject, AVAudioPlayerDelegate
 {
-	@Published var url:URL? = nil
+	@Published public var url:URL? = nil
 	{
 		didSet { self.updatePlayer() }
 	}
-	
-	
+
 	private var player:AVAudioPlayer? = nil
-	@Published var time:Double = 0.0
-	
 	private var urlObserver:Any? = nil
 	private var timeObserver:Any? = nil
 	
-	init()
+
+	override public init()
 	{
-		self.urlObserver = NotificationCenter.default.publisher(for:NSNotification.Name("selectedObjectURL"), object:nil).sink
+		super.init()
+		
+		self.urlObserver = NotificationCenter.default.publisher(for:NSCollectionView.didSelectURL, object:nil).sink
 		{
 			[weak self] in self?.url = $0.object as? URL
 		}
+	}
+	
+	public func updatePlayer()
+	{
+		if self.url != self.player?.url
+		{
+			if let url = self.url
+			{
+				let wasPlaying = self.isPlaying
+				self.createPlayer(for:url)
+				if wasPlaying { self.play() }
+			}
+			else
+			{
+				self.deletePlayer()
+			}
+		}
+	}
+	
+	public func createPlayer(for url:URL)
+	{
+		self.objectWillChange.send()
+
+		self.player = try? AVAudioPlayer(contentsOf:url)
+		self.player?.delegate = self
 		
 		self.timeObserver = Timer.publish(every:0.1, on:.main, in: RunLoop.Mode.common).autoconnect().sink
 		{
 			[weak self] _ in
 			guard let self = self else { return }
 			guard self.isPlaying else { return }
-			self.time = self.currentTime
+			self.objectWillChange.send()
 		}
+	}
+	
+	public func deletePlayer()
+	{
+		self.objectWillChange.send()
+		self.player = nil
+		self.timeObserver = nil
+	}
+	
+	public var isEnabled:Bool
+	{
+		self.player != nil
+	}
+}
 
-	}
-	
-	func updatePlayer()
-	{
-		if isPlaying, let oldURL = self.player?.url, let newURL = self.url, oldURL != newURL
-		{
-			self.createPlayer()
-			self.play()
-		}
-	}
-	
-	func createPlayer()
-	{
-		if let url = self.url
-		{
-			self.player = try? AVAudioPlayer(contentsOf:url)
-		}
-	}
-	
-	func toggle()
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+extension AudioPlayerController
+{
+	public func toggle()
 	{
 		if isPlaying { self.pause() } else { self.play() }
 	}
 	
-	func play()
+	public func play()
 	{
+		self.objectWillChange.send()
+
 		if self.player == nil
 		{
-			self.createPlayer()
+			if let url = self.url
+			{
+				self.createPlayer(for:url)
+			}
 		}
 		
-		self.objectWillChange.send()
 		self.player?.play()
 	}
 	
-	func pause()
+	public func pause()
 	{
 		self.objectWillChange.send()
 		self.player?.pause()
 	}
 	
-	var isPlaying:Bool
+	public var isPlaying:Bool
 	{
 		self.player?.isPlaying ?? false
 	}
 	
-	var duration:Double
+	public func audioPlayerDidFinishPlaying(_ player:AVAudioPlayer, successfully:Bool)
+	{
+		if successfully
+		{
+			self.deletePlayer()
+		}
+	}
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+extension AudioPlayerController
+{
+	public var duration:Double
 	{
 		self.player?.duration ?? 0.0
 	}
 	
-	var currentTime:Double
+	public var currentTime:Double
 	{
 		set
 		{
@@ -125,7 +169,7 @@ public class AudioPlayerController : ObservableObject
 		}
 	}
 	
-	var fraction:Double
+	public var fraction:Double
 	{
 		set
 		{
@@ -139,7 +183,6 @@ public class AudioPlayerController : ObservableObject
 			return currentTime / duration
 		}
 	}
-	
 }
 
 
