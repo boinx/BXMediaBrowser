@@ -336,7 +336,7 @@ extension ObjectCollectionView
 		private var layoutObserver:Any? = nil
 		private var dataSourceObserver:Any? = nil
 		
-
+		
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -428,8 +428,8 @@ extension ObjectCollectionView
 		}
 		
 		
-		/// Once the user scrolls down near the bottom of the ObjectCollectionView, then send out a notification that
-		/// can trigger certain actions (like reloading the Container).
+		// Once the user scrolls down near the bottom of the ObjectCollectionView, then send out a notification that
+		// can trigger certain actions (like reloading the Container).
 		
 		@MainActor public func collectionView(_ collectionView:NSCollectionView, willDisplay item:NSCollectionViewItem, forRepresentedObjectAt indexPath:IndexPath)
 		{
@@ -442,7 +442,6 @@ extension ObjectCollectionView
 				NotificationCenter.default.post(name:NSCollectionView.didScrollToEnd, object:self.container)
 			}
 		}
-
 
 		@MainActor public func collectionView(_ collectionView:NSCollectionView, didSelectItemsAt indexPaths:Set<IndexPath>)
 		{
