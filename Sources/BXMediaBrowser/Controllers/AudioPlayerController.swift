@@ -32,7 +32,7 @@ import AVKit
 
 public class AudioPlayerController : NSObject, ObservableObject, AVAudioPlayerDelegate
 {
-	@Published public var url:URL? = nil
+	public var url:URL? = nil
 	{
 		didSet { self.updatePlayer() }
 	}
