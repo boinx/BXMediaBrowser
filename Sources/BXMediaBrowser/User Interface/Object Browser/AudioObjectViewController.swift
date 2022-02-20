@@ -36,7 +36,6 @@ public class AudioObjectViewController : ObjectViewController
 {
 	// Outlets
 	
-//    @IBOutlet weak open var button: NSButton?
     @IBOutlet weak open var nameField: NSTextField?
     @IBOutlet weak open var metadataField: NSTextField?
     @IBOutlet weak open var durationField: NSTextField?
@@ -46,14 +45,22 @@ public class AudioObjectViewController : ObjectViewController
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// The resue identifier for this CollectionView cell
+	
     override class var identifier:NSUserInterfaceItemIdentifier
     {
     	NSUserInterfaceItemIdentifier("BXMediaBrowser.AudioObjectViewController")
 	}
 	
-	override class var width:CGFloat { 0 } // 0 means full width of view
+	// width 0 means full width of the view
+	
+	override class var width:CGFloat { 0 }
+	
+	// The cell is 46pt high
 	
 	override class var height:CGFloat { 46 }
+	
+	// No spacing between cells - to make it look like a NSTableView
 	
 	override class var spacing:CGFloat { 0 }
 
@@ -61,19 +68,51 @@ public class AudioObjectViewController : ObjectViewController
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	/// Toggles between name field and rating control
+	// MARK: - Setup
 	
-	override open func showRatingControl(_ isInside:Bool)
+	override open func setup()
 	{
-		let showRating = isInside || self.object.rating > 0
-		self.textField?.isHidden = false
-		self.ratingView?.isHidden = !showRating
+		super.setup()
+		
+		// Listen to notifications to update the UI accordingly
+		
+		self.observers += NotificationCenter.default.publisher(for:AudioPlayerController.didStartPlayingObject, object:object).sink
+		{
+			[weak self] _ in self?.setPlaybackIcon()
+		}
+		
+		self.observers += NotificationCenter.default.publisher(for:AudioPlayerController.didStopPlayingObject, object:object).sink
+		{
+			[weak self] _ in self?.setFileIcon()
+		}
+
+		self.observers += self.view.publisher(for:\.effectiveAppearance).receive(on:RunLoop.main, options:nil).sink
+		{
+			[weak self] _ in self?.updateHighlight()
+		}
+		
+		self.updateHighlight()
+
+		// Configure text field truncation when text gets too long
+		
+		self.nameField?.lineBreakMode = .byTruncatingTail
+		self.metadataField?.lineBreakMode = .byTruncatingTail
 	}
+	
+	
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - Drawing
+	
+	/// This function get scalled when the Object or some metadata has changed and the cell needs to be redrawn.
 	
 	override open func redraw()
 	{
 		guard let object = object else { return }
 		guard let metadata = object.metadata else { return }
+		
+		// Gather audio metadata
 		
 		let title = metadata[kMDItemTitle as String] as? String
 		let authors = metadata[kMDItemAuthors as String] as? [String]
@@ -84,91 +123,102 @@ public class AudioObjectViewController : ObjectViewController
 		let size = metadata[kMDItemFSSize as String] as? Int
 		let kind = metadata[kMDItemKind as String] as? String
 		let name = title ?? object.name
-		var info = ""
+		
+		// Build description string
+		
+		var description = ""
 		
 		if let artist = authors?.first ?? composer, !artist.isEmpty
 		{
-			info += artist
+			description += artist
 		}
 
 		if let album = album, !album.isEmpty
 		{
-			if !info.isEmpty { info += ", " }
-			info += album
+			if !description.isEmpty { description += ", " }
+			description += album
 		}
 
 		if let genre = genre, !genre.isEmpty
 		{
-			if !info.isEmpty { info += ", " }
-			info += genre
+			if !description.isEmpty { description += ", " }
+			description += genre
 		}
 		
 		if let kind = kind, !kind.isEmpty
 		{
-			if !info.isEmpty { info += ", " }
-			info += kind
+			if !description.isEmpty { description += ", " }
+			description += kind
 		}
 
+		// Update UI
+		
+		self.setFileIcon()
 		self.nameField?.stringValue = name
-		self.metadataField?.stringValue = info
+		self.metadataField?.stringValue = description
 		self.durationField?.stringValue = duration.shortTimecodeString()
 		self.sizeField?.stringValue = size?.fileSizeDescription ?? ""
 		
-		self.nameField?.lineBreakMode = .byTruncatingTail
-		self.metadataField?.lineBreakMode = .byTruncatingTail
-
-		if let thumbnail = object.thumbnailImage
+		self.nameField?.alphaValue = object.isLocallyAvailable ? 1.0 : 0.5
+	}
+	
+	
+	/// Displays the document file icon
+	
+	func setFileIcon()
+	{
+		if object.isLocallyAvailable
 		{
-			let w = thumbnail.width
-			let h = thumbnail.height
-			let size = CGSize(width:w, height:h)
-			self.imageView?.image = NSImage(cgImage:thumbnail, size:size)
-		}
-
-		if #available(macOS 11, *)
-		{
-			if object.isLocallyAvailable
+			if let thumbnail = object.thumbnailImage
 			{
-//				self.button?.image = NSImage(systemSymbolName:"play", accessibilityDescription:nil)
-				self.imageView?.alphaValue = 1.0
-				self.nameField?.alphaValue = 1.0
+				let w = thumbnail.width
+				let h = thumbnail.height
+				let size = CGSize(width:w, height:h)
+				self.imageView?.image = NSImage(cgImage:thumbnail, size:size)
 			}
-			else if object.isDownloadable
+		}
+		else if object.isDownloadable
+		{
+			if #available(macOS 11, *)
 			{
 				self.imageView?.image = NSImage(systemSymbolName:"icloud.and.arrow.down", accessibilityDescription:nil)
-				self.imageView?.alphaValue = 1.0
-				self.nameField?.alphaValue = 0.5
-			}
-			else
-			{
-				self.imageView?.image = NSImage(systemSymbolName:"exclamationmark.icloud", accessibilityDescription:nil)
-				self.imageView?.alphaValue = 1.0
-				self.nameField?.alphaValue = 0.5
 			}
 		}
 		else
 		{
-			if object.isLocallyAvailable
+			if #available(macOS 11, *)
 			{
-				self.imageView?.image = NSImage(named:"icon-play")
-				self.imageView?.alphaValue = 1.0
-				self.nameField?.alphaValue = 1.0
-			}
-			else
-			{
-				self.imageView?.image = NSImage(named:"icon-cloud")
-				self.imageView?.alphaValue = 1.0
-				self.nameField?.alphaValue = 0.5
+				self.imageView?.image = NSImage(systemSymbolName:"exclamationmark.icloud", accessibilityDescription:nil)
 			}
 		}
-		
+	}
+	
+	
+	/// Displays an icon that indicates audio playback
+	
+	func setPlaybackIcon()
+	{
+		if #available(macOS 11, *)
+		{
+			self.imageView?.image = NSImage(systemSymbolName:"speaker.wave.3.fill", accessibilityDescription:nil)
+		}
+	}
+	
+	
+	/// Toggles between name field and rating control
+	
+	override open func showRatingControl(_ isInside:Bool)
+	{
+		let showRating = isInside || self.object.rating > 0
+		self.textField?.isHidden = false
+		self.ratingView?.isHidden = !showRating
 	}
 	
 	
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	// MARK: -
+	// MARK: - Selecting
 	
     override public var isSelected:Bool
     {
@@ -189,10 +239,21 @@ public class AudioObjectViewController : ObjectViewController
 		let textColor = isHilited ? NSColor.white : NSColor.textColor
 
 		self.view.layer?.backgroundColor = backgroundColor.cgColor
+		
+		imageView?.contentTintColor = self.iconTintColor()
 		nameField?.textColor = textColor
 		metadataField?.textColor = textColor
 		durationField?.textColor = textColor
 		sizeField?.textColor = textColor
+    }
+    
+    private func iconTintColor() -> NSColor
+    {
+		if isSelected { return NSColor.white }
+		
+		return self.view.effectiveAppearance.isDarkMode ?
+			NSColor.white :
+			NSColor.black
     }
 }
 
