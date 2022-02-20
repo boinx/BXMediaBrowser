@@ -24,9 +24,7 @@
 
 
 import BXSwiftUI
-import BXSwiftUtils
 import SwiftUI
-import AVKit
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -58,13 +56,15 @@ public struct AudioObjectFooterView : View
 //----------------------------------------------------------------------------------------------------------------------
 
 
+/// Displays the user interface for the AudioPreviewController
+
 public struct AudioPlayerView : View
 {
 	// Model
 
 	@EnvironmentObject var controller:AudioPreviewController
 	
-	// View
+	// Build View
 	
 	public var body: some View
     {
@@ -82,11 +82,9 @@ public struct AudioPlayerView : View
 				
 			Text(controller.time.shortTimecodeString())
 				.frame(width:54, alignment:.leading)
-//				.border(Color.red)
 				
 			TimeSlider(fraction:self.$controller.fraction)
 				.frame(height:12)
-//				.border(Color.red)
 		}
 		.reducedOpacityWhenDisabled()
 		.enabled(controller.isEnabled)
@@ -94,6 +92,8 @@ public struct AudioPlayerView : View
 		
     }
     
+    /// Return the icon name for the play/pause button
+	
     public var iconName:String
     {
 		controller.isPlaying ? "pause.fill" : "play.fill"
@@ -104,9 +104,15 @@ public struct AudioPlayerView : View
 //----------------------------------------------------------------------------------------------------------------------
 
 
+/// Displays a slide for setting the audio playback position
+
 public struct TimeSlider : View
 {
+	// Model
+	
 	@Binding var fraction:Double
+	
+	// Build View
 	
 	public var body: some View
     {
@@ -129,6 +135,8 @@ public struct TimeSlider : View
 		
     }
     
+    /// Returns the offset (in points from left edge) of the playback position
+	
     func offset(for geometry:GeometryProxy) -> CGFloat
     {
 		let W = geometry.size.width - 2
@@ -136,10 +144,14 @@ public struct TimeSlider : View
 		return w
     }
     
+    /// Color of the slider track
+	
     var trackColor:Color
     {
 		Color.primary.opacity(0.2)
 	}
+	
+	/// Color of the slider thumb
 	
 	var thumbColor:Color
 	{
