@@ -45,7 +45,7 @@ public class AudioObjectViewController : ObjectViewController
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	// The resue identifier for this CollectionView cell
+	// The reuse identifier for this CollectionView cell
 	
     override class var identifier:NSUserInterfaceItemIdentifier
     {
@@ -64,7 +64,14 @@ public class AudioObjectViewController : ObjectViewController
 	
 	override class var spacing:CGFloat { 0 }
 
-
+	// Set whenever playback status changes
+	
+	var isPlaying = false
+	{
+		didSet { redraw() }
+	}
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -78,12 +85,12 @@ public class AudioObjectViewController : ObjectViewController
 		
 		self.observers += NotificationCenter.default.publisher(for:AudioPreviewController.didStartPlayingObject, object:object).sink
 		{
-			[weak self] _ in self?.setPlaybackIcon()
+			[weak self] _ in self?.isPlaying = true
 		}
 		
 		self.observers += NotificationCenter.default.publisher(for:AudioPreviewController.didStopPlayingObject, object:object).sink
 		{
-			[weak self] _ in self?.setFileIcon()
+			[weak self] _ in self?.isPlaying = false
 		}
 
 		self.observers += self.view.publisher(for:\.effectiveAppearance).receive(on:RunLoop.main, options:nil).sink
@@ -153,13 +160,28 @@ public class AudioObjectViewController : ObjectViewController
 
 		// Update UI
 		
-		self.setFileIcon()
+		self.setIcon()
 		self.nameField?.stringValue = name
 		self.metadataField?.stringValue = description
 		self.durationField?.stringValue = duration.shortTimecodeString()
 		self.sizeField?.stringValue = size?.fileSizeDescription ?? ""
 		
 		self.nameField?.alphaValue = object.isLocallyAvailable ? 1.0 : 0.5
+	}
+	
+	
+	/// Chooses an appropriate icon to display for the current state
+	
+	func setIcon()
+	{
+		if self.isPlaying
+		{
+			self.setPlaybackIcon()
+		}
+		else
+		{
+			self.setFileIcon()
+		}
 	}
 	
 	
