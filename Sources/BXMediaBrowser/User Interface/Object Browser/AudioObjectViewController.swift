@@ -76,12 +76,12 @@ public class AudioObjectViewController : ObjectViewController
 		
 		// Listen to notifications to update the UI accordingly
 		
-		self.observers += NotificationCenter.default.publisher(for:AudioPlayerController.didStartPlayingObject, object:object).sink
+		self.observers += NotificationCenter.default.publisher(for:AudioPreviewController.didStartPlayingObject, object:object).sink
 		{
 			[weak self] _ in self?.setPlaybackIcon()
 		}
 		
-		self.observers += NotificationCenter.default.publisher(for:AudioPlayerController.didStopPlayingObject, object:object).sink
+		self.observers += NotificationCenter.default.publisher(for:AudioPreviewController.didStopPlayingObject, object:object).sink
 		{
 			[weak self] _ in self?.setFileIcon()
 		}

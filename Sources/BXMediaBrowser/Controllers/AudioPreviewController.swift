@@ -32,7 +32,7 @@ import AVKit
 
 /// This class can preview play audio of an Object
 
-public class AudioPlayerController : NSObject, ObservableObject, AVAudioPlayerDelegate
+public class AudioPreviewController : NSObject, ObservableObject, AVAudioPlayerDelegate
 {
 	/// The current Object that can be played
 
@@ -59,11 +59,11 @@ public class AudioPlayerController : NSObject, ObservableObject, AVAudioPlayerDe
 	
 	/// This notification is sent when the audio of an Object starts playing
 		
-	public static let didStartPlayingObject = NSNotification.Name("AudioPlayerController.didStartPlayingObject")
+	public static let didStartPlayingObject = NSNotification.Name("AudioPreviewController.didStartPlayingObject")
 	
 	/// This notification is sent when the audio of an Object stops playing
 		
-	public static let didStopPlayingObject = NSNotification.Name("AudioPlayerController.didStopPlayingObject")
+	public static let didStopPlayingObject = NSNotification.Name("AudioPreviewController.didStopPlayingObject")
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -71,7 +71,7 @@ public class AudioPlayerController : NSObject, ObservableObject, AVAudioPlayerDe
 
 	// MARK: - Setup
 
-	/// Creates a new AudioPlayerController instance
+	/// Creates a new AudioPreviewController instance
 	
 	override public init()
 	{
