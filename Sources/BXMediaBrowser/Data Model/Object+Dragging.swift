@@ -83,8 +83,6 @@ extension Object : NSFilePromiseProviderDelegate
 					logDragAndDrop.error {"\(Self.self).\(#function) ERROR \(error)"}
 				}
 			}
-			
-			
 		}
     }
 
