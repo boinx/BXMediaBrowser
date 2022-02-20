@@ -322,16 +322,19 @@ public class ObjectViewController : NSCollectionViewItem
 	open func quickLook()
 	{
 		guard let collectionView = self.collectionView as? QuicklookCollectionView else { return }
-		collectionView.quickLook()
+		collectionView.quicklook()
 	}
 	
 	/// By default this function calls quicklook(), but subclasses can override this method to implement
 	/// a different preview mechanism.
 	
-	open func preview()
+	open func preview(with event:NSEvent?)
 	{
 		self.quickLook()
 	}
+	
+	/// Called when this cell is double-clicked. If a doubleClickHandler is set then it will be called,
+	/// otherwise the preview() function is called.
 	
 	@IBAction func onDoubleClick(_ sender:Any?)
 	{
@@ -341,7 +344,7 @@ public class ObjectViewController : NSCollectionViewItem
 		}
 		else
 		{
-			self.preview()
+			self.preview(with:NSApp.currentEvent)
 		}
 	}
 }

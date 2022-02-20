@@ -48,14 +48,13 @@ class QuicklookCollectionView : NSCollectionView, QLPreviewPanelDataSource , QLP
 		}
 	}
 
-
-	// Pressing the spacebar key toggles the QLPreviewPanel
+	// Pressing the spacebar key previews the selected items
 	
 	override public func keyDown(with event:NSEvent)
 	{
 		if event.charactersIgnoringModifiers == " "
 		{
-			self.quickLook()
+			self.preview(with:event)
 		}
 		else
 		{
@@ -63,10 +62,31 @@ class QuicklookCollectionView : NSCollectionView, QLPreviewPanelDataSource , QLP
 		}
 	}
 	
+	/// Previews the selected items.
 	
-	/// Toggles the visibility of the QLPreviewPanel
+	func preview(with event:NSEvent)
+	{
+		let indexPaths = self.selectionIndexPaths
+		
+		// If a single item is selected, then go through the preview() function of this item as this offers
+		// some subclass customization possibilities.
+		
+		if indexPaths.count == 1, let indexPath = indexPaths.first, let item = self.item(at:indexPath) as? ObjectViewController
+		{
+			item.preview(with:event)
+		}
+		
+		// Otherwise just show the QuickLook panel
+		
+		else
+		{
+			self.quicklook()
+		}
+	}
 	
-	func quickLook()
+	/// Toggles the visibility of the QLQuickLook panelPreviewPanel
+	
+	func quicklook()
 	{
 		guard !self.selectionIndexPaths.isEmpty else { return }
 		guard let panel = QLPreviewPanel.shared() else { return }
@@ -75,10 +95,6 @@ class QuicklookCollectionView : NSCollectionView, QLPreviewPanelDataSource , QLP
         {
              panel.makeKeyAndOrderFront(nil)
         }
-//        else
-//        {
-//			panel.orderOut(nil)
-//        }
 	}
 
 

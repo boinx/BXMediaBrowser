@@ -262,9 +262,16 @@ public class AudioObjectViewController : ObjectViewController
 	
 	// Instead of QuickLook we use the AudioPreviewController - this is more intuitive for this use case
 	
-	override open func preview()
+	override open func preview(with event:NSEvent?)
 	{
-		AudioPreviewController.shared.play()
+		if let event = event, event.type == .keyDown
+		{
+			AudioPreviewController.shared.toggle()	// If spacebar key - so toggle playback
+		}
+		else
+		{
+			AudioPreviewController.shared.play()	// Otherwise assume double-click, so just play
+		}
 	}
 }
 
