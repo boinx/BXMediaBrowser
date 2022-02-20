@@ -60,7 +60,9 @@ public struct AudioObjectFooterView : View
 
 public struct AudioPlayerView : View
 {
-	@StateObject var controller = AudioPreviewController()
+	// Model
+
+	@EnvironmentObject var controller:AudioPreviewController
 	
 	// View
 	

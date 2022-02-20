@@ -34,6 +34,10 @@ import AVKit
 
 public class AudioPreviewController : NSObject, ObservableObject, AVAudioPlayerDelegate
 {
+	/// A shared singleton instance of AudioPreviewController
+	
+	public static let shared = AudioPreviewController()
+	
 	/// The current Object that can be played
 
 	public var object:Object? = nil
