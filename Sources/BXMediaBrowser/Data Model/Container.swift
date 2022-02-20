@@ -238,6 +238,17 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 				BXMediaBrowser.logDataModel.verbose {"    containers = \(containerNames)"}
 				BXMediaBrowser.logDataModel.verbose {"    objects = \(objectNames)"}
 				
+				// Link the objects
+				
+				var prev:Object? = nil
+				
+				for object in objects
+				{
+					prev?.next = object
+					object.next = nil
+					prev = object
+				}
+				
 				// Check if this container should be expanded
 				
 				let isExpanded = containerState?[isExpandedKey] as? Bool ?? self.isExpanded

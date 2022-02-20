@@ -56,6 +56,10 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 	/// This dictionary contains various metadata information, usually with keys derived from ImageIO or AVFoundation
 	
 	@MainActor @Published public private(set) var metadata:[String:Any]? = nil
+	
+	/// A reference to the next Object according to the current ordering
+	
+	public internal(set) weak var next:Object? = nil
 
 	@MainActor @Published public internal(set) var isLocallyAvailable:Bool = true
 	@MainActor @Published public internal(set) var isDownloadable:Bool = false
