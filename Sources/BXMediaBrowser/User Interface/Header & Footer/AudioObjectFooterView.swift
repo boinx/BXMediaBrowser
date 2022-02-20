@@ -78,7 +78,7 @@ public struct AudioPlayerView : View
 					}
 			}
 				
-			Text(controller.currentTime.shortTimecodeString())
+			Text(controller.time.shortTimecodeString())
 				.frame(width:54, alignment:.leading)
 //				.border(Color.red)
 				
