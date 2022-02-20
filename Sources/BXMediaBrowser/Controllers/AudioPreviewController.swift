@@ -203,6 +203,15 @@ public class AudioPreviewController : NSObject, ObservableObject, AVAudioPlayerD
 		NotificationCenter.default.post(name:Self.didStopPlayingObject, object:self.object)
 	}
 	
+	/// Advances or goes back be the specified time delta
+	
+	public func jump(by delta:Double)
+	{
+		let max = duration - 0.05 // just before end, so that autoPlay keeps working!
+		let t = (time+delta).clipped(to:0...max)
+		self.time = t
+	}
+	
 	/// This function called when the currently playing audio Object reaches its end. If autoPlay is enabled,
 	/// the next audio Object will automatically start playing.
 	

@@ -72,11 +72,25 @@ public struct AudioPlayerView : View
 		{
 			if #available(macOS 11, *)
 			{
+				SwiftUI.Image(systemName:"gobackward.15")
+					.contentShape(Rectangle().inset(by:-6))
+					.onTapGesture
+					{
+						self.controller.jump(by:-15)
+					}
+
 				SwiftUI.Image(systemName:iconName)
 					.contentShape(Rectangle().inset(by:-6))
 					.onTapGesture
 					{
 						self.controller.toggle()
+					}
+
+				SwiftUI.Image(systemName:"goforward.15")
+					.contentShape(Rectangle().inset(by:-6))
+					.onTapGesture
+					{
+						self.controller.jump(by:+15)
 					}
 			}
 				
