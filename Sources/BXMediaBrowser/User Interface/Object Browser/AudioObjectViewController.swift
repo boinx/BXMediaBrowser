@@ -99,7 +99,7 @@ public class AudioObjectViewController : ObjectViewController
 		self.metadataField?.lineBreakMode = .byTruncatingTail
 	}
 	
-	
+
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -220,16 +220,22 @@ public class AudioObjectViewController : ObjectViewController
 
 	// MARK: - Selecting
 	
+	/// The current selection state
+
     override public var isSelected:Bool
     {
         didSet { self.updateHighlight() }
     }
 
+	/// The current HighlightState
+	
 	override public var highlightState:NSCollectionViewItem.HighlightState
     {
         didSet { self.updateHighlight() }
     }
-
+	
+	// Whenever isSelected or highlightState have changed, then visual appearance of this cell is updated appropriately
+	
     private func updateHighlight()
     {
         guard isViewLoaded else { return }
@@ -237,23 +243,15 @@ public class AudioObjectViewController : ObjectViewController
 		let isHilited = self.isSelected	|| self.highlightState != .none
 		let backgroundColor = isHilited ? NSColor.systemBlue : NSColor.clear
 		let textColor = isHilited ? NSColor.white : NSColor.textColor
+		var iconColor = self.view.effectiveAppearance.isDarkMode ? NSColor.white : NSColor.black
+		if isHilited { iconColor = NSColor.white }
 
 		self.view.layer?.backgroundColor = backgroundColor.cgColor
-		
-		imageView?.contentTintColor = self.iconTintColor()
-		nameField?.textColor = textColor
-		metadataField?.textColor = textColor
-		durationField?.textColor = textColor
-		sizeField?.textColor = textColor
-    }
-    
-    private func iconTintColor() -> NSColor
-    {
-		if isSelected { return NSColor.white }
-		
-		return self.view.effectiveAppearance.isDarkMode ?
-			NSColor.white :
-			NSColor.black
+		self.imageView?.contentTintColor = iconColor
+		self.nameField?.textColor = textColor
+		self.metadataField?.textColor = textColor
+		self.durationField?.textColor = textColor
+		self.sizeField?.textColor = textColor
     }
 }
 
@@ -261,6 +259,8 @@ public class AudioObjectViewController : ObjectViewController
 //----------------------------------------------------------------------------------------------------------------------
 
 
+// MARK: - Helpers
+	
 extension Int
 {
 	/// Creates a formatted file size description for the number of bytes

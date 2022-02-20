@@ -184,5 +184,6 @@ class QuicklookCollectionView : NSCollectionView, QLPreviewPanelDataSource , QLP
 
 
 //----------------------------------------------------------------------------------------------------------------------
-#endif
 
+
+#endif

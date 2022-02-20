@@ -297,7 +297,7 @@ public class ObjectViewController : NSCollectionViewItem
 	
 	/// Shows the "Get Info" popover anchored on the view of this cell
 	
-	func getInfo()
+	open func getInfo()
 	{
 		// Choose the area of this cell where to display the popover
 		
@@ -319,7 +319,7 @@ public class ObjectViewController : NSCollectionViewItem
 	
 	/// Toggles the Quicklook panel for this NSCollectionView
 	
-	func quickLook()
+	open func quickLook()
 	{
 		guard let collectionView = self.collectionView as? QuicklookCollectionView else { return }
 		collectionView.quickLook()
