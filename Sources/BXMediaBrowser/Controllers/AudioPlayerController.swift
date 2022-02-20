@@ -30,47 +30,93 @@ import AVKit
 //----------------------------------------------------------------------------------------------------------------------
 
 
+/// This class can preview play audio of an Object
+
 public class AudioPlayerController : NSObject, ObservableObject, AVAudioPlayerDelegate
 {
-	public var url:URL? = nil
+	/// The current Object that can be played
+
+	public var object:Object? = nil
 	{
 		didSet { self.updatePlayer() }
 	}
 
+	/// When true, the next Object will automatically start playing after tthe current Object reaches the end.
+	
+	public var autoPlay = true
+	
+	/// The player handler audio playback
+	
 	private var player:AVAudioPlayer? = nil
-	private var urlObserver:Any? = nil
+	
+	/// This subscriber listens to Object selection notifications
+	
+	private var objectObserver:Any? = nil
+	
+	/// This timer fire regularly to update the audio player user interface while audio is playing
+	
 	private var timeObserver:Any? = nil
 	
+	/// This notification is sent when the audio of an Object starts playing
+		
+	public static let didStartPlayingObject = NSNotification.Name("AudioPlayerController.didStartPlayingObject")
+	
+	/// This notification is sent when the audio of an Object stops playing
+		
+	public static let didStopPlayingObject = NSNotification.Name("AudioPlayerController.didStopPlayingObject")
 
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - Setup
+
+	/// Creates a new AudioPlayerController instance
+	
 	override public init()
 	{
 		super.init()
 		
-		self.urlObserver = NotificationCenter.default.publisher(for:NSCollectionView.didSelectObjects, object:nil).sink
+		self.objectObserver = NotificationCenter.default.publisher(for:NSCollectionView.didSelectObjects, object:nil).sink
 		{
-			[weak self] in
-			let objects = $0.object as? [Object] ?? []
-			self?.updateURL(with:objects)
+			[weak self] in self?.updateObject(with:$0)
 		}
 	}
 	
-	private func updateURL(with objects:[Object])
+	/// Called when new Object are selected in the ObjectCollectionView. If a single Object was selected, and
+	/// it has a previewItemURL, then it is eligible for audio playback.
+	
+	private func updateObject(with notification:Notification)
 	{
-		if objects.count == 1, let object = objects.first, let url = object.previewItemURL
+		// If we currently have audio playing, then send a didStop notification, because the player is
+		// about to be released.
+	
+		if let object = self.object, self.isPlaying
 		{
-			self.url = url
+			NotificationCenter.default.post(name:Self.didStopPlayingObject, object:object)
+		}
+
+		// Store reference to the new current Object. This will also create a new player (see next function).
+		
+		if let objects = notification.object as? [Object], objects.count == 1, let object = objects.first, object.previewItemURL != nil
+		{
+			self.object = object
 		}
 		else
 		{
-			self.url = nil
+			self.object = nil
 		}
 	}
 	
-	public func updatePlayer()
+	/// This function is called whenever the current Object changes. In this case a new player is created.
+	
+	private func updatePlayer()
 	{
-		if self.url != self.player?.url
+		let url = self.object?.previewItemURL
+		
+		if url != self.player?.url
 		{
-			if let url = self.url
+			if let url = url
 			{
 				let wasPlaying = self.isPlaying
 				self.createPlayer(for:url)
@@ -83,7 +129,9 @@ public class AudioPlayerController : NSObject, ObservableObject, AVAudioPlayerDe
 		}
 	}
 	
-	public func createPlayer(for url:URL)
+	/// Creates a new player for the specified file URL. A timer for updating the user interface is also created.
+	
+	private func createPlayer(for url:URL)
 	{
 		self.objectWillChange.send()
 
@@ -99,77 +147,109 @@ public class AudioPlayerController : NSObject, ObservableObject, AVAudioPlayerDe
 		}
 	}
 	
-	public func deletePlayer()
+	/// Deletes the currently player and UI timer
+	
+	private func deletePlayer()
 	{
 		self.objectWillChange.send()
 		self.player = nil
 		self.timeObserver = nil
 	}
 	
-	public var isEnabled:Bool
-	{
-		self.player != nil
-	}
-}
-
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-extension AudioPlayerController
-{
+	// MARK: - Control
+
+	/// Toggles audio playback between playing and paused.
+	
 	public func toggle()
 	{
 		if isPlaying { self.pause() } else { self.play() }
 	}
 	
+	/// Start audio playback and sends a notification to the user interface.
+	
 	public func play()
 	{
+		guard isEnabled else { return }
 		self.objectWillChange.send()
 
 		if self.player == nil
 		{
-			if let url = self.url
+			if let url = self.object?.previewItemURL
 			{
 				self.createPlayer(for:url)
 			}
 		}
 		
 		self.player?.play()
+		NotificationCenter.default.post(name:Self.didStartPlayingObject, object:self.object)
 	}
+	
+	/// Pauses audio playback and sends a notification to the UI.
 	
 	public func pause()
 	{
+		guard isEnabled else { return }
 		self.objectWillChange.send()
+		
 		self.player?.pause()
+		NotificationCenter.default.post(name:Self.didStopPlayingObject, object:self.object)
 	}
+	
+	/// This function called when the currently playing audio Object reaches its end. If autoPlay is enabled,
+	/// the next audio Object will automatically start playing.
+	
+	public func audioPlayerDidFinishPlaying(_ player:AVAudioPlayer, successfully:Bool)
+	{
+		NotificationCenter.default.post(name:Self.didStopPlayingObject, object:self.object)
+
+		if successfully
+		{
+			if autoPlay, let nextObject = self.object?.next
+			{
+				self.object = nextObject
+				self.play()
+			}
+			else
+			{
+				self.deletePlayer()
+			}
+		}
+	}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - Accessors
+
+	/// Returns true if a current Object is set and playback is possible.
+	
+	public var isEnabled:Bool
+	{
+		self.player != nil
+	}
+
+	/// Returns true is audio is currently playing
 	
 	public var isPlaying:Bool
 	{
 		self.player?.isPlaying ?? false
 	}
 	
-	public func audioPlayerDidFinishPlaying(_ player:AVAudioPlayer, successfully:Bool)
-	{
-		if successfully
-		{
-			self.deletePlayer()
-		}
-	}
-}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-extension AudioPlayerController
-{
+	/// Returns the duration (in seconds) of the current audio Object.
+	
 	public var duration:Double
 	{
 		self.player?.duration ?? 0.0
 	}
 	
-	public var currentTime:Double
+	/// Returns the current playback time (in seconds).
+	
+	public var time:Double
 	{
 		set
 		{
@@ -183,18 +263,20 @@ extension AudioPlayerController
 		}
 	}
 	
+	/// Returns the fraction of the audio file that has been played already.
+	
 	public var fraction:Double
 	{
 		set
 		{
-			self.currentTime = self.duration * newValue
+			self.time = self.duration * newValue
 		}
 		
 		get
 		{
 			let duration = self.duration
 			guard duration > 0.0 else { return 0.0 }
-			return currentTime / duration
+			return time / duration
 		}
 	}
 }
