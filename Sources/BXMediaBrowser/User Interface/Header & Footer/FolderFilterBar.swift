@@ -64,6 +64,9 @@ public struct FolderFilterBar : View
 			// Sort order
 			
 			Text("Sort by:")
+				.lineLimit(1)
+				.truncationMode(.tail)
+				.layoutPriority(-1)
 			
 			MenuButton(filter.sortType.localizedName)
 			{
