@@ -253,6 +253,19 @@ public class AudioObjectViewController : ObjectViewController
 		self.durationField?.textColor = textColor
 		self.sizeField?.textColor = textColor
     }
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - Actions
+	
+	// Instead of QuickLook we use the AudioPreviewController - this is more intuitive for this use case
+	
+	override open func preview()
+	{
+		AudioPreviewController.shared.play()
+	}
 }
 
 

@@ -325,6 +325,13 @@ public class ObjectViewController : NSCollectionViewItem
 		collectionView.quickLook()
 	}
 	
+	/// By default this function calls quicklook(), but subclasses can override this method to implement
+	/// a different preview mechanism.
+	
+	open func preview()
+	{
+		self.quickLook()
+	}
 	
 	@IBAction func onDoubleClick(_ sender:Any?)
 	{
@@ -334,7 +341,7 @@ public class ObjectViewController : NSCollectionViewItem
 		}
 		else
 		{
-			self.quickLook()
+			self.preview()
 		}
 	}
 }
