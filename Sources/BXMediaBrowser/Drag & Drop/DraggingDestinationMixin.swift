@@ -82,23 +82,23 @@ extension DraggingDestinationMixin
 	// MARK: - NSDraggingDestination
 	
 	
-	public func _draggingEntered(_ draggingInfo:NSDraggingInfo) -> NSDragOperation
+	@MainActor public func _draggingEntered(_ draggingInfo:NSDraggingInfo) -> NSDragOperation
     {
  		self.highlightViewHandler?(true)
 		return .copy
     }
 
-	public func _draggingExited(_ draggingInfo:NSDraggingInfo?)
+	@MainActor public func _draggingExited(_ draggingInfo:NSDraggingInfo?)
     {
  		self.highlightViewHandler?(false)
     }
 
-	public func _performDragOperation(_ draggingInfo:NSDraggingInfo) -> Bool
+	@MainActor public func _performDragOperation(_ draggingInfo:NSDraggingInfo) -> Bool
 	{
 		return self.receiveDroppedFiles(with:draggingInfo)
  	}
 
-	public func _concludeDragOperation(_ draggingInfo:NSDraggingInfo?)
+	@MainActor public func _concludeDragOperation(_ draggingInfo:NSDraggingInfo?)
     {
  		self.highlightViewHandler?(false)
     }
@@ -113,7 +113,7 @@ extension DraggingDestinationMixin
 	/// Retrieves dragged files from the dragging pasteboard in of several datatypes. Whichever type
 	/// has the highest priority will be processed, the other types will be ignored.
 	
-	public func receiveDroppedFiles(with draggingInfo:NSDraggingInfo) -> Bool
+	@MainActor public func receiveDroppedFiles(with draggingInfo:NSDraggingInfo) -> Bool
 	{
         let options:[NSPasteboard.ReadingOptionKey:Any] =
         [
@@ -349,7 +349,7 @@ extension DraggingDestinationMixin
 	
 	private func updateProgress(_ fraction:Double)
 	{
-		DispatchQueue.main.async
+		DispatchQueue.main.asyncIfNeeded
 		{
 			let now = CFAbsoluteTimeGetCurrent()
 			let dt = now - self.startTime
@@ -373,7 +373,7 @@ extension DraggingDestinationMixin
 	
 	private func hideProgress()
 	{
-		DispatchQueue.main.async
+		DispatchQueue.main.asyncIfNeeded
 		{
 			logDragAndDrop.debug {"\(Self.self).\(#function)"}
 			

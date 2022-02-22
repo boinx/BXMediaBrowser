@@ -86,22 +86,22 @@ public class FolderDropDestination : NSObject, NSDraggingDestination, DraggingDe
 	// MARK: - NSDraggingDestination
 	
 	
-	public func draggingEntered(_ draggingInfo:NSDraggingInfo) -> NSDragOperation
+	@MainActor public func draggingEntered(_ draggingInfo:NSDraggingInfo) -> NSDragOperation
     {
 		self._draggingEntered(draggingInfo)
     }
 
-    public func draggingExited(_ draggingInfo:NSDraggingInfo?)
+    @MainActor public func draggingExited(_ draggingInfo:NSDraggingInfo?)
     {
 		self._draggingExited(draggingInfo)
     }
 
-	public func performDragOperation(_ draggingInfo:NSDraggingInfo) -> Bool
+	@MainActor public func performDragOperation(_ draggingInfo:NSDraggingInfo) -> Bool
 	{
 		return self._performDragOperation(draggingInfo)
 	}
 
-	public func concludeDragOperation(_ draggingInfo:NSDraggingInfo?)
+	@MainActor public func concludeDragOperation(_ draggingInfo:NSDraggingInfo?)
     {
 		self._concludeDragOperation(draggingInfo)
     }
@@ -142,12 +142,13 @@ public class FolderDropDestination : NSObject, NSDraggingDestination, DraggingDe
 			logDragAndDrop.error {"\(Self.self).\(#function) ERROR \(error)"}
 		}
 		
-		// Otherwise copy the file to the destination folder
+		// Otherwise copy the file to the destination folder (but only if it is a different folder)
 		
 		else if let url = url
 		{
 			let filename = url.lastPathComponent
 			let dstURL = self.folderURL.appendingPathComponent(filename)
+			guard url != dstURL else { return }
 			
 			do
 			{
