@@ -167,6 +167,11 @@ open class UnsplashObject : Object
 	
 	override var localFileName:String
 	{
+		Self.localFileName(for:identifier, data:data)
+	}
+	
+	static func localFileName(for identifier:String, data:Any) -> String
+	{
 		// Fallback filename
 		
 		var name = "UnsplashPhoto"
@@ -216,8 +221,20 @@ open class UnsplashObject : Object
 	{
 		UnsplashSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
+		// Download the file
+		
 		let remoteURL = try remoteURL(for:identifier, data:data)
-		let localURL = try await URLSession.shared.downloadFile(from:remoteURL)
+		let tmpURL = try await URLSession.shared.downloadFile(from:remoteURL)
+		
+		// Rename the file
+		
+		let folderURL = tmpURL.deletingLastPathComponent()
+		let filename = self.localFileName(for:identifier, data:data)
+		let localURL = folderURL.appendingPathComponent(filename)
+		try FileManager.default.moveItem(at:tmpURL, to:localURL)
+		
+		// Register in TempFilePool
+		
 		TempFilePool.shared.register(localURL)
 		return localURL
 	}

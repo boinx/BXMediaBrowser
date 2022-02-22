@@ -33,9 +33,9 @@ public struct FileDropDestinationView : NSViewRepresentable
 {
 	public typealias NSViewType = _FileDropDestinationView
 
-	public var fileDropDestination:FileDropDestination? = nil
+	public var fileDropDestination:FolderDropDestination? = nil
 	
-	public init(with fileDropDestination:FileDropDestination?)
+	public init(with fileDropDestination:FolderDropDestination?)
 	{
 		self.fileDropDestination = fileDropDestination
 	}
@@ -62,11 +62,11 @@ public class _FileDropDestinationView : NSView
 	/// An externally supplied FileDropDestination helper object. This helper object implements the
 	/// NSDraggingDestination for dropped files.
 	
- 	internal var fileDropDestination:FileDropDestination? = nil
+ 	internal var fileDropDestination:FolderDropDestination? = nil
 	{
 		didSet
 		{
-			self.fileDropDestination?.highlightDropTargetHandler = { [weak self] in self?.setHighlighted($0) }
+			self.fileDropDestination?.highlightViewHandler = { [weak self] in self?.setHighlighted($0) }
 		}
 	}
 	
@@ -83,7 +83,7 @@ public class _FileDropDestinationView : NSView
 	override init(frame:NSRect)
 	{
 		super.init(frame:frame)
-		FileDropDestination.registerDragTypes(for:self)
+		FolderDropDestination.registerDragTypes(for:self)
 	}
 	
 	required init?(coder: NSCoder)

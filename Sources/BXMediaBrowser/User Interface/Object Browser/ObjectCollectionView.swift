@@ -103,7 +103,7 @@ public struct ObjectCollectionView<Cell:ObjectViewController> : NSViewRepresenta
 		collectionView.delegate = context.coordinator
         collectionView.setDraggingSourceOperationMask([.copy], forLocal:true)
         collectionView.setDraggingSourceOperationMask([.copy], forLocal:false)
-		FileDropDestination.registerDragTypes(for:collectionView)
+		FolderDropDestination.registerDragTypes(for:collectionView)
 		
 		// Wrap in a NSScrollView
 		

@@ -57,7 +57,7 @@ open class FolderContainer : Container
 		
 		self.folderObserver.resume()
 		
-		self.fileDropDestination = FileDropDestination(folderURL:url)
+		self.fileDropDestination = FolderDropDestination(folderURL:url)
 	}
 
 
