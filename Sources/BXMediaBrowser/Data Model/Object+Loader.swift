@@ -191,13 +191,10 @@ extension Object
 		{
 			get async throws
 			{
-				// If we already have the local file, then return it immediately. Progress will be faked.
+				// If we already have the local file, then return it immediately
 				
 				if let url = self._localFileURL
 				{
-					let childProgress = Progress(totalUnitCount:1)
-					Progress.globalParent?.addChild(childProgress, withPendingUnitCount:1)
-					childProgress.completedUnitCount = 1
 					return url
 				}
 				
