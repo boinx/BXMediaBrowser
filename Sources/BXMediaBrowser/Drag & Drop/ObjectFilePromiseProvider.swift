@@ -51,15 +51,14 @@ public class ObjectFilePromiseProvider : NSFilePromiseProvider
 	
 	/// This type identifies the native Object on the NSPasteboard
 	
-	public static let objectIdentifierType = NSPasteboard.PasteboardType.string // NSPasteboard.PasteboardType("com.boinx.BXMediaBrowser.Object.identifier")
-
-//	public static let fileURLType = NSPasteboard.PasteboardType(kUTTypeFileURL as String)
+	public static let objectIdentifierType = NSPasteboard.PasteboardType.string
 	
 	
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	///
+	/// Creates a new ObjectFilePromiseProvider with an attached Object
+	
 	public convenience init(object:Object?, fileType:String, delegate:NSFilePromiseProviderDelegate)
 	{
 		self.init(fileType:fileType, delegate:delegate)
@@ -67,7 +66,7 @@ public class ObjectFilePromiseProvider : NSFilePromiseProvider
 		self.storeDraggedObject()
 	}
 	
-	/// Stores a reference to the dragged Object in the dictionary of NSFilePromiseReceiver
+	/// Stores a reference to the dragged Object in the global dictionary 
 	
 	private func storeDraggedObject()
 	{
@@ -100,7 +99,6 @@ public class ObjectFilePromiseProvider : NSFilePromiseProvider
         if object != nil
         {
 			types.append(Self.objectIdentifierType)
-//			types.append(Self.fileURLType)
         }
         
         return types;
@@ -110,7 +108,7 @@ public class ObjectFilePromiseProvider : NSFilePromiseProvider
 
     public override func writingOptions(forType type:NSPasteboard.PasteboardType, pasteboard:NSPasteboard) -> NSPasteboard.WritingOptions
     {
-        if type == Self.objectIdentifierType //|| type == Self.fileURLType
+        if type == Self.objectIdentifierType
         {
             return []
         }
@@ -126,11 +124,6 @@ public class ObjectFilePromiseProvider : NSFilePromiseProvider
         {
             return self.object?.identifier
         }
-//        else if type == Self.fileURLType
-//        {
-//			#warning("FIXME: get real local file URL")
-//            return self.object?.previewItemURL.absoluteString
-//        }
 
         return super.pasteboardPropertyList(forType:type)
     }

@@ -110,8 +110,8 @@ extension DraggingDestinationMixin
 	// MARK: - Receiving Files
 	
 	
-	/// Retrieves dragged files from the dragging pasteboard in of several datatypes. Whichever type has the
-	/// highest priority will be processed, the other types will be ignored.
+	/// Retrieves dragged files from the dragging pasteboard in of several datatypes. Whichever type
+	/// has the highest priority will be processed, the other types will be ignored.
 	
 	public func reveiceDroppedFiles(with draggingInfo:NSDraggingInfo) -> Bool
 	{
@@ -120,18 +120,21 @@ extension DraggingDestinationMixin
 			.urlReadingFileURLsOnly : true
 		]
 		
-		// First look for native Object instances and receive them (in-app drag & drop)
+		// First look for native Object instances. This is the preferred datatype, because the native
+		// Objects provide the best experience, as they carry a lot of metadata.
 
 		if let identifiers = draggingInfo.draggingPasteboard.readObjects(forClasses:[NSString.self], options:options) as? [String], !identifiers.isEmpty
 		{
-			return self.receivedItems(identifiers)
+			let objects = identifiers.compactMap { Object.draggedObject(for:$0) }
+			
+			return self.receivedItems(objects)
 			{
-				let object = Object.draggedObject(for:$0)
-				self.receiveObject(object)
+				self.receiveObject($0)
 			}
 		}
 		
-		// Next look for dragged file URLs and receive them (e.g. drag from Finder)
+		// If the previous step failed, then look for dragged file URLs instead, e.g. a drag from Finder.
+		// In this case we will only get the file URLs, without any accompagning metadata.
 		
 		if let urls = draggingInfo.draggingPasteboard.readObjects(forClasses:[NSURL.self], options:options) as? [URL], !urls.isEmpty
 		{
@@ -140,17 +143,7 @@ extension DraggingDestinationMixin
 				self.receiveFile(with:$0)
 			}
 		}
-		
-		// Finally look for NSFilePromiseReceivers and receive them
-		
-//		if let promises = draggingInfo.draggingPasteboard.readObjects(forClasses:[NSFilePromiseReceiver.self], options:options) as? [NSFilePromiseReceiver], !promises.isEmpty
-//		{
-//			return self.receivedItems(promises)
-//			{
-//				self.receiveFile(with:$0)
-//			}
-//		}
-		
+
 		// Nothing found
 		
 		return false
@@ -192,7 +185,7 @@ extension DraggingDestinationMixin
 		guard let object = object else { return }
 		let identifier = object.identifier
 
-		logDragAndDrop.debug {"\(Self.self).\(#function)  object = \(object)  identifier = \(identifier)"}
+		logDragAndDrop.debug {"\(Self.self).\(#function)  object=\(object)  identifier=\(identifier)"}
 		
 		Task
 		{
@@ -219,7 +212,7 @@ extension DraggingDestinationMixin
 	{
 		guard url.isFileURL else { return }
 
-		logDragAndDrop.debug {"\(Self.self).\(#function) url = \(url)"}
+		logDragAndDrop.debug {"\(Self.self).\(#function)  url=\(url)"}
 		
 		DispatchQueue.main.asyncIfNeeded
 		{
@@ -255,9 +248,6 @@ extension DraggingDestinationMixin
 //	}
 	
 	
-//----------------------------------------------------------------------------------------------------------------------
-
-
 	/// Downloads a promised file and copies it to the destination folder
 	
 //	private func copyFile(with receiver:NSFilePromiseReceiver)
@@ -370,10 +360,11 @@ extension DraggingDestinationMixin
 			
 			if !BXProgressWindowController.shared.isVisible && dt>1.0 && fraction<0.8
 			{
+				logDragAndDrop.debug {"\(Self.self).\(#function)  show progress window"}
 				BXProgressWindowController.shared.show()
 			}
 
-			logDragAndDrop.verbose {"\(Self.self).\(#function)   progress = \(percent)%   duration = \(dt)s"}
+			logDragAndDrop.verbose {"\(Self.self).\(#function)  progress=\(percent)%%  duration=\(dt)s"}
 		}
 	}
 	
