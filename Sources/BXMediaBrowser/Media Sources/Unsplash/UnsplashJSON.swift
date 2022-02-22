@@ -34,25 +34,6 @@ public struct UnsplashPhoto : Codable
 	public let links:UnsplashLinks
 	public let exif:UnsplashExif?
     public let location:UnsplashLocation?
-	
-	private enum CodingKeys : String,CodingKey
-    {
-        case id
-        case created_at
-        case height
-        case width
-        case urls
-        case description
-        case public_domain
-        case user
-        case links
-        case exif
-        case location
-    }
-
-    // Not included in Codable
-    
-    public var progress = Progress(totalUnitCount:1)
 }
 
 
