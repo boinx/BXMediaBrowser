@@ -92,6 +92,8 @@ extension URLSession
 		{
 			continuation in
 
+			let isParentProgressAvailable = Progress.current() != nil
+		
 			// Download the file from remoteURL
 			
 			let task = self.downloadTask(with:remoteURL)
@@ -126,7 +128,10 @@ extension URLSession
 			// was created in a different thread (most likely the main thread). In this case we try to attach
 			// to globalParent (which is visible to all threads) as a workaround
 			
-			Progress.globalParent?.addChild(task.progress, withPendingUnitCount:1)
+			if !isParentProgressAvailable
+			{
+				Progress.globalParent?.addChild(task.progress, withPendingUnitCount:1)
+			}
 			
 			// Start downloading
 			
