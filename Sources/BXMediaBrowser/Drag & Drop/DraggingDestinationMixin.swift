@@ -217,37 +217,21 @@ extension DraggingDestinationMixin
 	{
 		guard !items.isEmpty else { return }
 
-//		await withTaskGroup(of:Void.self)
-//		{
-//			group in
-//
-//			for item in items
-//			{
-//				group.addTask
-//				{
-//					progress.becomeCurrent(withPendingUnitCount:1)
-//
-//					do
-//					{
-//						try await receive(item)
-//					}
-//					catch
-//					{
-//						item.error = error
-//						logDragAndDrop.error {"\(Self.self).\(#function) ERROR \(error)"}
-//					}
-//
-//					progress.resignCurrent()
-//				}
-//			}
-//		}
+		// Perform all downloads concurrently with a task group
 		
-		for item in items
+		try await withThrowingTaskGroup(of:Void.self)
 		{
-			progress.becomeCurrent(withPendingUnitCount:1)
-			try await receive(item)
-			progress.resignCurrent()
+			group in
+
+			for item in items
+			{
+				group.addTask { try await receive(item) }
+			}
+
+			try await group.waitForAll() // Needed to silence compiler warning - see https://stackoverflow.com/questions/70078461/withthrowingtaskgroup-no-calls-to-throwing-functions-occur-within-try-expres
 		}
+	
+		// Call completionHandler when all downloads are done
 		
 		await MainActor.run
 		{
