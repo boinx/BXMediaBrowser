@@ -109,6 +109,7 @@ extension URLSession
 				// Move file to backup location (because tmpURL will be deleted after lifetime of this completionHandler
 				
 				let tmpURL2 = tmpURL.appendingPathExtension("backup")
+				try? FileManager.default.removeItem(at:tmpURL2)
 				try? FileManager.default.linkItem(at:tmpURL, to:tmpURL2)
 				
 				// Return URL to backup file instead
