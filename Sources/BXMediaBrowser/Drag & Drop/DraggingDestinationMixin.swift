@@ -95,7 +95,7 @@ extension DraggingDestinationMixin
 
 	public func _performDragOperation(_ draggingInfo:NSDraggingInfo) -> Bool
 	{
-		return self.reveiceDroppedFiles(with:draggingInfo)
+		return self.receiveDroppedFiles(with:draggingInfo)
  	}
 
 	public func _concludeDragOperation(_ draggingInfo:NSDraggingInfo?)
@@ -113,7 +113,7 @@ extension DraggingDestinationMixin
 	/// Retrieves dragged files from the dragging pasteboard in of several datatypes. Whichever type
 	/// has the highest priority will be processed, the other types will be ignored.
 	
-	public func reveiceDroppedFiles(with draggingInfo:NSDraggingInfo) -> Bool
+	public func receiveDroppedFiles(with draggingInfo:NSDraggingInfo) -> Bool
 	{
         let options:[NSPasteboard.ReadingOptionKey:Any] =
         [

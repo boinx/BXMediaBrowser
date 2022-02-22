@@ -123,7 +123,7 @@ public class FolderDropDestination : NSObject, NSDraggingDestination, DraggingDe
 
 	@MainActor public func collectionView(_ collectionView:NSCollectionView, acceptDrop draggingInfo:NSDraggingInfo, indexPath:IndexPath, dropOperation:NSCollectionView.DropOperation) -> Bool
 	{
-		return self.reveiceDroppedFiles(with:draggingInfo)
+		return self.receiveDroppedFiles(with:draggingInfo)
 	}
 
 
