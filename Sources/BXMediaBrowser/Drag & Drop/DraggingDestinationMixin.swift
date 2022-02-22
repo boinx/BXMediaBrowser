@@ -33,13 +33,50 @@ import AppKit
 //----------------------------------------------------------------------------------------------------------------------
 
 
+public class DropItem
+{
+	/// The URL of the dropped file
+	
+	var url:URL? = nil
+	
+	/// For in-app drag & drop the reference to the Object is available. In this case you can access additional metadata
+	
+	var object:Object? = nil
+	
+	/// Any error that might have occured while processing this item
+	
+	var error:Error? = nil
+	
+	/// Creates a new DropItem
+	
+	public init(url:URL? = nil, object:Object? = nil, error:Error? = nil)
+	{
+		self.url = url
+		self.object = object
+		self.error = error
+	}
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+// MARK: -
+	
 public protocol DraggingDestinationMixin : AnyObject
 {
-	/// This handler is called for each received media file. In case of in-app drags,
-	/// the optional Object instance may also be supplied to the handler.
+	/// This handler is called once for each received item.
 	
-	var receiveFileHandler:((URL?,Object?,Error?)->Void)? { set get }
+	var processFileHandler:ProcessFileHandler? { set get }
 	
+	typealias ProcessFileHandler = (DropItem) throws -> Void
+
+	/// This handler is called after the asynchronous and concurrent receiving has completed. The array of DropItems maintains the original order.
+	
+	var completionHandler:CompletionHandler? { set get }
+	
+	typealias CompletionHandler = ([DropItem])->Void
+
 	/// If set this handler will be called at appropriate times to highlight
 	/// the drop destination view, as the mouse enters and leaves the view.
 	
@@ -61,7 +98,7 @@ public protocol DraggingDestinationMixin : AnyObject
 	
 //----------------------------------------------------------------------------------------------------------------------
 
-
+ 
 // MARK: -
 	
 extension DraggingDestinationMixin
@@ -95,7 +132,7 @@ extension DraggingDestinationMixin
 
 	@MainActor public func _performDragOperation(_ draggingInfo:NSDraggingInfo) -> Bool
 	{
-		return self.receiveDroppedFiles(with:draggingInfo)
+		return self.receiveItems(with:draggingInfo)
  	}
 
 	@MainActor public func _concludeDragOperation(_ draggingInfo:NSDraggingInfo?)
@@ -113,7 +150,7 @@ extension DraggingDestinationMixin
 	/// Retrieves dragged files from the dragging pasteboard in of several datatypes. Whichever type
 	/// has the highest priority will be processed, the other types will be ignored.
 	
-	@MainActor public func receiveDroppedFiles(with draggingInfo:NSDraggingInfo) -> Bool
+	@MainActor public func receiveItems(with draggingInfo:NSDraggingInfo) -> Bool
 	{
         let options:[NSPasteboard.ReadingOptionKey:Any] =
         [
@@ -126,24 +163,25 @@ extension DraggingDestinationMixin
 		if let identifiers = draggingInfo.draggingPasteboard.readObjects(forClasses:[NSString.self], options:options) as? [String], !identifiers.isEmpty
 		{
 			let objects = identifiers.compactMap { Object.draggedObject(for:$0) }
+			let items = objects.map { DropItem(object:$0) }
 			let progress = self.prepareProgress(with:objects.count)
 
 			Task
 			{
-				for object in objects
+				await self.receiveItems(items, progress:progress)
 				{
-					progress.becomeCurrent(withPendingUnitCount:1)
-					await self.receiveObject(object)
-					progress.resignCurrent()
+					item in
+					
+					if let object = item.object
+					{
+						let url = try await object.localFileURL
+						item.url = url
+						try self.processFileHandler?(item)
+					}
 				}
 			}
 
 			return true
-			
-//			return self.receivedItems(objects)
-//			{
-//				self.receiveObject($0)
-//			}
 		}
 		
 		// If the previous step failed, then look for dragged file URLs instead, e.g. a drag from Finder.
@@ -152,22 +190,18 @@ extension DraggingDestinationMixin
 		if let urls = draggingInfo.draggingPasteboard.readObjects(forClasses:[NSURL.self], options:options) as? [URL], !urls.isEmpty
 		{
 			let progress = self.prepareProgress(with:urls.count)
+			let items = urls.map { DropItem(url:$0) }
 
 			Task
 			{
-				for url in urls
+				await self.receiveItems(items, progress:progress)
 				{
-					progress.becomeCurrent(withPendingUnitCount:1)
-					await self.receiveFile(with:url)
-					progress.resignCurrent()
+					item in
+					try self.processFileHandler?(item)
 				}
 			}
 
 			return true
-//			return self.receivedItems(urls)
-//			{
-//				self.receiveFile(with:$0)
-//			}
 		}
 
 		// Nothing found
@@ -176,148 +210,61 @@ extension DraggingDestinationMixin
 	}
 
 
-	/// This generic function receive a list of Items (generic type) and calls the receiveHandler for each item.
-	/// If this process takes a while a progress bar will be displayed automatically.
+	/// This generic function receives a list of DropItems and calls the receive closure for each item.
+	/// If this async operation takes a while a progress bar will be displayed automatically.
 	
-	private func receivedItems<Item>(_ items:[Item], progress:Progress, receiveHandler:(Item) async -> Void) async
+	private func receiveItems(_ items:[DropItem], progress:Progress, receive:@escaping (DropItem) async throws -> Void) async
 	{
 		guard !items.isEmpty else { return }
 
-//		// Open a progress bar
+//		await withTaskGroup(of:Void.self)
+//		{
+//			group in
 //
-//		let progress = self.prepareProgress(with:items.count)
-
-		// Iterate over all dragged items and call the receiveHandler
-
+//			for item in items
+//			{
+//				group.addTask
+//				{
+//					progress.becomeCurrent(withPendingUnitCount:1)
+//
+//					do
+//					{
+//						try await receive(item)
+//					}
+//					catch
+//					{
+//						item.error = error
+//						logDragAndDrop.error {"\(Self.self).\(#function) ERROR \(error)"}
+//					}
+//
+//					progress.resignCurrent()
+//				}
+//			}
+//		}
+		
 		for item in items
 		{
 			progress.becomeCurrent(withPendingUnitCount:1)
-			await receiveHandler(item)
+
+			do
+			{
+				try await receive(item)
+			}
+			catch
+			{
+				item.error = error
+				logDragAndDrop.error {"\(Self.self).\(#function) ERROR \(error)"}
+			}
+
 			progress.resignCurrent()
 		}
-	}
-	
-	
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	/// Receives an Object by waiting for the localFileURL in a background Task. The receiveFileHandler will
-	/// be called on the main thread once the local file is available.
-	
-	private func receiveObject(_ object:Object?) async
-	{
-		guard let object = object else { return }
-		let identifier = object.identifier
-
-		logDragAndDrop.debug {"\(Self.self).\(#function)  object=\(object)  identifier=\(identifier)"}
 		
-		do
+		await MainActor.run
 		{
-			let url = try await object.localFileURL
-			await MainActor.run { self.receiveFileHandler?(url,object,nil) }
-		}
-		catch let error
-		{
-			logDragAndDrop.error {"\(Self.self).\(#function) ERROR \(error)"}
-			await MainActor.run { self.receiveFileHandler?(nil,nil,error) }
+			self.completionHandler?(items)
+			self.hideProgress()
 		}
 	}
-	
-	
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	/// Receives a local file. The receiveFileHandler is called immediately, as no background work is necessary.
-	
-	private func receiveFile(with url:URL) async
-	{
-		guard url.isFileURL else { return }
-
-		logDragAndDrop.debug {"\(Self.self).\(#function)  url=\(url)"}
-		
-//		Progress.globalParent?.becomeCurrent(withPendingUnitCount:1)
-		self.receiveFileHandler?(url,nil,nil)
-//		Progress.globalParent?.resignCurrent()
-	}
-	
-	
-//----------------------------------------------------------------------------------------------------------------------
-
-
-//	private func receiveFile(with receiver:NSFilePromiseReceiver)
-//	{
-//		logDragAndDrop.debug {"\(Self.self).\(#function) promise = \(receiver)"}
-//
-//		let tmpFolder = URL(fileURLWithPath:NSTemporaryDirectory())
-//		
-//		receiver.receivePromisedFiles(atDestination:tmpFolder, options:[:], operationQueue:Object.promiseQueue)
-//		{
-//			url,error in
-//
-//			if let error = error
-//			{
-//				logDragAndDrop.error {"\(Self.self).\(#function) ERROR \(error)"}
-//				DispatchQueue.main.async { self.receiveFileHandler?(nil,nil,error) }
-//			}
-//			else
-//			{
-//				logDragAndDrop.debug {"\(Self.self).\(#function) RECEIVED \(url)"}
-//				DispatchQueue.main.async { self.receiveFileHandler?(url,nil,nil) }
-//			}
-//		}
-//	}
-	
-	
-	/// Downloads a promised file and copies it to the destination folder
-	
-//	private func copyFile(with receiver:NSFilePromiseReceiver)
-//	{
-//		receiver.receivePromisedFiles(atDestination:self.folderURL, options:[:], operationQueue:self.queue)
-//		{
-//			url,error in
-//
-//			if let error = error
-//			{
-//				logDragAndDrop.error {"\(Self.self).\(#function) ERROR \(error)"}
-//			}
-//			else
-//			{
-//				logDragAndDrop.debug {"\(Self.self).\(#function) RECEIVED \(url)"}
-//			}
-//		}
-//	}
-	
-	
-	/// Copies the specified file to the destination folder
-	
-//	private func copyFile(at srcURL:URL)
-//	{
-//		// Unfortunately FileManager doesn't support NSProgress, so we have to fake it here
-//		
-////		let childProgress = Progress(totalUnitCount:1)
-////		Progress.globalParent?.addChild(childProgress, withPendingUnitCount:1)
-////		defer { childProgress.completedUnitCount = 1 }
-//		
-//		// Link or copy the file to the folder
-//		
-//		let dstURL = self.folderURL.appendingPathComponent(srcURL.lastPathComponent)
-//		
-//		do
-//		{
-//			try FileManager.default.linkItem(at:srcURL, to:dstURL)
-//		}
-//		catch
-//		{
-//			do
-//			{
-//				try FileManager.default.copyItem(at:srcURL, to:dstURL)
-//			}
-//			catch
-//			{
-//				logDragAndDrop.error {"\(Self.self).\(#function) ERROR \(error)"}
-//			}
-//		}
-//	}
 	
 	
 //----------------------------------------------------------------------------------------------------------------------
@@ -351,7 +298,6 @@ extension DraggingDestinationMixin
 			guard let self = self else { return }
 			let fraction = progress.fractionCompleted
 			self.updateProgress(fraction)
-			if fraction >= 0.99 { self.hideProgress() }
 		}
 		
 		BXProgressWindowController.shared.cancelHandler =

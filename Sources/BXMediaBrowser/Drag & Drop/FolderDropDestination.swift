@@ -39,10 +39,13 @@ public class FolderDropDestination : NSObject, NSDraggingDestination, DraggingDe
 	
 	private var folderURL:URL
 	
-	/// This handler is called for each received media file. In case of in-app drags,
-	/// the optional Object instance may also be supplied to the handler.
+	/// This handler is called for each received media file.
 
-	public var receiveFileHandler:((URL?,Object?,Error?)->Void)? = nil
+	public var processFileHandler: ProcessFileHandler? = nil
+	
+	/// The completionHandler is called at the end once all files have been processed
+	
+	public var completionHandler: CompletionHandler? = nil
 	
 	/// If set this handler will be called at appropriate times to highlight
 	/// the drop destination view, as the mouse enters and leaves the view.
@@ -73,13 +76,34 @@ public class FolderDropDestination : NSObject, NSDraggingDestination, DraggingDe
 		
 		super.init()
 		
-		self.receiveFileHandler =
+		self.processFileHandler =
 		{
-			[weak self] url,object,error in self?.copyFileToFolder(url:url, object:object, error:error)
+			[weak self] in try self?.copyFileToFolder(item:$0)
+		}
+		
+		self.completionHandler =
+		{
+			items in
+			logDragAndDrop.debug {"\(Self.self)  Copied \(items.count) files"}
 		}
 	}
 	
 	
+	/// If the file originated in a different folder, it will be copied the to the destination folder.
+		
+	public func copyFileToFolder(item:DropItem) throws -> Void
+	{
+		guard item.error == nil else { return }
+		guard let url = item.url else { return }
+
+		let filename = url.lastPathComponent
+		let dstURL = self.folderURL.appendingPathComponent(filename)
+		guard url != dstURL else { return }
+			
+		try url.fastCopy(to:dstURL)
+	}
+
+
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -123,181 +147,8 @@ public class FolderDropDestination : NSObject, NSDraggingDestination, DraggingDe
 
 	@MainActor public func collectionView(_ collectionView:NSCollectionView, acceptDrop draggingInfo:NSDraggingInfo, indexPath:IndexPath, dropOperation:NSCollectionView.DropOperation) -> Bool
 	{
-		return self.receiveDroppedFiles(with:draggingInfo)
+		return self.receiveItems(with:draggingInfo)
 	}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	// MARK: - Copying
-
-
-	public func copyFileToFolder(url:URL?, object:Object?, error:Error?)
-	{
-		// If an error has occured, just log the error
-		
-		if let error = error
-		{
-			logDragAndDrop.error {"\(Self.self).\(#function) ERROR \(error)"}
-		}
-		
-		// Otherwise copy the file to the destination folder (but only if it is a different folder)
-		
-		else if let url = url
-		{
-			let filename = url.lastPathComponent
-			let dstURL = self.folderURL.appendingPathComponent(filename)
-			guard url != dstURL else { return }
-			
-			do
-			{
-				try url.fastCopy(to:dstURL)
-			}
-			catch let error
-			{
-				logDragAndDrop.error {"\(Self.self).\(#function) ERROR \(error)"}
-			}
-		}
-	}
-
-
-//	/// Copies dropped files to the destination folder. In the case of NSFilePromiseProvider, the file may
-//	/// have to be downloaded first.
-//
-//	private func copyDroppedFiles(_ draggingInfo:NSDraggingInfo)
-//	{
-//		// Get the dropped files from the dragging pasteboard
-//
-//        let options:[NSPasteboard.ReadingOptionKey:Any] = [ .urlReadingFileURLsOnly:true ]
-//		let identifiers = draggingInfo.draggingPasteboard.readObjects(forClasses:[NSString.self], options:options)?.compactMap { $0 as? String }
-//		let urls = draggingInfo.draggingPasteboard.readObjects(forClasses:[NSURL.self], options:options)?.compactMap { $0 as? URL }
-//		let promises = draggingInfo.draggingPasteboard.readObjects(forClasses:[NSFilePromiseReceiver.self], options:options)?.compactMap { $0 as? NSFilePromiseReceiver }
-//
-//		// First check for native Object instances (in-app drag & drop)
-//
-//		if let identifiers = identifiers, identifiers.count > 0
-//		{
-//			let progress = self.prepareProgress(with:identifiers.count)
-//
-//			for identifier in identifiers
-//			{
-//				progress.becomeCurrent(withPendingUnitCount:1)
-//				print("identifier = \(identifier)")
-//				progress.resignCurrent()
-//			}
-//		}
-//
-//		// Next check for dragged URLs (e.g. from Finder)
-//
-//		else if let urls = urls, urls.count > 0
-//		{
-//			let progress = self.prepareProgress(with:urls.count)
-//
-//			for url in urls
-//			{
-//				progress.becomeCurrent(withPendingUnitCount:1)
-//				print("url = \(url)")
-//				progress.resignCurrent()
-//			}
-//		}
-//
-//		// Finally check for NSFilePromiseReceivers
-//
-//		else if let promises = promises, promises.count > 0
-//		{
-//			let progress = self.prepareProgress(with:promises.count)
-//
-//			for promise in promises
-//			{
-//				progress.becomeCurrent(withPendingUnitCount:1)
-//				print("promise = \(promise)")
-//				progress.resignCurrent()
-//			}
-//		}
-//
-////        let options:[NSPasteboard.ReadingOptionKey:Any] = [ .urlReadingFileURLsOnly:true ]
-////		let classes = [ NSFilePromiseReceiver.self, NSURL.self, NSString.self ]
-////		let files = draggingInfo.draggingPasteboard.readObjects(forClasses:classes, options:options) ?? []
-////
-////		// Prepare progress observing
-////
-////		let progress = self.prepareProgress(with:files.count)
-////
-////		// Iterate through all NSDraggingItems and copy dropped files
-////
-////		for file in files
-////		{
-////			progress.becomeCurrent(withPendingUnitCount:1)
-////
-////			if let string = file as? String
-////			{
-////				print("Dropped string = '\(string)'")
-////			}
-////			else if let srcURL = file as? URL
-////			{
-////				self.copyFile(at:srcURL)
-////			}
-////			else if let receiver = file as? NSFilePromiseReceiver
-////			{
-////				self.copyFile(with:receiver)
-////			}
-////
-////			progress.resignCurrent()
-////		}
-//	}
-//
-//
-//	/// Downloads a promised file and copies it to the destination folder
-//
-//	private func copyFile(with receiver:NSFilePromiseReceiver)
-//	{
-//		receiver.receivePromisedFiles(atDestination:self.folderURL, options:[:], operationQueue:self.queue)
-//		{
-//			url,error in
-//
-//			if let error = error
-//			{
-//				logDragAndDrop.error {"\(Self.self).\(#function) ERROR \(error)"}
-//			}
-//			else
-//			{
-//				logDragAndDrop.debug {"\(Self.self).\(#function) RECEIVED \(url)"}
-//			}
-//		}
-//	}
-//
-//
-//	/// Copies the specified file to the destination folder
-//
-//	private func copyFile(at srcURL:URL)
-//	{
-//		// Unfortunately FileManager doesn't support NSProgress, so we have to fake it here
-//
-////		let childProgress = Progress(totalUnitCount:1)
-////		Progress.globalParent?.addChild(childProgress, withPendingUnitCount:1)
-////		defer { childProgress.completedUnitCount = 1 }
-//
-//		// Link or copy the file to the folder
-//
-//		let dstURL = self.folderURL.appendingPathComponent(srcURL.lastPathComponent)
-//
-//		do
-//		{
-//			try FileManager.default.linkItem(at:srcURL, to:dstURL)
-//		}
-//		catch
-//		{
-//			do
-//			{
-//				try FileManager.default.copyItem(at:srcURL, to:dstURL)
-//			}
-//			catch
-//			{
-//				logDragAndDrop.error {"\(Self.self).\(#function) ERROR \(error)"}
-//			}
-//		}
-//	}
 }
 
 
