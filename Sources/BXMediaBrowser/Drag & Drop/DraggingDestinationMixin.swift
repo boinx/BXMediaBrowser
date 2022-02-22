@@ -126,11 +126,24 @@ extension DraggingDestinationMixin
 		if let identifiers = draggingInfo.draggingPasteboard.readObjects(forClasses:[NSString.self], options:options) as? [String], !identifiers.isEmpty
 		{
 			let objects = identifiers.compactMap { Object.draggedObject(for:$0) }
-			
-			return self.receivedItems(objects)
+			let progress = self.prepareProgress(with:objects.count)
+
+			Task
 			{
-				self.receiveObject($0)
+				for object in objects
+				{
+					progress.becomeCurrent(withPendingUnitCount:1)
+					await self.receiveObject(object)
+					progress.resignCurrent()
+				}
 			}
+
+			return true
+			
+//			return self.receivedItems(objects)
+//			{
+//				self.receiveObject($0)
+//			}
 		}
 		
 		// If the previous step failed, then look for dragged file URLs instead, e.g. a drag from Finder.
@@ -138,10 +151,23 @@ extension DraggingDestinationMixin
 		
 		if let urls = draggingInfo.draggingPasteboard.readObjects(forClasses:[NSURL.self], options:options) as? [URL], !urls.isEmpty
 		{
-			return self.receivedItems(urls)
+			let progress = self.prepareProgress(with:urls.count)
+
+			Task
 			{
-				self.receiveFile(with:$0)
+				for url in urls
+				{
+					progress.becomeCurrent(withPendingUnitCount:1)
+					await self.receiveFile(with:url)
+					progress.resignCurrent()
+				}
 			}
+
+			return true
+//			return self.receivedItems(urls)
+//			{
+//				self.receiveFile(with:$0)
+//			}
 		}
 
 		// Nothing found
@@ -153,24 +179,22 @@ extension DraggingDestinationMixin
 	/// This generic function receive a list of Items (generic type) and calls the receiveHandler for each item.
 	/// If this process takes a while a progress bar will be displayed automatically.
 	
-	@discardableResult private func receivedItems<Item>(_ items:[Item], receiveHandler:(Item)->Void) -> Bool
+	private func receivedItems<Item>(_ items:[Item], progress:Progress, receiveHandler:(Item) async -> Void) async
 	{
-		guard !items.isEmpty else { return false }
-		
-		// Open a progress bar
-		
-		let progress = self.prepareProgress(with:items.count)
+		guard !items.isEmpty else { return }
+
+//		// Open a progress bar
+//
+//		let progress = self.prepareProgress(with:items.count)
 
 		// Iterate over all dragged items and call the receiveHandler
-		
+
 		for item in items
 		{
 			progress.becomeCurrent(withPendingUnitCount:1)
-			receiveHandler(item)
+			await receiveHandler(item)
 			progress.resignCurrent()
 		}
-		
-		return true
 	}
 	
 	
@@ -180,25 +204,22 @@ extension DraggingDestinationMixin
 	/// Receives an Object by waiting for the localFileURL in a background Task. The receiveFileHandler will
 	/// be called on the main thread once the local file is available.
 	
-	private func receiveObject(_ object:Object?)
+	private func receiveObject(_ object:Object?) async
 	{
 		guard let object = object else { return }
 		let identifier = object.identifier
 
 		logDragAndDrop.debug {"\(Self.self).\(#function)  object=\(object)  identifier=\(identifier)"}
 		
-		Task
+		do
 		{
-			do
-			{
-				let url = try await object.localFileURL
-				await MainActor.run { self.receiveFileHandler?(url,object,nil) }
-			}
-			catch let error
-			{
-				logDragAndDrop.error {"\(Self.self).\(#function) ERROR \(error)"}
-				await MainActor.run { self.receiveFileHandler?(nil,nil,error) }
-			}
+			let url = try await object.localFileURL
+			await MainActor.run { self.receiveFileHandler?(url,object,nil) }
+		}
+		catch let error
+		{
+			logDragAndDrop.error {"\(Self.self).\(#function) ERROR \(error)"}
+			await MainActor.run { self.receiveFileHandler?(nil,nil,error) }
 		}
 	}
 	
@@ -208,16 +229,15 @@ extension DraggingDestinationMixin
 
 	/// Receives a local file. The receiveFileHandler is called immediately, as no background work is necessary.
 	
-	private func receiveFile(with url:URL)
+	private func receiveFile(with url:URL) async
 	{
 		guard url.isFileURL else { return }
 
 		logDragAndDrop.debug {"\(Self.self).\(#function)  url=\(url)"}
 		
-		DispatchQueue.main.asyncIfNeeded
-		{
-			self.receiveFileHandler?(url,nil,nil)
-		}
+//		Progress.globalParent?.becomeCurrent(withPendingUnitCount:1)
+		self.receiveFileHandler?(url,nil,nil)
+//		Progress.globalParent?.resignCurrent()
 	}
 	
 	
