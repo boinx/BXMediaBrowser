@@ -24,6 +24,7 @@
 
 
 import SwiftUI
+import BXSwiftUI
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -70,19 +71,9 @@ public struct SectionView : View
 					
 					if let addSourceHandler = section.addSourceHandler
 					{
-						if #available(macOS 11.0, iOS 13, *)
+						BXImage(systemName:"plus.circle").onTapGesture
 						{
-							SwiftUI.Image(systemName:"plus.circle").onTapGesture
-							{
-								addSourceHandler(section)
-							}
-						}
-						else
-						{
-							Text("⊕").onTapGesture
-							{
-								addSourceHandler(section)
-							}
+							addSourceHandler(section)
 						}
 					}
 				}

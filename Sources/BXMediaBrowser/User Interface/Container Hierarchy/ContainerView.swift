@@ -178,19 +178,9 @@ extension ContainerView
 	
 	@ViewBuilder func removeButton(for removeHandler:@escaping (Container)->Void) -> some View
 	{
-		if #available(macOS 11.0, iOS 13, *)
+		BXImage(systemName:"minus.circle").onTapGesture
 		{
-			SwiftUI.Image(systemName:"minus.circle").onTapGesture
-			{
-				removeHandler(container)
-			}
-		}
-		else
-		{
-			Text("⊖").onTapGesture
-			{
-				removeHandler(container)
-			}
+			removeHandler(container)
 		}
 	}
 
