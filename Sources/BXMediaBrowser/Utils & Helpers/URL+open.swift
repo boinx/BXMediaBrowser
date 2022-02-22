@@ -74,6 +74,11 @@ extension URL
 	{
 		do
 		{
+			if dstURL.exists
+			{
+				try? FileManager.default.removeItem(at:dstURL)
+			}
+			
 			try FileManager.default.linkItem(at:self, to:dstURL)
 		}
 		catch
