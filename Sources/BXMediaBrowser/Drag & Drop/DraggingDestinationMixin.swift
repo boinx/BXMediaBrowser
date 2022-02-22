@@ -168,7 +168,7 @@ extension DraggingDestinationMixin
 
 			Task
 			{
-				await self.receiveItems(items, progress:progress)
+				try await self.receiveItems(items, progress:progress)
 				{
 					item in
 					
@@ -194,7 +194,7 @@ extension DraggingDestinationMixin
 
 			Task
 			{
-				await self.receiveItems(items, progress:progress)
+				try await self.receiveItems(items, progress:progress)
 				{
 					item in
 					try self.processFileHandler?(item)
@@ -213,7 +213,7 @@ extension DraggingDestinationMixin
 	/// This generic function receives a list of DropItems and calls the receive closure for each item.
 	/// If this async operation takes a while a progress bar will be displayed automatically.
 	
-	private func receiveItems(_ items:[DropItem], progress:Progress, receive:@escaping (DropItem) async throws -> Void) async
+	private func receiveItems(_ items:[DropItem], progress:Progress, receive:@escaping (DropItem) async throws -> Void) async throws
 	{
 		guard !items.isEmpty else { return }
 
@@ -245,17 +245,7 @@ extension DraggingDestinationMixin
 		for item in items
 		{
 			progress.becomeCurrent(withPendingUnitCount:1)
-
-			do
-			{
-				try await receive(item)
-			}
-			catch
-			{
-				item.error = error
-				logDragAndDrop.error {"\(Self.self).\(#function) ERROR \(error)"}
-			}
-
+			try await receive(item)
 			progress.resignCurrent()
 		}
 		
@@ -280,7 +270,6 @@ extension DraggingDestinationMixin
 		// Create root Progress
 		
 		let progress = Progress(totalUnitCount:Int64(count))
-		progress.cancellationHandler = { [weak self] in self?.cancel() }
 		self.progress = progress
 		Progress.globalParent = progress
 
@@ -296,15 +285,14 @@ extension DraggingDestinationMixin
 		{
 			[weak self] _,_ in
 			guard let self = self else { return }
+			guard !progress.isCancelled else { return }
 			let fraction = progress.fractionCompleted
 			self.updateProgress(fraction)
 		}
 		
 		BXProgressWindowController.shared.cancelHandler =
 		{
-			[weak self] in
-			self?.cancel()
-			self?.hideProgress()
+			[weak self] in self?.cancel()
 		}
 
 		return progress
@@ -358,6 +346,7 @@ extension DraggingDestinationMixin
 	{
 		logDragAndDrop.debug {"\(Self.self).\(#function)"}
 		self.progress?.cancel()
+		self.hideProgress()
 	}
 }
 
