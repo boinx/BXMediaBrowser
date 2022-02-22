@@ -35,6 +35,8 @@ import UIKit
 
 extension URL
 {
+	/// Opens a remote URL in a web browser
+	
 	public func open()
 	{
 		#if os(macOS)
@@ -47,6 +49,8 @@ extension URL
 		
 		#endif
 	}
+	
+	/// Reveals a file URL in the Finder
 	
 	public func reveal()
 	{
@@ -62,6 +66,22 @@ extension URL
 
 		#endif
 	}
+	
+	/// Copies a file URL to the specified destination. If possible the file will be hard linked to save
+	/// disk space and speed up the operation.
+	
+	public func fastCopy(to dstURL:URL) throws
+	{
+		do
+		{
+			try FileManager.default.linkItem(at:self, to:dstURL)
+		}
+		catch
+		{
+			try FileManager.default.copyItem(at:self, to:dstURL)
+		}
+	}
+	
 }
 
 
