@@ -84,7 +84,7 @@ public class FolderDropDestination : NSObject, NSDraggingDestination, DraggingDe
 		self.completionHandler =
 		{
 			items in
-			logDragAndDrop.debug {"\(Self.self) Finished copying \(items.count) files"}
+			logDragAndDrop.debug {"\(Self.self) finished copying \(items.count) files"}
 		}
 	}
 	
