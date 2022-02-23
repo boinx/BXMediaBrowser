@@ -24,6 +24,7 @@
 
 
 import SwiftUI
+import BXSwiftUI
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -58,22 +59,9 @@ struct CustomDisclosureButton : View
 		{
 			// Disclosure triangle
 			
-			Group
-			{
-				if #available(macOS 11,*)
-				{
-					Text("\(Image(systemName:"chevron.forward"))")
-						.bold()
-						.scaleEffect(0.7)
-				}
-				else
-				{
-					Text("﹥")
-						.font(font)
-						.bold()
-				}
-			}
-			.rotationEffect(.degrees(isExpanded.wrappedValue ? 90 : 0))
+			BXImage(systemName:"chevron.forward")
+				.scaleEffect(0.7)
+				.rotationEffect(.degrees(isExpanded.wrappedValue ? 90 : 0))
 						
 			// Provide a bigger hit target for clicking the triangle
 			

@@ -85,17 +85,14 @@ public struct MusicFilterBar : View
 				}
 				.fixedSize()
 				
-				if #available(macOS 11, iOS 13, *)
-				{
-					SwiftUI.Image(systemName:directionIcon)
-						.padding(.vertical,6)
-						.padding(.horizontal,2)
-						.contentShape(Rectangle())
-						.onTapGesture
-						{
-							filter.toggleSortDirection()
-						}
-				}
+				BXImage(systemName:directionIcon)
+					.padding(.vertical,6)
+					.padding(.horizontal,2)
+					.contentShape(Rectangle())
+					.onTapGesture
+					{
+						filter.toggleSortDirection()
+					}
 			}
 		}
 		.padding(.horizontal,20)
