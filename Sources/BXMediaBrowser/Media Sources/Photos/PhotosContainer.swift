@@ -89,14 +89,14 @@ public class PhotosContainer : Container
 	}
 
 
-	public init(with assetCollection:PHAssetCollection, filter:Object.Filter)
+	public init(with assetCollection:PHAssetCollection, icon:String = "rectangle.stack", filter:Object.Filter)
 	{
 		let identifier = "PhotosSource:\(assetCollection.localIdentifier)"
 		let name = assetCollection.localizedTitle ?? "Album"
 		
 		super.init(
 			identifier:identifier,
-			icon:"rectangle.stack",
+			icon:icon,
 			name:name,
 			data:assetCollection,
 			filter:filter,

@@ -132,6 +132,37 @@ public class PhotosSource : Source, AccessControl
 		let library = PhotosContainer(mediaType:.image, filter:filter)
 		containers += library
 
+		// Recently Added
+		
+		let recentsFetchResult = PHAssetCollection.fetchAssetCollections(
+			with:.smartAlbum,
+			subtype:.smartAlbumRecentlyAdded,
+			options:nil)
+			
+		if let recents = recentsFetchResult.firstObject
+		{
+			containers += PhotosContainer(
+				with:recents,
+				icon:"clock",
+				filter:filter)
+		}
+
+
+
+		// Years
+		
+//		let years = PHCollectionList.fetchMomentLists(with:.momentListYear,options:nil)
+//
+//		let yearsContainer = iOSMediaBrowserPhotosContainer(
+//			years:yearsFetchResult,
+//			identifier:"com.apple.photos.years",
+//			name:NSLocalizedString("Years",bundle:bundle,comment:"Container name"))
+//
+//		if yearsContainer.childContainers.count > 0 || yearsContainer.itemCount > 0
+//		{
+//			containers.append(yearsContainer)
+//		}
+		
 		// Smart Albums
 		
 //		let smartAlbums = PHAssetCollection.fetchAssetCollections(
