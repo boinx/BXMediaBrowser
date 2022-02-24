@@ -110,11 +110,24 @@ open class FolderSource : Source, AccessControl
 
 		return FolderContainer(url:url, filter:filter)
 		{
-			[weak self] in self?.removeContainer($0)
+			[weak self] in self?.removeTopLevelContainer($0)
 		}
 	}
 
-
+	open func removeTopLevelContainer(_ container:Container)
+	{
+		let title = NSLocalizedString("Alert.title.removeFolder", bundle:.module, comment:"Alert Title")
+		let message = String(format:NSLocalizedString("Alert.message.removeFolder", bundle:.module, comment:"Alert Message"), container.name)
+		let ok = NSLocalizedString("Remove", bundle:.module, comment:"Button Title")
+		let cancel = NSLocalizedString("Cancel", bundle:.module, comment:"Button Title")
+		
+		NSAlert.presentModal(style:.critical, title:title, message:message, okButton:ok, cancelButton:cancel)
+		{
+			[weak self] in self?.removeContainer(container)
+		}
+	}
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 

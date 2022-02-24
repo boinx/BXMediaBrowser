@@ -44,7 +44,7 @@ open class AudioFolderSource : FolderSource
 	{
 		AudioFolderContainer(url:url, filter:filter)
 		{
-			[weak self] in self?.removeContainer($0)
+			[weak self] in self?.removeTopLevelContainer($0)
 		}
 	}
 }

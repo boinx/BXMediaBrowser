@@ -40,7 +40,7 @@ open class VideoFolderSource : FolderSource
 	{
 		VideoFolderContainer(url:url, filter:filter)
 		{
-			[weak self] in self?.removeContainer($0)
+			[weak self] in self?.removeTopLevelContainer($0)
 		}
 	}
 }

@@ -115,7 +115,17 @@ open class UnsplashSource : Source, AccessControl
 		
 		return UnsplashContainer(identifier:identifier, icon:"rectangle.stack", name:name, filter:filter, removeHandler:
 		{
-			[weak self] in self?.removeContainer($0)
+			[weak self] container in
+			
+			let title = NSLocalizedString("Alert.title.removeFolder", bundle:.module, comment:"Alert Title")
+			let message = String(format:NSLocalizedString("Alert.message.removeFolder", bundle:.module, comment:"Alert Message"), container.name)
+			let ok = NSLocalizedString("Remove", bundle:.module, comment:"Button Title")
+			let cancel = NSLocalizedString("Cancel", bundle:.module, comment:"Button Title")
+			
+			NSAlert.presentModal(style:.critical, title:title, message:message, okButton:ok, cancelButton:cancel)
+			{
+				[weak self] in self?.removeContainer(container)
+			}
 		})
 	}
 
