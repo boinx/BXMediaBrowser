@@ -98,6 +98,23 @@ public struct MusicFilterBar : View
 		.padding(.horizontal,20)
 		.padding(.vertical,10)
     }
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+extension MusicFilterBar
+{
+    var searchPlaceholder:String
+    {
+		NSLocalizedString("Search", bundle:.module, comment:"Placeholder")
+    }
+    
+    var sortByLabel:String
+    {
+		NSLocalizedString("Sort by:", bundle:.module, comment:"Label")
+    }
     
     var directionIcon:String
     {

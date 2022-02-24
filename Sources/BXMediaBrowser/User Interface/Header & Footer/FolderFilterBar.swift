@@ -53,7 +53,7 @@ public struct FolderFilterBar : View
 		{
 			// Search field
 			
-			TextField("Search", text:self.$filter.searchString)
+			TextField(searchPlaceholder, text:self.$filter.searchString)
 				.frame(maxWidth:300)
 				.textFieldStyle(RoundedBorderTextFieldStyle())
 
@@ -63,7 +63,7 @@ public struct FolderFilterBar : View
 
 			// Sort order
 			
-			Text("Sort by:")
+			Text(sortByLabel)
 				.lineLimit(1)
 				.truncationMode(.tail)
 				.layoutPriority(-1)
@@ -93,6 +93,23 @@ public struct FolderFilterBar : View
 		}
 		.padding(.horizontal,20)
 		.padding(.vertical,10)
+    }
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+extension FolderFilterBar
+{
+    var searchPlaceholder:String
+    {
+		NSLocalizedString("Search", bundle:.module, comment:"Placeholder")
+    }
+    
+    var sortByLabel:String
+    {
+		NSLocalizedString("Sort by:", bundle:.module, comment:"Label")
     }
     
     var directionIcon:String

@@ -75,7 +75,7 @@ public struct UnsplashFilterBar : View
 		{
 			if let container = self.unsplashContainer, let saveHandler = self.saveHandler
 			{
-				TextField("Search", text:self.$searchString)
+				TextField(searchPlaceholder, text:self.$searchString)
 				{
 					self.filter.searchString = self.searchString
 				}
@@ -89,7 +89,7 @@ public struct UnsplashFilterBar : View
 
 				Spacer()
 				
-				Button("Save")
+				Button(saveTitle)
 				{
 					saveHandler(container)
 				}
@@ -106,6 +106,17 @@ public struct UnsplashFilterBar : View
 		.padding(.horizontal,20)
 		.padding(.vertical,10)
     }
+
+    var searchPlaceholder:String
+    {
+		NSLocalizedString("Search", bundle:.module, comment:"Placeholder")
+    }
+    
+    var saveTitle:String
+    {
+		NSLocalizedString("Save", bundle:.module, comment:"Button Title")
+    }
+    
 }
 
 
