@@ -52,6 +52,10 @@ public class FolderDropDestination : NSObject, NSDraggingDestination, DraggingDe
 	
 	public var highlightViewHandler:((Bool)->Void)? = nil
     
+    /// Returns the optional title for the download progress
+	
+	public var progressTitle:String? { nil }
+	
     /// The Progress object for the current download/copy operation
 	
     public var progress:Progress? = nil
