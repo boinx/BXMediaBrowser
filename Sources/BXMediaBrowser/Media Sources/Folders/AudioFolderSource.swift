@@ -25,7 +25,6 @@
 
 import BXSwiftUtils
 import Foundation
-import QuartzCore
 
 #if os(macOS)
 import AppKit
