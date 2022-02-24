@@ -154,16 +154,8 @@ extension ContainerView
 		
 		// Container icon
 		
-		if #available(macOS 11.0, iOS 13, *)
-		{
-			SwiftUI.Image(systemName:icon)
-				.frame(minWidth:16, alignment:.center)
-		}
-		else
-		{
-			Text("📁")
-				.frame(minWidth:16, alignment:.center)
-		}
+		BXImage(systemName:icon)
+			.frame(minWidth:16, alignment:.center)
 		
 		// Container name
 		
