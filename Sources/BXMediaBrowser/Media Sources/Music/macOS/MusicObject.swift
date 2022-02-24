@@ -126,43 +126,43 @@ public class MusicObject : Object
 		
 		if let name = metadata[kMDItemTitle as String] as? String, !name.isEmpty
 		{
-			let label = NSLocalizedString("Song", tableName:"MusicSource", bundle:.module, comment:"Label")
+			let label = NSLocalizedString("Song", tableName:"Music", bundle:.module, comment:"Label")
 			array += ObjectMetadataEntry(label:label, value:name, action:{ [weak self] in self?.revealInFinder() })
 		}
 		
 		if let duration = metadata[kMDItemDurationSeconds as String] as? Double
 		{
-			let label = NSLocalizedString("Duration", tableName:"MusicSource", bundle:.module, comment:"Label")
+			let label = NSLocalizedString("Duration", tableName:"Music", bundle:.module, comment:"Label")
 			array += ObjectMetadataEntry(label:label, value:duration.shortTimecodeString())
 		}
 		
 		if let artists = metadata[kMDItemAuthors as String] as? [String], !artists.isEmpty
 		{
-			let label = NSLocalizedString("Artist", tableName:"MusicSource", bundle:.module, comment:"Label")
+			let label = NSLocalizedString("Artist", tableName:"Music", bundle:.module, comment:"Label")
 			array += ObjectMetadataEntry(label:label, value:artists.joined(separator:"\n"))
 		}
 		
 		if let composer = metadata[kMDItemComposer as String] as? String, !composer.isEmpty
 		{
-			let label = NSLocalizedString("Composer", tableName:"MusicSource", bundle:.module, comment:"Label")
+			let label = NSLocalizedString("Composer", tableName:"Music", bundle:.module, comment:"Label")
 			array += ObjectMetadataEntry(label:label, value:composer)
 		}
 		
 		if let album = metadata[kMDItemAlbum as String] as? String, !album.isEmpty
 		{
-			let label = NSLocalizedString("Album", tableName:"MusicSource", bundle:.module, comment:"Label")
+			let label = NSLocalizedString("Album", tableName:"Music", bundle:.module, comment:"Label")
 			array += ObjectMetadataEntry(label:label, value:album)
 		}
 		
 		if let genre = metadata[kMDItemMusicalGenre as String] as? String, !genre.isEmpty
 		{
-			let label = NSLocalizedString("Genre", tableName:"MusicSource", bundle:.module, comment:"Label")
+			let label = NSLocalizedString("Genre", tableName:"Music", bundle:.module, comment:"Label")
 			array += ObjectMetadataEntry(label:label, value:genre)
 		}
 		
 		if let value = metadata[kMDItemFSSize as String] as? Int, let str = Formatter.fileSizeFormatter.string(for:value)
 		{
-			let label = NSLocalizedString("File Size", tableName:"MusicSource", bundle:.module, comment:"Label")
+			let label = NSLocalizedString("File Size", tableName:"Music", bundle:.module, comment:"Label")
 			array += ObjectMetadataEntry(label:label, value:str) // value.fileSizeDescription)
 		}
 		
@@ -187,7 +187,7 @@ public class MusicObject : Object
 	
 	override var localFileName:String
 	{
-		let defaultFilename = NSLocalizedString("Audio File", tableName:"MusicSource", bundle:.module, comment:"Default Filename")
+		let defaultFilename = NSLocalizedString("Audio File", tableName:"Music", bundle:.module, comment:"Default Filename")
 		guard let item = data as? ITLibMediaItem else { return defaultFilename }
 		guard let url = item.location else { return defaultFilename }
 		return url.lastPathComponent
