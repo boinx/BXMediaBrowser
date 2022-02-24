@@ -67,7 +67,8 @@ open class UnsplashSource : Source, AccessControl
 		
 		// Add Live Search
 		
-		containers += UnsplashContainer(identifier:"UnsplashSource:Search", icon:"magnifyingglass", name:"Search", filter:UnsplashFilter(), saveHandler:
+		let name = NSLocalizedString("Search", tableName:"Unsplash", bundle:.module, comment:"Container Name")
+		containers += UnsplashContainer(identifier:"UnsplashSource:Search", icon:"magnifyingglass", name:name, filter:UnsplashFilter(), saveHandler:
 		{
 			[weak self] in self?.saveContainer($0)
 		})

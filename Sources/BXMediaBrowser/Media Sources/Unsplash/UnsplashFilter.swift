@@ -124,13 +124,12 @@ extension UnsplashFilter
 		
 		var localizedName:String
 		{
-			switch self
+			if self == .any
 			{
-				case .any : 		return "Any"
-				case .landscape : 	return "Horizontal"
-				case .portrait : 	return "Vertical"
-				case .squarish : 	return "Square"
+				return NSLocalizedString("any", tableName:"Unsplash", bundle:.module, comment:"Orientation Name")
 			}
+			
+			return NSLocalizedString(identifier, tableName:"Unsplash", bundle:.module, comment:"Orientation Name")
 		}
 	}
 }
@@ -168,21 +167,12 @@ extension UnsplashFilter
 		
 		var localizedName:String
 		{
-			switch self
+			if self == .any
 			{
-				case .any : 			return "Any"
-				case .black_and_white : return "B&W"
-				case .black : 			return "Dark"
-				case .white : 			return "Bright"
-				case .yellow : 			return "Yellow"
-				case .orange : 			return "Orange"
-				case .red : 			return "Red"
-				case .purple : 			return "Purple"
-				case .magenta : 		return "Pink"
-				case .green : 			return "Green"
-				case .teal : 			return "Teal"
-				case .blue : 			return "Blue"
+				return NSLocalizedString("any", tableName:"Unsplash", bundle:.module, comment:"Color Name")
 			}
+			
+			return NSLocalizedString(identifier, tableName:"Unsplash", bundle:.module, comment:"Color Name")
 		}
 		
 		var color:SwiftUI.Color

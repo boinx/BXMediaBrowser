@@ -113,47 +113,60 @@ open class UnsplashObject : Object
 		
 		var array:[ObjectMetadataEntry] = []
 		
-		array += ObjectMetadataEntry(label:"Photo", value:"\(photo.id)", action:openPhotoPage)
+		let photoLabel = NSLocalizedString("Photo", tableName:"Unsplash", bundle:.module, comment:"Label")
+		array += ObjectMetadataEntry(label:photoLabel, value:"\(photo.id)", action:openPhotoPage)
 
-		array += ObjectMetadataEntry(label:"Photographer", value:user.displayName, action:user.openProfileURL)
+		let photographerLabel = NSLocalizedString("Photographer", tableName:"Unsplash", bundle:.module, comment:"Label")
+		array += ObjectMetadataEntry(label:photographerLabel, value:user.displayName, action:user.openProfileURL)
 		
-		array += ObjectMetadataEntry(label:"Image Size", value:"\(photo.width) × \(photo.height) Pixels")
+		let imageSizeLabel = NSLocalizedString("Image Size", tableName:"Unsplash", bundle:.module, comment:"Label")
+		array += ObjectMetadataEntry(label:imageSizeLabel, value:"\(photo.width) × \(photo.height) Pixels")
 		
 		if let date = photo.created_at?.date
 		{
-			array += ObjectMetadataEntry(label:"Capture Date", value:String(with:date))
+			let label = NSLocalizedString("Capture Date", tableName:"Unsplash", bundle:.module, comment:"Label")
+			array += ObjectMetadataEntry(label:label, value:String(with:date))
 		}
 		else if let value = metadata["creationDate"] as? Date
 		{
-			array += ObjectMetadataEntry(label:"Creation Date", value:String(with:value))
+			let label = NSLocalizedString("Creation Date", tableName:"Unsplash", bundle:.module, comment:"Label")
+			array += ObjectMetadataEntry(label:label, value:String(with:value))
 		}
 
 		if let exif = exif
 		{
-			array += ObjectMetadataEntry(label:"Aperture", value:"f\(exif.aperture.string())")
-			array += ObjectMetadataEntry(label:"Exposure Time", value:"\(exif.exposure_time.string())s")
-			array += ObjectMetadataEntry(label:"Focal Length", value:"\(exif.focal_length)mm")
+			let apertureLabel = NSLocalizedString("Aperture", tableName:"Unsplash", bundle:.module, comment:"Label")
+			array += ObjectMetadataEntry(label:apertureLabel, value:"f\(exif.aperture.string())")
+			
+			let exposureTimeLabel = NSLocalizedString("Exposure Time", tableName:"Unsplash", bundle:.module, comment:"Label")
+			array += ObjectMetadataEntry(label:exposureTimeLabel, value:"\(exif.exposure_time.string())s")
+			
+			let focalLengthLabel = NSLocalizedString("Focal Length", tableName:"Unsplash", bundle:.module, comment:"Label")
+			array += ObjectMetadataEntry(label:focalLengthLabel, value:"\(exif.focal_length)mm")
 		}
 		
 		if let location = location
 		{
+			let label = NSLocalizedString("Location", tableName:"Unsplash", bundle:.module, comment:"Label")
+
 			if let city = location.city, let country = location.country
 			{
-				array += ObjectMetadataEntry(label:"Location", value:"\(city), \(country)")
+				array += ObjectMetadataEntry(label:label, value:"\(city), \(country)")
 			}
 			else if let city = location.city
 			{
-				array += ObjectMetadataEntry(label:"Location", value:city)
+				array += ObjectMetadataEntry(label:label, value:city)
 			}
 			else if let country = location.country
 			{
-				array += ObjectMetadataEntry(label:"Location", value:country)
+				array += ObjectMetadataEntry(label:label, value:country)
 			}
 		}
 		
 		if let description = photo.description
 		{
-			array += ObjectMetadataEntry(label:"Description", value:description.trimmingCharacters(in:.whitespacesAndNewlines))
+			let label = NSLocalizedString("Description", tableName:"Unsplash", bundle:.module, comment:"Label")
+			array += ObjectMetadataEntry(label:label, value:description.trimmingCharacters(in:.whitespacesAndNewlines))
 		}
 		
 		return array
