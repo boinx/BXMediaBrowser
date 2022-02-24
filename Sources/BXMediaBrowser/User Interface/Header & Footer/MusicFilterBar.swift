@@ -54,7 +54,7 @@ public struct MusicFilterBar : View
 		{
 			// Search field
 			
-			TextField("Search", text:self.$filter.searchString)
+			TextField(searchPlaceholder, text:self.$filter.searchString)
 				.frame(maxWidth:300)
 				.textFieldStyle(RoundedBorderTextFieldStyle())
 
@@ -66,7 +66,7 @@ public struct MusicFilterBar : View
 			
 			if !selectedContainer.allowedSortTypes.isEmpty
 			{
-				Text("Sort by:")
+				Text(sortByLabel)
 					.lineLimit(1)
 					.truncationMode(.tail)
 					.layoutPriority(-1)
