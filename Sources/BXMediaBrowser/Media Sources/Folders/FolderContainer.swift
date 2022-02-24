@@ -44,7 +44,7 @@ open class FolderContainer : Container
 		
 		super.init(
 			identifier: FolderSource.identifier(for:url),
-			name: url.lastPathComponent,
+			name: FileManager.default.displayName(atPath:url.path),
 			data: url,
 			filter: filter,
 			loadHandler: Self.loadContents,
