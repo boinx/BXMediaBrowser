@@ -55,6 +55,7 @@ public struct DefaultObjectFooterView : View
 			
 			Text(container.localizedObjectCount)
 				.controlSize(.small)
+				.lineLimit(1)
 		}
 		.padding(.horizontal,20)
 		.padding(.vertical,2)
