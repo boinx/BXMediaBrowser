@@ -82,6 +82,10 @@ public protocol DraggingDestinationMixin : AnyObject
 	
 	var highlightViewHandler:((Bool)->Void)? { set get }
 
+	/// The (optional) title for the download progress window
+	
+	var progressTitle:String? { get }
+	
     /// The Progress object for the current download/copy operation
 	
     var progress:Progress? { set get }
@@ -292,8 +296,8 @@ extension DraggingDestinationMixin
 			let now = CFAbsoluteTimeGetCurrent()
 			let dt = now - self.startTime
 			let percent = Int(fraction*100)
-
-			BXProgressWindowController.shared.title = "Copying Media Files"
+			
+			BXProgressWindowController.shared.title = self.progressTitle ?? NSLocalizedString("Copying Media Files", bundle:.module, comment:"Progress Title")
 			BXProgressWindowController.shared.value = fraction
 			
 			if !BXProgressWindowController.shared.isVisible && dt>1.0 && fraction<0.8
