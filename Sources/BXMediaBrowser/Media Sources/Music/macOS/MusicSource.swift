@@ -86,7 +86,13 @@ public class MusicSource : Source, AccessControl
 
 		// Configure the Source
 		
-		super.init(identifier:Self.identifier, icon:Self.icon, name:"Music", filter:MusicFilter())
+		var name = "Music"
+		if let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier:"com.apple.Music")
+		{
+			name = FileManager.default.displayName(atPath:url.path)
+		}
+		
+		super.init(identifier:Self.identifier, icon:Self.icon, name:name, filter:MusicFilter())
 		
 		self.loader = Loader(loadHandler:Self.loadContainers)
 		
@@ -175,16 +181,21 @@ public class MusicSource : Source, AccessControl
 		let allPlaylists = library.allPlaylists
 		let topLevelPlaylists = allPlaylists.filter { $0.parentID == nil }
 		var containers:[Container] = []
-				
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Songs", icon:"music.note", name:"Songs", data:MusicContainer.MusicData.library(allMediaItems:allMediaItems), filter:filter, allowedSortTypes:[.never,.artist,.album,.genre,.duration])
+		
+		let songs = NSLocalizedString("Songs", tableName:"MusicSource", bundle:.module, comment:"Container Name")
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Songs", icon:"music.note", name:songs, data:MusicContainer.MusicData.library(allMediaItems:allMediaItems), filter:filter, allowedSortTypes:[.never,.artist,.album,.genre,.duration])
 
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Artists", icon:"music.mic", name:"Artists", data:MusicContainer.MusicData.artistFolder(allMediaItems:allMediaItems), filter:filter, allowedSortTypes:[.never,.album,.genre,.duration])
+		let artists = NSLocalizedString("Artists", tableName:"MusicSource", bundle:.module, comment:"Container Name")
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Artists", icon:"music.mic", name:artists, data:MusicContainer.MusicData.artistFolder(allMediaItems:allMediaItems), filter:filter, allowedSortTypes:[.never,.album,.genre,.duration])
 
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Albums", icon:"square.stack", name:"Albums", data:MusicContainer.MusicData.albumFolder(allMediaItems:allMediaItems), filter:filter, allowedSortTypes:[.never,.artist,.genre,.duration])
+		let albums = NSLocalizedString("Albums", tableName:"MusicSource", bundle:.module, comment:"Container Name")
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Albums", icon:"square.stack", name:albums, data:MusicContainer.MusicData.albumFolder(allMediaItems:allMediaItems), filter:filter, allowedSortTypes:[.never,.artist,.genre,.duration])
 
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Genres", icon:"guitars", name:"Genres", data:MusicContainer.MusicData.genreFolder(allMediaItems:allMediaItems), filter:filter, allowedSortTypes:[.never,.artist,.album,.duration])
+		let genres = NSLocalizedString("Genres", tableName:"MusicSource", bundle:.module, comment:"Container Name")
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Genres", icon:"guitars", name:genres, data:MusicContainer.MusicData.genreFolder(allMediaItems:allMediaItems), filter:filter, allowedSortTypes:[.never,.artist,.album,.duration])
 
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Playlists", icon:"music.note.list", name:"Playlists", data:MusicContainer.MusicData.playlistFolder(playlists:topLevelPlaylists, allPlaylists:allPlaylists), filter:filter, allowedSortTypes:[])
+		let playlists = NSLocalizedString("Playlists", tableName:"MusicSource", bundle:.module, comment:"Container Name")
+		containers += Self.makeMusicContainer(identifier:"MusicSource:Playlists", icon:"music.note.list", name:playlists, data:MusicContainer.MusicData.playlistFolder(playlists:topLevelPlaylists, allPlaylists:allPlaylists), filter:filter, allowedSortTypes:[])
 
 		return containers
 	}

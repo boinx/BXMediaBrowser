@@ -121,7 +121,7 @@ public class MusicContainer : Container
 					containers += MusicSource.makeMusicContainer(
 						identifier:"MusicSource:Artist:\(artist.persistentID)",
 						icon:"person",
-						name:artist.name ?? "Artist",
+						name:artist.name ?? NSLocalizedString("Artist", tableName:"MusicSource", bundle:.module, comment:"Container Name"),
 						data:.artist(artist:artist, allMediaItems:allMediaItems),
 						filter:filter,
 						allowedSortTypes:[.never,.album,.genre,.duration,.rating])
@@ -136,7 +136,7 @@ public class MusicContainer : Container
 					containers += MusicSource.makeMusicContainer(
 						identifier:"MusicSource:Album:\(album.persistentID)",
 						icon:"square",
-						name:album.title ?? "Album",
+						name:album.title ?? NSLocalizedString("Album", tableName:"MusicSource", bundle:.module, comment:"Container Name"),
 						data:.album(album:album, allMediaItems:allMediaItems),
 						filter:filter,
 						allowedSortTypes:[.never,.artist,.genre,.duration,.rating])
