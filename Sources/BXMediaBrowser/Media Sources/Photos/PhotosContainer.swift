@@ -73,13 +73,14 @@ public class PhotosContainer : Container
 	}
 	
 	
-	public init(with collectionList:PHCollectionList, filter:Object.Filter)
+	public init(with collectionList:PHCollectionList, icon:String? = nil, filter:Object.Filter)
 	{
 		let identifier = "PhotosSource:\(collectionList.localIdentifier)"
 		let name = collectionList.localizedTitle ?? "Album"
 	
 		super.init(
 			identifier:identifier,
+			icon:icon,
 			name:name,
 			data:collectionList,
 			filter:filter,
@@ -89,7 +90,7 @@ public class PhotosContainer : Container
 	}
 
 
-	public init(with assetCollection:PHAssetCollection, icon:String = "rectangle.stack", filter:Object.Filter)
+	public init(with assetCollection:PHAssetCollection, icon:String? = "rectangle.stack", filter:Object.Filter)
 	{
 		let identifier = "PhotosSource:\(assetCollection.localIdentifier)"
 		let name = assetCollection.localizedTitle ?? "Album"

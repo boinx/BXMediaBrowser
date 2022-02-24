@@ -134,64 +134,46 @@ public class PhotosSource : Source, AccessControl
 
 		// Recently Added
 		
-		let recentsFetchResult = PHAssetCollection.fetchAssetCollections(
-			with:.smartAlbum,
-			subtype:.smartAlbumRecentlyAdded,
-			options:nil)
+		let recentsFetchResult = PHAssetCollection.fetchAssetCollections(with:.smartAlbum, subtype:.smartAlbumRecentlyAdded, options:nil)
 			
-		if let recents = recentsFetchResult.firstObject
+		if let recentsAssetCollection = recentsFetchResult.firstObject
 		{
-			containers += PhotosContainer(
-				with:recents,
-				icon:"clock",
-				filter:filter)
+			containers += PhotosContainer(with:recentsAssetCollection, icon:"clock", filter:filter)
 		}
-
-
 
 		// Years
 		
-//		let years = PHCollectionList.fetchMomentLists(with:.momentListYear,options:nil)
+//		let yearsFetchResult = PHCollectionList.fetchMomentLists(with:.momentListYear, options:nil)
 //
-//		let yearsContainer = iOSMediaBrowserPhotosContainer(
-//			years:yearsFetchResult,
-//			identifier:"com.apple.photos.years",
-//			name:NSLocalizedString("Years",bundle:bundle,comment:"Container name"))
-//
-//		if yearsContainer.childContainers.count > 0 || yearsContainer.itemCount > 0
+//		if let yearsCollectionList = yearsFetchResult.firstObject
 //		{
-//			containers.append(yearsContainer)
+//			containers += PhotosContainer(with:yearsCollectionList, filter:filter)
 //		}
-		
+
 		// Smart Albums
 		
-//		let smartAlbums = PHAssetCollection.fetchAssetCollections(
-//			with:.smartAlbum,
-//			subtype:.any,
-//			options:nil)
+//		let smartAlbums = PHAssetCollection.fetchAssetCollections( with:.smartAlbum, subtype:.any, options:nil)
 //
 //		for i in 0 ..< smartAlbums.count
 //		{
-//			let smartAlbum = smartAlbums[i]
-//			let container = PhotosContainer(with:smartAlbum)
-//			containers += container
+//			containers += PhotosContainer(with:smartAlbums[i], filter:filter)
 //		}
 		
 		// Smart Folders
 
-		let smartFolders = PHCollectionList.fetchCollectionLists(
-			with:.smartFolder,
-			subtype:.any,
-			options:nil)
+//		let smartFolders = PHCollectionList.fetchCollectionLists(
+//			with:.smartFolder,
+//			subtype:.any,
+//			options:nil)
+//
+//		for i in 0 ..< smartFolders.count
+//		{
+//			let smartFolder = smartFolders[i]
+//			let container = PhotosContainer(with:smartFolder, filter:filter)
+//			containers += container
+//		}
 
-		for i in 0 ..< smartFolders.count
-		{
-			let smartFolder = smartFolders[i]
-			let container = PhotosContainer(with:smartFolder, filter:filter)
-			containers += container
-		}
-
-		// User Folders & Albums
+		// User Albums
 		
 		let container = PhotosContainer(
 			with:PHCollectionList.fetchTopLevelUserCollections(with:nil),
