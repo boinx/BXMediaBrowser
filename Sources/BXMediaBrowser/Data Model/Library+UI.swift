@@ -36,6 +36,27 @@ extension Library
 		
 		@Published public var thumbnailScale:Double = 0.25
 	}
+	
+	/// Returns the localized name for the Images Library
+	
+	public static var localizedNameImages:String
+	{
+		NSLocalizedString("Images", tableName:"Library", bundle:.module, comment:"Library Name")
+	}
+	
+	/// Returns the localized name for the Videos Library
+	
+	public static var localizedNameVideos:String
+	{
+		NSLocalizedString("Videos", tableName:"Library", bundle:.module, comment:"Library Name")
+	}
+	
+	/// Returns the localized name for the Audio Library
+	
+	public static var localizedNameAudio:String
+	{
+		NSLocalizedString("Audio", tableName:"Library", bundle:.module, comment:"Library Name")
+	}
 }
 
 
