@@ -108,6 +108,10 @@
 		D01B49A627CA1378008249C0 /* ObjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B494127CA1378008249C0 /* ObjectView.swift */; };
 		D01B49A727CA1378008249C0 /* ObjectInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B494227CA1378008249C0 /* ObjectInfoView.swift */; };
 		D01B49A827CA1378008249C0 /* ViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B494427CA1378008249C0 /* ViewFactory.swift */; };
+		D01B49B127CA2132008249C0 /* BXSwiftUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D01B49B027CA2132008249C0 /* BXSwiftUtils.framework */; };
+		D01B49B527CA2145008249C0 /* BXSwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D01B49B427CA2145008249C0 /* BXSwiftUI.framework */; };
+		D01B49B927CA2189008249C0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D01B49B727CA2189008249C0 /* Foundation.framework */; platformFilter = maccatalyst; };
+		D01B49BA27CA2189008249C0 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D01B49B827CA2189008249C0 /* AVFoundation.framework */; platformFilter = maccatalyst; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -226,6 +230,10 @@
 		D01B494227CA1378008249C0 /* ObjectInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectInfoView.swift; sourceTree = "<group>"; };
 		D01B494427CA1378008249C0 /* ViewFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewFactory.swift; sourceTree = "<group>"; };
 		D01B49A927CA1470008249C0 /* BXMediaBrowser.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = BXMediaBrowser.xcconfig; sourceTree = "<group>"; };
+		D01B49B027CA2132008249C0 /* BXSwiftUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BXSwiftUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D01B49B427CA2145008249C0 /* BXSwiftUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BXSwiftUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D01B49B727CA2189008249C0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D01B49B827CA2189008249C0 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -233,6 +241,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D01B49BA27CA2189008249C0 /* AVFoundation.framework in Frameworks */,
+				D01B49B527CA2145008249C0 /* BXSwiftUI.framework in Frameworks */,
+				D01B49B927CA2189008249C0 /* Foundation.framework in Frameworks */,
+				D01B49B127CA2132008249C0 /* BXSwiftUtils.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -245,6 +257,7 @@
 				D01B49AB27CA1CB8008249C0 /* Config */,
 				D01B48BB27CA1377008249C0 /* Sources */,
 				D01B48B227CA1313008249C0 /* Products */,
+				D01B49AF27CA2132008249C0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -522,6 +535,17 @@
 				D01B48B427CA1313008249C0 /* BXMediaBrowser.h */,
 			);
 			name = Config;
+			sourceTree = "<group>";
+		};
+		D01B49AF27CA2132008249C0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D01B49B827CA2189008249C0 /* AVFoundation.framework */,
+				D01B49B727CA2189008249C0 /* Foundation.framework */,
+				D01B49B427CA2145008249C0 /* BXSwiftUI.framework */,
+				D01B49B027CA2132008249C0 /* BXSwiftUtils.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
