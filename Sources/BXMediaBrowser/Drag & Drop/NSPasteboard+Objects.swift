@@ -38,7 +38,7 @@ extension NSPasteboard
 	public var mediaBrowserObjects:[Object]?
 	{
 		guard let identifiers = self.readObjects(forClasses:[NSString.self], options:[:]) as? [String] else { return nil }
-		guard identifiers.isEmpty else { return nil }
+		guard !identifiers.isEmpty else { return nil }
 		let objects = identifiers.compactMap { Object.draggedObject(for:$0) }
 		return objects
 	}
@@ -49,7 +49,7 @@ extension NSPasteboard
 	{
         let options:[NSPasteboard.ReadingOptionKey:Any] = [ .urlReadingFileURLsOnly:true ]
 		guard let urls = self.readObjects(forClasses:[NSURL.self], options:options) as? [URL] else { return nil }
-		guard urls.isEmpty else { return nil }
+		guard !urls.isEmpty else { return nil }
 		return urls
 	}
 }
