@@ -156,17 +156,11 @@ extension DraggingDestinationMixin
 	
 	@MainActor public func receiveItems(with draggingInfo:NSDraggingInfo) -> Bool
 	{
-        let options:[NSPasteboard.ReadingOptionKey:Any] =
-        [
-			.urlReadingFileURLsOnly : true
-		]
-		
 		// First look for native Object instances. This is the preferred datatype, because the native
 		// Objects provide the best experience, as they carry a lot of metadata.
 
-		if let identifiers = draggingInfo.draggingPasteboard.readObjects(forClasses:[NSString.self], options:options) as? [String], !identifiers.isEmpty
+		if let objects = draggingInfo.draggingPasteboard.mediaBrowserObjects
 		{
-			let objects = identifiers.compactMap { Object.draggedObject(for:$0) }
 			let items = objects.map { DropItem(object:$0) }
 			let progress = self.prepareProgress(with:objects.count)
 
@@ -191,7 +185,7 @@ extension DraggingDestinationMixin
 		// If the previous step failed, then look for dragged file URLs instead, e.g. a drag from Finder.
 		// In this case we will only get the file URLs, without any accompagning metadata.
 		
-		if let urls = draggingInfo.draggingPasteboard.readObjects(forClasses:[NSURL.self], options:options) as? [URL], !urls.isEmpty
+		if let urls = draggingInfo.draggingPasteboard.fileURLs
 		{
 			let progress = self.prepareProgress(with:urls.count)
 			let items = urls.map { DropItem(url:$0) }

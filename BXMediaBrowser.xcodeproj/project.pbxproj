@@ -112,6 +112,7 @@
 		D01B49B527CA2145008249C0 /* BXSwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D01B49B427CA2145008249C0 /* BXSwiftUI.framework */; };
 		D01B49B927CA2189008249C0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D01B49B727CA2189008249C0 /* Foundation.framework */; platformFilter = maccatalyst; };
 		D01B49BA27CA2189008249C0 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D01B49B827CA2189008249C0 /* AVFoundation.framework */; platformFilter = maccatalyst; };
+		D01C33CF27CA70F3003337A9 /* NSPasteboard+Objects.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01C33CE27CA70F3003337A9 /* NSPasteboard+Objects.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -235,6 +236,7 @@
 		D01B49B727CA2189008249C0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D01B49B827CA2189008249C0 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		D01B49BB27CA463E008249C0 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D01C33CE27CA70F3003337A9 /* NSPasteboard+Objects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPasteboard+Objects.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -295,10 +297,11 @@
 		D01B48BD27CA1377008249C0 /* Drag & Drop */ = {
 			isa = PBXGroup;
 			children = (
-				D01B48BE27CA1377008249C0 /* ObjectFilePromiseProvider.swift */,
-				D01B48BF27CA1377008249C0 /* FolderDropDestination.swift */,
-				D01B48C027CA1377008249C0 /* Object+Dragging.swift */,
 				D01B48C127CA1377008249C0 /* DraggingDestinationMixin.swift */,
+				D01B48BF27CA1377008249C0 /* FolderDropDestination.swift */,
+				D01B48BE27CA1377008249C0 /* ObjectFilePromiseProvider.swift */,
+				D01B48C027CA1377008249C0 /* Object+Dragging.swift */,
+				D01C33CE27CA70F3003337A9 /* NSPasteboard+Objects.swift */,
 			);
 			path = "Drag & Drop";
 			sourceTree = "<group>";
@@ -345,28 +348,28 @@
 		D01B48E927CA1378008249C0 /* Data Model */ = {
 			isa = PBXGroup;
 			children = (
-				D01B48EA27CA1378008249C0 /* Object+Loader.swift */,
-				D01B48EB27CA1378008249C0 /* Source+Loader.swift */,
-				D01B48EC27CA1378008249C0 /* Source.swift */,
 				D01B48ED27CA1378008249C0 /* Library.swift */,
 				D01B48EE27CA1378008249C0 /* Library+Hashable.swift */,
-				D01B48EF27CA1378008249C0 /* Object+Hashable.swift */,
-				D01B48F027CA1378008249C0 /* Object+Error.swift */,
-				D01B48F127CA1378008249C0 /* Source+Hashable.swift */,
-				D01B48F227CA1378008249C0 /* Section+UI.swift */,
-				D01B48F327CA1378008249C0 /* Container+Cache.swift */,
 				D01B48F427CA1378008249C0 /* Library+State.swift */,
+				D01B48F727CA1378008249C0 /* Library+UI.swift */,
+				D01B48FB27CA1378008249C0 /* Section.swift */,
+				D01B48F227CA1378008249C0 /* Section+UI.swift */,
+				D01B48FF27CA1378008249C0 /* Section+Hashable.swift */,
+				D01B48EC27CA1378008249C0 /* Source.swift */,
+				D01B48EB27CA1378008249C0 /* Source+Loader.swift */,
+				D01B48F127CA1378008249C0 /* Source+Hashable.swift */,
+				D01B48FA27CA1378008249C0 /* Source+Error.swift */,
+				D01B48F827CA1378008249C0 /* Container.swift */,
 				D01B48F527CA1378008249C0 /* Container+Loader.swift */,
 				D01B48F627CA1378008249C0 /* Container+Hashable.swift */,
-				D01B48F727CA1378008249C0 /* Library+UI.swift */,
-				D01B48F827CA1378008249C0 /* Container.swift */,
-				D01B48F927CA1378008249C0 /* Object+Quicklook.swift */,
-				D01B48FA27CA1378008249C0 /* Source+Error.swift */,
-				D01B48FB27CA1378008249C0 /* Section.swift */,
+				D01B48F327CA1378008249C0 /* Container+Cache.swift */,
 				D01B48FC27CA1378008249C0 /* Container+Error.swift */,
-				D01B48FD27CA1378008249C0 /* Object+Filter.swift */,
 				D01B48FE27CA1378008249C0 /* Object.swift */,
-				D01B48FF27CA1378008249C0 /* Section+Hashable.swift */,
+				D01B48EA27CA1378008249C0 /* Object+Loader.swift */,
+				D01B48FD27CA1378008249C0 /* Object+Filter.swift */,
+				D01B48F927CA1378008249C0 /* Object+Quicklook.swift */,
+				D01B48EF27CA1378008249C0 /* Object+Hashable.swift */,
+				D01B48F027CA1378008249C0 /* Object+Error.swift */,
 			);
 			path = "Data Model";
 			sourceTree = "<group>";
@@ -643,6 +646,7 @@
 				D01B498627CA1378008249C0 /* PHAsset+Info.swift in Sources */,
 				D01B496527CA1378008249C0 /* Library+State.swift in Sources */,
 				D01B497A27CA1378008249C0 /* AudioFolderSource.swift in Sources */,
+				D01C33CF27CA70F3003337A9 /* NSPasteboard+Objects.swift in Sources */,
 				D01B497127CA1378008249C0 /* MusicFilter.swift in Sources */,
 				D01B498927CA1378008249C0 /* PhotosObject.swift in Sources */,
 				D01B495D27CA1378008249C0 /* Source.swift in Sources */,
