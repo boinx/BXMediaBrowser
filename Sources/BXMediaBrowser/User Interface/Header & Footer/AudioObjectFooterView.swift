@@ -71,31 +71,26 @@ public struct AudioPlayerView : View
     {
 		HStack
 		{
-			#warning("TODO: Migrate to BXImage")
-			
-			if #available(macOS 11, *)
-			{
-				SwiftUI.Image(systemName:"gobackward.15")
-					.contentShape(Rectangle().inset(by:-6))
-					.onTapGesture
-					{
-						self.controller.jump(by:-15)
-					}
+			BXImage(systemName:"gobackward.15")
+				.contentShape(Rectangle().inset(by:-6))
+				.onTapGesture
+				{
+					self.controller.jump(by:-15)
+				}
 
-				SwiftUI.Image(systemName:iconName)
-					.contentShape(Rectangle().inset(by:-6))
-					.onTapGesture
-					{
-						self.controller.toggle()
-					}
+			BXImage(systemName:iconName)
+				.contentShape(Rectangle().inset(by:-6))
+				.onTapGesture
+				{
+					self.controller.toggle()
+				}
 
-				SwiftUI.Image(systemName:"goforward.15")
-					.contentShape(Rectangle().inset(by:-6))
-					.onTapGesture
-					{
-						self.controller.jump(by:+15)
-					}
-			}
+			BXImage(systemName:"goforward.15")
+				.contentShape(Rectangle().inset(by:-6))
+				.onTapGesture
+				{
+					self.controller.jump(by:+15)
+				}
 				
 			Text(controller.time.shortTimecodeString())
 				.frame(width:54, alignment:.leading)

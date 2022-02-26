@@ -70,8 +70,7 @@ public struct RatingFilterView : View
 				{
 					i in
 
-			#warning("TODO: Migrate to BXImage")
-					SwiftUI.Image(systemName:icon(for:i))
+					BXSwiftUI.Image(systemName:icon(for:i))
 						.foregroundColor(color(for:i))
 				}
 			}
