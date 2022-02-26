@@ -1,0 +1,974 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D01B48B527CA1313008249C0 /* BXMediaBrowser.h in Headers */ = {isa = PBXBuildFile; fileRef = D01B48B427CA1313008249C0 /* BXMediaBrowser.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D01B494527CA1378008249C0 /* ObjectFilePromiseProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48BE27CA1377008249C0 /* ObjectFilePromiseProvider.swift */; };
+		D01B494627CA1378008249C0 /* FolderDropDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48BF27CA1377008249C0 /* FolderDropDestination.swift */; };
+		D01B494727CA1378008249C0 /* Object+Dragging.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48C027CA1377008249C0 /* Object+Dragging.swift */; };
+		D01B494827CA1378008249C0 /* DraggingDestinationMixin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48C127CA1377008249C0 /* DraggingDestinationMixin.swift */; };
+		D01B494927CA1378008249C0 /* Library.strings in Resources */ = {isa = PBXBuildFile; fileRef = D01B48C327CA1377008249C0 /* Library.strings */; };
+		D01B494A27CA1378008249C0 /* Object.Filter.strings in Resources */ = {isa = PBXBuildFile; fileRef = D01B48C527CA1378008249C0 /* Object.Filter.strings */; };
+		D01B494B27CA1378008249C0 /* Music.strings in Resources */ = {isa = PBXBuildFile; fileRef = D01B48C727CA1378008249C0 /* Music.strings */; };
+		D01B494C27CA1378008249C0 /* Section.strings in Resources */ = {isa = PBXBuildFile; fileRef = D01B48C927CA1378008249C0 /* Section.strings */; };
+		D01B494D27CA1378008249C0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D01B48CB27CA1378008249C0 /* Localizable.strings */; };
+		D01B494E27CA1378008249C0 /* Unsplash.strings in Resources */ = {isa = PBXBuildFile; fileRef = D01B48CD27CA1378008249C0 /* Unsplash.strings */; };
+		D01B494F27CA1378008249C0 /* URL+open.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48DC27CA1378008249C0 /* URL+open.swift */; };
+		D01B495027CA1378008249C0 /* URLSession+asyncAwait.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48DD27CA1378008249C0 /* URLSession+asyncAwait.swift */; };
+		D01B495127CA1378008249C0 /* Bundle+BXMediaBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48DE27CA1378008249C0 /* Bundle+BXMediaBrowser.swift */; };
+		D01B495227CA1378008249C0 /* String+UTI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48DF27CA1378008249C0 /* String+UTI.swift */; };
+		D01B495327CA1378008249C0 /* TempFilePool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48E027CA1378008249C0 /* TempFilePool.swift */; };
+		D01B495427CA1378008249C0 /* BXMediaBrowser+log.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48E127CA1378008249C0 /* BXMediaBrowser+log.swift */; };
+		D01B495527CA1378008249C0 /* FolderObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48E227CA1378008249C0 /* FolderObserver.swift */; };
+		D01B495627CA1378008249C0 /* StateSaving.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48E327CA1378008249C0 /* StateSaving.swift */; };
+		D01B495727CA1378008249C0 /* Progress+globalParent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48E427CA1378008249C0 /* Progress+globalParent.swift */; };
+		D01B495827CA1378008249C0 /* AccessControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48E527CA1378008249C0 /* AccessControl.swift */; };
+		D01B495927CA1378008249C0 /* AudioPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48E727CA1378008249C0 /* AudioPreviewController.swift */; };
+		D01B495A27CA1378008249C0 /* StatisticsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48E827CA1378008249C0 /* StatisticsController.swift */; };
+		D01B495B27CA1378008249C0 /* Object+Loader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48EA27CA1378008249C0 /* Object+Loader.swift */; };
+		D01B495C27CA1378008249C0 /* Source+Loader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48EB27CA1378008249C0 /* Source+Loader.swift */; };
+		D01B495D27CA1378008249C0 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48EC27CA1378008249C0 /* Source.swift */; };
+		D01B495E27CA1378008249C0 /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48ED27CA1378008249C0 /* Library.swift */; };
+		D01B495F27CA1378008249C0 /* Library+Hashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48EE27CA1378008249C0 /* Library+Hashable.swift */; };
+		D01B496027CA1378008249C0 /* Object+Hashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48EF27CA1378008249C0 /* Object+Hashable.swift */; };
+		D01B496127CA1378008249C0 /* Object+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48F027CA1378008249C0 /* Object+Error.swift */; };
+		D01B496227CA1378008249C0 /* Source+Hashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48F127CA1378008249C0 /* Source+Hashable.swift */; };
+		D01B496327CA1378008249C0 /* Section+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48F227CA1378008249C0 /* Section+UI.swift */; };
+		D01B496427CA1378008249C0 /* Container+Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48F327CA1378008249C0 /* Container+Cache.swift */; };
+		D01B496527CA1378008249C0 /* Library+State.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48F427CA1378008249C0 /* Library+State.swift */; };
+		D01B496627CA1378008249C0 /* Container+Loader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48F527CA1378008249C0 /* Container+Loader.swift */; };
+		D01B496727CA1378008249C0 /* Container+Hashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48F627CA1378008249C0 /* Container+Hashable.swift */; };
+		D01B496827CA1378008249C0 /* Library+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48F727CA1378008249C0 /* Library+UI.swift */; };
+		D01B496927CA1378008249C0 /* Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48F827CA1378008249C0 /* Container.swift */; };
+		D01B496A27CA1378008249C0 /* Object+Quicklook.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48F927CA1378008249C0 /* Object+Quicklook.swift */; };
+		D01B496B27CA1378008249C0 /* Source+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48FA27CA1378008249C0 /* Source+Error.swift */; };
+		D01B496C27CA1378008249C0 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48FB27CA1378008249C0 /* Section.swift */; };
+		D01B496D27CA1378008249C0 /* Container+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48FC27CA1378008249C0 /* Container+Error.swift */; };
+		D01B496E27CA1378008249C0 /* Object+Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48FD27CA1378008249C0 /* Object+Filter.swift */; };
+		D01B496F27CA1378008249C0 /* Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48FE27CA1378008249C0 /* Object.swift */; };
+		D01B497027CA1378008249C0 /* Section+Hashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48FF27CA1378008249C0 /* Section+Hashable.swift */; };
+		D01B497127CA1378008249C0 /* MusicFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B490327CA1378008249C0 /* MusicFilter.swift */; };
+		D01B497227CA1378008249C0 /* ITLibAlbum+Hashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B490427CA1378008249C0 /* ITLibAlbum+Hashable.swift */; };
+		D01B497327CA1378008249C0 /* MusicObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B490527CA1378008249C0 /* MusicObject.swift */; };
+		D01B497427CA1378008249C0 /* MusicSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B490627CA1378008249C0 /* MusicSource.swift */; };
+		D01B497527CA1378008249C0 /* MusicContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B490727CA1378008249C0 /* MusicContainer.swift */; };
+		D01B497627CA1378008249C0 /* ITLibArtist+Hashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B490827CA1378008249C0 /* ITLibArtist+Hashable.swift */; };
+		D01B497727CA1378008249C0 /* FolderContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B490A27CA1378008249C0 /* FolderContainer.swift */; };
+		D01B497827CA1378008249C0 /* FolderObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B490B27CA1378008249C0 /* FolderObject.swift */; };
+		D01B497927CA1378008249C0 /* FolderFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B490C27CA1378008249C0 /* FolderFilter.swift */; };
+		D01B497A27CA1378008249C0 /* AudioFolderSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B490D27CA1378008249C0 /* AudioFolderSource.swift */; };
+		D01B497B27CA1378008249C0 /* VideoFolderSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B490E27CA1378008249C0 /* VideoFolderSource.swift */; };
+		D01B497C27CA1378008249C0 /* ImageFolderSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B490F27CA1378008249C0 /* ImageFolderSource.swift */; };
+		D01B497D27CA1378008249C0 /* FolderSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B491027CA1378008249C0 /* FolderSource.swift */; };
+		D01B497E27CA1378008249C0 /* UnsplashSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B491227CA1378008249C0 /* UnsplashSource.swift */; };
+		D01B497F27CA1378008249C0 /* UnsplashContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B491327CA1378008249C0 /* UnsplashContainer.swift */; };
+		D01B498027CA1378008249C0 /* UnsplashJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B491427CA1378008249C0 /* UnsplashJSON.swift */; };
+		D01B498127CA1378008249C0 /* UnsplashConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B491527CA1378008249C0 /* UnsplashConfig.swift */; };
+		D01B498227CA1378008249C0 /* UnsplashFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B491627CA1378008249C0 /* UnsplashFilter.swift */; };
+		D01B498327CA1378008249C0 /* UnsplashObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B491727CA1378008249C0 /* UnsplashObject.swift */; };
+		D01B498427CA1378008249C0 /* Dictionary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B491927CA1378008249C0 /* Dictionary+Extensions.swift */; };
+		D01B498527CA1378008249C0 /* PhotosContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B491B27CA1378008249C0 /* PhotosContainer.swift */; };
+		D01B498627CA1378008249C0 /* PHAsset+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B491C27CA1378008249C0 /* PHAsset+Info.swift */; };
+		D01B498727CA1378008249C0 /* PhotosSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B491D27CA1378008249C0 /* PhotosSource.swift */; };
+		D01B498827CA1378008249C0 /* PhotosChangeObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B491E27CA1378008249C0 /* PhotosChangeObserver.swift */; };
+		D01B498927CA1378008249C0 /* PhotosObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B491F27CA1378008249C0 /* PhotosObject.swift */; };
+		D01B498A27CA1378008249C0 /* RatingFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B492227CA1378008249C0 /* RatingFilterView.swift */; };
+		D01B498B27CA1378008249C0 /* AudioObjectFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B492327CA1378008249C0 /* AudioObjectFooterView.swift */; };
+		D01B498C27CA1378008249C0 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B492427CA1378008249C0 /* SearchBar.swift */; };
+		D01B498D27CA1378008249C0 /* MusicFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B492527CA1378008249C0 /* MusicFilterBar.swift */; };
+		D01B498E27CA1378008249C0 /* UnsplashFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B492627CA1378008249C0 /* UnsplashFilterBar.swift */; };
+		D01B498F27CA1378008249C0 /* DefaultObjectFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B492727CA1378008249C0 /* DefaultObjectFooterView.swift */; };
+		D01B499027CA1378008249C0 /* FolderFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B492827CA1378008249C0 /* FolderFilterBar.swift */; };
+		D01B499127CA1378008249C0 /* BXProgressWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B492A27CA1378008249C0 /* BXProgressWindowController.swift */; };
+		D01B499227CA1378008249C0 /* MenuAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B492B27CA1378008249C0 /* MenuAction.swift */; };
+		D01B499327CA1378008249C0 /* BXProgressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B492C27CA1378008249C0 /* BXProgressViewController.swift */; };
+		D01B499427CA1378008249C0 /* BXProgressViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D01B492D27CA1378008249C0 /* BXProgressViewController.storyboard */; };
+		D01B499527CA1378008249C0 /* EfficientVStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B492E27CA1378008249C0 /* EfficientVStack.swift */; };
+		D01B499627CA1378008249C0 /* CustomDisclosureButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B492F27CA1378008249C0 /* CustomDisclosureButton.swift */; };
+		D01B499727CA1378008249C0 /* SourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B493127CA1378008249C0 /* SourceView.swift */; };
+		D01B499827CA1378008249C0 /* FolderContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B493227CA1378008249C0 /* FolderContainerView.swift */; };
+		D01B499927CA1378008249C0 /* SectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B493327CA1378008249C0 /* SectionView.swift */; };
+		D01B499A27CA1378008249C0 /* FolderSourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B493427CA1378008249C0 /* FolderSourceView.swift */; };
+		D01B499B27CA1378008249C0 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B493527CA1378008249C0 /* LibraryView.swift */; };
+		D01B499C27CA1378008249C0 /* FileDropDestinationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B493627CA1378008249C0 /* FileDropDestinationView.swift */; };
+		D01B499D27CA1378008249C0 /* ContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B493727CA1378008249C0 /* ContainerView.swift */; };
+		D01B499E27CA1378008249C0 /* ObjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B493927CA1378008249C0 /* ObjectViewController.swift */; };
+		D01B499F27CA1378008249C0 /* ObjectRatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B493A27CA1378008249C0 /* ObjectRatingView.swift */; };
+		D01B49A027CA1378008249C0 /* ObjectCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B493B27CA1378008249C0 /* ObjectCollectionView.swift */; };
+		D01B49A127CA1378008249C0 /* ImageObjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B493C27CA1378008249C0 /* ImageObjectViewController.swift */; };
+		D01B49A227CA1378008249C0 /* QuicklookCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B493D27CA1378008249C0 /* QuicklookCollectionView.swift */; };
+		D01B49A327CA1378008249C0 /* AudioObjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B493E27CA1378008249C0 /* AudioObjectViewController.swift */; };
+		D01B49A427CA1378008249C0 /* ImageObjectViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D01B493F27CA1378008249C0 /* ImageObjectViewController.xib */; };
+		D01B49A527CA1378008249C0 /* AudioObjectViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D01B494027CA1378008249C0 /* AudioObjectViewController.xib */; };
+		D01B49A627CA1378008249C0 /* ObjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B494127CA1378008249C0 /* ObjectView.swift */; };
+		D01B49A727CA1378008249C0 /* ObjectInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B494227CA1378008249C0 /* ObjectInfoView.swift */; };
+		D01B49A827CA1378008249C0 /* ViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B494427CA1378008249C0 /* ViewFactory.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		D01B48B127CA1313008249C0 /* BXMediaBrowser.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BXMediaBrowser.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D01B48B427CA1313008249C0 /* BXMediaBrowser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BXMediaBrowser.h; sourceTree = "<group>"; };
+		D01B48BE27CA1377008249C0 /* ObjectFilePromiseProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectFilePromiseProvider.swift; sourceTree = "<group>"; };
+		D01B48BF27CA1377008249C0 /* FolderDropDestination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderDropDestination.swift; sourceTree = "<group>"; };
+		D01B48C027CA1377008249C0 /* Object+Dragging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Object+Dragging.swift"; sourceTree = "<group>"; };
+		D01B48C127CA1377008249C0 /* DraggingDestinationMixin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DraggingDestinationMixin.swift; sourceTree = "<group>"; };
+		D01B48C427CA1377008249C0 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Library.strings; sourceTree = "<group>"; };
+		D01B48C627CA1378008249C0 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Object.Filter.strings; sourceTree = "<group>"; };
+		D01B48C827CA1378008249C0 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Music.strings; sourceTree = "<group>"; };
+		D01B48CA27CA1378008249C0 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Section.strings; sourceTree = "<group>"; };
+		D01B48CC27CA1378008249C0 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		D01B48CE27CA1378008249C0 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Unsplash.strings; sourceTree = "<group>"; };
+		D01B48CF27CA1378008249C0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Library.strings; sourceTree = "<group>"; };
+		D01B48D027CA1378008249C0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Object.Filter.strings; sourceTree = "<group>"; };
+		D01B48D127CA1378008249C0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Music.strings; sourceTree = "<group>"; };
+		D01B48D227CA1378008249C0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Section.strings; sourceTree = "<group>"; };
+		D01B48D327CA1378008249C0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		D01B48D427CA1378008249C0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Unsplash.strings; sourceTree = "<group>"; };
+		D01B48D527CA1378008249C0 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Library.strings; sourceTree = "<group>"; };
+		D01B48D627CA1378008249C0 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Object.Filter.strings; sourceTree = "<group>"; };
+		D01B48D727CA1378008249C0 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Music.strings; sourceTree = "<group>"; };
+		D01B48D827CA1378008249C0 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Section.strings; sourceTree = "<group>"; };
+		D01B48D927CA1378008249C0 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		D01B48DA27CA1378008249C0 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Unsplash.strings; sourceTree = "<group>"; };
+		D01B48DC27CA1378008249C0 /* URL+open.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URL+open.swift"; sourceTree = "<group>"; };
+		D01B48DD27CA1378008249C0 /* URLSession+asyncAwait.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URLSession+asyncAwait.swift"; sourceTree = "<group>"; };
+		D01B48DE27CA1378008249C0 /* Bundle+BXMediaBrowser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bundle+BXMediaBrowser.swift"; sourceTree = "<group>"; };
+		D01B48DF27CA1378008249C0 /* String+UTI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+UTI.swift"; sourceTree = "<group>"; };
+		D01B48E027CA1378008249C0 /* TempFilePool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TempFilePool.swift; sourceTree = "<group>"; };
+		D01B48E127CA1378008249C0 /* BXMediaBrowser+log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BXMediaBrowser+log.swift"; sourceTree = "<group>"; };
+		D01B48E227CA1378008249C0 /* FolderObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderObserver.swift; sourceTree = "<group>"; };
+		D01B48E327CA1378008249C0 /* StateSaving.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateSaving.swift; sourceTree = "<group>"; };
+		D01B48E427CA1378008249C0 /* Progress+globalParent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Progress+globalParent.swift"; sourceTree = "<group>"; };
+		D01B48E527CA1378008249C0 /* AccessControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessControl.swift; sourceTree = "<group>"; };
+		D01B48E727CA1378008249C0 /* AudioPreviewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPreviewController.swift; sourceTree = "<group>"; };
+		D01B48E827CA1378008249C0 /* StatisticsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticsController.swift; sourceTree = "<group>"; };
+		D01B48EA27CA1378008249C0 /* Object+Loader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Object+Loader.swift"; sourceTree = "<group>"; };
+		D01B48EB27CA1378008249C0 /* Source+Loader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Source+Loader.swift"; sourceTree = "<group>"; };
+		D01B48EC27CA1378008249C0 /* Source.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Source.swift; sourceTree = "<group>"; };
+		D01B48ED27CA1378008249C0 /* Library.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Library.swift; sourceTree = "<group>"; };
+		D01B48EE27CA1378008249C0 /* Library+Hashable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Library+Hashable.swift"; sourceTree = "<group>"; };
+		D01B48EF27CA1378008249C0 /* Object+Hashable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Object+Hashable.swift"; sourceTree = "<group>"; };
+		D01B48F027CA1378008249C0 /* Object+Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Object+Error.swift"; sourceTree = "<group>"; };
+		D01B48F127CA1378008249C0 /* Source+Hashable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Source+Hashable.swift"; sourceTree = "<group>"; };
+		D01B48F227CA1378008249C0 /* Section+UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Section+UI.swift"; sourceTree = "<group>"; };
+		D01B48F327CA1378008249C0 /* Container+Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Container+Cache.swift"; sourceTree = "<group>"; };
+		D01B48F427CA1378008249C0 /* Library+State.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Library+State.swift"; sourceTree = "<group>"; };
+		D01B48F527CA1378008249C0 /* Container+Loader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Container+Loader.swift"; sourceTree = "<group>"; };
+		D01B48F627CA1378008249C0 /* Container+Hashable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Container+Hashable.swift"; sourceTree = "<group>"; };
+		D01B48F727CA1378008249C0 /* Library+UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Library+UI.swift"; sourceTree = "<group>"; };
+		D01B48F827CA1378008249C0 /* Container.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Container.swift; sourceTree = "<group>"; };
+		D01B48F927CA1378008249C0 /* Object+Quicklook.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Object+Quicklook.swift"; sourceTree = "<group>"; };
+		D01B48FA27CA1378008249C0 /* Source+Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Source+Error.swift"; sourceTree = "<group>"; };
+		D01B48FB27CA1378008249C0 /* Section.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
+		D01B48FC27CA1378008249C0 /* Container+Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Container+Error.swift"; sourceTree = "<group>"; };
+		D01B48FD27CA1378008249C0 /* Object+Filter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Object+Filter.swift"; sourceTree = "<group>"; };
+		D01B48FE27CA1378008249C0 /* Object.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Object.swift; sourceTree = "<group>"; };
+		D01B48FF27CA1378008249C0 /* Section+Hashable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Section+Hashable.swift"; sourceTree = "<group>"; };
+		D01B490327CA1378008249C0 /* MusicFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicFilter.swift; sourceTree = "<group>"; };
+		D01B490427CA1378008249C0 /* ITLibAlbum+Hashable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ITLibAlbum+Hashable.swift"; sourceTree = "<group>"; };
+		D01B490527CA1378008249C0 /* MusicObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicObject.swift; sourceTree = "<group>"; };
+		D01B490627CA1378008249C0 /* MusicSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicSource.swift; sourceTree = "<group>"; };
+		D01B490727CA1378008249C0 /* MusicContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicContainer.swift; sourceTree = "<group>"; };
+		D01B490827CA1378008249C0 /* ITLibArtist+Hashable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ITLibArtist+Hashable.swift"; sourceTree = "<group>"; };
+		D01B490A27CA1378008249C0 /* FolderContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderContainer.swift; sourceTree = "<group>"; };
+		D01B490B27CA1378008249C0 /* FolderObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderObject.swift; sourceTree = "<group>"; };
+		D01B490C27CA1378008249C0 /* FolderFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderFilter.swift; sourceTree = "<group>"; };
+		D01B490D27CA1378008249C0 /* AudioFolderSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioFolderSource.swift; sourceTree = "<group>"; };
+		D01B490E27CA1378008249C0 /* VideoFolderSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoFolderSource.swift; sourceTree = "<group>"; };
+		D01B490F27CA1378008249C0 /* ImageFolderSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageFolderSource.swift; sourceTree = "<group>"; };
+		D01B491027CA1378008249C0 /* FolderSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderSource.swift; sourceTree = "<group>"; };
+		D01B491227CA1378008249C0 /* UnsplashSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnsplashSource.swift; sourceTree = "<group>"; };
+		D01B491327CA1378008249C0 /* UnsplashContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnsplashContainer.swift; sourceTree = "<group>"; };
+		D01B491427CA1378008249C0 /* UnsplashJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnsplashJSON.swift; sourceTree = "<group>"; };
+		D01B491527CA1378008249C0 /* UnsplashConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnsplashConfig.swift; sourceTree = "<group>"; };
+		D01B491627CA1378008249C0 /* UnsplashFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnsplashFilter.swift; sourceTree = "<group>"; };
+		D01B491727CA1378008249C0 /* UnsplashObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnsplashObject.swift; sourceTree = "<group>"; };
+		D01B491927CA1378008249C0 /* Dictionary+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Extensions.swift"; sourceTree = "<group>"; };
+		D01B491B27CA1378008249C0 /* PhotosContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosContainer.swift; sourceTree = "<group>"; };
+		D01B491C27CA1378008249C0 /* PHAsset+Info.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PHAsset+Info.swift"; sourceTree = "<group>"; };
+		D01B491D27CA1378008249C0 /* PhotosSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosSource.swift; sourceTree = "<group>"; };
+		D01B491E27CA1378008249C0 /* PhotosChangeObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosChangeObserver.swift; sourceTree = "<group>"; };
+		D01B491F27CA1378008249C0 /* PhotosObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosObject.swift; sourceTree = "<group>"; };
+		D01B492227CA1378008249C0 /* RatingFilterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RatingFilterView.swift; sourceTree = "<group>"; };
+		D01B492327CA1378008249C0 /* AudioObjectFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioObjectFooterView.swift; sourceTree = "<group>"; };
+		D01B492427CA1378008249C0 /* SearchBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
+		D01B492527CA1378008249C0 /* MusicFilterBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicFilterBar.swift; sourceTree = "<group>"; };
+		D01B492627CA1378008249C0 /* UnsplashFilterBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnsplashFilterBar.swift; sourceTree = "<group>"; };
+		D01B492727CA1378008249C0 /* DefaultObjectFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultObjectFooterView.swift; sourceTree = "<group>"; };
+		D01B492827CA1378008249C0 /* FolderFilterBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderFilterBar.swift; sourceTree = "<group>"; };
+		D01B492A27CA1378008249C0 /* BXProgressWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BXProgressWindowController.swift; sourceTree = "<group>"; };
+		D01B492B27CA1378008249C0 /* MenuAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuAction.swift; sourceTree = "<group>"; };
+		D01B492C27CA1378008249C0 /* BXProgressViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BXProgressViewController.swift; sourceTree = "<group>"; };
+		D01B492D27CA1378008249C0 /* BXProgressViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = BXProgressViewController.storyboard; sourceTree = "<group>"; };
+		D01B492E27CA1378008249C0 /* EfficientVStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EfficientVStack.swift; sourceTree = "<group>"; };
+		D01B492F27CA1378008249C0 /* CustomDisclosureButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomDisclosureButton.swift; sourceTree = "<group>"; };
+		D01B493127CA1378008249C0 /* SourceView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceView.swift; sourceTree = "<group>"; };
+		D01B493227CA1378008249C0 /* FolderContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderContainerView.swift; sourceTree = "<group>"; };
+		D01B493327CA1378008249C0 /* SectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionView.swift; sourceTree = "<group>"; };
+		D01B493427CA1378008249C0 /* FolderSourceView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderSourceView.swift; sourceTree = "<group>"; };
+		D01B493527CA1378008249C0 /* LibraryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
+		D01B493627CA1378008249C0 /* FileDropDestinationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileDropDestinationView.swift; sourceTree = "<group>"; };
+		D01B493727CA1378008249C0 /* ContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContainerView.swift; sourceTree = "<group>"; };
+		D01B493927CA1378008249C0 /* ObjectViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectViewController.swift; sourceTree = "<group>"; };
+		D01B493A27CA1378008249C0 /* ObjectRatingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectRatingView.swift; sourceTree = "<group>"; };
+		D01B493B27CA1378008249C0 /* ObjectCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectCollectionView.swift; sourceTree = "<group>"; };
+		D01B493C27CA1378008249C0 /* ImageObjectViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageObjectViewController.swift; sourceTree = "<group>"; };
+		D01B493D27CA1378008249C0 /* QuicklookCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuicklookCollectionView.swift; sourceTree = "<group>"; };
+		D01B493E27CA1378008249C0 /* AudioObjectViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioObjectViewController.swift; sourceTree = "<group>"; };
+		D01B493F27CA1378008249C0 /* ImageObjectViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageObjectViewController.xib; sourceTree = "<group>"; };
+		D01B494027CA1378008249C0 /* AudioObjectViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioObjectViewController.xib; sourceTree = "<group>"; };
+		D01B494127CA1378008249C0 /* ObjectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectView.swift; sourceTree = "<group>"; };
+		D01B494227CA1378008249C0 /* ObjectInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectInfoView.swift; sourceTree = "<group>"; };
+		D01B494427CA1378008249C0 /* ViewFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewFactory.swift; sourceTree = "<group>"; };
+		D01B49A927CA1470008249C0 /* BXMediaBrowser.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = BXMediaBrowser.xcconfig; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D01B48AE27CA1313008249C0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D01B48A727CA1313008249C0 = {
+			isa = PBXGroup;
+			children = (
+				D01B49AB27CA1CB8008249C0 /* Config */,
+				D01B48BB27CA1377008249C0 /* Sources */,
+				D01B48B227CA1313008249C0 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D01B48B227CA1313008249C0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D01B48B127CA1313008249C0 /* BXMediaBrowser.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D01B48BB27CA1377008249C0 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				D01B48BC27CA1377008249C0 /* BXMediaBrowser */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		D01B48BC27CA1377008249C0 /* BXMediaBrowser */ = {
+			isa = PBXGroup;
+			children = (
+				D01B48BD27CA1377008249C0 /* Drag & Drop */,
+				D01B48C227CA1377008249C0 /* Resources */,
+				D01B48DB27CA1378008249C0 /* Utils & Helpers */,
+				D01B48E627CA1378008249C0 /* Controllers */,
+				D01B48E927CA1378008249C0 /* Data Model */,
+				D01B490027CA1378008249C0 /* Media Sources */,
+				D01B492027CA1378008249C0 /* User Interface */,
+			);
+			path = BXMediaBrowser;
+			sourceTree = "<group>";
+		};
+		D01B48BD27CA1377008249C0 /* Drag & Drop */ = {
+			isa = PBXGroup;
+			children = (
+				D01B48BE27CA1377008249C0 /* ObjectFilePromiseProvider.swift */,
+				D01B48BF27CA1377008249C0 /* FolderDropDestination.swift */,
+				D01B48C027CA1377008249C0 /* Object+Dragging.swift */,
+				D01B48C127CA1377008249C0 /* DraggingDestinationMixin.swift */,
+			);
+			path = "Drag & Drop";
+			sourceTree = "<group>";
+		};
+		D01B48C227CA1377008249C0 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D01B48C327CA1377008249C0 /* Library.strings */,
+				D01B48C527CA1378008249C0 /* Object.Filter.strings */,
+				D01B48C727CA1378008249C0 /* Music.strings */,
+				D01B48C927CA1378008249C0 /* Section.strings */,
+				D01B48CB27CA1378008249C0 /* Localizable.strings */,
+				D01B48CD27CA1378008249C0 /* Unsplash.strings */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		D01B48DB27CA1378008249C0 /* Utils & Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				D01B48DC27CA1378008249C0 /* URL+open.swift */,
+				D01B48DD27CA1378008249C0 /* URLSession+asyncAwait.swift */,
+				D01B48DE27CA1378008249C0 /* Bundle+BXMediaBrowser.swift */,
+				D01B48DF27CA1378008249C0 /* String+UTI.swift */,
+				D01B48E027CA1378008249C0 /* TempFilePool.swift */,
+				D01B48E127CA1378008249C0 /* BXMediaBrowser+log.swift */,
+				D01B48E227CA1378008249C0 /* FolderObserver.swift */,
+				D01B48E327CA1378008249C0 /* StateSaving.swift */,
+				D01B48E427CA1378008249C0 /* Progress+globalParent.swift */,
+				D01B48E527CA1378008249C0 /* AccessControl.swift */,
+			);
+			path = "Utils & Helpers";
+			sourceTree = "<group>";
+		};
+		D01B48E627CA1378008249C0 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				D01B48E727CA1378008249C0 /* AudioPreviewController.swift */,
+				D01B48E827CA1378008249C0 /* StatisticsController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		D01B48E927CA1378008249C0 /* Data Model */ = {
+			isa = PBXGroup;
+			children = (
+				D01B48EA27CA1378008249C0 /* Object+Loader.swift */,
+				D01B48EB27CA1378008249C0 /* Source+Loader.swift */,
+				D01B48EC27CA1378008249C0 /* Source.swift */,
+				D01B48ED27CA1378008249C0 /* Library.swift */,
+				D01B48EE27CA1378008249C0 /* Library+Hashable.swift */,
+				D01B48EF27CA1378008249C0 /* Object+Hashable.swift */,
+				D01B48F027CA1378008249C0 /* Object+Error.swift */,
+				D01B48F127CA1378008249C0 /* Source+Hashable.swift */,
+				D01B48F227CA1378008249C0 /* Section+UI.swift */,
+				D01B48F327CA1378008249C0 /* Container+Cache.swift */,
+				D01B48F427CA1378008249C0 /* Library+State.swift */,
+				D01B48F527CA1378008249C0 /* Container+Loader.swift */,
+				D01B48F627CA1378008249C0 /* Container+Hashable.swift */,
+				D01B48F727CA1378008249C0 /* Library+UI.swift */,
+				D01B48F827CA1378008249C0 /* Container.swift */,
+				D01B48F927CA1378008249C0 /* Object+Quicklook.swift */,
+				D01B48FA27CA1378008249C0 /* Source+Error.swift */,
+				D01B48FB27CA1378008249C0 /* Section.swift */,
+				D01B48FC27CA1378008249C0 /* Container+Error.swift */,
+				D01B48FD27CA1378008249C0 /* Object+Filter.swift */,
+				D01B48FE27CA1378008249C0 /* Object.swift */,
+				D01B48FF27CA1378008249C0 /* Section+Hashable.swift */,
+			);
+			path = "Data Model";
+			sourceTree = "<group>";
+		};
+		D01B490027CA1378008249C0 /* Media Sources */ = {
+			isa = PBXGroup;
+			children = (
+				D01B490127CA1378008249C0 /* Music */,
+				D01B490927CA1378008249C0 /* Folders */,
+				D01B491127CA1378008249C0 /* Unsplash */,
+				D01B491A27CA1378008249C0 /* Photos */,
+			);
+			path = "Media Sources";
+			sourceTree = "<group>";
+		};
+		D01B490127CA1378008249C0 /* Music */ = {
+			isa = PBXGroup;
+			children = (
+				D01B490227CA1378008249C0 /* macOS */,
+			);
+			path = Music;
+			sourceTree = "<group>";
+		};
+		D01B490227CA1378008249C0 /* macOS */ = {
+			isa = PBXGroup;
+			children = (
+				D01B490327CA1378008249C0 /* MusicFilter.swift */,
+				D01B490427CA1378008249C0 /* ITLibAlbum+Hashable.swift */,
+				D01B490527CA1378008249C0 /* MusicObject.swift */,
+				D01B490627CA1378008249C0 /* MusicSource.swift */,
+				D01B490727CA1378008249C0 /* MusicContainer.swift */,
+				D01B490827CA1378008249C0 /* ITLibArtist+Hashable.swift */,
+			);
+			path = macOS;
+			sourceTree = "<group>";
+		};
+		D01B490927CA1378008249C0 /* Folders */ = {
+			isa = PBXGroup;
+			children = (
+				D01B490A27CA1378008249C0 /* FolderContainer.swift */,
+				D01B490B27CA1378008249C0 /* FolderObject.swift */,
+				D01B490C27CA1378008249C0 /* FolderFilter.swift */,
+				D01B490D27CA1378008249C0 /* AudioFolderSource.swift */,
+				D01B490E27CA1378008249C0 /* VideoFolderSource.swift */,
+				D01B490F27CA1378008249C0 /* ImageFolderSource.swift */,
+				D01B491027CA1378008249C0 /* FolderSource.swift */,
+			);
+			path = Folders;
+			sourceTree = "<group>";
+		};
+		D01B491127CA1378008249C0 /* Unsplash */ = {
+			isa = PBXGroup;
+			children = (
+				D01B491227CA1378008249C0 /* UnsplashSource.swift */,
+				D01B491327CA1378008249C0 /* UnsplashContainer.swift */,
+				D01B491427CA1378008249C0 /* UnsplashJSON.swift */,
+				D01B491527CA1378008249C0 /* UnsplashConfig.swift */,
+				D01B491627CA1378008249C0 /* UnsplashFilter.swift */,
+				D01B491727CA1378008249C0 /* UnsplashObject.swift */,
+				D01B491827CA1378008249C0 /* Helpers */,
+			);
+			path = Unsplash;
+			sourceTree = "<group>";
+		};
+		D01B491827CA1378008249C0 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				D01B491927CA1378008249C0 /* Dictionary+Extensions.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		D01B491A27CA1378008249C0 /* Photos */ = {
+			isa = PBXGroup;
+			children = (
+				D01B491B27CA1378008249C0 /* PhotosContainer.swift */,
+				D01B491C27CA1378008249C0 /* PHAsset+Info.swift */,
+				D01B491D27CA1378008249C0 /* PhotosSource.swift */,
+				D01B491E27CA1378008249C0 /* PhotosChangeObserver.swift */,
+				D01B491F27CA1378008249C0 /* PhotosObject.swift */,
+			);
+			path = Photos;
+			sourceTree = "<group>";
+		};
+		D01B492027CA1378008249C0 /* User Interface */ = {
+			isa = PBXGroup;
+			children = (
+				D01B492127CA1378008249C0 /* Header & Footer */,
+				D01B492927CA1378008249C0 /* Other */,
+				D01B493027CA1378008249C0 /* Container Hierarchy */,
+				D01B493827CA1378008249C0 /* Object Browser */,
+				D01B494327CA1378008249C0 /* Factory */,
+			);
+			path = "User Interface";
+			sourceTree = "<group>";
+		};
+		D01B492127CA1378008249C0 /* Header & Footer */ = {
+			isa = PBXGroup;
+			children = (
+				D01B492227CA1378008249C0 /* RatingFilterView.swift */,
+				D01B492327CA1378008249C0 /* AudioObjectFooterView.swift */,
+				D01B492427CA1378008249C0 /* SearchBar.swift */,
+				D01B492527CA1378008249C0 /* MusicFilterBar.swift */,
+				D01B492627CA1378008249C0 /* UnsplashFilterBar.swift */,
+				D01B492727CA1378008249C0 /* DefaultObjectFooterView.swift */,
+				D01B492827CA1378008249C0 /* FolderFilterBar.swift */,
+			);
+			path = "Header & Footer";
+			sourceTree = "<group>";
+		};
+		D01B492927CA1378008249C0 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				D01B492A27CA1378008249C0 /* BXProgressWindowController.swift */,
+				D01B492B27CA1378008249C0 /* MenuAction.swift */,
+				D01B492C27CA1378008249C0 /* BXProgressViewController.swift */,
+				D01B492D27CA1378008249C0 /* BXProgressViewController.storyboard */,
+				D01B492E27CA1378008249C0 /* EfficientVStack.swift */,
+				D01B492F27CA1378008249C0 /* CustomDisclosureButton.swift */,
+			);
+			path = Other;
+			sourceTree = "<group>";
+		};
+		D01B493027CA1378008249C0 /* Container Hierarchy */ = {
+			isa = PBXGroup;
+			children = (
+				D01B493127CA1378008249C0 /* SourceView.swift */,
+				D01B493227CA1378008249C0 /* FolderContainerView.swift */,
+				D01B493327CA1378008249C0 /* SectionView.swift */,
+				D01B493427CA1378008249C0 /* FolderSourceView.swift */,
+				D01B493527CA1378008249C0 /* LibraryView.swift */,
+				D01B493627CA1378008249C0 /* FileDropDestinationView.swift */,
+				D01B493727CA1378008249C0 /* ContainerView.swift */,
+			);
+			path = "Container Hierarchy";
+			sourceTree = "<group>";
+		};
+		D01B493827CA1378008249C0 /* Object Browser */ = {
+			isa = PBXGroup;
+			children = (
+				D01B493927CA1378008249C0 /* ObjectViewController.swift */,
+				D01B493A27CA1378008249C0 /* ObjectRatingView.swift */,
+				D01B493B27CA1378008249C0 /* ObjectCollectionView.swift */,
+				D01B493C27CA1378008249C0 /* ImageObjectViewController.swift */,
+				D01B493D27CA1378008249C0 /* QuicklookCollectionView.swift */,
+				D01B493E27CA1378008249C0 /* AudioObjectViewController.swift */,
+				D01B493F27CA1378008249C0 /* ImageObjectViewController.xib */,
+				D01B494027CA1378008249C0 /* AudioObjectViewController.xib */,
+				D01B494127CA1378008249C0 /* ObjectView.swift */,
+				D01B494227CA1378008249C0 /* ObjectInfoView.swift */,
+			);
+			path = "Object Browser";
+			sourceTree = "<group>";
+		};
+		D01B494327CA1378008249C0 /* Factory */ = {
+			isa = PBXGroup;
+			children = (
+				D01B494427CA1378008249C0 /* ViewFactory.swift */,
+			);
+			path = Factory;
+			sourceTree = "<group>";
+		};
+		D01B49AB27CA1CB8008249C0 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				D01B49A927CA1470008249C0 /* BXMediaBrowser.xcconfig */,
+				D01B48B427CA1313008249C0 /* BXMediaBrowser.h */,
+			);
+			name = Config;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D01B48AC27CA1313008249C0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D01B48B527CA1313008249C0 /* BXMediaBrowser.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D01B48B027CA1313008249C0 /* BXMediaBrowser */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D01B48B827CA1313008249C0 /* Build configuration list for PBXNativeTarget "BXMediaBrowser" */;
+			buildPhases = (
+				D01B48AC27CA1313008249C0 /* Headers */,
+				D01B48AD27CA1313008249C0 /* Sources */,
+				D01B48AE27CA1313008249C0 /* Frameworks */,
+				D01B48AF27CA1313008249C0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BXMediaBrowser;
+			productName = BXMediaBrowser;
+			productReference = D01B48B127CA1313008249C0 /* BXMediaBrowser.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D01B48A827CA1313008249C0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1320;
+				TargetAttributes = {
+					D01B48B027CA1313008249C0 = {
+						CreatedOnToolsVersion = 13.2.1;
+					};
+				};
+			};
+			buildConfigurationList = D01B48AB27CA1313008249C0 /* Build configuration list for PBXProject "BXMediaBrowser" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				de,
+				fr,
+			);
+			mainGroup = D01B48A727CA1313008249C0;
+			productRefGroup = D01B48B227CA1313008249C0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D01B48B027CA1313008249C0 /* BXMediaBrowser */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D01B48AF27CA1313008249C0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D01B494D27CA1378008249C0 /* Localizable.strings in Resources */,
+				D01B494C27CA1378008249C0 /* Section.strings in Resources */,
+				D01B499427CA1378008249C0 /* BXProgressViewController.storyboard in Resources */,
+				D01B494A27CA1378008249C0 /* Object.Filter.strings in Resources */,
+				D01B494B27CA1378008249C0 /* Music.strings in Resources */,
+				D01B494E27CA1378008249C0 /* Unsplash.strings in Resources */,
+				D01B49A527CA1378008249C0 /* AudioObjectViewController.xib in Resources */,
+				D01B494927CA1378008249C0 /* Library.strings in Resources */,
+				D01B49A427CA1378008249C0 /* ImageObjectViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D01B48AD27CA1313008249C0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D01B498627CA1378008249C0 /* PHAsset+Info.swift in Sources */,
+				D01B496527CA1378008249C0 /* Library+State.swift in Sources */,
+				D01B497A27CA1378008249C0 /* AudioFolderSource.swift in Sources */,
+				D01B497127CA1378008249C0 /* MusicFilter.swift in Sources */,
+				D01B498927CA1378008249C0 /* PhotosObject.swift in Sources */,
+				D01B495D27CA1378008249C0 /* Source.swift in Sources */,
+				D01B497C27CA1378008249C0 /* ImageFolderSource.swift in Sources */,
+				D01B499127CA1378008249C0 /* BXProgressWindowController.swift in Sources */,
+				D01B499927CA1378008249C0 /* SectionView.swift in Sources */,
+				D01B496627CA1378008249C0 /* Container+Loader.swift in Sources */,
+				D01B495727CA1378008249C0 /* Progress+globalParent.swift in Sources */,
+				D01B495B27CA1378008249C0 /* Object+Loader.swift in Sources */,
+				D01B49A827CA1378008249C0 /* ViewFactory.swift in Sources */,
+				D01B498527CA1378008249C0 /* PhotosContainer.swift in Sources */,
+				D01B49A127CA1378008249C0 /* ImageObjectViewController.swift in Sources */,
+				D01B496A27CA1378008249C0 /* Object+Quicklook.swift in Sources */,
+				D01B497927CA1378008249C0 /* FolderFilter.swift in Sources */,
+				D01B498127CA1378008249C0 /* UnsplashConfig.swift in Sources */,
+				D01B499727CA1378008249C0 /* SourceView.swift in Sources */,
+				D01B49A327CA1378008249C0 /* AudioObjectViewController.swift in Sources */,
+				D01B497E27CA1378008249C0 /* UnsplashSource.swift in Sources */,
+				D01B498027CA1378008249C0 /* UnsplashJSON.swift in Sources */,
+				D01B495327CA1378008249C0 /* TempFilePool.swift in Sources */,
+				D01B499F27CA1378008249C0 /* ObjectRatingView.swift in Sources */,
+				D01B499327CA1378008249C0 /* BXProgressViewController.swift in Sources */,
+				D01B496027CA1378008249C0 /* Object+Hashable.swift in Sources */,
+				D01B496B27CA1378008249C0 /* Source+Error.swift in Sources */,
+				D01B49A227CA1378008249C0 /* QuicklookCollectionView.swift in Sources */,
+				D01B496127CA1378008249C0 /* Object+Error.swift in Sources */,
+				D01B498D27CA1378008249C0 /* MusicFilterBar.swift in Sources */,
+				D01B494527CA1378008249C0 /* ObjectFilePromiseProvider.swift in Sources */,
+				D01B497227CA1378008249C0 /* ITLibAlbum+Hashable.swift in Sources */,
+				D01B498227CA1378008249C0 /* UnsplashFilter.swift in Sources */,
+				D01B499B27CA1378008249C0 /* LibraryView.swift in Sources */,
+				D01B498A27CA1378008249C0 /* RatingFilterView.swift in Sources */,
+				D01B497B27CA1378008249C0 /* VideoFolderSource.swift in Sources */,
+				D01B494627CA1378008249C0 /* FolderDropDestination.swift in Sources */,
+				D01B499027CA1378008249C0 /* FolderFilterBar.swift in Sources */,
+				D01B495C27CA1378008249C0 /* Source+Loader.swift in Sources */,
+				D01B499C27CA1378008249C0 /* FileDropDestinationView.swift in Sources */,
+				D01B499227CA1378008249C0 /* MenuAction.swift in Sources */,
+				D01B497527CA1378008249C0 /* MusicContainer.swift in Sources */,
+				D01B498327CA1378008249C0 /* UnsplashObject.swift in Sources */,
+				D01B495A27CA1378008249C0 /* StatisticsController.swift in Sources */,
+				D01B49A727CA1378008249C0 /* ObjectInfoView.swift in Sources */,
+				D01B49A627CA1378008249C0 /* ObjectView.swift in Sources */,
+				D01B495027CA1378008249C0 /* URLSession+asyncAwait.swift in Sources */,
+				D01B499E27CA1378008249C0 /* ObjectViewController.swift in Sources */,
+				D01B495427CA1378008249C0 /* BXMediaBrowser+log.swift in Sources */,
+				D01B498F27CA1378008249C0 /* DefaultObjectFooterView.swift in Sources */,
+				D01B498827CA1378008249C0 /* PhotosChangeObserver.swift in Sources */,
+				D01B495127CA1378008249C0 /* Bundle+BXMediaBrowser.swift in Sources */,
+				D01B498B27CA1378008249C0 /* AudioObjectFooterView.swift in Sources */,
+				D01B496C27CA1378008249C0 /* Section.swift in Sources */,
+				D01B49A027CA1378008249C0 /* ObjectCollectionView.swift in Sources */,
+				D01B494F27CA1378008249C0 /* URL+open.swift in Sources */,
+				D01B496D27CA1378008249C0 /* Container+Error.swift in Sources */,
+				D01B494727CA1378008249C0 /* Object+Dragging.swift in Sources */,
+				D01B496827CA1378008249C0 /* Library+UI.swift in Sources */,
+				D01B494827CA1378008249C0 /* DraggingDestinationMixin.swift in Sources */,
+				D01B497027CA1378008249C0 /* Section+Hashable.swift in Sources */,
+				D01B495627CA1378008249C0 /* StateSaving.swift in Sources */,
+				D01B495527CA1378008249C0 /* FolderObserver.swift in Sources */,
+				D01B495227CA1378008249C0 /* String+UTI.swift in Sources */,
+				D01B496327CA1378008249C0 /* Section+UI.swift in Sources */,
+				D01B497627CA1378008249C0 /* ITLibArtist+Hashable.swift in Sources */,
+				D01B497F27CA1378008249C0 /* UnsplashContainer.swift in Sources */,
+				D01B497827CA1378008249C0 /* FolderObject.swift in Sources */,
+				D01B495E27CA1378008249C0 /* Library.swift in Sources */,
+				D01B496227CA1378008249C0 /* Source+Hashable.swift in Sources */,
+				D01B498727CA1378008249C0 /* PhotosSource.swift in Sources */,
+				D01B497427CA1378008249C0 /* MusicSource.swift in Sources */,
+				D01B498C27CA1378008249C0 /* SearchBar.swift in Sources */,
+				D01B499A27CA1378008249C0 /* FolderSourceView.swift in Sources */,
+				D01B497327CA1378008249C0 /* MusicObject.swift in Sources */,
+				D01B495927CA1378008249C0 /* AudioPreviewController.swift in Sources */,
+				D01B497727CA1378008249C0 /* FolderContainer.swift in Sources */,
+				D01B496E27CA1378008249C0 /* Object+Filter.swift in Sources */,
+				D01B498E27CA1378008249C0 /* UnsplashFilterBar.swift in Sources */,
+				D01B499627CA1378008249C0 /* CustomDisclosureButton.swift in Sources */,
+				D01B499527CA1378008249C0 /* EfficientVStack.swift in Sources */,
+				D01B499D27CA1378008249C0 /* ContainerView.swift in Sources */,
+				D01B495F27CA1378008249C0 /* Library+Hashable.swift in Sources */,
+				D01B496927CA1378008249C0 /* Container.swift in Sources */,
+				D01B497D27CA1378008249C0 /* FolderSource.swift in Sources */,
+				D01B498427CA1378008249C0 /* Dictionary+Extensions.swift in Sources */,
+				D01B496427CA1378008249C0 /* Container+Cache.swift in Sources */,
+				D01B496F27CA1378008249C0 /* Object.swift in Sources */,
+				D01B495827CA1378008249C0 /* AccessControl.swift in Sources */,
+				D01B499827CA1378008249C0 /* FolderContainerView.swift in Sources */,
+				D01B496727CA1378008249C0 /* Container+Hashable.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		D01B48C327CA1377008249C0 /* Library.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D01B48C427CA1377008249C0 /* de */,
+				D01B48CF27CA1378008249C0 /* en */,
+				D01B48D527CA1378008249C0 /* fr */,
+			);
+			name = Library.strings;
+			sourceTree = "<group>";
+		};
+		D01B48C527CA1378008249C0 /* Object.Filter.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D01B48C627CA1378008249C0 /* de */,
+				D01B48D027CA1378008249C0 /* en */,
+				D01B48D627CA1378008249C0 /* fr */,
+			);
+			name = Object.Filter.strings;
+			sourceTree = "<group>";
+		};
+		D01B48C727CA1378008249C0 /* Music.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D01B48C827CA1378008249C0 /* de */,
+				D01B48D127CA1378008249C0 /* en */,
+				D01B48D727CA1378008249C0 /* fr */,
+			);
+			name = Music.strings;
+			sourceTree = "<group>";
+		};
+		D01B48C927CA1378008249C0 /* Section.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D01B48CA27CA1378008249C0 /* de */,
+				D01B48D227CA1378008249C0 /* en */,
+				D01B48D827CA1378008249C0 /* fr */,
+			);
+			name = Section.strings;
+			sourceTree = "<group>";
+		};
+		D01B48CB27CA1378008249C0 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D01B48CC27CA1378008249C0 /* de */,
+				D01B48D327CA1378008249C0 /* en */,
+				D01B48D927CA1378008249C0 /* fr */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		D01B48CD27CA1378008249C0 /* Unsplash.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D01B48CE27CA1378008249C0 /* de */,
+				D01B48D427CA1378008249C0 /* en */,
+				D01B48DA27CA1378008249C0 /* fr */,
+			);
+			name = Unsplash.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		D01B48B627CA1313008249C0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D01B49A927CA1470008249C0 /* BXMediaBrowser.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		D01B48B727CA1313008249C0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D01B49A927CA1470008249C0 /* BXMediaBrowser.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		D01B48B927CA1313008249C0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 6372P8EH2J;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.boinx.BXMediaBrowser;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		D01B48BA27CA1313008249C0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 6372P8EH2J;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.boinx.BXMediaBrowser;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D01B48AB27CA1313008249C0 /* Build configuration list for PBXProject "BXMediaBrowser" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D01B48B627CA1313008249C0 /* Debug */,
+				D01B48B727CA1313008249C0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D01B48B827CA1313008249C0 /* Build configuration list for PBXNativeTarget "BXMediaBrowser" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D01B48B927CA1313008249C0 /* Debug */,
+				D01B48BA27CA1313008249C0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D01B48A827CA1313008249C0 /* Project object */;
+}
