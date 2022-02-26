@@ -15,10 +15,16 @@ import Foundation
 
 public extension Bundle
 {
-	/// Returns a reference to the BXMediaBrowser resources bundle
+	/// Returns a reference to the BXMediaBrowser (resources) bundle
 	
+	#if SWIFT_PACKAGE
 	static let BXMediaBrowser = Bundle.module
+	#else
+	static let BXMediaBrowser = Bundle(for:BXMediaBrowserMarker.self)
+	#endif
 }
+
+fileprivate class BXMediaBrowserMarker {}
 
 
 //----------------------------------------------------------------------------------------------------------------------

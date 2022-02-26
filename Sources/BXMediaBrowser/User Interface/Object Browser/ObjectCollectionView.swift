@@ -81,7 +81,7 @@ public struct ObjectCollectionView<Cell:ObjectViewController> : NSViewRepresenta
 		
 		let identifier = self.cellType.identifier
 		let name = self.cellType.nibName
-		let bundle = Bundle.module
+		let bundle = Bundle.BXMediaBrowser
         let nib = NSNib(nibNamed:name, bundle:bundle)
         
         collectionView.register(nib, forItemWithIdentifier:identifier)

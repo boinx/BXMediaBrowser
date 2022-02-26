@@ -194,7 +194,7 @@ extension Object.Filter.SortType
 	
 	public var localizedName:String
 	{
-		NSLocalizedString(self, tableName:"Object.Filter", bundle:Bundle.module, comment:"Sorting Kind Name")
+		NSLocalizedString(self, tableName:"Object.Filter", bundle:Bundle.BXMediaBrowser, comment:"Sorting Kind Name")
 	}
 }
 

@@ -108,12 +108,12 @@ extension MusicFilterBar
 {
     var searchPlaceholder:String
     {
-		NSLocalizedString("Search", bundle:.module, comment:"Placeholder")
+		NSLocalizedString("Search", bundle:.BXMediaBrowser, comment:"Placeholder")
     }
     
     var sortByLabel:String
     {
-		NSLocalizedString("Sort by:", bundle:.module, comment:"Label")
+		NSLocalizedString("Sort by:", bundle:.BXMediaBrowser, comment:"Label")
     }
     
     var directionIcon:String

@@ -20,7 +20,7 @@ open class BXProgressWindowController : NSWindowController
 {
 	public static let shared:BXProgressWindowController =
 	{
-		let bundle = Bundle.module //(for:BXProgressWindowController.self)
+		let bundle = Bundle.BXMediaBrowser //(for:BXProgressWindowController.self)
 		let storyboard = NSStoryboard(name:"BXProgressViewController", bundle:bundle)
 		let controller = storyboard.instantiateInitialController() as! BXProgressWindowController
 		

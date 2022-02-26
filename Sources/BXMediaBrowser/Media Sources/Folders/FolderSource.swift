@@ -116,10 +116,10 @@ open class FolderSource : Source, AccessControl
 
 	open func removeTopLevelContainer(_ container:Container)
 	{
-		let title = NSLocalizedString("Alert.title.removeFolder", bundle:.module, comment:"Alert Title")
-		let message = String(format:NSLocalizedString("Alert.message.removeFolder", bundle:.module, comment:"Alert Message"), container.name)
-		let ok = NSLocalizedString("Remove", bundle:.module, comment:"Button Title")
-		let cancel = NSLocalizedString("Cancel", bundle:.module, comment:"Button Title")
+		let title = NSLocalizedString("Alert.title.removeFolder", bundle:.BXMediaBrowser, comment:"Alert Title")
+		let message = String(format:NSLocalizedString("Alert.message.removeFolder", bundle:.BXMediaBrowser, comment:"Alert Message"), container.name)
+		let ok = NSLocalizedString("Remove", bundle:.BXMediaBrowser, comment:"Button Title")
+		let cancel = NSLocalizedString("Cancel", bundle:.BXMediaBrowser, comment:"Button Title")
 		
 		NSAlert.presentModal(style:.critical, title:title, message:message, okButton:ok, cancelButton:cancel)
 		{

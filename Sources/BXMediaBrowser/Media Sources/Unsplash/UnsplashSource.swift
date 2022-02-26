@@ -67,7 +67,7 @@ open class UnsplashSource : Source, AccessControl
 		
 		// Add Live Search
 		
-		let name = NSLocalizedString("Search", tableName:"Unsplash", bundle:.module, comment:"Container Name")
+		let name = NSLocalizedString("Search", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Container Name")
 		containers += UnsplashContainer(identifier:"UnsplashSource:Search", icon:"magnifyingglass", name:name, filter:UnsplashFilter(), saveHandler:
 		{
 			[weak self] in self?.saveContainer($0)
@@ -117,10 +117,10 @@ open class UnsplashSource : Source, AccessControl
 		{
 			[weak self] container in
 			
-			let title = NSLocalizedString("Alert.title.removeFolder", bundle:.module, comment:"Alert Title")
-			let message = String(format:NSLocalizedString("Alert.message.removeFolder", bundle:.module, comment:"Alert Message"), container.name)
-			let ok = NSLocalizedString("Remove", bundle:.module, comment:"Button Title")
-			let cancel = NSLocalizedString("Cancel", bundle:.module, comment:"Button Title")
+			let title = NSLocalizedString("Alert.title.removeFolder", bundle:.BXMediaBrowser, comment:"Alert Title")
+			let message = String(format:NSLocalizedString("Alert.message.removeFolder", bundle:.BXMediaBrowser, comment:"Alert Message"), container.name)
+			let ok = NSLocalizedString("Remove", bundle:.BXMediaBrowser, comment:"Button Title")
+			let cancel = NSLocalizedString("Cancel", bundle:.BXMediaBrowser, comment:"Button Title")
 			
 			NSAlert.presentModal(style:.critical, title:title, message:message, okButton:ok, cancelButton:cancel)
 			{

@@ -35,21 +35,21 @@ extension Section
 	
 	public static var localizedNameLibraries:String
 	{
-		NSLocalizedString("Libraries", tableName:"Section", bundle:.module, comment:"Section Name")
+		NSLocalizedString("Libraries", tableName:"Section", bundle:.BXMediaBrowser, comment:"Section Name")
 	}
 	
 	/// Returns the localized name for the Internet section
 	
 	public static var localizedNameInternet:String
 	{
-		NSLocalizedString("Internet", tableName:"Section", bundle:.module, comment:"Section Name")
+		NSLocalizedString("Internet", tableName:"Section", bundle:.BXMediaBrowser, comment:"Section Name")
 	}
 	
 	/// Returns the localized name for the Folders section
 	
 	public static var localizedNameFolders:String
 	{
-		NSLocalizedString("Folders", tableName:"Section", bundle:.module, comment:"Section Name")
+		NSLocalizedString("Folders", tableName:"Section", bundle:.BXMediaBrowser, comment:"Section Name")
 	}
 }
 

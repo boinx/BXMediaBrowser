@@ -126,10 +126,10 @@ extension UnsplashFilter
 		{
 			if self == .any
 			{
-				return NSLocalizedString("any", tableName:"Unsplash", bundle:.module, comment:"Orientation Name")
+				return NSLocalizedString("any", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Orientation Name")
 			}
 			
-			return NSLocalizedString(identifier, tableName:"Unsplash", bundle:.module, comment:"Orientation Name")
+			return NSLocalizedString(identifier, tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Orientation Name")
 		}
 	}
 }
@@ -169,10 +169,10 @@ extension UnsplashFilter
 		{
 			if self == .any
 			{
-				return NSLocalizedString("any", tableName:"Unsplash", bundle:.module, comment:"Color Name")
+				return NSLocalizedString("any", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Color Name")
 			}
 			
-			return NSLocalizedString(identifier, tableName:"Unsplash", bundle:.module, comment:"Color Name")
+			return NSLocalizedString(identifier, tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Color Name")
 		}
 		
 		var color:SwiftUI.Color

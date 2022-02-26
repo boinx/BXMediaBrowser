@@ -110,7 +110,7 @@ public class ObjectViewController : NSCollectionViewItem
 
 	override open var nibBundle: Bundle?
     {
-		Bundle.module
+		Bundle.BXMediaBrowser
 	}
 
 

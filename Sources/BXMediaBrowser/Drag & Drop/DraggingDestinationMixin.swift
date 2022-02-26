@@ -297,7 +297,7 @@ extension DraggingDestinationMixin
 			let dt = now - self.startTime
 			let percent = Int(fraction*100)
 			
-			BXProgressWindowController.shared.title = self.progressTitle ?? NSLocalizedString("Copying Media Files", bundle:.module, comment:"Progress Title")
+			BXProgressWindowController.shared.title = self.progressTitle ?? NSLocalizedString("Copying Media Files", bundle:.BXMediaBrowser, comment:"Progress Title")
 			BXProgressWindowController.shared.value = fraction
 			
 			if !BXProgressWindowController.shared.isVisible && dt>1.0 && fraction<0.8

@@ -109,12 +109,12 @@ public struct UnsplashFilterBar : View
 
     var searchPlaceholder:String
     {
-		NSLocalizedString("Search", bundle:.module, comment:"Placeholder")
+		NSLocalizedString("Search", bundle:.BXMediaBrowser, comment:"Placeholder")
     }
     
     var saveTitle:String
     {
-		NSLocalizedString("Save", bundle:.module, comment:"Button Title")
+		NSLocalizedString("Save", bundle:.BXMediaBrowser, comment:"Button Title")
     }
     
 }
