@@ -18,8 +18,3 @@ WATCHOS_DEPLOYMENT_TARGET = 6.0
 COPY_PHASE_STRIP = NO
 LD_DYLIB_INSTALL_NAME = @rpath
 CLANG_ENABLE_MODULES = YES
-
-// These are needed to make the tests work on both macOS and iOS
-
-LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks @loader_path/Frameworks
-LD_RUNPATH_SEARCH_PATHS[sdk=macosx*] = $(inherited) @executable_path/../Frameworks @loader_path/../Frameworks
