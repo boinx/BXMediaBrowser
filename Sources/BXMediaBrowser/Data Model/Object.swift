@@ -204,7 +204,7 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 	/// the correct filename. In some cases (e.g. Photos.app) a filename is not available, so a generated name
 	/// must be used.
 	
-	var localFileName:String
+	public var localFileName:String
 	{
 		var name = self.name
 		
@@ -220,7 +220,7 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 	/// Returns the UTI for the local file. Since the Object can still be in the cloud, and needs to be downloaded
 	/// first, thi UTI must be know ahead of the download by the concrete subclass.
 	
-	var localFileUTI:String
+	public var localFileUTI:String
 	{
 		if #available(macOS 12, *)
 		{
@@ -235,7 +235,7 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 	
 	/// Returns the URL to the local file. This can possibly trigger a download, if the Object is still in the cloud.
 	
-	var localFileURL:URL
+	public var localFileURL:URL
 	{
 		get async throws
 		{

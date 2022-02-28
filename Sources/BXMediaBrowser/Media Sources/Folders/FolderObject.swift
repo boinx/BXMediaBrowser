@@ -163,7 +163,7 @@ open class FolderObject : Object
 	
 	// Since the file is already local we can get its filename
 	
-	override var localFileName:String
+	override public var localFileName:String
 	{
 		guard let url = self.url else { return super.localFileName }
 		return url.lastPathComponent

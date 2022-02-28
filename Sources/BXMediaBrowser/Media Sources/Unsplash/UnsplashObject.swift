@@ -178,7 +178,7 @@ open class UnsplashObject : Object
 
 	// Returns the filename of the file that will be downloaded
 	
-	override var localFileName:String
+	override public var localFileName:String
 	{
 		Self.localFileName(for:identifier, data:data)
 	}

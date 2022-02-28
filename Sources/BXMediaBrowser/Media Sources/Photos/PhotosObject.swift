@@ -149,7 +149,7 @@ public class PhotosObject : Object
 
 	/// Returns the UTI of the promised local file
 	
-	override var localFileUTI:String
+	override public var localFileUTI:String
 	{
 		guard let asset = data as? PHAsset else { return String.imageUTI }
 		return asset.uti
@@ -158,7 +158,7 @@ public class PhotosObject : Object
 
 	/// Returns the filename of the local file
 	
-	override var localFileName:String
+	override public var localFileName:String
 	{
 		// Try to get the original filename from the PHAsset
 		

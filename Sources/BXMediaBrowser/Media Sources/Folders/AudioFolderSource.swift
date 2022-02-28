@@ -179,7 +179,7 @@ open class AudioFile : FolderObject
     
 	/// Returns the UTI of the promised image file
 	
-	override var localFileUTI:String
+	override public var localFileUTI:String
 	{
 		guard let url = data as? URL else { return String.audioUTI }
 		return url.uti ?? String.audioUTI

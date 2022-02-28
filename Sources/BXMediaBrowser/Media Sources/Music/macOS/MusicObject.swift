@@ -175,7 +175,7 @@ public class MusicObject : Object
 
 	/// Returns the UTI of the promised local file
 	
-	override var localFileUTI:String
+	override public var localFileUTI:String
 	{
 		guard let item = data as? ITLibMediaItem else { return String.audioUTI }
 		guard let url = item.location else { return String.audioUTI }
@@ -185,7 +185,7 @@ public class MusicObject : Object
 
 	/// Returns the filename of the local file
 	
-	override var localFileName:String
+	override public var localFileName:String
 	{
 		let defaultFilename = NSLocalizedString("Audio File", tableName:"Music", bundle:.BXMediaBrowser, comment:"Default Filename")
 		guard let item = data as? ITLibMediaItem else { return defaultFilename }

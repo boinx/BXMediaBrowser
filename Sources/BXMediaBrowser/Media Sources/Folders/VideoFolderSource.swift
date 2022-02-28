@@ -185,7 +185,7 @@ open class VideoFile : FolderObject
 
 	/// Returns the UTI of the promised image file
 	
-	override var localFileUTI:String
+	override public var localFileUTI:String
 	{
 		guard let url = data as? URL else { return String.movieUTI }
 		return url.uti ?? String.movieUTI

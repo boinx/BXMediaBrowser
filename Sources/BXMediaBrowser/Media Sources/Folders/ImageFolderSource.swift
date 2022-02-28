@@ -128,7 +128,7 @@ open class ImageFile : FolderObject
 	
 	/// Returns the UTI of the promised image file 
 	
-	override var localFileUTI:String
+	override public var localFileUTI:String
 	{
 		guard let url = data as? URL else { return String.imageUTI }
 		return url.uti ?? String.imageUTI
