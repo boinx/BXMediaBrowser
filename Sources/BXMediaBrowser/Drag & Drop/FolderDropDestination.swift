@@ -52,21 +52,21 @@ public class FolderDropDestination : NSObject, NSDraggingDestination, DraggingDe
 	
 	public var highlightViewHandler:((Bool)->Void)? = nil
     
-    /// Returns the optional title for the download progress
-	
-	public var progressTitle:String? { nil }
-	
     /// The Progress object for the current download/copy operation
 	
     public var progress:Progress? = nil
     
-    /// The start time of a download/copy operation
-	
-    public var startTime:CFAbsoluteTime = .zero
-    
     /// KVO observers
 	
-	public var observers:[Any] = []
+	public var progressObserver:Any? = nil
+    
+    /// The start time of a download/copy operation
+	
+    public var progressStartTime:CFAbsoluteTime = .zero
+	
+    /// Returns the optional title for the download progress
+	
+	public var progressTitle:String? { nil }
 	
 	
 //----------------------------------------------------------------------------------------------------------------------

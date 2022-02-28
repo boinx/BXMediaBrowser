@@ -63,7 +63,7 @@ public class DropItem
 
 // MARK: -
 	
-public protocol DraggingDestinationMixin : AnyObject
+public protocol DraggingDestinationMixin : DraggingProgressMixin
 {
 	/// This handler is called once for each received item.
 	
@@ -81,22 +81,6 @@ public protocol DraggingDestinationMixin : AnyObject
 	/// the drop destination view, as the mouse enters and leaves the view.
 	
 	var highlightViewHandler:((Bool)->Void)? { set get }
-
-	/// The (optional) title for the download progress window
-	
-	var progressTitle:String? { get }
-	
-    /// The Progress object for the current download/copy operation
-	
-    var progress:Progress? { set get }
-    
-    /// The start time of a download/copy operation
-	
-    var startTime:CFAbsoluteTime { set get }
-    
-    /// KVO observers
-	
-	var observers:[Any] { set get }
 }
 
 	
@@ -238,98 +222,6 @@ extension DraggingDestinationMixin
 		}
 	}
 	
-	
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	// MARK: - Progress
-	
-	
-	/// Creates a root Progress object with the specified totalUnitCount
-	
-	private func prepareProgress(with count:Int) -> Progress
-	{
-		// Create root Progress
-		
-		let progress = Progress(totalUnitCount:Int64(count))
-		self.progress = progress
-		Progress.globalParent = progress
-
-		// Store starting time
-		
-		self.startTime = CFAbsoluteTimeGetCurrent()
-		
-		// Register KVO observers
-		
-		self.observers = []
-		
-		self.observers += KVO(object:progress, keyPath:"fractionCompleted", options:[.new])
-		{
-			[weak self] _,_ in
-			guard let self = self else { return }
-			guard !progress.isCancelled else { return }
-			let fraction = progress.fractionCompleted
-			self.updateProgress(fraction)
-		}
-		
-		BXProgressWindowController.shared.cancelHandler =
-		{
-			[weak self] in self?.cancel()
-		}
-
-		return progress
-	}
-	
-	
-	/// Update the progress UI with the specified fraction
-	
-	private func updateProgress(_ fraction:Double)
-	{
-		DispatchQueue.main.asyncIfNeeded
-		{
-			let now = CFAbsoluteTimeGetCurrent()
-			let dt = now - self.startTime
-			let percent = Int(fraction*100)
-			
-			BXProgressWindowController.shared.title = self.progressTitle ?? NSLocalizedString("Copying Media Files", bundle:.BXMediaBrowser, comment:"Progress Title")
-			BXProgressWindowController.shared.value = fraction
-			
-			if !BXProgressWindowController.shared.isVisible && dt>1.0 && fraction<0.8
-			{
-				logDragAndDrop.debug {"\(Self.self).\(#function)  show progress window"}
-				BXProgressWindowController.shared.show()
-			}
-
-			logDragAndDrop.verbose {"\(Self.self).\(#function)  progress=\(percent)%%  duration=\(dt)s"}
-		}
-	}
-	
-	
-	/// Hides the progress UI
-	
-	private func hideProgress()
-	{
-		DispatchQueue.main.asyncIfNeeded
-		{
-			logDragAndDrop.debug {"\(Self.self).\(#function)"}
-			
-			BXProgressWindowController.shared.hide()
-		
-			Progress.globalParent = nil
-			self.progress = nil
-			self.observers = []
-		}
-	}
-
-
-	/// Cancels the currently running download/copy operation
-	
-	public func cancel()
-	{
-		logDragAndDrop.debug {"\(Self.self).\(#function)"}
-		self.progress?.cancel()
-		self.hideProgress()
-	}
 }
 
 

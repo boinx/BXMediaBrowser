@@ -113,6 +113,7 @@
 		D01B49B927CA2189008249C0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D01B49B727CA2189008249C0 /* Foundation.framework */; platformFilter = maccatalyst; };
 		D01B49BA27CA2189008249C0 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D01B49B827CA2189008249C0 /* AVFoundation.framework */; platformFilter = maccatalyst; };
 		D01C33CF27CA70F3003337A9 /* NSPasteboard+Objects.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01C33CE27CA70F3003337A9 /* NSPasteboard+Objects.swift */; };
+		D01C33D727CD187D003337A9 /* DraggingProgressMixin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01C33D627CD187D003337A9 /* DraggingProgressMixin.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -237,6 +238,7 @@
 		D01B49B827CA2189008249C0 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		D01B49BB27CA463E008249C0 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D01C33CE27CA70F3003337A9 /* NSPasteboard+Objects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPasteboard+Objects.swift"; sourceTree = "<group>"; };
+		D01C33D627CD187D003337A9 /* DraggingProgressMixin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggingProgressMixin.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -297,6 +299,7 @@
 		D01B48BD27CA1377008249C0 /* Drag & Drop */ = {
 			isa = PBXGroup;
 			children = (
+				D01C33D627CD187D003337A9 /* DraggingProgressMixin.swift */,
 				D01B48C127CA1377008249C0 /* DraggingDestinationMixin.swift */,
 				D01B48BF27CA1377008249C0 /* FolderDropDestination.swift */,
 				D01B48BE27CA1377008249C0 /* ObjectFilePromiseProvider.swift */,
@@ -676,6 +679,7 @@
 				D01B498D27CA1378008249C0 /* MusicFilterBar.swift in Sources */,
 				D01B494527CA1378008249C0 /* ObjectFilePromiseProvider.swift in Sources */,
 				D01B497227CA1378008249C0 /* ITLibAlbum+Hashable.swift in Sources */,
+				D01C33D727CD187D003337A9 /* DraggingProgressMixin.swift in Sources */,
 				D01B498227CA1378008249C0 /* UnsplashFilter.swift in Sources */,
 				D01B499B27CA1378008249C0 /* LibraryView.swift in Sources */,
 				D01B498A27CA1378008249C0 /* RatingFilterView.swift in Sources */,
