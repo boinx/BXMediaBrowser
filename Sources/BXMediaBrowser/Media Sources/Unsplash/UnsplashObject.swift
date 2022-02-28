@@ -183,6 +183,13 @@ open class UnsplashObject : Object
 		Self.localFileName(for:identifier, data:data)
 	}
 	
+	// Unsplash always return image - can we be even more specific with JPEG?
+	
+	override public var localFileUTI:String
+	{
+		String.imageUTI
+	}
+	
 	static func localFileName(for identifier:String, data:Any) -> String
 	{
 		// Fallback filename
