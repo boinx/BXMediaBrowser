@@ -283,7 +283,7 @@ public class PhotosContainer : Container
 
 	/// Returns a description of the contents of this Container
 	
-    @MainActor override var localizedObjectCount:String
+    @MainActor override open var localizedObjectCount:String
     {
 		let n = self.objects.count
 		let str = n.localizedImagesString

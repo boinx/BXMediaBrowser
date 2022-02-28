@@ -404,7 +404,7 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 	
 	/// Returns a description of the contents of this Container
 	
-    @MainActor var localizedObjectCount:String
+    @MainActor open var localizedObjectCount:String
     {
 		let n = self.objects.count
 		let str = n.localizedItemsString

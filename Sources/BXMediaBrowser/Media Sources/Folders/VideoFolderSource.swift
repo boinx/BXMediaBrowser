@@ -60,7 +60,7 @@ open class VideoFolderContainer : FolderContainer
 		return VideoFile(url:url)
 	}
 
-    @MainActor override var localizedObjectCount:String
+    @MainActor override open var localizedObjectCount:String
     {
 		let n = self.objects.count
 		let str = n.localizedVideosString
