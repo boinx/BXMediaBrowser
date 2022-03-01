@@ -33,7 +33,7 @@ import UniformTypeIdentifiers
 //----------------------------------------------------------------------------------------------------------------------
 
 
-extension String
+public extension String
 {
 	static var fileUTI:String
 	{
