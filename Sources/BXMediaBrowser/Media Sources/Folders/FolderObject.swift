@@ -91,6 +91,7 @@ open class FolderObject : Object
 		if let fileSize = url.fileSize
 		{
 			metadata["fileSize"] = fileSize
+			metadata[kMDItemFSSize as String] = fileSize
 		}
 
 		if let creationDate = url.creationDate
