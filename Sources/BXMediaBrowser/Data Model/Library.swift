@@ -97,6 +97,14 @@ open class Library : ObservableObject, StateSaving
 		self.sections.append(section)
 	}
 	
+	/// Inserts a new section at the specified index
+	
+	public func insertSection(_ section:Section, at index:Int)
+	{
+		self.objectWillChange.send()
+		self.sections.insert(section, at:index)
+	}
+	
 
 //----------------------------------------------------------------------------------------------------------------------
 
