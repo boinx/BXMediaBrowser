@@ -36,6 +36,13 @@ public struct AudioObjectFooterView : View
 	
 	@ObservedObject var container:Container
 	
+	// Init
+	
+	public init(container:Container)
+	{
+		self.container = container
+	}
+	
 	// View
 	
 	public var body: some View

@@ -39,7 +39,7 @@ extension Source
 		
 		/// Creates the thread-safe Loader for a Source
 		
-		init(loadHandler:@escaping LoadHandler)
+		public init(loadHandler:@escaping LoadHandler)
 		{
 			self.loadHandler = loadHandler
 		}

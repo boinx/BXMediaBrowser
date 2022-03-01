@@ -33,12 +33,20 @@ import SwiftUI
 
 /// This struct contains the information for a single line in the ObjectInfoView
 
-struct ObjectMetadataEntry : Identifiable
+public struct ObjectMetadataEntry : Identifiable
 {
-	let id = UUID().uuidString
-	var label:String
-	var value:String
-	var action:(()->Void)? = nil
+	public let id:String
+	public var label:String
+	public var value:String
+	public var action:(()->Void)?
+	
+	public init(label:String, value:String, action:(()->Void)? = nil)
+	{
+		self.id = UUID().uuidString
+		self.label = label
+		self.value = value
+		self.action = action
+	}
 }
 
 

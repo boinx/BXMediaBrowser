@@ -37,6 +37,14 @@ public struct DefaultObjectFooterView : View
 	@ObservedObject var container:Container
 	@ObservedObject var uiState:Library.UIState
 	
+	// Init
+	
+	public init(container:Container, uiState:Library.UIState)
+	{
+		self.container = container
+		self.uiState = uiState
+	}
+	
 	// View
 	
 	public var body: some View
