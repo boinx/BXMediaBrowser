@@ -154,7 +154,7 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 	
 	/// Transforms the metadata dictionary into an order list of human readable information (with optional click actions)
 	
-	@MainActor var localizedMetadata:[ObjectMetadataEntry]
+	@MainActor open var localizedMetadata:[ObjectMetadataEntry]
     {
 		let dict = self.metadata ?? [:]
 		var array:[ObjectMetadataEntry] = []
@@ -170,7 +170,7 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 
 	/// The rating value of this Object is stored by the StatisticsController, which takes care of persisting the values.
 	
-	@MainActor public var rating:Int
+	@MainActor open var rating:Int
 	{
 		set
 		{
@@ -183,7 +183,7 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 	
 	/// The useCount of this Object is stored by the StatisticsController, which takes care of persisting the values.
 	
-	@MainActor public var useCount:Int
+	@MainActor open var useCount:Int
 	{
 		set
 		{
@@ -204,7 +204,7 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 	/// the correct filename. In some cases (e.g. Photos.app) a filename is not available, so a generated name
 	/// must be used.
 	
-	public var localFileName:String
+	open var localFileName:String
 	{
 		var name = self.name
 		
@@ -220,7 +220,7 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 	/// Returns the UTI for the local file. Since the Object can still be in the cloud, and needs to be downloaded
 	/// first, thi UTI must be know ahead of the download by the concrete subclass.
 	
-	public var localFileUTI:String
+	open var localFileUTI:String
 	{
 		if #available(macOS 12, *)
 		{
@@ -235,7 +235,7 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 	
 	/// Returns the URL to the local file. This can possibly trigger a download, if the Object is still in the cloud.
 	
-	public var localFileURL:URL
+	open var localFileURL:URL
 	{
 		get async throws
 		{

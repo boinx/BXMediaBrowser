@@ -118,7 +118,7 @@ public class MusicObject : Object
 
 	/// Tranforms the metadata dictionary into an order list of human readable information (with optional click actions)
 	
-	@MainActor override var localizedMetadata:[ObjectMetadataEntry]
+	@MainActor override open var localizedMetadata:[ObjectMetadataEntry]
     {
 //		guard let item = data as? ITLibMediaItem else { return [] }
 		let metadata = self.metadata ?? [:]

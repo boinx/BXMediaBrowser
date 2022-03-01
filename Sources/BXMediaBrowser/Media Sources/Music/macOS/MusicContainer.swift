@@ -69,7 +69,7 @@ public class MusicContainer : Container
 
 	/// Returns true if this Container can be expanded. Depends on the type of Container.
 	
-	override var canExpand:Bool
+	override open var canExpand:Bool
 	{
 		guard let musicData = data as? MusicData else { return true }
 

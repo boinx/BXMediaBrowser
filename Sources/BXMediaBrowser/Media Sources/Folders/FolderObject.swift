@@ -109,7 +109,7 @@ open class FolderObject : Object
 
 	/// Tranforms the metadata dictionary into an order list of human readable information (with optional click actions)
 	
-	@MainActor override var localizedMetadata:[ObjectMetadataEntry]
+	@MainActor override open var localizedMetadata:[ObjectMetadataEntry]
     {
 		guard let url = data as? URL else { return  [] }
 		let dict = self.metadata ?? [:]
@@ -172,7 +172,7 @@ open class FolderObject : Object
 	
 	/// Returns the URL for QLPreviewPanel
 	
-	override public var previewItemURL:URL!
+	override open var previewItemURL:URL!
     {
 		self.url
     }

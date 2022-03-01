@@ -137,7 +137,7 @@ open class ImageFile : FolderObject
 
 	/// Tranforms the metadata dictionary into an order list of human readable information (with optional click actions)
 	
-	@MainActor override var localizedMetadata:[ObjectMetadataEntry]
+	@MainActor override open var localizedMetadata:[ObjectMetadataEntry]
     {
 		guard let url = data as? URL else { return [] }
 		let metadata = self.metadata ?? [:]

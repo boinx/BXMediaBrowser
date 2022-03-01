@@ -63,7 +63,7 @@ open class FolderContainer : Container
 
 	// This container can be expanded if it has subfolders
 	
-	override var canExpand: Bool
+	override open var canExpand: Bool
 	{
 		if self.isLoaded { return !self.containers.isEmpty }
 		guard let folderURL = data as? URL else { return false }

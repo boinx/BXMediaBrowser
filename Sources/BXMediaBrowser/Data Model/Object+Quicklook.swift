@@ -36,12 +36,12 @@ import QuickLookUI
 
 extension Object : QLPreviewItem
 {
-	public var previewItemURL:URL!
+	open var previewItemURL:URL!
     {
 		nil
     }
 
-	public var previewItemTitle: String!
+	open var previewItemTitle: String!
     {
 		self.name
     }

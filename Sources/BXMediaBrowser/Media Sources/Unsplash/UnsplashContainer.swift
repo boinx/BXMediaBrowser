@@ -79,7 +79,7 @@ open class UnsplashContainer : Container
 
 	// Unsplash Container can never be expanded, as they do not have any sub-containers
 	
-	override var canExpand: Bool
+	override open var canExpand: Bool
 	{
 		false
 	}

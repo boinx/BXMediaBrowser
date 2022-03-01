@@ -95,7 +95,7 @@ open class UnsplashObject : Object
 
 	/// Tranforms the metadata dictionary into an order list of human readable information (with optional click actions)
 	
-	@MainActor override var localizedMetadata:[ObjectMetadataEntry]
+	@MainActor override open var localizedMetadata:[ObjectMetadataEntry]
     {
 		guard let photo = data as? UnsplashPhoto else { return [] }
 		let user = photo.user

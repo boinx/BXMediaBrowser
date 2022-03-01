@@ -134,7 +134,7 @@ public class PhotosContainer : Container
 	
 	// Folders can be expanded, because they have sub-containers
 	
-	override var canExpand: Bool
+	override open var canExpand: Bool
 	{
 		if self.identifier == "PhotosSource:Library" { return false }
 		if self.identifier == "PhotosSource:Albums" { return true }
