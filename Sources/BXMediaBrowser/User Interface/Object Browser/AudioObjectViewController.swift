@@ -112,7 +112,17 @@ public class AudioObjectViewController : ObjectViewController
 
 	// MARK: - Drawing
 	
-	/// This function get scalled when the Object or some metadata has changed and the cell needs to be redrawn.
+
+	// When reusing a cell, we also need to reset the isPlaying property
+	
+	override open func reset()
+	{
+		super.reset()
+		self.isPlaying = false
+	}
+	
+
+	/// This function gets called when the Object or some metadata has changed and the cell needs to be redrawn.
 	
 	override open func redraw()
 	{
