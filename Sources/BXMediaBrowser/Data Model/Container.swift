@@ -112,7 +112,7 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 	
 	/// References to subcriptions and notifications
 	
-	internal var observers:[Any] = []
+	public var observers:[Any] = []
 
 
 //----------------------------------------------------------------------------------------------------------------------
