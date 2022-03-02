@@ -67,7 +67,7 @@ open class AudioFolderContainer : FolderContainer
     @MainActor override open var localizedObjectCount:String
     {
 		let n = self.objects.count
-		let str = n.localizedFilesString
+		let str = n.localizedSongsString
 		return str
     }
 }
@@ -75,6 +75,8 @@ open class AudioFolderContainer : FolderContainer
 
 //----------------------------------------------------------------------------------------------------------------------
 
+
+// MARK: -
 
 open class AudioFile : FolderObject
 {
