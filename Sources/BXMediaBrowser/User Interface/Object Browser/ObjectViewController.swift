@@ -35,11 +35,11 @@ import QuickLookUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public class ObjectViewController : NSCollectionViewItem
+open class ObjectViewController : NSCollectionViewItem
 {
 	/// The data model for this cell
 	
-	var object:Object!
+	public var object:Object!
 	{
 		didSet
 		{

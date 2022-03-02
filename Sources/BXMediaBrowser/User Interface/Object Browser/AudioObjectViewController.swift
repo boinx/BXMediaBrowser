@@ -32,7 +32,7 @@ import AppKit
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public class AudioObjectViewController : ObjectViewController
+open class AudioObjectViewController : ObjectViewController
 {
 	// Outlets
 	
@@ -47,7 +47,7 @@ public class AudioObjectViewController : ObjectViewController
 
 	// The reuse identifier for this CollectionView cell
 	
-    override class var identifier:NSUserInterfaceItemIdentifier
+    override open class var identifier:NSUserInterfaceItemIdentifier
     {
     	NSUserInterfaceItemIdentifier("BXMediaBrowser.AudioObjectViewController")
 	}

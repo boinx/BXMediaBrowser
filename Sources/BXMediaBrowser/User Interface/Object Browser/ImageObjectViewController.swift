@@ -32,9 +32,9 @@ import BXSwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public class ImageObjectViewController : ObjectViewController
+open class ImageObjectViewController : ObjectViewController
 {
-    override class var identifier:NSUserInterfaceItemIdentifier
+    override open class var identifier:NSUserInterfaceItemIdentifier
     {
     	NSUserInterfaceItemIdentifier("BXMediaBrowser.ImageObjectViewController")
 	}
