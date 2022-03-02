@@ -52,6 +52,10 @@ public class FolderDropDestination : NSObject, NSDraggingDestination, DraggingDe
 	
 	public var highlightViewHandler:((Bool)->Void)? = nil
     
+    /// Returns true if dropping to this folder is allowed
+	
+    public private(set) var isEnabled = true
+    
     /// The Progress object for the current download/copy operation
 	
     public var progress:Progress? = nil
@@ -77,6 +81,7 @@ public class FolderDropDestination : NSObject, NSDraggingDestination, DraggingDe
 	public init(folderURL:URL)
 	{
 		self.folderURL = folderURL
+		self.isEnabled = folderURL.isWritable && !folderURL.path.contains("/Library")
 		
 		super.init()
 		
@@ -116,7 +121,8 @@ public class FolderDropDestination : NSObject, NSDraggingDestination, DraggingDe
 	
 	@MainActor public func draggingEntered(_ draggingInfo:NSDraggingInfo) -> NSDragOperation
     {
-		self._draggingEntered(draggingInfo)
+		guard isEnabled else { return [] }
+		return self._draggingEntered(draggingInfo)
     }
 
     @MainActor public func draggingExited(_ draggingInfo:NSDraggingInfo?)
@@ -126,6 +132,7 @@ public class FolderDropDestination : NSObject, NSDraggingDestination, DraggingDe
 
 	@MainActor public func performDragOperation(_ draggingInfo:NSDraggingInfo) -> Bool
 	{
+		guard isEnabled else { return false }
 		return self._performDragOperation(draggingInfo)
 	}
 
@@ -142,6 +149,8 @@ public class FolderDropDestination : NSObject, NSDraggingDestination, DraggingDe
 	
 	@MainActor public func collectionView(_ collectionView:NSCollectionView, validateDrop draggingInfo:NSDraggingInfo, proposedIndexPath:AutoreleasingUnsafeMutablePointer<NSIndexPath>, dropOperation:UnsafeMutablePointer<NSCollectionView.DropOperation>) -> NSDragOperation
 	{
+		guard isEnabled else { return [] }
+
 		let n = collectionView.numberOfItems(inSection:0)
         dropOperation.pointee = .before
         proposedIndexPath.pointee = NSIndexPath(index:n)
@@ -151,6 +160,7 @@ public class FolderDropDestination : NSObject, NSDraggingDestination, DraggingDe
 
 	@MainActor public func collectionView(_ collectionView:NSCollectionView, acceptDrop draggingInfo:NSDraggingInfo, indexPath:IndexPath, dropOperation:NSCollectionView.DropOperation) -> Bool
 	{
+		guard isEnabled else { return false }
 		return self.receiveItems(with:draggingInfo)
 	}
 }
