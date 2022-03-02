@@ -462,6 +462,7 @@ extension ObjectCollectionView
 			self.sendDidSelectObjectsNotification(for:collectionView)
 		}
 		
+		
 		// Unfortunately the deselect gets called before the select, so we have to delay and check again
 		// if we got a new selection, before sending any notifications that announces the delesecting.
 		
@@ -477,6 +478,7 @@ extension ObjectCollectionView
 			}
 		}
 		
+		
 		// After changing the selection, the QLPreviewPanel should be updated (if currently open)
 		
 		func updatePreviewPanel()
@@ -486,6 +488,7 @@ extension ObjectCollectionView
 				panel.reloadData()
 			}
 		}
+		
 		
 		/// Sends a notification announcing which Objects have been selected
 		

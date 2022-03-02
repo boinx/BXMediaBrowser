@@ -61,8 +61,16 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 	
 	public internal(set) weak var next:Object? = nil
 
+	/// Returns true if the media file is avaiable on the local device and can be used directly without downloading
+	
 	@MainActor @Published public internal(set) var isLocallyAvailable:Bool = true
+	
+	/// Returns true if the media file is at a remote location, but can be downloaded to the local device
+	
 	@MainActor @Published public internal(set) var isDownloadable:Bool = false
+	
+	/// Returns true if the media is for streaming only and thus cannot be downloaded to this device
+	
 	@MainActor @Published public internal(set) var isStreaming:Bool = false
 	
 	
