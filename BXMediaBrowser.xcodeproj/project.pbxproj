@@ -513,14 +513,14 @@
 		D01B493827CA1378008249C0 /* Object Browser */ = {
 			isa = PBXGroup;
 			children = (
-				D01B493927CA1378008249C0 /* ObjectViewController.swift */,
-				D01B493A27CA1378008249C0 /* ObjectRatingView.swift */,
-				D01B493B27CA1378008249C0 /* ObjectCollectionView.swift */,
-				D01B493C27CA1378008249C0 /* ImageObjectViewController.swift */,
 				D01B493D27CA1378008249C0 /* QuicklookCollectionView.swift */,
-				D01B493E27CA1378008249C0 /* AudioObjectViewController.swift */,
+				D01B493B27CA1378008249C0 /* ObjectCollectionView.swift */,
+				D01B493927CA1378008249C0 /* ObjectViewController.swift */,
+				D01B493C27CA1378008249C0 /* ImageObjectViewController.swift */,
 				D01B493F27CA1378008249C0 /* ImageObjectViewController.xib */,
+				D01B493E27CA1378008249C0 /* AudioObjectViewController.swift */,
 				D01B494027CA1378008249C0 /* AudioObjectViewController.xib */,
+				D01B493A27CA1378008249C0 /* ObjectRatingView.swift */,
 				D01B494127CA1378008249C0 /* ObjectView.swift */,
 				D01B494227CA1378008249C0 /* ObjectInfoView.swift */,
 			);
