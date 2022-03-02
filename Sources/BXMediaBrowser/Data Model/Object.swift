@@ -61,6 +61,10 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 	
 	public internal(set) weak var next:Object? = nil
 
+	/// Returns true if this Object can be used. If false it will be grayed out, but still displayed in the browser.
+	
+	@Published public var isEnabled:Bool = true
+	
 	/// Returns true if the media file is avaiable on the local device and can be used directly without downloading
 	
 	@MainActor @Published public internal(set) var isLocallyAvailable:Bool = true

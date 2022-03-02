@@ -454,6 +454,24 @@ extension ObjectCollectionView
 			}
 		}
 
+
+		// Only allow seleting enabled Objects
+		
+    	@MainActor public func collectionView(_ collectionView:NSCollectionView, shouldSelectItemsAt indexPaths:Set<IndexPath>) -> Set<IndexPath>
+    	{
+			var allowedPaths = Set<IndexPath>()
+			
+			for indexPath in indexPaths
+			{
+				guard let object = self.object(for:indexPath) else { continue }
+				guard object.isEnabled else { continue }
+				allowedPaths.insert(indexPath)
+			}
+			
+			return allowedPaths
+    	}
+    	
+    	
 		// When the selection was changed, update the Quicklook preview panel and notify others
 		
 		@MainActor public func collectionView(_ collectionView:NSCollectionView, didSelectItemsAt indexPaths:Set<IndexPath>)
@@ -530,10 +548,8 @@ extension ObjectCollectionView
 		{
 			// Get Object to be dragged
 			
-			let i = indexPath.item
-			guard let objects = self.container?.objects else { return nil }
-			guard i < objects.count else { return nil }
-			let object = objects[i]
+			guard let object = self.object(for:indexPath) else { return nil }
+			guard object.isEnabled else { return nil }
 			
 			// Get a file promise from the Object
 			
@@ -542,7 +558,7 @@ extension ObjectCollectionView
 		}
 		
 		
-		//  Prevent item from being hidden (creating a hole in the grid) while being dragged
+		// Prevent item from being hidden (creating a hole in the grid) while being dragged
 
 		@MainActor public func collectionView(_ collectionView:NSCollectionView, draggingSession session:NSDraggingSession, willBeginAt screenPoint:NSPoint, forItemsAt indexPaths:Set<IndexPath>)
 		{
@@ -550,6 +566,16 @@ extension ObjectCollectionView
 			{
 				collectionView.item(at:indexPath)?.view.isHidden = false
 			}
+		}
+
+		/// Returns the Object for the specified IndexPath
+		
+		@MainActor func object(for indexPath:IndexPath) -> Object?
+		{
+			let i = indexPath.item
+			guard let objects = self.container?.objects else { return nil }
+			guard i < objects.count else { return nil }
+			return objects[i]
 		}
 
 

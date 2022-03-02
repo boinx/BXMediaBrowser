@@ -111,6 +111,17 @@ open class ObjectViewController : NSCollectionViewItem
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	/// Returns true if our Object is enabled and thus fully usable
+	
+	open var isEnabled:Bool
+	{
+		self.object?.isEnabled ?? false
+	}
+	
+	
+//----------------------------------------------------------------------------------------------------------------------
+
+
 	// MARK: - Setup
 	
 	
@@ -134,6 +145,11 @@ open class ObjectViewController : NSCollectionViewItem
 		self.observers = []
 		
 		self.observers += object.$thumbnailImage.receive(on:RunLoop.main).sink
+		{
+			[weak self] _ in DispatchQueue.main.asyncIfNeeded { self?.redraw() }
+		}
+		
+		self.observers += object.$isEnabled.receive(on:RunLoop.main).sink
 		{
 			[weak self] _ in DispatchQueue.main.asyncIfNeeded { self?.redraw() }
 		}
@@ -173,10 +189,17 @@ open class ObjectViewController : NSCollectionViewItem
 	
 	func setupDoubleClick()
 	{
-		let doubleClick = NSClickGestureRecognizer(target:self, action:#selector(onDoubleClick(_:)))
-		doubleClick.numberOfClicksRequired = 2
-		doubleClick.delaysPrimaryMouseButtonEvents = false
-		self.view.addGestureRecognizer(doubleClick)
+		if isEnabled
+		{
+			let doubleClick = NSClickGestureRecognizer(target:self, action:#selector(onDoubleClick(_:)))
+			doubleClick.numberOfClicksRequired = 2
+			doubleClick.delaysPrimaryMouseButtonEvents = false
+			self.view.addGestureRecognizer(doubleClick)
+		}
+		else
+		{
+			self.view.gestureRecognizers.forEach { self.view.removeGestureRecognizer($0) }
+		}
 	}
 	
 	/// Configures behavior when mouse moves over this cell. Default implementation hides the textfield
@@ -201,6 +224,8 @@ open class ObjectViewController : NSCollectionViewItem
 	
 	open func showRatingControl(_ isInside:Bool)
 	{
+		guard self.isEnabled else { return }
+		
 		let showRating = isInside || self.object.rating > 0
 		self.textField?.isHidden = showRating
 		self.ratingView?.isHidden = !showRating
@@ -241,6 +266,8 @@ open class ObjectViewController : NSCollectionViewItem
 	
 	open func buildContextMenu(for view:NSView, object:Object) -> NSMenu?
 	{
+		guard self.isEnabled else { return nil }
+
 		let menu = NSMenu()
 		
 		self.addMenuItem(menu:menu, title:"Get Info")
@@ -293,6 +320,8 @@ open class ObjectViewController : NSCollectionViewItem
 	
 	open func getInfo()
 	{
+		guard self.isEnabled else { return }
+
 		// Choose the area of this cell where to display the popover
 		
 		let rootView = self.imageView?.subviews.first ?? self.view
@@ -315,6 +344,8 @@ open class ObjectViewController : NSCollectionViewItem
 	
 	open func quickLook()
 	{
+		guard self.isEnabled else { return }
+
 		guard let collectionView = self.collectionView as? QuicklookCollectionView else { return }
 		collectionView.quicklook()
 	}
@@ -332,6 +363,8 @@ open class ObjectViewController : NSCollectionViewItem
 	
 	@IBAction func onDoubleClick(_ sender:Any?)
 	{
+		guard self.isEnabled else { return }
+
 		if let doubleClickHandler = self.doubleClickHandler
 		{
 			doubleClickHandler()

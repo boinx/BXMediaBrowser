@@ -97,6 +97,17 @@ open class ImageObjectViewController : ObjectViewController
 			self.useCountView?.image = useCountImage
 			self.useCountView?.contentTintColor = NSColor.systemGreen
 		}
+		
+		// Gray out cell if Object is not enabled
+		
+		self.imageView?.isEnabled = self.isEnabled
+		self.textField?.isEnabled = self.isEnabled
+		
+		let alpha = isEnabled ? 1.0 : 0.5
+		self.imageView?.alphaValue = alpha
+		self.textField?.alphaValue = alpha
+		self.ratingView?.alphaValue = alpha
+		self.useCountView?.alphaValue = alpha
 	}
 	
 	
@@ -118,8 +129,8 @@ open class ImageObjectViewController : ObjectViewController
     private func updateHighlight()
     {
         guard isViewLoaded else { return }
-
-		let isHilited = self.isSelected	|| self.highlightState != .none
+		
+		let isHilited = isEnabled && (isSelected || highlightState != .none)
 
 		if let layer = self.imageView?.subviews.first?.layer
 		{
