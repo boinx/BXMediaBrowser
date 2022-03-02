@@ -240,13 +240,6 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 		get async throws
 		{
 			let url = try await self.loader.localURL
-			
-			await MainActor.run
-			{
-				#warning("FIXME: Next line needs to be removed later")
-				StatisticsController.shared.incrementUseCount(for:self)
-			}
-			
 			return url
 		}
 	}
