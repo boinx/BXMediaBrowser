@@ -70,13 +70,6 @@ open class ObjectViewController : NSCollectionViewItem
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	/// The identifier can be used with makeItem() in the NSCollectionView datasource
-	
-    class var identifier:NSUserInterfaceItemIdentifier
-    {
-    	NSUserInterfaceItemIdentifier("BXMediaBrowser.\(Self.self)")
-	}
-	
 	/// The width of this cell
 	
 	class var width:CGFloat { 120 }
@@ -93,22 +86,23 @@ open class ObjectViewController : NSCollectionViewItem
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	/// The nib name should be the same as the class name
+	/// The identifier can be used with makeItem() in the NSCollectionView datasource
 	
-	class var nibName:NSNib.Name
-	{
-		"\(Self.self)"
-	}
-	
-	// These overrides are important or The NSCollectionView will look in the wrong Bundle (main bundle) and
-	// crash because it cannot find the nib file.
-	
-	override open var nibName: NSNib.Name?
+    open class var identifier:NSUserInterfaceItemIdentifier
     {
-		Self.nibName
+    	NSUserInterfaceItemIdentifier("BXMediaBrowser.\(Self.self)")
 	}
 
-	override open var nibBundle: Bundle?
+	// Look for a Nib file with the same name as the class.
+	
+	override open var nibName:NSNib.Name?
+    {
+		"\(Self.self)"
+	}
+
+	// Look for the Nib file in the BXMediaBrowser bundle instead of the app bundle
+	
+	override open var nibBundle:Bundle?
     {
 		Bundle.BXMediaBrowser
 	}

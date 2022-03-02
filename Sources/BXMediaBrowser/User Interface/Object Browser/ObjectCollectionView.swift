@@ -79,12 +79,7 @@ public struct ObjectCollectionView<Cell:ObjectViewController> : NSViewRepresenta
  		
 		// Configure layout
 		
-		let identifier = self.cellType.identifier
-		let name = self.cellType.nibName
-		let bundle = Bundle.BXMediaBrowser
-        let nib = NSNib(nibNamed:name, bundle:bundle)
-        
-        collectionView.register(nib, forItemWithIdentifier:identifier)
+		self.registerCellType(for:collectionView)
         let (layout,_) = self.createLayout(for:collectionView)
         collectionView.collectionViewLayout = layout
         
@@ -125,6 +120,8 @@ public struct ObjectCollectionView<Cell:ObjectViewController> : NSViewRepresenta
 	{
 		guard let collectionView = scrollView.documentView as? QuicklookCollectionView else { return }
 		
+		self.registerCellType(for:collectionView)
+
 		context.coordinator.library = self.library
 
 		context.coordinator.updateLayoutHandler =
@@ -231,6 +228,14 @@ extension ObjectCollectionView
         snapshot.appendSections([0])
         snapshot.appendItems([], toSection:0)
         coordinator.dataSource.apply(snapshot, animatingDifferences:false)
+    }
+    
+    /// Register the NSViewController class for the current cellType identifier
+	
+    private func registerCellType(for collectionView:NSCollectionView)
+    {
+		let identifier = self.cellType.identifier
+        collectionView.register(self.cellType, forItemWithIdentifier:identifier)
     }
 }
 
