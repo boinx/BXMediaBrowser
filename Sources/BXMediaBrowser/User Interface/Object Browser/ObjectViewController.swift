@@ -43,7 +43,6 @@ open class ObjectViewController : NSCollectionViewItem
 	{
 		didSet
 		{
-			self.reset()
 			self.setup()
 			
 			DispatchQueue.main.asyncIfNeeded
@@ -125,16 +124,12 @@ open class ObjectViewController : NSCollectionViewItem
 	// MARK: - Setup
 	
 	
-	open func reset()
-	{
-		self.imageView?.image = nil
-		self.textField?.stringValue = ""
-	}
-	
-	
 	open func setup()
 	{
 		guard let object = object else { return }
+
+		self.imageView?.image = nil
+		self.textField?.stringValue = ""
 
 		// Load the Object thumbnail and metadata
 		

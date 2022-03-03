@@ -104,6 +104,10 @@ open class AudioObjectViewController : ObjectViewController
 		
 		self.nameField?.lineBreakMode = .byTruncatingTail
 		self.metadataField?.lineBreakMode = .byTruncatingTail
+
+		// When reusing a cell, we also need to reset the isPlaying property
+
+		self.isPlaying = false
 	}
 	
 
@@ -111,16 +115,6 @@ open class AudioObjectViewController : ObjectViewController
 
 
 	// MARK: - Drawing
-	
-
-	// When reusing a cell, we also need to reset the isPlaying property
-	
-	override open func reset()
-	{
-		super.reset()
-		self.isPlaying = false
-	}
-	
 
 	/// This function gets called when the Object or some metadata has changed and the cell needs to be redrawn.
 	
