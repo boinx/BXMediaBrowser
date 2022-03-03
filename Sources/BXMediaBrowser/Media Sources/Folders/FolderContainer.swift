@@ -88,22 +88,40 @@ open class FolderContainer : Container
 		guard folderURL.isReadable else { throw Error.accessDenied }
 		guard let filter = filter as? FolderFilter else { throw Error.loadContentsFailed }
 		
-		// Get the folder contents and sort them like the Finder would
+		// Get the folder contents
 		
-		let filenames = try self.filenames(in:folderURL)
+		var filenames = try self.filenames(in:folderURL)
+		
+		guard !Task.isCancelled else { throw Error.loadContentsCancelled }
+
+		// First round of filtering by search string
+		
 		let searchString = filter.searchString.lowercased()
 		
-		// Go through all items
+		if !searchString.isEmpty
+		{
+			filenames = filenames.filter { $0.contains(searchString) }
+		}
 		
-		for filename in filenames
+		guard !Task.isCancelled else { throw Error.loadContentsCancelled }
+
+		// Convert to file URLs
+		
+		let urls = filenames.compactMap
+		{
+			(filename:String) -> URL? in
+			let url = folderURL.appendingPathComponent(filename)
+			guard url.isFileURL else { return nil }
+			guard url.isReadable else { return nil }
+			guard !url.isHidden else { return nil }
+			return url
+		}
+		
+		// Go through all URLs
+		
+		for url in urls
 		{
 			guard !Task.isCancelled else { throw Error.loadContentsCancelled }
-			
-			let url = folderURL.appendingPathComponent(filename)
-			
-			guard url.isFileURL else { continue }
-			guard url.isReadable else { continue }
-			guard !url.isHidden else { continue }
 			
 			// For a directory, create a Container
 			
@@ -119,15 +137,12 @@ open class FolderContainer : Container
 			
 			else
 			{
-				if !searchString.isEmpty
+				if let object = try? Self.createObject(for:url, filter:filter)
 				{
-					let filename = url.lastPathComponent
-					guard filename.lowercased().contains(searchString) else { continue }
-				}
-			
-				if let object = try? Self.createObject(for:url), StatisticsController.shared.rating(for:object) >= filter.rating
-				{
-					objects.append(object)
+					if filter.rating == 0 || StatisticsController.shared.rating(for:object) >= filter.rating
+					{
+						objects.append(object)
+					}
 				}
 			}
 		}
