@@ -35,13 +35,13 @@ open class FolderObject : Object
 {
 	/// Creates a new Object for the file at the specified URL
 	
-	public init(url:URL)
+	public init(url:URL, name:String? = nil)
 	{
 		FolderSource.log.verbose {"\(Self.self).\(#function) url = \(url)"}
 
 		super.init(
 			identifier: FolderSource.identifier(for:url),
-			name: url.lastPathComponent,
+			name: name ?? url.lastPathComponent,
 			data: url,
 			loadThumbnailHandler: Self.loadThumbnail,
 			loadMetadataHandler: Self.loadMetadata,
