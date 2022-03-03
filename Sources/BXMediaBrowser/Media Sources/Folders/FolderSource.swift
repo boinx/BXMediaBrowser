@@ -42,10 +42,10 @@ open class FolderSource : Source, AccessControl
 	
 	/// Creates a new Source for local file system directories
 	
-	public init()
+	public init(filter:FolderFilter = FolderFilter())
 	{
 		FolderSource.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
-		super.init(identifier:Self.identifier, name:"Finder", filter:FolderFilter())
+		super.init(identifier:Self.identifier, name:"Finder", filter:filter)
 		self.loader = Loader(loadHandler:self.loadContainers)
 	}
 
