@@ -53,7 +53,7 @@ open class VideoFolderSource : FolderSource
 
 open class VideoFolderContainer : FolderContainer
 {
-	override open class func createObject(for url:URL) throws -> Object?
+	override open class func createObject(for url:URL, filter:FolderFilter) throws -> Object?
 	{
 		guard url.exists else { throw Object.Error.notFound }
 		guard url.isVideoFile else { return nil }

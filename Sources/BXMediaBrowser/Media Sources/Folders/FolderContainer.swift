@@ -176,7 +176,7 @@ open class FolderContainer : Container
 	///
 	/// Subclasses can override this function to filter out some files.
 	
-	open class func createObject(for url:URL) throws -> Object?
+	open class func createObject(for url:URL, filter:FolderFilter) throws -> Object?
 	{
 		// Check if file exists
 		

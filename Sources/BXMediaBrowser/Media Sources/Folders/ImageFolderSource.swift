@@ -55,7 +55,7 @@ open class ImageFolderSource : FolderSource
 
 open class ImageFolderContainer : FolderContainer
 {
-	override open class func createObject(for url:URL) throws -> Object?
+	override open class func createObject(for url:URL, filter:FolderFilter) throws -> Object?
 	{
 		guard url.exists else { throw Object.Error.notFound }
 		guard url.isImageFile else { return nil }
