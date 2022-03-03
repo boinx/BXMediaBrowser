@@ -208,13 +208,13 @@ open class ObjectViewController : NSCollectionViewItem
 			get:{ self.object?.rating ?? 0 },
 			set:{ self.object?.rating = $0 }
 		)
-		
-		self.showRatingControl(false)
 
 		(self.view as? ObjectView)?.mouseHoverHandler =
 		{
 			[weak self] in self?.showRatingControl($0)
 		}
+		
+		self.showRatingControl(false)
 	}
 	
 	/// Toggles between name field and rating control

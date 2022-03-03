@@ -103,11 +103,11 @@ open class ImageObjectViewController : ObjectViewController
 		self.imageView?.isEnabled = self.isEnabled
 		self.textField?.isEnabled = self.isEnabled
 		
-		let alpha = isEnabled ? 1.0 : 0.33
-		self.imageView?.alphaValue = alpha
-		self.textField?.alphaValue = alpha
-		self.ratingView?.alphaValue = alpha
-		self.useCountView?.alphaValue = alpha
+		let alpha:Float = isEnabled ? 1.0 : 0.33
+		self.imageView?.layer?.opacity = alpha
+		self.textField?.layer?.opacity = alpha
+		self.ratingView?.layer?.opacity = alpha
+		self.useCountView?.layer?.opacity = alpha
 	}
 	
 	
