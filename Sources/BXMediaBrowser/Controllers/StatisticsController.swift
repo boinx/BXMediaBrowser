@@ -155,7 +155,7 @@ public class StatisticsController : ObservableObject
 	
 	public func rating(for object:Object) -> Int
 	{
-		self.rating(for:object.identifier)
+		max(0, self.rating(for:object.identifier))
 	}
 	
 	/// Returns the rating for the specified Object identifier
