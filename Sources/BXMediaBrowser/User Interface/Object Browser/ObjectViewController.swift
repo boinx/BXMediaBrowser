@@ -149,6 +149,8 @@ open class ObjectViewController : NSCollectionViewItem
 			[weak self] _ in DispatchQueue.main.asyncIfNeeded { self?.redraw() }
 		}
 		
+		// Redraw when the isEnabled state changes
+		
 		self.observers += object.$isEnabled.receive(on:RunLoop.main).sink
 		{
 			[weak self] _ in DispatchQueue.main.asyncIfNeeded { self?.redraw() }

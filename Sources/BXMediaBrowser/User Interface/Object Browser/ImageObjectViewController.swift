@@ -103,7 +103,7 @@ open class ImageObjectViewController : ObjectViewController
 		self.imageView?.isEnabled = self.isEnabled
 		self.textField?.isEnabled = self.isEnabled
 		
-		let alpha = isEnabled ? 1.0 : 0.5
+		let alpha = isEnabled ? 1.0 : 0.33
 		self.imageView?.alphaValue = alpha
 		self.textField?.alphaValue = alpha
 		self.ratingView?.alphaValue = alpha
