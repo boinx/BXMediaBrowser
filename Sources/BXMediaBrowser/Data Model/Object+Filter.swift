@@ -100,6 +100,19 @@ extension Object
 			return nil
 		}
 	
+		/// Sorts the specified array of Objects according to the current sorting parameters
+		
+		open func sort(_ objects:inout [Object])
+		{
+			let token = self.beginSignpost(in:"Object.Filter","sort")
+			defer { self.endSignpost(with:token, in:"Object.Filter","sort") }
+			
+			if let comparator = self.objectComparator
+			{
+				objects.sort(by:comparator)
+			}
+		}
+
 	
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -144,19 +157,6 @@ extension Object
 	
 extension Object.Filter
 {
-	/// Sorts the specified array of Objects according to the current sorting parameters
-	
-	public func sort(_ objects:inout [Object])
-	{
-		let token = self.beginSignpost(in:"Object.Filter","sort")
-		defer { self.endSignpost(with:token, in:"Object.Filter","sort") }
-		
-		if let comparator = self.objectComparator
-		{
-			objects.sort(by:comparator)
-		}
-	}
-
 	/// Toggles the current SortDirection
 	
 	public func toggleSortDirection()
