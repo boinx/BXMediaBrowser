@@ -329,6 +329,14 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 		}
 	}
 	
+	/// Call this function in special cases where you want to mark a Container as "unloaded", i.e. invalidated,
+	/// so that it will be loaded lazily again the next time it is selected.
+	
+	@MainActor public func invaldateLoaded()
+	{
+		self.isLoaded = false
+	}
+	
 	
 //----------------------------------------------------------------------------------------------------------------------
 
