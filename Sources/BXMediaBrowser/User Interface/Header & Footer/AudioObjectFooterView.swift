@@ -108,7 +108,12 @@ public struct AudioPlayerView : View
 		.reducedOpacityWhenDisabled()
 		.enabled(controller.isEnabled)
 		
+		// When the player UI dissappears, then stop any audio that is playing
 		
+		.onDisappear
+		{
+			self.controller.pause()
+		}
     }
     
     /// Return the icon name for the play/pause button
