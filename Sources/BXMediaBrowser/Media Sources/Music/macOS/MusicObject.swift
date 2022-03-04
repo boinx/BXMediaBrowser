@@ -170,6 +170,14 @@ public class MusicObject : Object
     }
 
 
+	/// This optional comment can be displayed in the user interface, e.g. as a tooltip
+	
+	@MainActor override open var comment:String?
+	{
+		isLocallyAvailable ? nil : NSLocalizedString("MusicObject.tooltip.download", tableName:"Music", bundle:.BXMediaBrowser, comment:"Tooltip for Music.app songs that are not available locally")
+	}
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 

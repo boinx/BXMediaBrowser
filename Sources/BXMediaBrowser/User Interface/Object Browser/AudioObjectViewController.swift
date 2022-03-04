@@ -179,10 +179,12 @@ open class AudioObjectViewController : ObjectViewController
 	override open func updateTooltip()
 	{
 		self.view.removeAllToolTips()
+		self.view.subviews.forEach { $0.removeAllToolTips() }
 		
 		if let comment = self.object?.comment
 		{
 			self.view.toolTip = comment
+			self.view.subviews.forEach { $0.toolTip = comment }
 		}
 	}
 	

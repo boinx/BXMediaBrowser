@@ -208,7 +208,7 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 
 	/// This optional comment can be displayed in the user interface, e.g. as a tooltip
 	
-	open var comment:String?
+	@MainActor open var comment:String?
 	{
 		nil
 	}
