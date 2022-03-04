@@ -223,8 +223,6 @@ open class ObjectViewController : NSCollectionViewItem
 	
 	open func showRatingControl(_ isInside:Bool)
 	{
-		guard self.isEnabled else { return }
-		
 		let showRating = isInside || self.object.rating > 0
 		self.textField?.isHidden = showRating
 		self.ratingView?.isHidden = !showRating
