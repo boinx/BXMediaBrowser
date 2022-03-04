@@ -47,7 +47,17 @@ class ObjectRatingView : NSView
 	
 	public var size:CGFloat = 16
 	
-
+	/// Set to false to disable this control
+	
+	public var isEnabled:Bool = true
+	{
+		didSet
+		{
+			self.layer?.opacity = isEnabled ? 1.0 : 0.33
+		}
+	}
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -133,19 +143,16 @@ class ObjectRatingView : NSView
 	
 	override func draw(_ rect:NSRect)
 	{
-		if #available(macOS 11, *)
+		let rating = self.rating.wrappedValue
+		var frame = CGRect(x:0, y:0, width:size, height:size)
+		
+		for i in 1...maxRating
 		{
-			let rating = self.rating.wrappedValue
-			var frame = CGRect(x:0, y:0, width:size, height:size)
-			
-			for i in 1...maxRating
-			{
-				frame.origin.x = CGFloat(i-1) * size
-				frame.origin.y = bounds.maxY - size
+			frame.origin.x = CGFloat(i-1) * size
+			frame.origin.y = bounds.maxY - size
 
-				let image = i <= rating ? onImage : offImage
-				image?.draw(in:frame)
-			}
+			let image = i <= rating ? onImage : offImage
+			image?.draw(in:frame)
 		}
 	}
 	
@@ -157,16 +164,19 @@ class ObjectRatingView : NSView
 	
 	override func mouseDown(with event:NSEvent)
 	{
+		guard isEnabled else { return }
 		self.setRating(with:mouse(for:event))
 	}
 	
 	override func mouseDragged(with event:NSEvent)
 	{
+		guard isEnabled else { return }
 		self.setRating(with:mouse(for:event))
 	}
 	
 	override func mouseUp(with event:NSEvent)
 	{
+		guard isEnabled else { return }
 		self.setRating(with:mouse(for:event))
 	}
 	
