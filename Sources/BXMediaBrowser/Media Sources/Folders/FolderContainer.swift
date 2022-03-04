@@ -38,13 +38,13 @@ open class FolderContainer : Container
 	
 	/// Creates a new Container for the folder at the specified URL
 	
-	public required init(url:URL, filter:FolderFilter, removeHandler:((Container)->Void)? = nil)
+	public required init(url:URL, name:String? = nil, filter:FolderFilter, removeHandler:((Container)->Void)? = nil)
 	{
 		self.folderObserver = FolderObserver(url:url)
 		
 		super.init(
 			identifier: FolderSource.identifier(for:url),
-			name: FileManager.default.displayName(atPath:url.path),
+			name: name ?? FileManager.default.displayName(atPath:url.path),
 			data: url,
 			filter: filter,
 			loadHandler: Self.loadContents,
