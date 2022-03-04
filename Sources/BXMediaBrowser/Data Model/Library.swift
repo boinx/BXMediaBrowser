@@ -105,6 +105,15 @@ open class Library : ObservableObject, StateSaving
 		self.sections.insert(section, at:index)
 	}
 	
+	/// Removes the specified Section
+	
+	public func removeSection(_ section:Section?)
+	{
+		guard let section = section else { return }
+		self.objectWillChange.send()
+		self.sections.removeAll { $0 === section }
+	}
+	
 
 //----------------------------------------------------------------------------------------------------------------------
 
