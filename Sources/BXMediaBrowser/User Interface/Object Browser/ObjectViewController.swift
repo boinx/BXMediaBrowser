@@ -128,6 +128,8 @@ open class ObjectViewController : NSCollectionViewItem
 	{
 		guard let object = object else { return }
 
+		// Reset
+		
 		self.imageView?.image = nil
 		self.textField?.stringValue = ""
 

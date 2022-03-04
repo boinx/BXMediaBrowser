@@ -100,13 +100,16 @@ open class ImageObjectViewController : ObjectViewController
 		
 		// Gray out cell if Object is not enabled
 		
-		self.imageView?.isEnabled = self.isEnabled
-		self.textField?.isEnabled = self.isEnabled
-		
+		let isEnabled = self.isEnabled
 		let alpha:Float = isEnabled ? 1.0 : 0.33
+
+		self.imageView?.isEnabled = isEnabled
+		self.textField?.isEnabled = isEnabled
+		self.ratingView?.isEnabled = isEnabled
+		
 		self.imageView?.layer?.opacity = alpha
 		self.textField?.layer?.opacity = alpha
-		self.ratingView?.layer?.opacity = alpha
+//		self.ratingView?.layer?.opacity = alpha
 		self.useCountView?.layer?.opacity = alpha
 	}
 	
