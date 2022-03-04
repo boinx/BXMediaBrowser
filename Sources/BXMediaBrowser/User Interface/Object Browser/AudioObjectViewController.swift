@@ -174,6 +174,19 @@ open class AudioObjectViewController : ObjectViewController
 	}
 	
 	
+	/// Sets a new tooltip on the cell
+	
+	override open func updateTooltip()
+	{
+		self.view.removeAllToolTips()
+		
+		if let comment = self.object?.comment
+		{
+			self.view.toolTip = comment
+		}
+	}
+	
+	
 	/// Chooses an appropriate icon to display for the current state
 	
 	func setIcon()

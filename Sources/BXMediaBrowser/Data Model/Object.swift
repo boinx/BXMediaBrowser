@@ -206,6 +206,13 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 		get { StatisticsController.shared.useCount(for:self) }
 	}
 
+	/// This optional comment can be displayed in the user interface, e.g. as a tooltip
+	
+	open var comment:String?
+	{
+		nil
+	}
+	
 
 //----------------------------------------------------------------------------------------------------------------------
 

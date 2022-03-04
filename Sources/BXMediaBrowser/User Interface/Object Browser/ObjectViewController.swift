@@ -148,7 +148,11 @@ open class ObjectViewController : NSCollectionViewItem
 		
 		self.observers += object.$isEnabled.receive(on:RunLoop.main).sink
 		{
-			[weak self] _ in DispatchQueue.main.asyncIfNeeded { self?.redraw() }
+			[weak self] _ in DispatchQueue.main.asyncIfNeeded
+			{
+				self?.redraw()
+				self?.updateTooltip()
+			}
 		}
 		
 		// When statistics for our object change also redraw
@@ -172,13 +176,11 @@ open class ObjectViewController : NSCollectionViewItem
 			}
 		}
 		
-		// Configure double-click
+		// Initial state
 		
 		self.setupDoubleClick()
-		
-		// Configure mouse over behavior for rating control
-		
 		self.setupRatingControl()
+		self.updateTooltip()
 	}
 	
 
@@ -248,6 +250,14 @@ open class ObjectViewController : NSCollectionViewItem
 	/// Redraws the cell
 	
 	open func redraw()
+	{
+		// To be overridden in subclasses
+	}
+
+
+	/// Sets a new tooltip on the cell
+	
+	open func updateTooltip()
 	{
 		// To be overridden in subclasses
 	}

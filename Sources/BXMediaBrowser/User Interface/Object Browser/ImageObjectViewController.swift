@@ -111,6 +111,19 @@ open class ImageObjectViewController : ObjectViewController
 	}
 	
 	
+	/// Sets a new tooltip on the cell
+	
+	override open func updateTooltip()
+	{
+		self.imageView?.removeAllToolTips()
+		
+		if let comment = self.object?.comment
+		{
+			self.imageView?.toolTip = comment
+		}
+	}
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 
