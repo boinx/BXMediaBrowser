@@ -78,27 +78,21 @@ public struct AudioPlayerView : View
     {
 		HStack
 		{
-			BXImage(systemName:"gobackward.15")
-				.contentShape(Rectangle().inset(by:-6))
-				.onTapGesture
-				{
-					self.controller.jump(by:-15)
-				}
+			BXIconPushButton(icon:"gobackward.15")
+			{
+				self.controller.jump(by:-15)
+			}
 
-			BXImage(systemName:iconName)
-				.contentShape(Rectangle().inset(by:-6))
-				.onTapGesture
-				{
-					self.controller.toggle()
-				}
+			BXIconPushButton(icon:iconName)
+			{
+				self.controller.toggle()
+			}
 
-			BXImage(systemName:"goforward.15")
-				.contentShape(Rectangle().inset(by:-6))
-				.onTapGesture
-				{
-					self.controller.jump(by:+15)
-				}
-				
+			BXIconPushButton(icon:"goforward.15")
+			{
+				self.controller.jump(by:+15)
+			}
+
 			Text(controller.time.shortTimecodeString())
 				.frame(width:54, alignment:.leading)
 				
@@ -146,8 +140,17 @@ public struct TimeSlider : View
 			
 			ZStack(alignment:.leading)
 			{
-				self.trackColor.frame(height:2)
-				self.thumbColor.frame(width:2).offset(x:offset(for:geometry), y:0)
+				RoundedRectangle(cornerRadius:1.5)
+					.fill(trackColor)
+					.frame(height:3)
+					
+				RoundedRectangle(cornerRadius:1.5)
+					.fill(thumbColor)
+					.frame(width:3)
+					.offset(x:offset(for:geometry), y:0)
+					
+//				self.trackColor.frame(height:2)
+//				self.thumbColor.frame(width:2).offset(x:offset(for:geometry), y:0)
 			}
 			.contentShape(Rectangle())
 			.gesture(DragGesture(minimumDistance:0.0).onChanged
@@ -181,6 +184,54 @@ public struct TimeSlider : View
 	{
 		Color.primary
 	}
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+/// Displays the user interface for the AudioPreviewController
+
+public struct BXIconPushButton : View
+{
+	// Model
+
+	public var icon:String
+	public var zoom:CGFloat = 1.12
+	public var opacity:CGFloat = 0.65
+	public var action:()->Void
+	
+	@State private var isPressed = false
+	
+	// Build View
+	
+	public var body: some View
+    {
+		BXImage(systemName:icon)
+		
+			// When pressed the icon is slighty smaller and dimmer (appearing pushed in)
+			
+			.scaleEffect(isPressed ? 1.0 : zoom)
+			.opacity(isPressed ? opacity : 1.0)
+			
+			// On click push in the icon. On release call the button action
+			
+			.contentShape(Rectangle().inset(by:-6))
+			.gesture( DragGesture(minimumDistance:0)
+				.onChanged
+				{
+					_ in
+					self.isPressed = true
+					
+				}
+				.onEnded
+				{
+					_ in
+					self.isPressed = false
+					self.action()
+				}
+			)
+    }
 }
 
 
