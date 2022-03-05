@@ -30,9 +30,9 @@ import Combine
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public class PexelsConfig : ObservableObject
+public class Pexels : ObservableObject
 {
-	public static let shared = PexelsConfig()
+	public static let shared = Pexels()
 	
     private init() { }
     

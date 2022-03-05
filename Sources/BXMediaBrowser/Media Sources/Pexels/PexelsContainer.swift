@@ -42,7 +42,7 @@ open class PexelsContainer : Container
 	{
 		var lastUsedFilter = PexelsFilter()
 		var page = 0
-		var photos:[PexelsPhoto] = []
+		var photos:[Pexels.Photo] = []
 	}
 	
 	public typealias SaveContainerHandler = (PexelsContainer)->Void
@@ -148,13 +148,12 @@ open class PexelsContainer : Container
 
 	/// Returns an array of PexelsPhotos for the specified search string and page number
 
-	private class func photos(for filter:PexelsFilter, page:Int) async throws -> [PexelsPhoto]
+	private class func photos(for filter:PexelsFilter, page:Int) async throws -> [Pexels.Photo]
 	{
 		// Build a search request with the provided search string (filter)
 		
-		let accessKey = PexelsConfig.shared.accessKey
-		let authorization = "\(accessKey)"
 		let accessPoint = "https://api.pexels.com/v1/search"
+		let accessKey = Pexels.shared.accessKey
 		var urlComponents = URLComponents(string:accessPoint)!
         
 		urlComponents.queryItems =
@@ -178,7 +177,7 @@ open class PexelsContainer : Container
 
 		var request = URLRequest(url:url)
 		request.httpMethod = "GET"
-		request.setValue(authorization, forHTTPHeaderField:"Authorization")
+		request.setValue(accessKey, forHTTPHeaderField:"Authorization")
 		
 		// Perform the online search
 		
@@ -186,7 +185,7 @@ open class PexelsContainer : Container
 
 		// Decode returned JSON to array of PexelsPhoto
 		
-		let results = try JSONDecoder().decode(PexelsPhotoSearchResults.self, from:data)
+		let results = try JSONDecoder().decode(Pexels.Photo.SearchResults.self, from:data)
 		return results.photos
 	}
 	
@@ -195,9 +194,9 @@ open class PexelsContainer : Container
 	/// This is important when using a NSDiffableDataSource with NSCollectionView. Having duplicate identifiers
 	/// would cause fatal exceptions.
 	
-	private class func removeDuplicates(from photos:[PexelsPhoto]) -> [PexelsPhoto]
+	private class func removeDuplicates(from photos:[Pexels.Photo]) -> [Pexels.Photo]
 	{
-		var uniquePhotos:[PexelsPhoto] = []
+		var uniquePhotos:[Pexels.Photo] = []
 		var identifiers:[Int] = []
 		
 		for photo in photos

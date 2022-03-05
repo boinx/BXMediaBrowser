@@ -36,7 +36,7 @@ open class PexelsObject : Object
 {
 	/// Creates a new Object for the file at the specified URL
 	
-	public init(with photo:PexelsPhoto)
+	public init(with photo:Pexels.Photo)
 	{
 		super.init(
 			identifier: "PexelsSource:Photo:\(photo.id)",
@@ -55,8 +55,8 @@ open class PexelsObject : Object
 	
 	open class func loadThumbnail(for identifier:String, data:Any) async throws -> CGImage
 	{
-		guard let photo = data as? PexelsPhoto else { throw Error.loadThumbnailFailed }
-		guard let url = URL(string:photo.src.tiny) else { throw Error.loadThumbnailFailed }
+		guard let photo = data as? Pexels.Photo else { throw Error.loadThumbnailFailed }
+		guard let url = URL(string:photo.src.small) else { throw Error.loadThumbnailFailed }
 		
 		let data = try await URLSession.shared.data(with:url)
 		guard let source = CGImageSourceCreateWithData(data as CFData,nil) else { throw Error.loadThumbnailFailed }
@@ -75,13 +75,15 @@ open class PexelsObject : Object
 	{
 		PexelsSource.log.verbose {"\(Self.self).\(#function) \(identifier)"}
 
-		guard let photo = data as? PexelsPhoto else { throw Error.loadMetadataFailed }
+		guard let photo = data as? Pexels.Photo else { throw Error.loadMetadataFailed }
 
 		var metadata:[String:Any] = [:]
 		
 		metadata[.widthKey] = photo.width
 		metadata[.heightKey] = photo.height
 		metadata[.descriptionKey] = photo.alt
+		metadata[.authorsKey] = [photo.photographer]
+		metadata[.whereFromsKey] = [photo.url]
 		metadata["photographer"] = photo.photographer
 		metadata["photographer_url"] = photo.photographer_url
 		metadata["url"] = photo.url
@@ -95,7 +97,7 @@ open class PexelsObject : Object
 	
 	@MainActor override open var localizedMetadata:[ObjectMetadataEntry]
     {
-		guard let photo = data as? PexelsPhoto else { return [] }
+		guard let photo = data as? Pexels.Photo else { return [] }
 		
 		let openPhotoPage:()->Void =
 		{
@@ -142,7 +144,7 @@ open class PexelsObject : Object
 	static func localFileName(for identifier:String, data:Any) -> String
 	{
 		var filename = "PexelsPhoto.jpg"
-		guard let photo = data as? PexelsPhoto else { return filename }
+		guard let photo = data as? Pexels.Photo else { return filename }
 		filename = "Pexels.\(photo.id).jpg"
 		return filename
 	}
@@ -152,7 +154,7 @@ open class PexelsObject : Object
 	
 	class func remoteURL(for identifier:String, data:Any) throws -> URL
 	{
-		guard let photo = data as? PexelsPhoto else { throw Error.downloadFileFailed }
+		guard let photo = data as? Pexels.Photo else { throw Error.downloadFileFailed }
 		let str = photo.src.original
 		guard let url = URL(string:str) else { throw Error.downloadFileFailed }
 		return url
@@ -184,12 +186,21 @@ open class PexelsObject : Object
 	}
 
 
-	/// Returns the URL for QLPreviewPanel
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	/// QuickLook support
 	
 	override public var previewItemURL:URL!
     {
-		guard let photo = data as? PexelsPhoto else { return nil }
+		guard let photo = data as? Pexels.Photo else { return nil }
 		return URL(string:photo.src.large2x)
+    }
+    
+	override open var previewItemTitle: String!
+    {
+		guard let photo = data as? Pexels.Photo else { return self.name }
+		return photo.alt
     }
 }
 

@@ -25,121 +25,138 @@
 
 import Foundation
 
-//#if os(macOS)
-//import AppKit
-//#else
-//import UIKit
-//#endif
-
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
 /// The JSON for a single photo on pexels.com
 
-public struct PexelsPhoto : Codable
+extension Pexels
 {
-    public let id:Int
-    public let height:Int
-    public let width:Int
-    public let url:String
-    public let photographer:String
-    public let photographer_url:String
-    public let photographer_id:Int
-    public let avg_color:String
-    public let src:PexelsPhotoSrc
-    public let alt:String
+	public struct Photo : Codable
+	{
+		public let id:Int
+		public let height:Int
+		public let width:Int
+		public let url:String
+		public let photographer:String
+		public let photographer_url:String
+		public let photographer_id:Int
+		public let avg_color:String
+		public let src:Src
+		public let alt:String
+	}
 }
 
-/// The JSON that contains the URLs to the different variants of a Pexels photo
 
-public struct PexelsPhotoSrc : Codable
+/// The JSON that contains the URLs to the different versions of a Photo
+
+extension Pexels.Photo
 {
-    public let original:String
-    public let large2x:String
-    public let large:String
-    public let medium:String
-    public let small:String
-    public let portrait:String
-    public let landscape:String
-    public let tiny:String
+	public struct Src : Codable
+	{
+		public let original:String
+		public let large2x:String
+		public let large:String
+		public let medium:String
+		public let small:String
+		public let portrait:String
+		public let landscape:String
+		public let tiny:String
+	}
 }
 
+
+/// The results JSON for a Photo search on pexels.com
+
+extension Pexels.Photo
+{
+	public struct SearchResults : Codable
+	{
+		public let photos:[Pexels.Photo]
+		public let page:Int
+		public let per_page:Int
+		public let total_results:Int
+		public let prev_page:String?
+		public let next_page:String?
+	}
+}
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-/// The JSON for a single video on pexels.com
+/// The JSON for a Video on pexels.com
 
-public struct PexelsVideo : Codable
+extension Pexels
 {
-    public let id:Int
-    public let width:Int								// in pixels
-    public let height:Int								// in pixels
-    public let url:String								// URL to main page of the video
-    public let image:String 							// URL to a posterframe
-    public let duration:Int 							// in seconds
-    public let user:PexelsUser							// Info about the author
-    public let video_files:[PexelsVideoFile]			// The variants of this video
+	public struct Video : Codable
+	{
+		public let id:Int
+		public let width:Int								// in pixels
+		public let height:Int								// in pixels
+		public let url:String								// URL to main page of the video
+		public let image:String 							// URL to a posterframe
+		public let duration:Int 							// in seconds
+		public let user:User								// Info about the author
+		public let video_files:[File]						// The variants of this video
+		public let video_pictures:[Preview]					// The posterframes for this video
+	}
 }
 
 /// The JSON for a Pexels User
 
-public struct PexelsUser : Codable
+extension Pexels
 {
-    public let id:Int
-    public let name:String								// Name of the author
-    public let url:String 								// URL to user profile page
+	public struct User : Codable
+	{
+		public let id:Int
+		public let name:String								// Name of the author
+		public let url:String 								// URL to user profile page
+	}
 }
 
-/// The JSON for a single video file variant
+/// The JSON for a single Video file
 
-public struct PexelsVideoFile : Codable
+extension Pexels.Video
 {
-    public let id:Int
-    public let quality:String
-    public let file_type:String 						// mime type
-    public let width:Int								// in pixels
-    public let height:Int								// in pixels
-    public let link:String 								// URL to file
+	public struct File : Codable
+	{
+		public let id:Int
+		public let quality:String
+		public let file_type:String 						// mime type
+		public let width:Int								// in pixels
+		public let height:Int								// in pixels
+		public let link:String 								// URL to file
+	}
 }
 
-/// The JSON for a video preview picture
+/// The JSON for a Video preview picture
 
-public struct PexelsVideoPreview : Codable
+extension Pexels.Video
 {
-    public let id:Int
-    public let picture:String 							// URL to preview image
-    public let nr:Int
+	public struct Preview : Codable
+	{
+		public let id:Int
+		public let picture:String 							// URL to preview image
+		public let nr:Int
+	}
 }
 
 
-//----------------------------------------------------------------------------------------------------------------------
+/// The results JSON for a Video search on pexels.com
 
-
-/// The results JSON for a photo search on pexels.com
-
-public struct PexelsPhotoSearchResults : Codable
+extension Pexels.Video
 {
-	public let photos:[PexelsPhoto]
-	public let page:Int
-	public let per_page:Int
-	public let total_results:Int
-	public let prev_page:String?
-	public let next_page:String?
-}
-
-/// The results JSON for a video search on pexels.com
-
-public struct PexelsVideoSearchResults : Codable
-{
-	public let videos:[PexelsVideo]
-	public let url:String
-	public let page:Int
-	public let per_page:Int
-	public let total_results:Int
-	public let prev_page:String?
-	public let next_page:String?
+	public struct SearchResults : Codable
+	{
+		public let videos:[Pexels.Video]
+		public let url:String
+		public let page:Int
+		public let per_page:Int
+		public let total_results:Int
+		public let prev_page:String?
+		public let next_page:String?
+	}
 }
 
 
