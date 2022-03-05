@@ -110,7 +110,6 @@ public struct ContainerView : View
 				}
 				.padding(.leading,16)
 			})
-			.id(container.identifier)
 			
 			// Display an optional context menu when right-clicking
 			

@@ -73,7 +73,6 @@ public struct SourceView : View
 				}
 				.padding(.leading,20)
 			})
-//			.id(source.identifier)
 			
 			// Whenever the current state changes, save it to persistent storage
 		

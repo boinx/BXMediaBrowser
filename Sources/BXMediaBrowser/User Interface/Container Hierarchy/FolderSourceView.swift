@@ -57,7 +57,6 @@ public struct FolderSourceView : View
 				viewFactory.containerView(for:$0)
 			}
 		}
-		.id(source.identifier)
 		.padding(.top,2)
     }
 }

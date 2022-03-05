@@ -91,10 +91,6 @@ public struct SectionView : View
 		
 		.padding(.horizontal)
 		.padding(.bottom,12)
-		
-		// Apply id to optimize view hierarchy rebuilding
-		
-		.id(section.identifier)
 
 		// Whenever the current state changes, save it to persistent storage
 		

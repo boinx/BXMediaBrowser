@@ -51,8 +51,6 @@ public struct FolderContainerView : View
 	public var body: some View
     {
 		ContainerView(with:container)
-		
-			.id(container.identifier)
 
 			.background(dropDestinationView)
     }
