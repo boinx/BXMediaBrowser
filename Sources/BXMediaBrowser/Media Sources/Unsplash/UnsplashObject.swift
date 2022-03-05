@@ -81,9 +81,9 @@ open class UnsplashObject : Object
 		
 		metadata[.widthKey] = photo.width
 		metadata[.heightKey] = photo.height
+		metadata[.descriptionKey] = photo.description
 		metadata[.creationDate] = photo.created_at
 		metadata["created_at"] = photo.created_at
-		metadata["description"] = photo.description
 		metadata["location"] = photo.location
 		metadata["urls"] = photo.urls
 		metadata["public_domain"] = photo.public_domain
