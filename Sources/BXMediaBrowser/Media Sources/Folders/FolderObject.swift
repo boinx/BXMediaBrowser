@@ -90,18 +90,18 @@ open class FolderObject : Object
 		
 		if let fileSize = url.fileSize
 		{
-			metadata["fileSize"] = fileSize
-			metadata[kMDItemFSSize as String] = fileSize
+//			metadata["fileSize"] = fileSize
+			metadata[.fileSizeKey] = fileSize
 		}
 
 		if let creationDate = url.creationDate
 		{
-			metadata["creationDate"] = creationDate
+			metadata[.creationDateKey] = creationDate
 		}
 
 		if let modificationDate = url.modificationDate
 		{
-			metadata["modificationDate"] = modificationDate
+			metadata[.modificationDateKey] = modificationDate
 		}
 		
 		return metadata
@@ -118,17 +118,17 @@ open class FolderObject : Object
 		
 		array += ObjectMetadataEntry(label:"File", value:self.name, action:url.reveal)
 		
-		if let value = dict["fileSize"] as? Int
+		if let value = dict[.fileSizeKey] as? Int
 		{
 			array += ObjectMetadataEntry(label:"File Size", value:value.fileSizeDescription)
 		}
 		
-		if let value = dict["creationDate"] as? Date
+		if let value = dict[.creationDateKey] as? Date
 		{
 			array += ObjectMetadataEntry(label:"Creation Date", value:String(with:value))
 		}
 		
-		if let value = dict["modificationDate"] as? Date
+		if let value = dict[.modificationDateKey] as? Date
 		{
 			array += ObjectMetadataEntry(label:"Modification Date", value:String(with:value))
 		}

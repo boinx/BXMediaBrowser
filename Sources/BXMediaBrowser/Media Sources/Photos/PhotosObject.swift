@@ -112,12 +112,12 @@ public class PhotosObject : Object
 			throw Object.Error.loadMetadataFailed
 		}
 		
-		metadata["PixelWidth"] = asset.pixelWidth
-		metadata["PixelHeight"] = asset.pixelHeight
-		metadata["duration"] = asset.duration
 		metadata["mediaType"] = asset.mediaType.rawValue
-		metadata["creationDate"] = asset.creationDate
-		metadata["modificationDate"] = asset.modificationDate
+		metadata[.widthKey] = asset.pixelWidth
+		metadata[.heightKey] = asset.pixelHeight
+		metadata[.durationKey] = asset.duration
+		metadata[.creationDate] = asset.creationDate
+		metadata[.modificationDateKey] = asset.modificationDate
 	
 		return metadata
 	}

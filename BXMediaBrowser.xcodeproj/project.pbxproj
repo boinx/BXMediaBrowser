@@ -114,6 +114,7 @@
 		D01B49BA27CA2189008249C0 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D01B49B827CA2189008249C0 /* AVFoundation.framework */; platformFilter = maccatalyst; };
 		D01C33CF27CA70F3003337A9 /* NSPasteboard+Objects.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01C33CE27CA70F3003337A9 /* NSPasteboard+Objects.swift */; };
 		D01C33D727CD187D003337A9 /* DraggingProgressMixin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01C33D627CD187D003337A9 /* DraggingProgressMixin.swift */; };
+		D0BAD10627D386B600B749FD /* String+MetadataKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BAD10527D386B600B749FD /* String+MetadataKeys.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -239,6 +240,7 @@
 		D01B49BB27CA463E008249C0 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D01C33CE27CA70F3003337A9 /* NSPasteboard+Objects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPasteboard+Objects.swift"; sourceTree = "<group>"; };
 		D01C33D627CD187D003337A9 /* DraggingProgressMixin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggingProgressMixin.swift; sourceTree = "<group>"; };
+		D0BAD10527D386B600B749FD /* String+MetadataKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+MetadataKeys.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -329,6 +331,7 @@
 				D01B48DD27CA1378008249C0 /* URLSession+asyncAwait.swift */,
 				D01B48DE27CA1378008249C0 /* Bundle+BXMediaBrowser.swift */,
 				D01B48DF27CA1378008249C0 /* String+UTI.swift */,
+				D0BAD10527D386B600B749FD /* String+MetadataKeys.swift */,
 				D01B48E027CA1378008249C0 /* TempFilePool.swift */,
 				D01B48E127CA1378008249C0 /* BXMediaBrowser+log.swift */,
 				D01B48E227CA1378008249C0 /* FolderObserver.swift */,
@@ -656,6 +659,7 @@
 				D01B497C27CA1378008249C0 /* ImageFolderSource.swift in Sources */,
 				D01B499127CA1378008249C0 /* BXProgressWindowController.swift in Sources */,
 				D01B499927CA1378008249C0 /* SectionView.swift in Sources */,
+				D0BAD10627D386B600B749FD /* String+MetadataKeys.swift in Sources */,
 				D01B496627CA1378008249C0 /* Container+Loader.swift in Sources */,
 				D01B495727CA1378008249C0 /* Progress+globalParent.swift in Sources */,
 				D01B495B27CA1378008249C0 /* Object+Loader.swift in Sources */,

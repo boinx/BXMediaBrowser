@@ -146,41 +146,41 @@ open class ImageFile : FolderObject
 		
 		array += ObjectMetadataEntry(label:"File", value:"\(self.name)", action:url.reveal)
 
-		if let w = metadata["PixelWidth"] as? Int, let h = metadata["PixelHeight"] as? Int
+		if let w = metadata[.widthKey] as? Int, let h = metadata[.heightKey] as? Int
 		{
 			array += ObjectMetadataEntry(label:"Image Size", value:"\(w) × \(h) Pixels")
 		}
 		
-		if let value = metadata["fileSize"] as? Int, let str = Formatter.fileSizeFormatter.string(for:value)
+		if let value = metadata[.fileSizeKey] as? Int, let str = Formatter.fileSizeFormatter.string(for:value)
 		{
 			array += ObjectMetadataEntry(label:"File Size", value:str) // value.fileSizeDescription)
 		}
 	
-		if let value = exif["ApertureValue"] as? Double, let str = Formatter.singleDigitFormatter.string(for:value)
+		if let value = exif[.exifApertureKey] as? Double, let str = Formatter.singleDigitFormatter.string(for:value)
 		{
 			array += ObjectMetadataEntry(label:"Aperture", value:"f\(str)")
 		}
 	
-		if let value = exif["ExposureTime"] as? Double, let str = Formatter.exposureTimeFormatter.string(for:value)
+		if let value = exif[.exifExposureTimeKey] as? Double, let str = Formatter.exposureTimeFormatter.string(for:value)
 		{
 			array += ObjectMetadataEntry(label:"Exposure Time", value:str)
 		}
 	
-		if let value = exif["FocalLenIn35mmFilm"] as? Int
+		if let value = exif[.exifFocalLengthKey] as? Int
 		{
 			array += ObjectMetadataEntry(label:"Focal Length", value:"\(value)mm")
 		}
 		
-		if let value = metadata["ProfileName"] as? String
+		if let value = metadata[.profileNameKey] as? String
 		{
 			array += ObjectMetadataEntry(label:"Color Space", value:value)
 		}
 
-		if let value = exif["DateTimeOriginal"] as? String, let date = value.date
+		if let value = exif[.exifCaptureDateKey] as? String, let date = value.date
 		{
 			array += ObjectMetadataEntry(label:"Capture Date", value:String(with:date))
 		}
-		else if let value = metadata["creationDate"] as? Date
+		else if let value = metadata[.creationDate] as? Date
 		{
 			array += ObjectMetadataEntry(label:"Creation Date", value:String(with:value))
 		}

@@ -102,14 +102,15 @@ public class MusicObject : Object
 		let artist = (item.artist?.name ?? "") as String
 		var metadata:[String:Any] = [:]
 		
-		metadata[kMDItemTitle as String] = item.title
-		metadata[kMDItemAuthors as String] = [artist]
-		metadata[kMDItemComposer as String] = item.composer
-		metadata[kMDItemAlbum as String] = item.album.title
-		metadata[kMDItemMusicalGenre as String] = item.genre
-		metadata[kMDItemDurationSeconds as String] = Double(item.totalTime) / 1000.0
-		metadata[kMDItemFSSize as String] = Int(item.fileSize)
-		metadata[kMDItemKind as String] = item.kind
+		metadata[.titleKey] = item.title
+		metadata[.authorsKey] = [artist]
+		metadata[.composerKey] = item.composer
+		metadata[.albumKey] = item.album.title
+		metadata[.genreKey] = item.genre
+		metadata[.durationKey] = Double(item.totalTime) / 1000.0
+		metadata[.fileSizeKey] = Int(item.fileSize)
+		metadata[.kindKey] = item.kind
+		metadata[.tempoKey] = Double(item.beatsPerMinute)
 		metadata["bpm"] = Double(item.beatsPerMinute)
 
 		return metadata
@@ -124,43 +125,43 @@ public class MusicObject : Object
 		let metadata = self.metadata ?? [:]
 		var array:[ObjectMetadataEntry] = []
 		
-		if let name = metadata[kMDItemTitle as String] as? String, !name.isEmpty
+		if let name = metadata[.titleKey] as? String, !name.isEmpty
 		{
 			let label = NSLocalizedString("Song", tableName:"Music", bundle:.BXMediaBrowser, comment:"Label")
 			array += ObjectMetadataEntry(label:label, value:name, action:{ [weak self] in self?.revealInFinder() })
 		}
 		
-		if let duration = metadata[kMDItemDurationSeconds as String] as? Double
+		if let duration = metadata[.durationKey] as? Double
 		{
 			let label = NSLocalizedString("Duration", tableName:"Music", bundle:.BXMediaBrowser, comment:"Label")
 			array += ObjectMetadataEntry(label:label, value:duration.shortTimecodeString())
 		}
 		
-		if let artists = metadata[kMDItemAuthors as String] as? [String], !artists.isEmpty
+		if let artists = metadata[.authorsKey] as? [String], !artists.isEmpty
 		{
 			let label = NSLocalizedString("Artist", tableName:"Music", bundle:.BXMediaBrowser, comment:"Label")
 			array += ObjectMetadataEntry(label:label, value:artists.joined(separator:"\n"))
 		}
 		
-		if let composer = metadata[kMDItemComposer as String] as? String, !composer.isEmpty
+		if let composer = metadata[.composerKey] as? String, !composer.isEmpty
 		{
 			let label = NSLocalizedString("Composer", tableName:"Music", bundle:.BXMediaBrowser, comment:"Label")
 			array += ObjectMetadataEntry(label:label, value:composer)
 		}
 		
-		if let album = metadata[kMDItemAlbum as String] as? String, !album.isEmpty
+		if let album = metadata[.albumKey] as? String, !album.isEmpty
 		{
 			let label = NSLocalizedString("Album", tableName:"Music", bundle:.BXMediaBrowser, comment:"Label")
 			array += ObjectMetadataEntry(label:label, value:album)
 		}
 		
-		if let genre = metadata[kMDItemMusicalGenre as String] as? String, !genre.isEmpty
+		if let genre = metadata[.genreKey] as? String, !genre.isEmpty
 		{
 			let label = NSLocalizedString("Genre", tableName:"Music", bundle:.BXMediaBrowser, comment:"Label")
 			array += ObjectMetadataEntry(label:label, value:genre)
 		}
 		
-		if let value = metadata[kMDItemFSSize as String] as? Int, let str = Formatter.fileSizeFormatter.string(for:value)
+		if let value = metadata[.fileSizeKey] as? Int, let str = Formatter.fileSizeFormatter.string(for:value)
 		{
 			let label = NSLocalizedString("File Size", tableName:"Music", bundle:.BXMediaBrowser, comment:"Label")
 			array += ObjectMetadataEntry(label:label, value:str) // value.fileSizeDescription)

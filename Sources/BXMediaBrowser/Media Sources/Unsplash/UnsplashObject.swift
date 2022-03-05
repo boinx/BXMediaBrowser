@@ -79,9 +79,9 @@ open class UnsplashObject : Object
 
 		var metadata:[String:Any] = [:]
 		
-		metadata["PixelWidth"] = photo.width
-		metadata["PixelHeight"] = photo.height
-		metadata["creationDate"] = photo.created_at
+		metadata[.widthKey] = photo.width
+		metadata[.heightKey] = photo.height
+		metadata[.creationDate] = photo.created_at
 		metadata["created_at"] = photo.created_at
 		metadata["description"] = photo.description
 		metadata["location"] = photo.location
@@ -127,7 +127,7 @@ open class UnsplashObject : Object
 			let label = NSLocalizedString("Capture Date", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Label")
 			array += ObjectMetadataEntry(label:label, value:String(with:date))
 		}
-		else if let value = metadata["creationDate"] as? Date
+		else if let value = metadata[.creationDateKey] as? Date
 		{
 			let label = NSLocalizedString("Creation Date", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Label")
 			array += ObjectMetadataEntry(label:label, value:String(with:value))

@@ -125,52 +125,47 @@ open class AudioFile : FolderObject
 		let metadata = self.metadata ?? [:]
 		var array:[ObjectMetadataEntry] = []
 		
-		if let name = metadata[kMDItemTitle as String] as? String, !name.isEmpty
+		if let name = metadata[.titleKey] as? String, !name.isEmpty
 		{
 			array += ObjectMetadataEntry(label:"Song", value:name, action:url.reveal)
 		}
 		
-		if let album = metadata[kMDItemAlbum as String] as? String, !album.isEmpty
+		if let album = metadata[.albumKey] as? String, !album.isEmpty
 		{
 			array += ObjectMetadataEntry(label:"Album", value:album)
 		}
 		
-		if let artists = metadata[kMDItemAuthors as String] as? [String], !artists.isEmpty
+		if let artists = metadata[.authorsKey] as? [String], !artists.isEmpty
 		{
 			array += ObjectMetadataEntry(label:"Artist", value:artists.joined(separator:"\n"))
 		}
 		
-		if let composer = metadata[kMDItemComposer as String] as? String, !composer.isEmpty
+		if let composer = metadata[.composerKey] as? String, !composer.isEmpty
 		{
 			array += ObjectMetadataEntry(label:"Composer", value:composer)
 		}
 		
-		if let album = metadata[kMDItemAlbum as String] as? String, !album.isEmpty
-		{
-			array += ObjectMetadataEntry(label:"Album", value:album)
-		}
-		
-		if let genre = metadata[kMDItemMusicalGenre as String] as? String, !genre.isEmpty
+		if let genre = metadata[.genreKey] as? String, !genre.isEmpty
 		{
 			array += ObjectMetadataEntry(label:"Genre", value:genre)
 		}
 		
-		if let duration = metadata[kMDItemDurationSeconds as String] as? Double
+		if let duration = metadata[.durationKey] as? Double
 		{
 			array += ObjectMetadataEntry(label:"Duration", value:duration.shortTimecodeString())
 		}
 		
-		if let value = metadata[kMDItemFSSize as String] as? Int, let str = Formatter.fileSizeFormatter.string(for:value)
+		if let value = metadata[.fileSizeKey] as? Int, let str = Formatter.fileSizeFormatter.string(for:value)
 		{
 			array += ObjectMetadataEntry(label:"File Size", value:str)
 		}
 
-		if let value = metadata[kMDItemTempo as String] as? Double, let str = Formatter.singleDigitFormatter.string(for:value)
+		if let value = metadata[.tempoKey] as? Double, let str = Formatter.singleDigitFormatter.string(for:value)
 		{
 			array += ObjectMetadataEntry(label:"Tempo", value:"\(str) BPM")
 		}
 
-		if let value = metadata[kMDItemWhereFroms as String] as? [String], let str = value.first, let url = URL(string:str)
+		if let value = metadata[.whereFromsKey] as? [String], let str = value.first, let url = URL(string:str)
 		{
 			array += ObjectMetadataEntry(label:"URL", value:str, action:url.open)
 		}

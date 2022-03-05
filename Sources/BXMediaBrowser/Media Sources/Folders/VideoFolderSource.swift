@@ -149,32 +149,32 @@ open class VideoFile : FolderObject
 		
 		array += ObjectMetadataEntry(label:"File", value:self.name, action:url.reveal)
 		
-		if let kind = metadata[kMDItemKind as String] as? String, !kind.isEmpty
+		if let kind = metadata[.kindKey] as? String, !kind.isEmpty
 		{
 			array += ObjectMetadataEntry(label:"Kind", value:kind)
 		}
 
-		if let w = metadata[kMDItemPixelWidth as String] as? Int, let h = metadata[kMDItemPixelHeight as String] as? Int
+		if let w = metadata[.widthKey] as? Int, let h = metadata[.heightKey] as? Int
 		{
 			array += ObjectMetadataEntry(label:"Video Size", value:"\(w) × \(h) Pixels")
 		}
 		
-		if let duration = metadata[kMDItemDurationSeconds as String] as? Double
+		if let duration = metadata[.durationKey] as? Double
 		{
 			array += ObjectMetadataEntry(label:"Duration", value:duration.shortTimecodeString())
 		}
 		
-		if let value = metadata[kMDItemFSSize as String] as? Int, let str = Formatter.fileSizeFormatter.string(for:value)
+		if let value = metadata[.fileSizeKey] as? Int, let str = Formatter.fileSizeFormatter.string(for:value)
 		{
 			array += ObjectMetadataEntry(label:"File Size", value:str)
 		}
 		
-		if let codecs = metadata[kMDItemCodecs as String] as? [String], !codecs.isEmpty
+		if let codecs = metadata[.codecsKey] as? [String], !codecs.isEmpty
 		{
 			array += ObjectMetadataEntry(label:"Codecs", value:codecs.joined(separator:", "))
 		}
 		
-		if let value = metadata["creationDate"] as? Date
+		if let value = metadata[.creationDate] as? Date
 		{
 			array += ObjectMetadataEntry(label:"Creation Date", value:String(with:value))
 		}
