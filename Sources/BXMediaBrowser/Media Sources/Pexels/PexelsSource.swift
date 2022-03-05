@@ -47,7 +47,8 @@ open class PexelsSource : Source, AccessControl
 	public init()
 	{
 		PexelsSource.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
-		super.init(identifier:Self.identifier, name:"Pexels", filter:PexelsFilter())
+		let icon = Bundle.BXMediaBrowser.image(forResource:"Pexels")?.CGImage
+		super.init(identifier:Self.identifier, icon:icon, name:"Pexels", filter:PexelsFilter())
 		self.loader = Loader(loadHandler:self.loadContainers)
 	}
 

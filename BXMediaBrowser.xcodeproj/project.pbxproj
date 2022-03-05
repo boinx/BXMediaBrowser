@@ -122,6 +122,8 @@
 		D0BAD10B27D392D700B749FD /* PexelsConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BAD0FC27D37A9A00B749FD /* PexelsConfig.swift */; };
 		D0BAD10C27D392D700B749FD /* PexelsJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BAD0FD27D37A9A00B749FD /* PexelsJSON.swift */; };
 		D0BAD10E27D3AB0900B749FD /* PexelsFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BAD10D27D3AB0800B749FD /* PexelsFilterBar.swift */; };
+		D0BAD11127D3BF5600B749FD /* Pexels.strings in Resources */ = {isa = PBXBuildFile; fileRef = D0BAD10F27D3BF5600B749FD /* Pexels.strings */; };
+		D0BAD11527D3C42400B749FD /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0BAD11427D3C42400B749FD /* Icons.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -255,6 +257,10 @@
 		D0BAD0FE27D37A9A00B749FD /* PexelsSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PexelsSource.swift; sourceTree = "<group>"; };
 		D0BAD10527D386B600B749FD /* String+MetadataKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+MetadataKeys.swift"; sourceTree = "<group>"; };
 		D0BAD10D27D3AB0800B749FD /* PexelsFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PexelsFilterBar.swift; sourceTree = "<group>"; };
+		D0BAD11027D3BF5600B749FD /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Pexels.strings; sourceTree = "<group>"; };
+		D0BAD11227D3C0A800B749FD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Pexels.strings; sourceTree = "<group>"; };
+		D0BAD11327D3C10600B749FD /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Pexels.strings; sourceTree = "<group>"; };
+		D0BAD11427D3C42400B749FD /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -328,12 +334,14 @@
 		D01B48C227CA1377008249C0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D01B48CB27CA1378008249C0 /* Localizable.strings */,
 				D01B48C327CA1377008249C0 /* Library.strings */,
+				D01B48C927CA1378008249C0 /* Section.strings */,
 				D01B48C527CA1378008249C0 /* Object.Filter.strings */,
 				D01B48C727CA1378008249C0 /* Music.strings */,
-				D01B48C927CA1378008249C0 /* Section.strings */,
-				D01B48CB27CA1378008249C0 /* Localizable.strings */,
 				D01B48CD27CA1378008249C0 /* Unsplash.strings */,
+				D0BAD10F27D3BF5600B749FD /* Pexels.strings */,
+				D0BAD11427D3C42400B749FD /* Icons.xcassets */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -668,6 +676,8 @@
 				D01B49A527CA1378008249C0 /* AudioObjectViewController.xib in Resources */,
 				D01B494927CA1378008249C0 /* Library.strings in Resources */,
 				D01B49A427CA1378008249C0 /* ImageObjectViewController.xib in Resources */,
+				D0BAD11127D3BF5600B749FD /* Pexels.strings in Resources */,
+				D0BAD11527D3C42400B749FD /* Icons.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -843,6 +853,16 @@
 				D01B48DA27CA1378008249C0 /* fr */,
 			);
 			name = Unsplash.strings;
+			sourceTree = "<group>";
+		};
+		D0BAD10F27D3BF5600B749FD /* Pexels.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D0BAD11027D3BF5600B749FD /* de */,
+				D0BAD11227D3C0A800B749FD /* en */,
+				D0BAD11327D3C10600B749FD /* fr */,
+			);
+			name = Pexels.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

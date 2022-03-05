@@ -47,7 +47,8 @@ open class UnsplashSource : Source, AccessControl
 	public init()
 	{
 		UnsplashSource.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
-		super.init(identifier:Self.identifier, name:"Unsplash", filter:UnsplashFilter())
+		let icon = Bundle.BXMediaBrowser.image(forResource:"Unsplash")?.CGImage
+		super.init(identifier:Self.identifier, icon:icon, name:"Unsplash", filter:UnsplashFilter())
 		self.loader = Loader(loadHandler:self.loadContainers)
 	}
 
