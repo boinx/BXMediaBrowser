@@ -417,11 +417,11 @@
 		D01B490227CA1378008249C0 /* macOS */ = {
 			isa = PBXGroup;
 			children = (
-				D01B490327CA1378008249C0 /* MusicFilter.swift */,
-				D01B490427CA1378008249C0 /* ITLibAlbum+Hashable.swift */,
-				D01B490527CA1378008249C0 /* MusicObject.swift */,
 				D01B490627CA1378008249C0 /* MusicSource.swift */,
 				D01B490727CA1378008249C0 /* MusicContainer.swift */,
+				D01B490527CA1378008249C0 /* MusicObject.swift */,
+				D01B490327CA1378008249C0 /* MusicFilter.swift */,
+				D01B490427CA1378008249C0 /* ITLibAlbum+Hashable.swift */,
 				D01B490827CA1378008249C0 /* ITLibArtist+Hashable.swift */,
 			);
 			path = macOS;
