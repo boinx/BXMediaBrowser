@@ -115,3 +115,55 @@ public struct PexelsFilterBar : View
 
 
 //----------------------------------------------------------------------------------------------------------------------
+
+
+struct PexelsOrientationView : View
+{
+	@ObservedObject var filter:PexelsFilter
+	
+	var body: some View
+	{
+		MenuButton(self.filter.orientation.localizedName)
+		{
+			ForEach(PexelsFilter.Orientation.allCases, id:\.self)
+			{
+				value in
+				
+				Button(value.localizedName)
+				{
+					self.filter.orientation = value
+				}
+			}
+		}
+		.fixedSize()
+	}
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+struct PexelsColorView : View
+{
+	@ObservedObject var filter:PexelsFilter
+	
+	var body: some View
+	{
+		MenuButton(self.filter.color.localizedName)
+		{
+			ForEach(PexelsFilter.Color.allCases, id:\.self)
+			{
+				color in
+				
+				Button(action:{ self.filter.color = color })
+				{
+					Text(color.localizedName)
+				}
+			}
+		}
+		.fixedSize()
+	}
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------

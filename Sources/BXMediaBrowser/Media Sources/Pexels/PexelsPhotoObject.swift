@@ -165,7 +165,7 @@ open class PexelsPhotoObject : Object
 	
 	open class func downloadFile(for identifier:String, data:Any) async throws -> URL
 	{
-		UnsplashSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
+		Pexels.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
 		// Download the file
 		
