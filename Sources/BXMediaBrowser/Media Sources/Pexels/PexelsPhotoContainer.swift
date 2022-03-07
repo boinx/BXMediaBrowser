@@ -89,28 +89,16 @@ open class PexelsPhotoContainer : Container
 	{
 		[]
 	}
+
+	/// Returns a description of the contents of this Container
 	
-	/// Returns a textual description of the filter params (for displaying in the UI)
-	
-	var description:String
-	{
-		guard let filter = self.filter as? PexelsFilter else { return "" }
-		return Self.description(with:filter)
-	}
+    @MainActor override open var localizedObjectCount:String
+    {
+		let n = self.objects.count
+		let str = n.localizedImagesString
+		return str
+    }
 
-	/// Returns a textual description of the filter params (for displaying in the UI)
-
-	class func description(with filter:PexelsFilter) -> String
-	{
-		let searchString = filter.searchString
-		let orientation = filter.orientation != .any ? filter.orientation.localizedName : ""
-		let color = filter.color != .any ? filter.color.localizedName : ""
-
-		var description = searchString
-		if !orientation.isEmpty { description += ", \(orientation)" }
-		if !color.isEmpty { description += ", \(color)" }
-		return description
-	}
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -232,75 +220,8 @@ open class PexelsPhotoContainer : Container
 		
 		return uniquePhotos
 	}
-
-
-	/// Returns a description of the contents of this Container
-	
-    @MainActor override open var localizedObjectCount:String
-    {
-		let n = self.objects.count
-		let str = n.localizedImagesString
-		return str
-    }
     
     
-//----------------------------------------------------------------------------------------------------------------------
-
-
-//	/// Encodes/decodes a PexelsFilter from Data
-//	
-//	var filterData:Data?
-//	{
-//		get
-//		{
-//			guard let pexelsData = self.data as? PexelsData else { return nil }
-//			let filter = pexelsData.lastUsedFilter
-//			let data = try? JSONEncoder().encode(filter)
-//			return data
-//		}
-//		
-//		set
-//		{
-//			guard let data = newValue else { return }
-//			guard let pexelsData = self.data as? PexelsData else { return }
-//			guard let filter = try? JSONDecoder().decode(PexelsFilter.self, from:data) else { return }
-//			pexelsData.lastUsedFilter = filter
-//		}
-//	}
-//
-//	/// Returns a textual description of the filter params (for displaying in the UI)
-//	
-//	var description:String
-//	{
-//		guard let filter = self.filter as? PexelsFilter else { return "" }
-//		return Self.description(with:filter)
-//	}
-//
-//	/// Returns a textual description of the filter params (for displaying in the UI)
-//
-//	class func description(with filter:PexelsFilter) -> String
-//	{
-//		let searchString = filter.searchString
-//		let orientation = filter.orientation != .any ? filter.orientation.localizedName : ""
-//		let color = filter.color != .any ? filter.color.localizedName : ""
-//
-//		var description = searchString
-//		if !orientation.isEmpty { description += ", \(orientation)" }
-//		if !color.isEmpty { description += ", \(color)" }
-//		return description
-//	}
-//
-//
-////----------------------------------------------------------------------------------------------------------------------
-//
-//
-//	// MARK: - Sorting
-//	
-//	/// Returns the list of allowed sort Kinds for this Container
-//		
-//	override open var allowedSortTypes:[Object.Filter.SortType] { [] }
-
-
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -323,6 +244,28 @@ open class PexelsPhotoContainer : Container
 			guard let filter = try? JSONDecoder().decode(PexelsFilter.self, from:data) else { return }
 			pexelsData.lastUsedFilter = filter
 		}
+	}
+
+	/// Returns a textual description of the filter params (for displaying in the UI)
+	
+	var description:String
+	{
+		guard let filter = self.filter as? PexelsFilter else { return "" }
+		return Self.description(with:filter)
+	}
+
+	/// Returns a textual description of the filter params (for displaying in the UI)
+
+	class func description(with filter:PexelsFilter) -> String
+	{
+		let searchString = filter.searchString
+		let orientation = filter.orientation != .any ? filter.orientation.localizedName : ""
+		let color = filter.color != .any ? filter.color.localizedName : ""
+
+		var description = searchString
+		if !orientation.isEmpty { description += ", \(orientation)" }
+		if !color.isEmpty { description += ", \(color)" }
+		return description
 	}
 }
 
