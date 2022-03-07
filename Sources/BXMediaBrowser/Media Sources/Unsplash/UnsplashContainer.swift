@@ -134,7 +134,7 @@ open class UnsplashContainer : Container
 			
 			if StatisticsController.shared.rating(for:object) >= filter.rating
 			{
-				objects += UnsplashObject(with:photo)
+				objects += object
 			}
 		}
 		
