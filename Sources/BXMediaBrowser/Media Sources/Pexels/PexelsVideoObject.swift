@@ -32,16 +32,16 @@ import AppKit
 //----------------------------------------------------------------------------------------------------------------------
 
 
-open class PexelsObject : Object
+open class PexelsVideoObject : Object
 {
 	/// Creates a new Object for the file at the specified URL
 	
-	public init(with photo:Pexels.Photo)
+	public required init(with video:Pexels.Video)
 	{
 		super.init(
-			identifier: "PexelsSource:Photo:\(photo.id)",
-			name: photo.alt,
-			data: photo,
+			identifier: "PexelsSource:Video:\(video.id)",
+			name: "Video",
+			data: video,
 			loadThumbnailHandler: Self.loadThumbnail,
 			loadMetadataHandler: Self.loadMetadata,
 			downloadFileHandler: Self.downloadFile)
@@ -55,8 +55,8 @@ open class PexelsObject : Object
 	
 	open class func loadThumbnail(for identifier:String, data:Any) async throws -> CGImage
 	{
-		guard let photo = data as? Pexels.Photo else { throw Error.loadThumbnailFailed }
-		guard let url = URL(string:photo.src.small) else { throw Error.loadThumbnailFailed }
+		guard let video = data as? Pexels.Video else { throw Error.loadThumbnailFailed }
+		guard let url = URL(string:video.image) else { throw Error.loadThumbnailFailed }
 		
 		let data = try await URLSession.shared.data(with:url)
 		guard let source = CGImageSourceCreateWithData(data as CFData,nil) else { throw Error.loadThumbnailFailed }
@@ -73,21 +73,19 @@ open class PexelsObject : Object
 	
 	open class func loadMetadata(for identifier:String, data:Any) async throws -> [String:Any]
 	{
-		PexelsSource.log.verbose {"\(Self.self).\(#function) \(identifier)"}
+		Pexels.log.verbose {"\(Self.self).\(#function) \(identifier)"}
 
-		guard let photo = data as? Pexels.Photo else { throw Error.loadMetadataFailed }
+		guard let video = data as? Pexels.Video else { throw Error.loadMetadataFailed }
 
 		var metadata:[String:Any] = [:]
 		
-		metadata[.widthKey] = photo.width
-		metadata[.heightKey] = photo.height
-		metadata[.descriptionKey] = photo.alt
-		metadata[.authorsKey] = [photo.photographer]
-		metadata[.whereFromsKey] = [photo.url]
-		metadata["photographer"] = photo.photographer
-		metadata["photographer_url"] = photo.photographer_url
-		metadata["url"] = photo.url
-		metadata["photo_src_original"] = photo.src.original
+		metadata[.widthKey] = video.width
+		metadata[.heightKey] = video.height
+		metadata[.durationKey] = [video.duration]
+		metadata[.whereFromsKey] = [video.url]
+		metadata[.authorsKey] = [video.user.name]
+		metadata["user"] = video.user.name
+		metadata["user_url"] = video.user.url
 		
 		return metadata
 	}
@@ -97,28 +95,28 @@ open class PexelsObject : Object
 	
 	@MainActor override open var localizedMetadata:[ObjectMetadataEntry]
     {
-		guard let photo = data as? Pexels.Photo else { return [] }
+		guard let video = data as? Pexels.Video else { return [] }
 		
 		let openPhotoPage:()->Void =
 		{
-			URL(string:photo.url)?.open()
+			URL(string:video.url)?.open()
 		}
 		
 		let openUserPage:()->Void =
 		{
-			URL(string:photo.photographer_url)?.open()
+			URL(string:video.user.url)?.open()
 		}
 		
 		var array:[ObjectMetadataEntry] = []
 		
-		let photoLabel = NSLocalizedString("Photo", tableName:"Pexels", bundle:.BXMediaBrowser, comment:"Label")
-		array += ObjectMetadataEntry(label:photoLabel, value:photo.alt, action:openPhotoPage)
+		let photoLabel = NSLocalizedString("Video", tableName:"Pexels", bundle:.BXMediaBrowser, comment:"Label")
+		array += ObjectMetadataEntry(label:photoLabel, value:"Video", action:openPhotoPage)
 
 		let photographerLabel = NSLocalizedString("Photographer", tableName:"Pexels", bundle:.BXMediaBrowser, comment:"Label")
-		array += ObjectMetadataEntry(label:photographerLabel, value:photo.photographer, action:openUserPage)
+		array += ObjectMetadataEntry(label:photographerLabel, value:video.user.name, action:openUserPage)
 		
 		let imageSizeLabel = NSLocalizedString("Image Size", tableName:"Pexels", bundle:.BXMediaBrowser, comment:"Label")
-		array += ObjectMetadataEntry(label:imageSizeLabel, value:"\(photo.width) × \(photo.height) Pixels")
+		array += ObjectMetadataEntry(label:imageSizeLabel, value:"\(video.width) × \(video.height) Pixels")
 		
 		return array
     }
@@ -134,18 +132,33 @@ open class PexelsObject : Object
 		Self.localFileName(for:identifier, data:data)
 	}
 	
-	// Unsplash always return image - can we be even more specific with JPEG?
+	// Unsplash always return movie - can we be even more specific with MP4?
 	
 	override public var localFileUTI:String
 	{
-		kUTTypeJPEG as String
+		var uti = kUTTypeMovie as String
+		
+		guard let file = try? Self.bestFile(for:identifier, data:data) else { return uti }
+		let mimeType = file.file_type as CFString
+		if let _uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeType, nil)?.takeUnretainedValue()
+		{
+			uti = _uti as String
+		}
+		
+		return uti
 	}
 	
 	static func localFileName(for identifier:String, data:Any) -> String
 	{
-		var filename = "PexelsPhoto.jpg"
-		guard let photo = data as? Pexels.Photo else { return filename }
-		filename = "Pexels.\(photo.id).jpg"
+		var filename = "PexelsVideo.mp4"
+
+//		guard let video = data as? Pexels.Video else { return filename }
+//		filename = "Pexels.\(video.id).mp4"
+
+		guard let file = try? Self.bestFile(for:identifier, data:data) else { return filename }
+		guard let url = URL(string:file.link) else { return filename }
+		filename = url.pathComponents.last ?? filename
+		
 		return filename
 	}
 	
@@ -154,9 +167,8 @@ open class PexelsObject : Object
 	
 	class func remoteURL(for identifier:String, data:Any) throws -> URL
 	{
-		guard let photo = data as? Pexels.Photo else { throw Error.downloadFileFailed }
-		let str = photo.src.original
-		guard let url = URL(string:str) else { throw Error.downloadFileFailed }
+		let file = try self.bestFile(for:identifier, data:data)
+		guard let url = URL(string:file.link) else { throw Error.downloadFileFailed }
 		return url
 	}
 	
@@ -165,7 +177,7 @@ open class PexelsObject : Object
 	
 	open class func downloadFile(for identifier:String, data:Any) async throws -> URL
 	{
-		UnsplashSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
+		Pexels.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
 		// Download the file
 		
@@ -186,6 +198,32 @@ open class PexelsObject : Object
 	}
 
 
+	open class func bestFile(for identifier:String, data:Any) throws -> Pexels.Video.File
+	{
+		guard let video = data as? Pexels.Video else { throw Error.downloadFileFailed }
+
+		var bestIndex = 0
+		var maxPixels = 0
+		
+		for (i,file) in video.video_files.enumerated()
+		{
+			let w = file.width ?? 0
+			let h = file.height ?? 0
+			let n = w * h
+			
+			if n > maxPixels
+			{
+				bestIndex = i
+				maxPixels = n
+			}
+		}
+		
+		guard bestIndex >= 0 && bestIndex < video.video_files.count else { throw Error.downloadFileFailed }
+		
+		return video.video_files[bestIndex]
+	}
+
+
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -193,14 +231,14 @@ open class PexelsObject : Object
 	
 	override public var previewItemURL:URL!
     {
-		guard let photo = data as? Pexels.Photo else { return nil }
-		return URL(string:photo.src.large2x)
+		guard let video = data as? Pexels.Video else { return nil }
+		guard let str = video.video_files.last?.link else { return nil }
+		return URL(string:str)
     }
     
 	override open var previewItemTitle: String!
     {
-		guard let photo = data as? Pexels.Photo else { return self.name }
-		return photo.alt
+		return self.name
     }
 }
 

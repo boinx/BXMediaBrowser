@@ -30,13 +30,13 @@ import SwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-open class PexelsSource : Source, AccessControl
+open class PexelsVideoSource : Source, AccessControl
 {
 	/// The unique identifier of this source must always remain the same. Do not change this
 	/// identifier, even if the class name changes due to refactoring, because the identifier
 	/// might be stored in a preferences file or user documents.
 	
-	static let identifier = "PexelsSource:"
+	static let identifier = "PexelsVideoSource:"
 	
 	
 //----------------------------------------------------------------------------------------------------------------------
@@ -46,13 +46,13 @@ open class PexelsSource : Source, AccessControl
 	
 	public init()
 	{
-		PexelsSource.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
+		Pexels.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
 		let icon = Bundle.BXMediaBrowser.image(forResource:"Pexels")?.CGImage
 		super.init(identifier:Self.identifier, icon:icon, name:"Pexels", filter:PexelsFilter())
 		self.loader = Loader(loadHandler:self.loadContainers)
 	}
-
-
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -62,14 +62,14 @@ open class PexelsSource : Source, AccessControl
 	
 	private func loadContainers(with sourceState:[String:Any]? = nil, filter:Object.Filter) async throws -> [Container]
 	{
-		PexelsSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
+		Pexels.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
 		var containers:[Container] = []
 		
 		// Add Live Search
 		
 		let name = NSLocalizedString("Search", tableName:"Pexels", bundle:.BXMediaBrowser, comment:"Container Name")
-		containers += PexelsContainer(identifier:"PexelsSource:Search", icon:"magnifyingglass", name:name, filter:PexelsFilter(), saveHandler:
+		containers += PexelsVideoContainer(identifier:"PexelsVideoSource:Search", icon:"magnifyingglass", name:name, filter:PexelsFilter(), saveHandler:
 		{
 			[weak self] in self?.saveContainer($0)
 		})
@@ -94,7 +94,7 @@ open class PexelsSource : Source, AccessControl
 	
 	func saveContainer(_ liveSearchContainer:PexelsContainer)
 	{
-		PexelsSource.log.debug {"\(Self.self).\(#function)"}
+		Pexels.log.debug {"\(Self.self).\(#function)"}
 
 		guard let liveFilter = liveSearchContainer.filter as? PexelsFilter else { return }
 		guard let savedContainer = self.createContainer(with:liveFilter.copy) else { return }
@@ -104,17 +104,17 @@ open class PexelsSource : Source, AccessControl
 
 	/// Creates a new "saved" PexelsContainer with the specified filter
 	
-	func createContainer(with filter:PexelsFilter) -> PexelsContainer?
+	func createContainer(with filter:PexelsFilter) -> PexelsVideoContainer?
 	{
 		guard !filter.searchString.isEmpty else { return nil }
 
 		let searchString = filter.searchString
 		let orientation = filter.orientation.rawValue
 		let color = filter.color.rawValue
-		let identifier = "PexelsSource:\(searchString)/\(orientation)/\(color)".replacingOccurrences(of:" ", with:"-")
-		let name = PexelsContainer.description(with:filter)
+		let identifier = "PexelsVideoSource:\(searchString)/\(orientation)/\(color)".replacingOccurrences(of:" ", with:"-")
+		let name = PexelsVideoContainer.description(with:filter)
 		
-		return PexelsContainer(identifier:identifier, icon:"rectangle.stack", name:name, filter:filter, removeHandler:
+		return PexelsVideoContainer(identifier:identifier, icon:"rectangle.stack", name:name, filter:filter, removeHandler:
 		{
 			[weak self] container in
 			
@@ -141,7 +141,7 @@ open class PexelsSource : Source, AccessControl
 		var state = await super.state()
 		
 		let savedFilterDatas = await self.containers
-			.compactMap { $0 as? PexelsContainer }
+			.compactMap { $0 as? PexelsPhotoContainer }
 			.filter { $0.saveHandler == nil }
 			.compactMap { $0.filterData }
 
@@ -164,23 +164,6 @@ open class PexelsSource : Source, AccessControl
 	}
 
 
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	public static var log:BXLogger =
-	{
-		()->BXLogger in
-		
-		var logger = BXLogger()
-
-		logger.addDestination
-		{
-			(level:BXLogger.Level,string:String)->() in
-			BXMediaBrowser.log.print(level:level, force:true) { string }
-		}
-		
-		return logger
-	}()
 }
 
 

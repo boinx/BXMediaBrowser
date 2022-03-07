@@ -124,8 +124,8 @@ extension Pexels.Video
 		public let id:Int
 		public let quality:String
 		public let file_type:String 						// mime type
-		public let width:Int								// in pixels
-		public let height:Int								// in pixels
+		public let width:Int?								// in pixels
+		public let height:Int?								// in pixels
 		public let link:String 								// URL to file
 	}
 }

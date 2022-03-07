@@ -52,7 +52,7 @@ public struct PexelsFilterBar : View
 		selectedContainer as? PexelsContainer
 	}
 	
-	var saveHandler:PexelsContainer.SaveContainerHandler?
+	var saveHandler:PexelsPhotoContainer.SaveContainerHandler?
 	{
 		self.pexelsContainer?.saveHandler
 	}
@@ -83,7 +83,11 @@ public struct PexelsFilterBar : View
 				.frame(maxWidth:300)
 				
 				PexelsOrientationView(filter:filter)
-				PexelsColorView(filter:filter)
+				
+				if container is PexelsPhotoContainer
+				{
+					PexelsColorView(filter:filter)
+				}
 				
 				RatingFilterView(rating:self.$filter.rating)
 

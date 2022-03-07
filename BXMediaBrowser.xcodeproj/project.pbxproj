@@ -115,15 +115,19 @@
 		D01C33CF27CA70F3003337A9 /* NSPasteboard+Objects.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01C33CE27CA70F3003337A9 /* NSPasteboard+Objects.swift */; };
 		D01C33D727CD187D003337A9 /* DraggingProgressMixin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01C33D627CD187D003337A9 /* DraggingProgressMixin.swift */; };
 		D0BAD10627D386B600B749FD /* String+MetadataKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BAD10527D386B600B749FD /* String+MetadataKeys.swift */; };
-		D0BAD10727D392D700B749FD /* PexelsSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BAD0FE27D37A9A00B749FD /* PexelsSource.swift */; };
-		D0BAD10827D392D700B749FD /* PexelsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BAD0FB27D37A9A00B749FD /* PexelsContainer.swift */; };
-		D0BAD10927D392D700B749FD /* PexelsObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BAD0F927D37A9A00B749FD /* PexelsObject.swift */; };
+		D0BAD10727D392D700B749FD /* PexelsPhotoSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BAD0FE27D37A9A00B749FD /* PexelsPhotoSource.swift */; };
+		D0BAD10827D392D700B749FD /* PexelsPhotoContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BAD0FB27D37A9A00B749FD /* PexelsPhotoContainer.swift */; };
+		D0BAD10927D392D700B749FD /* PexelsPhotoObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BAD0F927D37A9A00B749FD /* PexelsPhotoObject.swift */; };
 		D0BAD10A27D392D700B749FD /* PexelsFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BAD0FA27D37A9A00B749FD /* PexelsFilter.swift */; };
-		D0BAD10B27D392D700B749FD /* PexelsConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BAD0FC27D37A9A00B749FD /* PexelsConfig.swift */; };
+		D0BAD10B27D392D700B749FD /* Pexels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BAD0FC27D37A9A00B749FD /* Pexels.swift */; };
 		D0BAD10C27D392D700B749FD /* PexelsJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BAD0FD27D37A9A00B749FD /* PexelsJSON.swift */; };
 		D0BAD10E27D3AB0900B749FD /* PexelsFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BAD10D27D3AB0800B749FD /* PexelsFilterBar.swift */; };
 		D0BAD11127D3BF5600B749FD /* Pexels.strings in Resources */ = {isa = PBXBuildFile; fileRef = D0BAD10F27D3BF5600B749FD /* Pexels.strings */; };
 		D0BAD11527D3C42400B749FD /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0BAD11427D3C42400B749FD /* Icons.xcassets */; };
+		D0BAD11927D3D3E700B749FD /* PexelsVideoObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BAD11827D3D3E700B749FD /* PexelsVideoObject.swift */; };
+		D0BAD11B27D3DF8000B749FD /* PexelsVideoContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BAD11A27D3DF8000B749FD /* PexelsVideoContainer.swift */; };
+		D0DEF7D527D5E0BD00601E3F /* PexelsVideoSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DEF7D427D5E0BD00601E3F /* PexelsVideoSource.swift */; };
+		D0DEF7D727D5FF4400601E3F /* PexelsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DEF7D627D5FF4400601E3F /* PexelsContainer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -249,18 +253,22 @@
 		D01B49BB27CA463E008249C0 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D01C33CE27CA70F3003337A9 /* NSPasteboard+Objects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPasteboard+Objects.swift"; sourceTree = "<group>"; };
 		D01C33D627CD187D003337A9 /* DraggingProgressMixin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggingProgressMixin.swift; sourceTree = "<group>"; };
-		D0BAD0F927D37A9A00B749FD /* PexelsObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PexelsObject.swift; sourceTree = "<group>"; };
+		D0BAD0F927D37A9A00B749FD /* PexelsPhotoObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PexelsPhotoObject.swift; sourceTree = "<group>"; };
 		D0BAD0FA27D37A9A00B749FD /* PexelsFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PexelsFilter.swift; sourceTree = "<group>"; };
-		D0BAD0FB27D37A9A00B749FD /* PexelsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PexelsContainer.swift; sourceTree = "<group>"; };
-		D0BAD0FC27D37A9A00B749FD /* PexelsConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PexelsConfig.swift; sourceTree = "<group>"; };
+		D0BAD0FB27D37A9A00B749FD /* PexelsPhotoContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PexelsPhotoContainer.swift; sourceTree = "<group>"; };
+		D0BAD0FC27D37A9A00B749FD /* Pexels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pexels.swift; sourceTree = "<group>"; };
 		D0BAD0FD27D37A9A00B749FD /* PexelsJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PexelsJSON.swift; sourceTree = "<group>"; };
-		D0BAD0FE27D37A9A00B749FD /* PexelsSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PexelsSource.swift; sourceTree = "<group>"; };
+		D0BAD0FE27D37A9A00B749FD /* PexelsPhotoSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PexelsPhotoSource.swift; sourceTree = "<group>"; };
 		D0BAD10527D386B600B749FD /* String+MetadataKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+MetadataKeys.swift"; sourceTree = "<group>"; };
 		D0BAD10D27D3AB0800B749FD /* PexelsFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PexelsFilterBar.swift; sourceTree = "<group>"; };
 		D0BAD11027D3BF5600B749FD /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Pexels.strings; sourceTree = "<group>"; };
 		D0BAD11227D3C0A800B749FD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Pexels.strings; sourceTree = "<group>"; };
 		D0BAD11327D3C10600B749FD /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Pexels.strings; sourceTree = "<group>"; };
 		D0BAD11427D3C42400B749FD /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
+		D0BAD11827D3D3E700B749FD /* PexelsVideoObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PexelsVideoObject.swift; sourceTree = "<group>"; };
+		D0BAD11A27D3DF8000B749FD /* PexelsVideoContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PexelsVideoContainer.swift; sourceTree = "<group>"; };
+		D0DEF7D427D5E0BD00601E3F /* PexelsVideoSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PexelsVideoSource.swift; sourceTree = "<group>"; };
+		D0DEF7D627D5FF4400601E3F /* PexelsContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PexelsContainer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -586,10 +594,14 @@
 		D0BAD0F827D37A4600B749FD /* Pexels */ = {
 			isa = PBXGroup;
 			children = (
-				D0BAD0FC27D37A9A00B749FD /* PexelsConfig.swift */,
-				D0BAD0FE27D37A9A00B749FD /* PexelsSource.swift */,
-				D0BAD0FB27D37A9A00B749FD /* PexelsContainer.swift */,
-				D0BAD0F927D37A9A00B749FD /* PexelsObject.swift */,
+				D0BAD0FC27D37A9A00B749FD /* Pexels.swift */,
+				D0BAD0FE27D37A9A00B749FD /* PexelsPhotoSource.swift */,
+				D0DEF7D427D5E0BD00601E3F /* PexelsVideoSource.swift */,
+				D0DEF7D627D5FF4400601E3F /* PexelsContainer.swift */,
+				D0BAD0FB27D37A9A00B749FD /* PexelsPhotoContainer.swift */,
+				D0BAD11A27D3DF8000B749FD /* PexelsVideoContainer.swift */,
+				D0BAD0F927D37A9A00B749FD /* PexelsPhotoObject.swift */,
+				D0BAD11827D3D3E700B749FD /* PexelsVideoObject.swift */,
 				D0BAD0FA27D37A9A00B749FD /* PexelsFilter.swift */,
 				D0BAD0FD27D37A9A00B749FD /* PexelsJSON.swift */,
 			);
@@ -692,7 +704,7 @@
 				D01B496527CA1378008249C0 /* Library+State.swift in Sources */,
 				D01B497A27CA1378008249C0 /* AudioFolderSource.swift in Sources */,
 				D01C33CF27CA70F3003337A9 /* NSPasteboard+Objects.swift in Sources */,
-				D0BAD10827D392D700B749FD /* PexelsContainer.swift in Sources */,
+				D0BAD10827D392D700B749FD /* PexelsPhotoContainer.swift in Sources */,
 				D01B497127CA1378008249C0 /* MusicFilter.swift in Sources */,
 				D01B498927CA1378008249C0 /* PhotosObject.swift in Sources */,
 				D01B495D27CA1378008249C0 /* Source.swift in Sources */,
@@ -704,7 +716,7 @@
 				D01B495727CA1378008249C0 /* Progress+globalParent.swift in Sources */,
 				D01B495B27CA1378008249C0 /* Object+Loader.swift in Sources */,
 				D01B49A827CA1378008249C0 /* ViewFactory.swift in Sources */,
-				D0BAD10727D392D700B749FD /* PexelsSource.swift in Sources */,
+				D0BAD10727D392D700B749FD /* PexelsPhotoSource.swift in Sources */,
 				D01B498527CA1378008249C0 /* PhotosContainer.swift in Sources */,
 				D01B49A127CA1378008249C0 /* ImageObjectViewController.swift in Sources */,
 				D01B496A27CA1378008249C0 /* Object+Quicklook.swift in Sources */,
@@ -723,7 +735,7 @@
 				D01B496127CA1378008249C0 /* Object+Error.swift in Sources */,
 				D01B498D27CA1378008249C0 /* MusicFilterBar.swift in Sources */,
 				D01B494527CA1378008249C0 /* ObjectFilePromiseProvider.swift in Sources */,
-				D0BAD10B27D392D700B749FD /* PexelsConfig.swift in Sources */,
+				D0BAD10B27D392D700B749FD /* Pexels.swift in Sources */,
 				D01B497227CA1378008249C0 /* ITLibAlbum+Hashable.swift in Sources */,
 				D01C33D727CD187D003337A9 /* DraggingProgressMixin.swift in Sources */,
 				D01B498227CA1378008249C0 /* UnsplashFilter.swift in Sources */,
@@ -754,9 +766,11 @@
 				D01B494727CA1378008249C0 /* Object+Dragging.swift in Sources */,
 				D01B496827CA1378008249C0 /* Library+UI.swift in Sources */,
 				D01B494827CA1378008249C0 /* DraggingDestinationMixin.swift in Sources */,
+				D0BAD11B27D3DF8000B749FD /* PexelsVideoContainer.swift in Sources */,
 				D01B497027CA1378008249C0 /* Section+Hashable.swift in Sources */,
 				D01B495627CA1378008249C0 /* StateSaving.swift in Sources */,
 				D01B495527CA1378008249C0 /* FolderObserver.swift in Sources */,
+				D0DEF7D527D5E0BD00601E3F /* PexelsVideoSource.swift in Sources */,
 				D01B495227CA1378008249C0 /* String+UTI.swift in Sources */,
 				D01B496327CA1378008249C0 /* Section+UI.swift in Sources */,
 				D01B497627CA1378008249C0 /* ITLibArtist+Hashable.swift in Sources */,
@@ -774,14 +788,16 @@
 				D01B495927CA1378008249C0 /* AudioPreviewController.swift in Sources */,
 				D01B497727CA1378008249C0 /* FolderContainer.swift in Sources */,
 				D01B496E27CA1378008249C0 /* Object+Filter.swift in Sources */,
+				D0DEF7D727D5FF4400601E3F /* PexelsContainer.swift in Sources */,
 				D01B498E27CA1378008249C0 /* UnsplashFilterBar.swift in Sources */,
 				D01B499627CA1378008249C0 /* CustomDisclosureButton.swift in Sources */,
 				D01B499527CA1378008249C0 /* EfficientVStack.swift in Sources */,
 				D01B499D27CA1378008249C0 /* ContainerView.swift in Sources */,
-				D0BAD10927D392D700B749FD /* PexelsObject.swift in Sources */,
+				D0BAD10927D392D700B749FD /* PexelsPhotoObject.swift in Sources */,
 				D01B495F27CA1378008249C0 /* Library+Hashable.swift in Sources */,
 				D0BAD10E27D3AB0900B749FD /* PexelsFilterBar.swift in Sources */,
 				D01B496927CA1378008249C0 /* Container.swift in Sources */,
+				D0BAD11927D3D3E700B749FD /* PexelsVideoObject.swift in Sources */,
 				D01B497D27CA1378008249C0 /* FolderSource.swift in Sources */,
 				D01B498427CA1378008249C0 /* Dictionary+Extensions.swift in Sources */,
 				D01B496427CA1378008249C0 /* Container+Cache.swift in Sources */,

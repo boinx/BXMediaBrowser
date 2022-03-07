@@ -43,6 +43,7 @@ open class PexelsContainer : Container
 		var lastUsedFilter = PexelsFilter()
 		var page = 0
 		var photos:[Pexels.Photo] = []
+		var videos:[Pexels.Video] = []
 	}
 	
 	public typealias SaveContainerHandler = (PexelsContainer)->Void
@@ -57,7 +58,7 @@ open class PexelsContainer : Container
 	
 	public required init(identifier:String, icon:String, name:String, filter:PexelsFilter, saveHandler:SaveContainerHandler? = nil, removeHandler:((Container)->Void)? = nil)
 	{
-		PexelsSource.log.verbose {"\(Self.self).\(#function) \(identifier)"}
+		Pexels.log.verbose {"\(Self.self).\(#function) \(identifier)"}
 
 		self.saveHandler = saveHandler
 
@@ -77,6 +78,14 @@ open class PexelsContainer : Container
 	}
 
 
+	/// Loads the (shallow) contents of this folder
+	
+	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
+	{
+		return ([],[])
+	}
+		
+		
 	// Pexels Container can never be expanded, as they do not have any sub-containers
 	
 	override open var canExpand: Bool
@@ -85,131 +94,6 @@ open class PexelsContainer : Container
 	}
 	
 
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	/// Loads the (shallow) contents of this folder
-	
-	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
-	{
-		PexelsSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
-
-		let containers:[Container] = []
-		var objects:[Object] = []
-		
-		guard let pexelsData = data as? PexelsData else { return (containers,objects) }
-		guard let pexelsFilter = filter as? PexelsFilter else { return (containers,objects) }
-		
-		// If the search string has changed, then clear the results and store the new filter 
-		
-		if pexelsFilter != pexelsData.lastUsedFilter
-		{
-			pexelsData.page = 0
-			pexelsData.photos = []
-			pexelsData.lastUsedFilter.searchString = pexelsFilter.searchString
-			pexelsData.lastUsedFilter.orientation = pexelsFilter.orientation
-			pexelsData.lastUsedFilter.color = pexelsFilter.color
-			pexelsData.lastUsedFilter.size = pexelsFilter.size
-			pexelsData.lastUsedFilter.rating = pexelsFilter.rating
-			PexelsSource.log.verbose {"    clear search results"}
-		}
-		
-		// Append the next page of search results
-			
-		if !pexelsFilter.searchString.isEmpty
-		{
-			pexelsData.page += 1
-			pexelsData.photos += try await self.photos(for:pexelsFilter, page:pexelsData.page)
-			PexelsSource.log.verbose {"    appending page \(pexelsData.page)"}
-		}
-		
-		// Remove potential duplicates, as that would cause serious issues with NSDiffableDataSource
-		
-		let photos = self.removeDuplicates(from:pexelsData.photos)
-		
-		// Build an Object for each PexelsPhoto in the search results
-		
-		for photo in photos
-		{
-			let object = PexelsObject(with:photo)
-			
-			if StatisticsController.shared.rating(for:object) >= filter.rating
-			{
-				objects += PexelsObject(with:photo)
-			}
-		}
-		
-		return (containers,objects)
-	}
-	
-	
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	/// Returns an array of PexelsPhotos for the specified search string and page number
-
-	private class func photos(for filter:PexelsFilter, page:Int) async throws -> [Pexels.Photo]
-	{
-		// Build a search request with the provided search string (filter)
-		
-		let accessPoint = "https://api.pexels.com/v1/search"
-		let accessKey = Pexels.shared.accessKey
-		var urlComponents = URLComponents(string:accessPoint)!
-        
-		urlComponents.queryItems =
-		[
-			URLQueryItem(name:"query", value:filter.searchString),
-			URLQueryItem(name:"page", value:"\(page)"),
-			URLQueryItem(name:"per_page", value:"30")
-		]
-		
-		if filter.orientation != .any
-		{
-			urlComponents.queryItems?.append(URLQueryItem(name:"orientation", value:filter.orientation.rawValue))
-		}
-		
-		if filter.color != .any
-		{
-			urlComponents.queryItems?.append(URLQueryItem(name:"color", value:filter.color.rawValue))
-		}
-		
-		guard let url = urlComponents.url else { throw Error.loadContentsFailed }
-
-		var request = URLRequest(url:url)
-		request.httpMethod = "GET"
-		request.setValue(accessKey, forHTTPHeaderField:"Authorization")
-		
-		// Perform the online search
-		
-		let data = try await URLSession.shared.data(with:request)
-
-		// Decode returned JSON to array of PexelsPhoto
-		
-		let results = try JSONDecoder().decode(Pexels.Photo.SearchResults.self, from:data)
-		return results.photos
-	}
-	
-	
-	/// Removes any duplicate photos from the specified array. The returned array only contains unique entries.
-	/// This is important when using a NSDiffableDataSource with NSCollectionView. Having duplicate identifiers
-	/// would cause fatal exceptions.
-	
-	private class func removeDuplicates(from photos:[Pexels.Photo]) -> [Pexels.Photo]
-	{
-		var uniquePhotos:[Pexels.Photo] = []
-		var identifiers:[Int] = []
-		
-		for photo in photos
-		{
-			guard !identifiers.contains(photo.id) else { continue }
-			uniquePhotos += photo
-			identifiers += photo.id
-		}
-		
-		return uniquePhotos
-	}
-	
-	
 //----------------------------------------------------------------------------------------------------------------------
 
 

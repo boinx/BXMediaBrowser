@@ -23,8 +23,8 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 
+import BXSwiftUtils
 import Foundation
-import Combine
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -42,11 +42,28 @@ public class Pexels : ObservableObject
 
     /// The image API url
 	
-    let imagesAPI = "https://api.pexels.com/v1/"
+    let imagesAPI = "https://api.pexels.com/v1/search"
 
     /// The video API url
 	
-    let videosAPI = "https://api.pexels.com/videos/"
+    let videosAPI = "https://api.pexels.com/videos/search"
+
+	/// A logger for Pexels related code
+
+	public static var log:BXLogger =
+	{
+		()->BXLogger in
+		
+		var logger = BXLogger()
+
+		logger.addDestination
+		{
+			(level:BXLogger.Level,string:String)->() in
+			BXMediaBrowser.log.print(level:level, force:true) { string }
+		}
+		
+		return logger
+	}()
 }
 
 
