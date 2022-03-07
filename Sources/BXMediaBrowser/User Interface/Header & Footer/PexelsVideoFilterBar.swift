@@ -52,11 +52,6 @@ public struct PexelsVideoFilterBar : View
 		selectedContainer as? PexelsVideoContainer
 	}
 	
-	var saveHandler:PexelsVideoContainer.SaveContainerHandler?
-	{
-		self.pexelsContainer?.saveHandler
-	}
-	
 	var isSaveEnabled:Bool
 	{
 		!self.searchString.isEmpty
@@ -73,7 +68,7 @@ public struct PexelsVideoFilterBar : View
     {
 		HStack
 		{
-			if let container = self.pexelsContainer, let saveHandler = self.saveHandler
+			if let container = self.pexelsContainer, let saveHandler = container.saveHandler
 			{
 				TextField(searchPlaceholder, text:self.$searchString)
 				{

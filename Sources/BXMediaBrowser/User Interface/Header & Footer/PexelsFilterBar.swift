@@ -30,7 +30,7 @@ import SwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public struct PexelsPhotoFilterBar : View
+public struct PexelsFilterBar : View
 {
 	// Model
 	
@@ -47,14 +47,9 @@ public struct PexelsPhotoFilterBar : View
 		self.searchString = filter.searchString
 	}
 	
-	var pexelsContainer:PexelsPhotoContainer?
+	var pexelsContainer:PexelsContainer?
 	{
-		selectedContainer as? PexelsPhotoContainer
-	}
-	
-	var saveHandler:PexelsPhotoContainer.SaveContainerHandler?
-	{
-		self.pexelsContainer?.saveHandler
+		selectedContainer as? PexelsContainer
 	}
 	
 	var isSaveEnabled:Bool
@@ -73,7 +68,7 @@ public struct PexelsPhotoFilterBar : View
     {
 		HStack
 		{
-			if let container = self.pexelsContainer, let saveHandler = self.saveHandler
+			if let container = self.pexelsContainer, let saveHandler = container.saveHandler
 			{
 				TextField(searchPlaceholder, text:self.$searchString)
 				{
@@ -88,11 +83,11 @@ public struct PexelsPhotoFilterBar : View
 
 				Spacer()
 				
-				Button(saveTitle)
-				{
-					saveHandler(container)
-				}
-				.disabled(!isSaveEnabled)
+					Button(saveTitle)
+					{
+						saveHandler(container)
+					}
+					.disabled(!isSaveEnabled)
 			}
 			else
 			{

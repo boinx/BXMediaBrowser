@@ -93,10 +93,11 @@ open class PexelsPhotoSource : Source, AccessControl
 	
 	/// Creates a new "saved" copy of the live search container
 	
-	func saveContainer(_ liveSearchContainer:PexelsPhotoContainer)
+	func saveContainer(_ container:Container)
 	{
 		Pexels.log.debug {"\(Self.self).\(#function)"}
-
+	
+		guard let liveSearchContainer = container as? PexelsPhotoContainer else { return }
 		guard let liveFilter = liveSearchContainer.filter as? PexelsFilter else { return }
 		guard let savedContainer = self.createContainer(with:liveFilter.copy) else { return }
 		self.addContainer(savedContainer)

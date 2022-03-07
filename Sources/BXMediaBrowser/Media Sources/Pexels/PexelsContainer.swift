@@ -26,19 +26,94 @@
 import BXSwiftUtils
 import Foundation
 
-#if os(macOS)
-import AppKit
-#elseif os(iOS)
-import UIKit
-#endif
-
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
 open class PexelsContainer : Container
 {
+	class PexelsData
+	{
+		var lastUsedFilter = PexelsFilter()
+		var page = 0
+		var photos:[Pexels.Photo] = []
+		var videos:[Pexels.Video] = []
+	}
+	
+	/// This handler is called when the user clicks on the Save button - it will permanently save a Pexels search
+	
+	open var saveHandler:SaveContainerHandler? = nil
 
+	public typealias SaveContainerHandler = (Container)->Void
+	
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// Pexels Container can never be expanded, as they do not have any sub-containers
+	
+	override open var canExpand: Bool
+	{
+		false
+	}
+	
+	/// Returns the list of allowed sort Kinds for this Container
+		
+	override open var allowedSortTypes:[Object.Filter.SortType]
+	{
+		[]
+	}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	/// Encodes/decodes a PexelsFilter from Data
+	
+	var filterData:Data?
+	{
+		get
+		{
+			guard let pexelsData = self.data as? PexelsData else { return nil }
+			let filter = pexelsData.lastUsedFilter
+			let data = try? JSONEncoder().encode(filter)
+			return data
+		}
+		
+		set
+		{
+			guard let data = newValue else { return }
+			guard let pexelsData = self.data as? PexelsData else { return }
+			guard let filter = try? JSONDecoder().decode(PexelsFilter.self, from:data) else { return }
+			pexelsData.lastUsedFilter = filter
+		}
+	}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	/// Returns a textual description of the filter params (for displaying in the UI)
+	
+	var description:String
+	{
+		guard let filter = self.filter as? PexelsFilter else { return "" }
+		return Self.description(with:filter)
+	}
+
+	/// Returns a textual description of the filter params (for displaying in the UI)
+
+	class func description(with filter:PexelsFilter) -> String
+	{
+		let searchString = filter.searchString
+		let orientation = filter.orientation != .any ? filter.orientation.localizedName : ""
+		let color = filter.color != .any ? filter.color.localizedName : ""
+
+		var description = searchString
+		if !orientation.isEmpty { description += ", \(orientation)" }
+		if !color.isEmpty { description += ", \(color)" }
+		return description
+	}
 }
 
 

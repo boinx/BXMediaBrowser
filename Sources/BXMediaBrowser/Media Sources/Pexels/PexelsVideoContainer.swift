@@ -35,32 +35,13 @@ import UIKit
 //----------------------------------------------------------------------------------------------------------------------
 
 
-open class PexelsVideoContainer : Container
+open class PexelsVideoContainer : PexelsContainer
 {
-	class PexelsData
-	{
-		var lastUsedFilter = PexelsFilter()
-		var page = 0
-		var videos:[Pexels.Video] = []
-	}
-	
-	public typealias SaveContainerHandler = (PexelsVideoContainer)->Void
-
-	let saveHandler:SaveContainerHandler?
-	
-	
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	// MARK: -
-	
 	/// Creates a new Container for the folder at the specified URL
 	
 	public required init(identifier:String, icon:String, name:String, filter:PexelsFilter, saveHandler:SaveContainerHandler? = nil, removeHandler:((Container)->Void)? = nil)
 	{
 		Pexels.log.verbose {"\(Self.self).\(#function) \(identifier)"}
-		
-		self.saveHandler = saveHandler
 
 		super.init(
 			identifier: identifier,
@@ -70,6 +51,8 @@ open class PexelsVideoContainer : Container
 			filter: filter,
 			loadHandler: Self.loadContents,
 			removeHandler: removeHandler)
+		
+		self.saveHandler = saveHandler
 
 		self.observers += NotificationCenter.default.publisher(for:NSCollectionView.didScrollToEnd, object:self).sink
 		{
@@ -77,21 +60,6 @@ open class PexelsVideoContainer : Container
 		}
 	}
 
-
-	// Pexels Container can never be expanded, as they do not have any sub-containers
-	
-	override open var canExpand: Bool
-	{
-		false
-	}
-	
-	/// Returns the list of allowed sort Kinds for this Container
-		
-	override open var allowedSortTypes:[Object.Filter.SortType]
-	{
-		[]
-	}
-	
 	/// Returns a description of the contents of this Container
 	
     @MainActor override open var localizedObjectCount:String
@@ -227,53 +195,7 @@ open class PexelsVideoContainer : Container
 		
 		return uniqueVideos
 	}
-    
-    
-//----------------------------------------------------------------------------------------------------------------------
 
-
-	/// Encodes/decodes a PexelsFilter from Data
-	
-	var filterData:Data?
-	{
-		get
-		{
-			guard let pexelsData = self.data as? PexelsData else { return nil }
-			let filter = pexelsData.lastUsedFilter
-			let data = try? JSONEncoder().encode(filter)
-			return data
-		}
-		
-		set
-		{
-			guard let data = newValue else { return }
-			guard let pexelsData = self.data as? PexelsData else { return }
-			guard let filter = try? JSONDecoder().decode(PexelsFilter.self, from:data) else { return }
-			pexelsData.lastUsedFilter = filter
-		}
-	}
-	
-	/// Returns a textual description of the filter params (for displaying in the UI)
-	
-	var description:String
-	{
-		guard let filter = self.filter as? PexelsFilter else { return "" }
-		return Self.description(with:filter)
-	}
-
-	/// Returns a textual description of the filter params (for displaying in the UI)
-
-	class func description(with filter:PexelsFilter) -> String
-	{
-		let searchString = filter.searchString
-		let orientation = filter.orientation != .any ? filter.orientation.localizedName : ""
-		let color = filter.color != .any ? filter.color.localizedName : ""
-
-		var description = searchString
-		if !orientation.isEmpty { description += ", \(orientation)" }
-		if !color.isEmpty { description += ", \(color)" }
-		return description
-	}
 }
 
 
