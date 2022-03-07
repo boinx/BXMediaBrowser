@@ -24,7 +24,6 @@
 
 
 import BXSwiftUtils
-import Foundation
 
 #if os(macOS)
 import AppKit
@@ -36,18 +35,18 @@ import UIKit
 //----------------------------------------------------------------------------------------------------------------------
 
 
-open class PexelsPhotoContainer : PexelsContainer
+open class PexelsPhotoContainer : Container
 {
-//	class PexelsData
-//	{
-//		var lastUsedFilter = PexelsFilter()
-//		var page = 0
-//		var photos:[Pexels.Photo] = []
-//	}
-//
-//	public typealias SaveContainerHandler = (PexelsPhotoContainer)->Void
-//
-//	let saveHandler:SaveContainerHandler?
+	class PexelsData
+	{
+		var lastUsedFilter = PexelsFilter()
+		var page = 0
+		var photos:[Pexels.Photo] = []
+	}
+	
+	public typealias SaveContainerHandler = (PexelsPhotoContainer)->Void
+	
+	var saveHandler:SaveContainerHandler? = nil 
 	
 	
 //----------------------------------------------------------------------------------------------------------------------
@@ -55,42 +54,70 @@ open class PexelsPhotoContainer : PexelsContainer
 
 	/// Creates a new Container for the folder at the specified URL
 	
-//	public required init(identifier:String, icon:String, name:String, filter:PexelsFilter, saveHandler:SaveContainerHandler? = nil, removeHandler:((Container)->Void)? = nil)
-//	{
-//		Pexels.log.verbose {"\(Self.self).\(#function) \(identifier)"}
-//
-//		self.saveHandler = saveHandler
-//
-//		super.init(
-//			identifier: identifier,
-//			icon: icon,
-//			name: name,
-//			data: PexelsData(),
-//			filter: filter,
-//			loadHandler: Self.loadContents,
-//			removeHandler: removeHandler)
-//
-//		self.observers += NotificationCenter.default.publisher(for:NSCollectionView.didScrollToEnd, object:self).sink
-//		{
-//			[weak self] _ in self?.load(with:nil)
-//		}
-//	}
-//
-//
-//	// Pexels Container can never be expanded, as they do not have any sub-containers
-//
-//	override open var canExpand: Bool
-//	{
-//		false
-//	}
+	public required init(identifier:String, icon:String, name:String, filter:PexelsFilter, saveHandler:SaveContainerHandler? = nil, removeHandler:((Container)->Void)? = nil)
+	{
+		Pexels.log.verbose {"\(Self.self).\(#function) \(identifier)"}
+
+		self.saveHandler = saveHandler
+
+		super.init(
+			identifier: identifier,
+			icon: icon,
+			name: name,
+			data: PexelsData(),
+			filter: filter,
+			loadHandler: Self.loadContents,
+			removeHandler: removeHandler)
+
+		self.observers += NotificationCenter.default.publisher(for:NSCollectionView.didScrollToEnd, object:self).sink
+		{
+			[weak self] _ in self?.load(with:nil)
+		}
+	}
+
+
+	// Pexels Container can never be expanded, as they do not have any sub-containers
 	
+	override open var canExpand: Bool
+	{
+		false
+	}
+	
+	/// Returns the list of allowed sort Kinds for this Container
+		
+	override open var allowedSortTypes:[Object.Filter.SortType]
+	{
+		[]
+	}
+	
+	/// Returns a textual description of the filter params (for displaying in the UI)
+	
+	var description:String
+	{
+		guard let filter = self.filter as? PexelsFilter else { return "" }
+		return Self.description(with:filter)
+	}
+
+	/// Returns a textual description of the filter params (for displaying in the UI)
+
+	class func description(with filter:PexelsFilter) -> String
+	{
+		let searchString = filter.searchString
+		let orientation = filter.orientation != .any ? filter.orientation.localizedName : ""
+		let color = filter.color != .any ? filter.color.localizedName : ""
+
+		var description = searchString
+		if !orientation.isEmpty { description += ", \(orientation)" }
+		if !color.isEmpty { description += ", \(color)" }
+		return description
+	}
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
 	/// Loads the (shallow) contents of this folder
 	
-	override class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
+	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
 	{
 		Pexels.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
@@ -143,9 +170,6 @@ open class PexelsPhotoContainer : PexelsContainer
 	}
 	
 	
-//----------------------------------------------------------------------------------------------------------------------
-
-
 	/// Returns an array of PexelsPhotos for the specified search string and page number
 
 	private class func photos(for filter:PexelsFilter, page:Int) async throws -> [Pexels.Photo]
@@ -208,13 +232,23 @@ open class PexelsPhotoContainer : PexelsContainer
 		
 		return uniquePhotos
 	}
+
+
+	/// Returns a description of the contents of this Container
 	
-	
+    @MainActor override open var localizedObjectCount:String
+    {
+		let n = self.objects.count
+		let str = n.localizedImagesString
+		return str
+    }
+    
+    
 //----------------------------------------------------------------------------------------------------------------------
 
 
 //	/// Encodes/decodes a PexelsFilter from Data
-//
+//	
 //	var filterData:Data?
 //	{
 //		get
@@ -224,7 +258,7 @@ open class PexelsPhotoContainer : PexelsContainer
 //			let data = try? JSONEncoder().encode(filter)
 //			return data
 //		}
-//
+//		
 //		set
 //		{
 //			guard let data = newValue else { return }
@@ -235,7 +269,7 @@ open class PexelsPhotoContainer : PexelsContainer
 //	}
 //
 //	/// Returns a textual description of the filter params (for displaying in the UI)
-//
+//	
 //	var description:String
 //	{
 //		guard let filter = self.filter as? PexelsFilter else { return "" }
@@ -255,25 +289,41 @@ open class PexelsPhotoContainer : PexelsContainer
 //		if !color.isEmpty { description += ", \(color)" }
 //		return description
 //	}
-
-	/// Returns a description of the contents of this Container
-	
-    @MainActor override open var localizedObjectCount:String
-    {
-		let n = self.objects.count
-		let str = n.localizedImagesString
-		return str
-    }
+//
+//
+////----------------------------------------------------------------------------------------------------------------------
+//
+//
+//	// MARK: - Sorting
+//	
+//	/// Returns the list of allowed sort Kinds for this Container
+//		
+//	override open var allowedSortTypes:[Object.Filter.SortType] { [] }
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	// MARK: - Sorting
+	/// Encodes/decodes a PexelsFilter from Data
 	
-//	/// Returns the list of allowed sort Kinds for this Container
-//
-//	override open var allowedSortTypes:[Object.Filter.SortType] { [] }
+	var filterData:Data?
+	{
+		get
+		{
+			guard let pexelsData = self.data as? PexelsData else { return nil }
+			let filter = pexelsData.lastUsedFilter
+			let data = try? JSONEncoder().encode(filter)
+			return data
+		}
+		
+		set
+		{
+			guard let data = newValue else { return }
+			guard let pexelsData = self.data as? PexelsData else { return }
+			guard let filter = try? JSONDecoder().decode(PexelsFilter.self, from:data) else { return }
+			pexelsData.lastUsedFilter = filter
+		}
+	}
 }
 
 

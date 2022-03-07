@@ -68,8 +68,9 @@ open class PexelsVideoSource : Source, AccessControl
 		
 		// Add Live Search
 		
+		guard let filter = filter as? PexelsFilter else { return containers }
 		let name = NSLocalizedString("Search", tableName:"Pexels", bundle:.BXMediaBrowser, comment:"Container Name")
-		containers += PexelsVideoContainer(identifier:"PexelsVideoSource:Search", icon:"magnifyingglass", name:name, filter:PexelsFilter(), saveHandler:
+		containers += PexelsVideoContainer(identifier:"PexelsVideoSource:Search", icon:"magnifyingglass", name:name, filter:filter, saveHandler:
 		{
 			[weak self] in self?.saveContainer($0)
 		})
@@ -92,7 +93,7 @@ open class PexelsVideoSource : Source, AccessControl
 	
 	/// Creates a new "saved" copy of the live search container
 	
-	func saveContainer(_ liveSearchContainer:PexelsContainer)
+	func saveContainer(_ liveSearchContainer:PexelsVideoContainer)
 	{
 		Pexels.log.debug {"\(Self.self).\(#function)"}
 
@@ -141,7 +142,7 @@ open class PexelsVideoSource : Source, AccessControl
 		var state = await super.state()
 		
 		let savedFilterDatas = await self.containers
-			.compactMap { $0 as? PexelsPhotoContainer }
+			.compactMap { $0 as? PexelsVideoContainer }
 			.filter { $0.saveHandler == nil }
 			.compactMap { $0.filterData }
 

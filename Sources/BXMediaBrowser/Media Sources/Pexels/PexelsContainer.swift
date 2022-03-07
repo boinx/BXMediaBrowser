@@ -38,54 +38,12 @@ import UIKit
 
 open class PexelsContainer : Container
 {
-	class PexelsData
-	{
-		var lastUsedFilter = PexelsFilter()
-		var page = 0
-		var photos:[Pexels.Photo] = []
-		var videos:[Pexels.Video] = []
-	}
 	
 	public typealias SaveContainerHandler = (PexelsContainer)->Void
 	
-	let saveHandler:SaveContainerHandler?
-	
-	
-//----------------------------------------------------------------------------------------------------------------------
+	var saveHandler:SaveContainerHandler? = nil
 
 
-	/// Creates a new Container for the folder at the specified URL
-	
-	public required init(identifier:String, icon:String, name:String, filter:PexelsFilter, saveHandler:SaveContainerHandler? = nil, removeHandler:((Container)->Void)? = nil)
-	{
-		Pexels.log.verbose {"\(Self.self).\(#function) \(identifier)"}
-
-		self.saveHandler = saveHandler
-
-		super.init(
-			identifier: identifier,
-			icon: icon,
-			name: name,
-			data: PexelsData(),
-			filter: filter,
-			loadHandler: Self.loadContents,
-			removeHandler: removeHandler)
-		
-		self.observers += NotificationCenter.default.publisher(for:NSCollectionView.didScrollToEnd, object:self).sink
-		{
-			[weak self] _ in self?.load(with:nil)
-		}
-	}
-
-
-	/// Loads the (shallow) contents of this folder
-	
-	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
-	{
-		return ([],[])
-	}
-		
-		
 	// Pexels Container can never be expanded, as they do not have any sub-containers
 	
 	override open var canExpand: Bool
@@ -93,30 +51,13 @@ open class PexelsContainer : Container
 		false
 	}
 	
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	/// Encodes/decodes a PexelsFilter from Data
-	
-	var filterData:Data?
-	{
-		get
-		{
-			guard let pexelsData = self.data as? PexelsData else { return nil }
-			let filter = pexelsData.lastUsedFilter
-			let data = try? JSONEncoder().encode(filter)
-			return data
-		}
+	/// Returns the list of allowed sort Kinds for this Container
 		
-		set
-		{
-			guard let data = newValue else { return }
-			guard let pexelsData = self.data as? PexelsData else { return }
-			guard let filter = try? JSONDecoder().decode(PexelsFilter.self, from:data) else { return }
-			pexelsData.lastUsedFilter = filter
-		}
+	override open var allowedSortTypes:[Object.Filter.SortType]
+	{
+		[]
 	}
+
 
 	/// Returns a textual description of the filter params (for displaying in the UI)
 	
@@ -140,24 +81,30 @@ open class PexelsContainer : Container
 		return description
 	}
 
-	/// Returns a description of the contents of this Container
-	
-    @MainActor override open var localizedObjectCount:String
-    {
-		let n = self.objects.count
-		let str = n.localizedImagesString
-		return str
-    }
-
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	// MARK: - Sorting
-	
-	/// Returns the list of allowed sort Kinds for this Container
-		
-	override open var allowedSortTypes:[Object.Filter.SortType] { [] }
+//	/// Encodes/decodes a PexelsFilter from Data
+//	
+//	var filterData:Data?
+//	{
+//		get
+//		{
+//			guard let pexelsData = self.data as? PexelsData else { return nil }
+//			let filter = pexelsData.lastUsedFilter
+//			let data = try? JSONEncoder().encode(filter)
+//			return data
+//		}
+//		
+//		set
+//		{
+//			guard let data = newValue else { return }
+//			guard let pexelsData = self.data as? PexelsData else { return }
+//			guard let filter = try? JSONDecoder().decode(PexelsFilter.self, from:data) else { return }
+//			pexelsData.lastUsedFilter = filter
+//		}
+//	}
 }
 
 

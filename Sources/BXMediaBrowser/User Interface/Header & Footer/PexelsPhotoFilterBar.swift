@@ -30,7 +30,7 @@ import SwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public struct PexelsFilterBar : View
+public struct PexelsPhotoFilterBar : View
 {
 	// Model
 	
@@ -47,9 +47,9 @@ public struct PexelsFilterBar : View
 		self.searchString = filter.searchString
 	}
 	
-	var pexelsContainer:PexelsContainer?
+	var pexelsContainer:PexelsPhotoContainer?
 	{
-		selectedContainer as? PexelsContainer
+		selectedContainer as? PexelsPhotoContainer
 	}
 	
 	var saveHandler:PexelsPhotoContainer.SaveContainerHandler?
@@ -83,12 +83,7 @@ public struct PexelsFilterBar : View
 				.frame(maxWidth:300)
 				
 				PexelsOrientationView(filter:filter)
-				
-				if container is PexelsPhotoContainer
-				{
-					PexelsColorView(filter:filter)
-				}
-				
+				PexelsColorView(filter:filter)
 				RatingFilterView(rating:self.$filter.rating)
 
 				Spacer()
@@ -121,58 +116,6 @@ public struct PexelsFilterBar : View
 		NSLocalizedString("Save", bundle:.BXMediaBrowser, comment:"Button Title")
     }
     
-}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-struct PexelsOrientationView : View
-{
-	@ObservedObject var filter:PexelsFilter
-	
-	var body: some View
-	{
-		MenuButton(self.filter.orientation.localizedName)
-		{
-			ForEach(PexelsFilter.Orientation.allCases, id:\.self)
-			{
-				value in
-				
-				Button(value.localizedName)
-				{
-					self.filter.orientation = value
-				}
-			}
-		}
-		.fixedSize()
-	}
-}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-struct PexelsColorView : View
-{
-	@ObservedObject var filter:PexelsFilter
-	
-	var body: some View
-	{
-		MenuButton(self.filter.color.localizedName)
-		{
-			ForEach(PexelsFilter.Color.allCases, id:\.self)
-			{
-				color in
-				
-				Button(action:{ self.filter.color = color })
-				{
-					Text(color.localizedName)
-				}
-			}
-		}
-		.fixedSize()
-	}
 }
 
 

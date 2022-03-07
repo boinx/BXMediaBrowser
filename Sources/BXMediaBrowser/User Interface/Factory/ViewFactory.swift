@@ -197,9 +197,13 @@ public extension ViewFactory
 		{
 			UnsplashFilterBar(with:container, filter:filter)
 		}
-		else if let container = container as? PexelsContainer, let filter = container.filter as? PexelsFilter
+		else if let container = container as? PexelsPhotoContainer, let filter = container.filter as? PexelsFilter
 		{
-			PexelsFilterBar(with:container, filter:filter)
+			PexelsPhotoFilterBar(with:container, filter:filter)
+		}
+		else if let container = container as? PexelsVideoContainer, let filter = container.filter as? PexelsFilter
+		{
+			PexelsVideoFilterBar(with:container, filter:filter)
 		}
 		else if let container = container as? MusicContainer, let filter = container.filter as? MusicFilter
 		{
