@@ -68,7 +68,7 @@
 		D01B497E27CA1378008249C0 /* UnsplashSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B491227CA1378008249C0 /* UnsplashSource.swift */; };
 		D01B497F27CA1378008249C0 /* UnsplashContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B491327CA1378008249C0 /* UnsplashContainer.swift */; };
 		D01B498027CA1378008249C0 /* UnsplashJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B491427CA1378008249C0 /* UnsplashJSON.swift */; };
-		D01B498127CA1378008249C0 /* UnsplashConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B491527CA1378008249C0 /* UnsplashConfig.swift */; };
+		D01B498127CA1378008249C0 /* Unsplash.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B491527CA1378008249C0 /* Unsplash.swift */; };
 		D01B498227CA1378008249C0 /* UnsplashFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B491627CA1378008249C0 /* UnsplashFilter.swift */; };
 		D01B498327CA1378008249C0 /* UnsplashObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B491727CA1378008249C0 /* UnsplashObject.swift */; };
 		D01B498427CA1378008249C0 /* Dictionary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B491927CA1378008249C0 /* Dictionary+Extensions.swift */; };
@@ -205,7 +205,7 @@
 		D01B491227CA1378008249C0 /* UnsplashSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnsplashSource.swift; sourceTree = "<group>"; };
 		D01B491327CA1378008249C0 /* UnsplashContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnsplashContainer.swift; sourceTree = "<group>"; };
 		D01B491427CA1378008249C0 /* UnsplashJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnsplashJSON.swift; sourceTree = "<group>"; };
-		D01B491527CA1378008249C0 /* UnsplashConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnsplashConfig.swift; sourceTree = "<group>"; };
+		D01B491527CA1378008249C0 /* Unsplash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Unsplash.swift; sourceTree = "<group>"; };
 		D01B491627CA1378008249C0 /* UnsplashFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnsplashFilter.swift; sourceTree = "<group>"; };
 		D01B491727CA1378008249C0 /* UnsplashObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnsplashObject.swift; sourceTree = "<group>"; };
 		D01B491927CA1378008249C0 /* Dictionary+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Extensions.swift"; sourceTree = "<group>"; };
@@ -460,7 +460,7 @@
 		D01B491127CA1378008249C0 /* Unsplash */ = {
 			isa = PBXGroup;
 			children = (
-				D01B491527CA1378008249C0 /* UnsplashConfig.swift */,
+				D01B491527CA1378008249C0 /* Unsplash.swift */,
 				D01B491227CA1378008249C0 /* UnsplashSource.swift */,
 				D01B491327CA1378008249C0 /* UnsplashContainer.swift */,
 				D01B491727CA1378008249C0 /* UnsplashObject.swift */,
@@ -721,7 +721,7 @@
 				D01B49A127CA1378008249C0 /* ImageObjectViewController.swift in Sources */,
 				D01B496A27CA1378008249C0 /* Object+Quicklook.swift in Sources */,
 				D01B497927CA1378008249C0 /* FolderFilter.swift in Sources */,
-				D01B498127CA1378008249C0 /* UnsplashConfig.swift in Sources */,
+				D01B498127CA1378008249C0 /* Unsplash.swift in Sources */,
 				D01B499727CA1378008249C0 /* SourceView.swift in Sources */,
 				D01B49A327CA1378008249C0 /* AudioObjectViewController.swift in Sources */,
 				D01B497E27CA1378008249C0 /* UnsplashSource.swift in Sources */,

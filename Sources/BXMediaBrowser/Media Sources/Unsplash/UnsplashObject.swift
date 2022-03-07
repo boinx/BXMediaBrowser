@@ -73,7 +73,7 @@ open class UnsplashObject : Object
 	
 	open class func loadMetadata(for identifier:String, data:Any) async throws -> [String:Any]
 	{
-		UnsplashSource.log.verbose {"\(Self.self).\(#function) \(identifier)"}
+		Unsplash.log.verbose {"\(Self.self).\(#function) \(identifier)"}
 
 		guard let photo = data as? UnsplashPhoto else { throw Error.loadMetadataFailed }
 
@@ -239,7 +239,7 @@ open class UnsplashObject : Object
 	
 	open class func downloadFile(for identifier:String, data:Any) async throws -> URL
 	{
-		UnsplashSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
+		Unsplash.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
 		// Download the file
 		

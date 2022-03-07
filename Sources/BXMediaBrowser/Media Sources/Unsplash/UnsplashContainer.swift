@@ -57,7 +57,7 @@ open class UnsplashContainer : Container
 	
 	public required init(identifier:String, icon:String, name:String, filter:UnsplashFilter, saveHandler:SaveContainerHandler? = nil, removeHandler:((Container)->Void)? = nil)
 	{
-		UnsplashSource.log.verbose {"\(Self.self).\(#function) \(identifier)"}
+		Unsplash.log.verbose {"\(Self.self).\(#function) \(identifier)"}
 
 		self.saveHandler = saveHandler
 
@@ -92,7 +92,7 @@ open class UnsplashContainer : Container
 	
 	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
 	{
-		UnsplashSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
+		Unsplash.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
 		let containers:[Container] = []
 		var objects:[Object] = []
@@ -110,7 +110,7 @@ open class UnsplashContainer : Container
 			unsplashData.lastUsedFilter.orientation = unsplashFilter.orientation
 			unsplashData.lastUsedFilter.color = unsplashFilter.color
 			unsplashData.lastUsedFilter.rating = unsplashFilter.rating
-			UnsplashSource.log.verbose {"    clear search results"}
+			Unsplash.log.verbose {"    clear search results"}
 		}
 		
 		// Append the next page of search results
@@ -119,7 +119,7 @@ open class UnsplashContainer : Container
 		{
 			unsplashData.page += 1
 			unsplashData.photos += try await self.photos(for:unsplashFilter, page:unsplashData.page)
-			UnsplashSource.log.verbose {"    appending page \(unsplashData.page)"}
+			Unsplash.log.verbose {"    appending page \(unsplashData.page)"}
 		}
 		
 		// Remove potential duplicates, as that would cause serious issues with NSDiffableDataSource
@@ -151,7 +151,7 @@ open class UnsplashContainer : Container
 	{
 		// Build a search request with the provided search string (filter)
 		
-		let accessKey = UnsplashConfig.shared.accessKey
+		let accessKey = Unsplash.shared.accessKey
 		let authorization = "Client-ID \(accessKey)"
 		let accessPoint = "https://api.unsplash.com/search/photos"
 		var urlComponents = URLComponents(string:accessPoint)!
