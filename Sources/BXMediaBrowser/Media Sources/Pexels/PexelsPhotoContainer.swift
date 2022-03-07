@@ -54,10 +54,16 @@ open class PexelsPhotoContainer : PexelsContainer
 
 		self.saveHandler = saveHandler
 
+		#if os(macOS)
+		
 		self.observers += NotificationCenter.default.publisher(for:NSCollectionView.didScrollToEnd, object:self).sink
 		{
 			[weak self] _ in self?.load(with:nil)
 		}
+		
+		#elseif os(iOS)
+		#warning("TODO: implement")
+		#endif
 	}
 
 	/// Returns a description of the contents of this Container
