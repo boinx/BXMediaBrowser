@@ -38,9 +38,13 @@ open class PexelsVideoObject : Object
 	
 	public required init(with video:Pexels.Video)
 	{
+		#warning("TODO: is there any info we can use to generate a better name?")
+		
+		let name = NSLocalizedString("Video", tableName:"Pexels", bundle:.BXMediaBrowser, comment:"Label") + " \(video.id)"
+		
 		super.init(
 			identifier: "PexelsSource:Video:\(video.id)",
-			name: "Video",
+			name: name,
 			data: video,
 			loadThumbnailHandler: Self.loadThumbnail,
 			loadMetadataHandler: Self.loadMetadata,
@@ -115,7 +119,7 @@ open class PexelsVideoObject : Object
 		let photographerLabel = NSLocalizedString("Photographer", tableName:"Pexels", bundle:.BXMediaBrowser, comment:"Label")
 		array += ObjectMetadataEntry(label:photographerLabel, value:video.user.name, action:openUserPage)
 		
-		let imageSizeLabel = NSLocalizedString("Image Size", tableName:"Pexels", bundle:.BXMediaBrowser, comment:"Label")
+		let imageSizeLabel = NSLocalizedString("Video Size", tableName:"Pexels", bundle:.BXMediaBrowser, comment:"Label")
 		array += ObjectMetadataEntry(label:imageSizeLabel, value:"\(video.width) × \(video.height) Pixels")
 		
 		return array

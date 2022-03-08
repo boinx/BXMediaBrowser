@@ -116,21 +116,25 @@ open class FolderObject : Object
 		let dict = self.metadata ?? [:]
 		var array:[ObjectMetadataEntry] = []
 		
-		array += ObjectMetadataEntry(label:"File", value:self.name, action:url.reveal)
+		let label = NSLocalizedString("Metadata.label.file", bundle:.BXMediaBrowser, comment:"Metadata Label")
+		array += ObjectMetadataEntry(label:label, value:self.name, action:url.reveal)
 		
 		if let value = dict[.fileSizeKey] as? Int
 		{
-			array += ObjectMetadataEntry(label:"File Size", value:value.fileSizeDescription)
+			let label = NSLocalizedString("Metadata.label.fileSize", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:value.fileSizeDescription)
 		}
 		
 		if let value = dict[.creationDateKey] as? Date
 		{
-			array += ObjectMetadataEntry(label:"Creation Date", value:String(with:value))
+			let label = NSLocalizedString("Metadata.label.creationDate", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:String(with:value))
 		}
 		
 		if let value = dict[.modificationDateKey] as? Date
 		{
-			array += ObjectMetadataEntry(label:"Modification Date", value:String(with:value))
+			let label = NSLocalizedString("Metadata.label.modificationDate", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:String(with:value))
 		}
 		
 		return array
