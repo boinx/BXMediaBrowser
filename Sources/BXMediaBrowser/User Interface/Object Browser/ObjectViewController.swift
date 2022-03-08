@@ -277,26 +277,27 @@ open class ObjectViewController : NSCollectionViewItem
 
 		let menu = NSMenu()
 		
-		self.addMenuItem(menu:menu, title:"Get Info")
+		
+		self.addMenuItem(menu:menu, title:NSLocalizedString("Get Info", bundle:.BXMediaBrowser, comment:"Menu Item"))
 		{
 			[weak self] in self?.getInfo()
 		}
 			
-		self.addMenuItem(menu:menu, title:"Quick Look")
+		self.addMenuItem(menu:menu, title:NSLocalizedString("Quick Look", bundle:.BXMediaBrowser, comment:"Menu Item"))
 		{
 			[weak self] in self?.quickLook()
 		}
 			
 		if let folderObject = object as? FolderObject
 		{
-			self.addMenuItem(menu:menu, title:"Reveal in Finder")
+			self.addMenuItem(menu:menu, title:NSLocalizedString("Reveal in Finder", bundle:.BXMediaBrowser, comment:"Menu Item"))
 			{
 				folderObject.revealInFinder()
 			}
 		}
 		else if let musicObject = object as? MusicObject, musicObject.previewItemURL != nil
 		{
-			self.addMenuItem(menu:menu, title:"Reveal in Finder")
+			self.addMenuItem(menu:menu, title:NSLocalizedString("Reveal in Finder", bundle:.BXMediaBrowser, comment:"Menu Item"))
 			{
 				musicObject.revealInFinder()
 			}

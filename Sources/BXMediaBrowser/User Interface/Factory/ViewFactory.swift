@@ -249,20 +249,20 @@ public extension ViewFactory
 	{
 		if let folderContainer = container as? FolderContainer
 		{
-			Button("Reveal in Finder")
+			Button(NSLocalizedString("Reveal in Finder", bundle:.BXMediaBrowser, comment:"Menu Item"))
 			{
 				folderContainer.revealInFinder()
 			}
 		}
 		
-		Button("Reload")
+		Button(NSLocalizedString("Reload", bundle:.BXMediaBrowser, comment:"Menu Item"))
 		{
 			container.load()
 		}
 			
 		if let removeHandler = container.removeHandler
 		{
-			Button("Remove")
+			Button(NSLocalizedString("Remove", bundle:.BXMediaBrowser, comment:"Menu Item"))
 			{
 				removeHandler(container)
 			}
