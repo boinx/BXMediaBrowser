@@ -156,9 +156,6 @@ open class PexelsVideoObject : Object
 	{
 		var filename = "PexelsVideo.mp4"
 
-//		guard let video = data as? Pexels.Video else { return filename }
-//		filename = "Pexels.\(video.id).mp4"
-
 		guard let file = try? Self.bestFile(for:identifier, data:data) else { return filename }
 		guard let url = URL(string:file.link) else { return filename }
 		filename = url.pathComponents.last ?? filename

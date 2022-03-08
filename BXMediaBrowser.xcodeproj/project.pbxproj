@@ -446,13 +446,13 @@
 		D01B490927CA1378008249C0 /* Folders */ = {
 			isa = PBXGroup;
 			children = (
+				D01B491027CA1378008249C0 /* FolderSource.swift */,
 				D01B490A27CA1378008249C0 /* FolderContainer.swift */,
 				D01B490B27CA1378008249C0 /* FolderObject.swift */,
 				D01B490C27CA1378008249C0 /* FolderFilter.swift */,
 				D01B490F27CA1378008249C0 /* ImageFolderSource.swift */,
 				D01B490E27CA1378008249C0 /* VideoFolderSource.swift */,
 				D01B490D27CA1378008249C0 /* AudioFolderSource.swift */,
-				D01B491027CA1378008249C0 /* FolderSource.swift */,
 			);
 			path = Folders;
 			sourceTree = "<group>";
@@ -522,11 +522,11 @@
 			isa = PBXGroup;
 			children = (
 				D01B492A27CA1378008249C0 /* BXProgressWindowController.swift */,
-				D01B492B27CA1378008249C0 /* MenuAction.swift */,
 				D01B492C27CA1378008249C0 /* BXProgressViewController.swift */,
 				D01B492D27CA1378008249C0 /* BXProgressViewController.storyboard */,
-				D01B492E27CA1378008249C0 /* EfficientVStack.swift */,
 				D01B492F27CA1378008249C0 /* CustomDisclosureButton.swift */,
+				D01B492E27CA1378008249C0 /* EfficientVStack.swift */,
+				D01B492B27CA1378008249C0 /* MenuAction.swift */,
 			);
 			path = Other;
 			sourceTree = "<group>";
