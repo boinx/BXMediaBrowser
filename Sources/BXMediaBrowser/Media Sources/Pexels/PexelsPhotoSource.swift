@@ -153,18 +153,6 @@ open class PexelsPhotoSource : Source, AccessControl
 	}
 
 	internal static var savedFilterDatasKey:String { "savedFilterDatas" }
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	public var hasAccess:Bool { true }
-	
-	public func grantAccess(_ completionHandler:@escaping (Bool)->Void)
-	{
-		completionHandler(hasAccess)
-	}
-
 }
 
 

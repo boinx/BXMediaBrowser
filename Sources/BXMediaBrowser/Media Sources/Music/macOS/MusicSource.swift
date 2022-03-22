@@ -115,24 +115,6 @@ public class MusicSource : Source, AccessControl
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	/// Returns true if we have access to the Photos library
-	
-	public var hasAccess:Bool
-	{
-		true
-	}
-	
-	/// Calling this function prompts the user to grant access to the Photos library
-	
-	public func grantAccess(_ completionHandler:@escaping (Bool)->Void)
-	{
-
-	}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
 	/// This function is called the the app is brought to the foreground again in this case the whole
 	/// Source will be reloaded with updated data from the iTunesLibrary framework, while preserving
 	/// the expanded state of each Container.

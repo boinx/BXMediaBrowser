@@ -150,17 +150,6 @@ open class FolderSource : Source, AccessControl
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	public var hasAccess:Bool { true }
-	
-	public func grantAccess(_ completionHandler:@escaping (Bool)->Void)
-	{
-		completionHandler(hasAccess)
-	}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
 	public static var log:BXLogger =
 	{
 		()->BXLogger in

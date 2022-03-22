@@ -71,12 +71,18 @@ public class PhotosSource : Source, AccessControl
 		
 		// Request access to photo library if not available yet. Reload all containers once access has been granted.
 
-		if !self.hasAccess
+		Task
 		{
-			self.grantAccess()
+			await MainActor.run
 			{
-				[weak self] isGranted in
-				if isGranted { self?.load() }
+				if !self.hasAccess
+				{
+					self.grantAccess()
+					{
+						[weak self] isGranted in
+						if isGranted { self?.load() }
+					}
+				}
 			}
 		}
 	}
@@ -87,19 +93,26 @@ public class PhotosSource : Source, AccessControl
 
 	/// Returns true if we have access to the Photos library
 	
-	public var hasAccess:Bool
+	@MainActor public var hasAccess:Bool
 	{
 		PHPhotoLibrary.authorizationStatus() == .authorized
 	}
 	
 	/// Calling this function prompts the user to grant access to the Photos library
 	
-	public func grantAccess(_ completionHandler:@escaping (Bool)->Void)
+	@MainActor public func grantAccess(_ completionHandler:@escaping (Bool)->Void = { _ in })
 	{
 		PHPhotoLibrary.requestAuthorization
 		{
 			status in completionHandler(status == .authorized)
 		}
+	}
+
+	// Photos doesn't let us remove access once it has been granted
+	
+	@MainActor public func revokeAccess(_ completionHandler:@escaping (Bool)->Void = { _ in })
+	{
+		completionHandler(hasAccess)
 	}
 
 
