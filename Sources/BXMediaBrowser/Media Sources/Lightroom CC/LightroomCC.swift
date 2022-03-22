@@ -36,13 +36,50 @@ public class LightroomCC : ObservableObject
 	
     private init() { }
     
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
     /// Your application’s client ID
 	
     public var clientID = ""
 
     /// The API for checking Lighroom server health
 	
-    let healthCheckURL = "https://lr.adobe.io/v2/health"
+    let healthCheckAPI = "https://lr.adobe.io/v2/health"
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	public enum Status : Equatable
+	{
+		case invalidClientID
+		case currentlyUnavailable
+		case loggedOut
+		case loggedIn(user:String)
+	}
+	
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	/// Strips the "while (1) {}" prefix from the returned JSON
+	
+	public static func stripped(_ data:Data) -> Data?
+	{
+		guard let string = String(data:data, encoding:.utf8) else { return nil }
+		
+		let stripped = string
+			.replacingOccurrences(of:"while (1) {}", with:"")
+			.trimmingCharacters(in:.whitespacesAndNewlines)
+			
+		return stripped.data(using:.utf8)
+	}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
 
 	/// A logger for Lightroom related code
 
@@ -60,6 +97,8 @@ public class LightroomCC : ObservableObject
 		
 		return logger
 	}()
+	
+	
 }
 
 

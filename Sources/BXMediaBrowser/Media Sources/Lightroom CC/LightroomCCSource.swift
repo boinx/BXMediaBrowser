@@ -38,7 +38,22 @@ open class LightroomCCSource : Source, AccessControl
 	
 	static let identifier = "LightroomCCSource:"
 	
+	/// The current status
 	
+	@MainActor public var status:LightroomCC.Status = .currentlyUnavailable
+	{
+		willSet
+		{
+			self.objectWillChange.send()
+		}
+		
+		didSet
+		{
+			LightroomCC.log.debug {"\(Self.self).\(#function) = \(status)"}
+		}
+	}
+
+
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -46,23 +61,150 @@ open class LightroomCCSource : Source, AccessControl
 	
 	public init()
 	{
-		LightroomCC.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
+		LightroomCC.log.debug {"\(Self.self).\(#function)"}
+		
 		let icon = Bundle.BXMediaBrowser.image(forResource:"LightroomCC")?.CGImage
 		super.init(identifier:Self.identifier, icon:icon, name:"Adobe Lightroom CC", filter:PexelsFilter())
 		self.loader = Loader(loadHandler:self.loadContainers)
+
+		self.checkHealth()
 	}
+	
 	
 	
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: - Health Check
+	
+	/// Performs a health check with exponential backoff delays if the Lightroom CC serivce is currently unavailable
+
+	private func checkHealth()
+	{
+		LightroomCC.log.debug {"\(Self.self).\(#function)"}
+
+		Task
+		{
+			var health:LightroomCC.Health? = nil
+			var delay = UInt64(1_000_000_000)
+			
+			while health == nil
+			{
+				health = try await Self.checkHealth()
+				
+				if health == nil
+				{
+					try await Task.sleep(nanoseconds:delay)
+					delay *= 2
+				}
+				
+				if let health = health
+				{
+					if health.version == nil
+					{
+						try await Task.sleep(nanoseconds:delay)
+						delay *= 2
+					}
+				}
+			}
+			
+			guard let health = health else { return }
+ 
+			if health.version != nil
+			{
+				await MainActor.run
+				{
+					self.status = .loggedOut
+				}
+			}
+			else if let code = health.code, code == 9999
+			{
+				await MainActor.run
+				{
+					self.status = .currentlyUnavailable
+				}
+			}
+			else
+			{
+				await MainActor.run
+				{
+					self.status = .invalidClientID
+				}
+			}
+			
+		}
+	}
+	
+	
+	/// Performs a health check for the Lightroom CC internet service
+	
+	private class func checkHealth() async throws -> LightroomCC.Health
+	{
+		LightroomCC.log.verbose {"\(Self.self).\(#function)"}
+
+		// Build a search request with the provided search string (filter)
+		
+		let clientID = LightroomCC.shared.clientID
+		let accessPoint = LightroomCC.shared.healthCheckAPI
+		let urlComponents = URLComponents(string:accessPoint)!
+		guard let url = urlComponents.url else { throw Error.loadFailed }
+
+		var request = URLRequest(url:url)
+		request.httpMethod = "GET"
+		request.setValue(clientID, forHTTPHeaderField:"X-API-Key")
+		
+		// Perform the online search
+		
+		let data = try await URLSession.shared.data(with:request)
+		guard let strippedData = LightroomCC.stripped(data) else { throw Error.loadFailed }
+		
+		// Decode returned JSON to array of UnsplashPhoto
+		
+		let health = try JSONDecoder().decode(LightroomCC.Health.self, from:strippedData)
+
+		return health
+	}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - Login
+	
+
+	@MainActor public var hasAccess:Bool
+	{
+		if case .loggedIn(let user) = self.status
+		{
+			return true
+		}
+		
+		return false
+	}
+	
+	@MainActor public func grantAccess(_ completionHandler:@escaping (Bool)->Void = { _ in })
+	{
+		completionHandler(hasAccess)
+	}
+
+	@MainActor public func revokeAccess(_ completionHandler:@escaping (Bool)->Void = { _ in })
+	{
+		completionHandler(hasAccess)
+	}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - Top Level Containers
+	
 	/// Loads the top-level containers of this source.
 	///
 	/// Subclasses can override this function, e.g. to load top level folder from the preferences file
 	
 	private func loadContainers(with sourceState:[String:Any]? = nil, filter:Object.Filter) async throws -> [Container]
 	{
-		LightroomCC.log.debug {"\(Self.self).\(#function) \(identifier)"}
+		LightroomCC.log.debug {"\(Self.self).\(#function)"}
 
 		var containers:[Container] = []
 		
@@ -154,16 +296,6 @@ open class LightroomCCSource : Source, AccessControl
 
 	internal static var savedFilterDatasKey:String { "savedFilterDatas" }
 
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	public var hasAccess:Bool { true }
-	
-	public func grantAccess(_ completionHandler:@escaping (Bool)->Void)
-	{
-		completionHandler(hasAccess)
-	}
 
 }
 

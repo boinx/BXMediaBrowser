@@ -167,7 +167,11 @@ public extension ViewFactory
 
 	@ViewBuilder class func defaultSourceView(for source:Source) -> some View
 	{
-		if source is FolderSource
+		if let source = source as? LightroomCCSource
+		{
+			LightroomCCSourceView(with:source)
+		}
+		else if source is FolderSource
 		{
 			FolderSourceView(with:source)
 		}

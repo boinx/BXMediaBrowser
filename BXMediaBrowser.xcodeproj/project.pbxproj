@@ -114,6 +114,12 @@
 		D01B49BA27CA2189008249C0 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D01B49B827CA2189008249C0 /* AVFoundation.framework */; platformFilter = maccatalyst; };
 		D01C33CF27CA70F3003337A9 /* NSPasteboard+Objects.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01C33CE27CA70F3003337A9 /* NSPasteboard+Objects.swift */; };
 		D01C33D727CD187D003337A9 /* DraggingProgressMixin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01C33D627CD187D003337A9 /* DraggingProgressMixin.swift */; };
+		D0573FA327E9ADED00788155 /* LightroomCCSourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0573FA227E9ADED00788155 /* LightroomCCSourceView.swift */; };
+		D05F5F6D27E8E840003735C6 /* LightroomCCObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05F5F6827E8E840003735C6 /* LightroomCCObject.swift */; };
+		D05F5F6E27E8E840003735C6 /* LightroomCC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05F5F6927E8E840003735C6 /* LightroomCC.swift */; };
+		D05F5F6F27E8E840003735C6 /* LightroomCCContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05F5F6A27E8E840003735C6 /* LightroomCCContainer.swift */; };
+		D05F5F7027E8E840003735C6 /* LightroomCC+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05F5F6B27E8E840003735C6 /* LightroomCC+JSON.swift */; };
+		D05F5F7127E8E840003735C6 /* LightroomCCSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05F5F6C27E8E840003735C6 /* LightroomCCSource.swift */; };
 		D0BAD10627D386B600B749FD /* String+MetadataKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BAD10527D386B600B749FD /* String+MetadataKeys.swift */; };
 		D0BAD10727D392D700B749FD /* PexelsPhotoSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BAD0FE27D37A9A00B749FD /* PexelsPhotoSource.swift */; };
 		D0BAD10827D392D700B749FD /* PexelsPhotoContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BAD0FB27D37A9A00B749FD /* PexelsPhotoContainer.swift */; };
@@ -253,6 +259,12 @@
 		D01B49BB27CA463E008249C0 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D01C33CE27CA70F3003337A9 /* NSPasteboard+Objects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPasteboard+Objects.swift"; sourceTree = "<group>"; };
 		D01C33D627CD187D003337A9 /* DraggingProgressMixin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggingProgressMixin.swift; sourceTree = "<group>"; };
+		D0573FA227E9ADED00788155 /* LightroomCCSourceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightroomCCSourceView.swift; sourceTree = "<group>"; };
+		D05F5F6827E8E840003735C6 /* LightroomCCObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LightroomCCObject.swift; sourceTree = "<group>"; };
+		D05F5F6927E8E840003735C6 /* LightroomCC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LightroomCC.swift; sourceTree = "<group>"; };
+		D05F5F6A27E8E840003735C6 /* LightroomCCContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LightroomCCContainer.swift; sourceTree = "<group>"; };
+		D05F5F6B27E8E840003735C6 /* LightroomCC+JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LightroomCC+JSON.swift"; sourceTree = "<group>"; };
+		D05F5F6C27E8E840003735C6 /* LightroomCCSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LightroomCCSource.swift; sourceTree = "<group>"; };
 		D0BAD0F927D37A9A00B749FD /* PexelsPhotoObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PexelsPhotoObject.swift; sourceTree = "<group>"; };
 		D0BAD0FA27D37A9A00B749FD /* PexelsFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PexelsFilter.swift; sourceTree = "<group>"; };
 		D0BAD0FB27D37A9A00B749FD /* PexelsPhotoContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PexelsPhotoContainer.swift; sourceTree = "<group>"; };
@@ -418,6 +430,7 @@
 				D01B491127CA1378008249C0 /* Unsplash */,
 				D0BAD0F827D37A4600B749FD /* Pexels */,
 				D01B491A27CA1378008249C0 /* Photos */,
+				D05F5F6727E8E840003735C6 /* Lightroom CC */,
 			);
 			path = "Media Sources";
 			sourceTree = "<group>";
@@ -534,13 +547,14 @@
 		D01B493027CA1378008249C0 /* Container Hierarchy */ = {
 			isa = PBXGroup;
 			children = (
-				D01B493127CA1378008249C0 /* SourceView.swift */,
-				D01B493227CA1378008249C0 /* FolderContainerView.swift */,
-				D01B493327CA1378008249C0 /* SectionView.swift */,
-				D01B493427CA1378008249C0 /* FolderSourceView.swift */,
 				D01B493527CA1378008249C0 /* LibraryView.swift */,
-				D01B493627CA1378008249C0 /* FileDropDestinationView.swift */,
+				D01B493327CA1378008249C0 /* SectionView.swift */,
+				D01B493127CA1378008249C0 /* SourceView.swift */,
+				D01B493427CA1378008249C0 /* FolderSourceView.swift */,
+				D0573FA227E9ADED00788155 /* LightroomCCSourceView.swift */,
 				D01B493727CA1378008249C0 /* ContainerView.swift */,
+				D01B493227CA1378008249C0 /* FolderContainerView.swift */,
+				D01B493627CA1378008249C0 /* FileDropDestinationView.swift */,
 			);
 			path = "Container Hierarchy";
 			sourceTree = "<group>";
@@ -589,6 +603,18 @@
 				D01B49B027CA2132008249C0 /* BXSwiftUtils.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D05F5F6727E8E840003735C6 /* Lightroom CC */ = {
+			isa = PBXGroup;
+			children = (
+				D05F5F6927E8E840003735C6 /* LightroomCC.swift */,
+				D05F5F6C27E8E840003735C6 /* LightroomCCSource.swift */,
+				D05F5F6A27E8E840003735C6 /* LightroomCCContainer.swift */,
+				D05F5F6827E8E840003735C6 /* LightroomCCObject.swift */,
+				D05F5F6B27E8E840003735C6 /* LightroomCC+JSON.swift */,
+			);
+			path = "Lightroom CC";
 			sourceTree = "<group>";
 		};
 		D0BAD0F827D37A4600B749FD /* Pexels */ = {
@@ -720,6 +746,7 @@
 				D01B498527CA1378008249C0 /* PhotosContainer.swift in Sources */,
 				D01B49A127CA1378008249C0 /* ImageObjectViewController.swift in Sources */,
 				D01B496A27CA1378008249C0 /* Object+Quicklook.swift in Sources */,
+				D0573FA327E9ADED00788155 /* LightroomCCSourceView.swift in Sources */,
 				D01B497927CA1378008249C0 /* FolderFilter.swift in Sources */,
 				D01B498127CA1378008249C0 /* Unsplash.swift in Sources */,
 				D01B499727CA1378008249C0 /* SourceView.swift in Sources */,
@@ -747,12 +774,14 @@
 				D01B495C27CA1378008249C0 /* Source+Loader.swift in Sources */,
 				D0DEF7DD27D6615D00601E3F /* PexelsContainer.swift in Sources */,
 				D01B499C27CA1378008249C0 /* FileDropDestinationView.swift in Sources */,
+				D05F5F6F27E8E840003735C6 /* LightroomCCContainer.swift in Sources */,
 				D01B499227CA1378008249C0 /* MenuAction.swift in Sources */,
 				D01B497527CA1378008249C0 /* MusicContainer.swift in Sources */,
 				D01B498327CA1378008249C0 /* UnsplashObject.swift in Sources */,
 				D01B495A27CA1378008249C0 /* StatisticsController.swift in Sources */,
 				D01B49A727CA1378008249C0 /* ObjectInfoView.swift in Sources */,
 				D01B49A627CA1378008249C0 /* ObjectView.swift in Sources */,
+				D05F5F7127E8E840003735C6 /* LightroomCCSource.swift in Sources */,
 				D01B495027CA1378008249C0 /* URLSession+asyncAwait.swift in Sources */,
 				D01B499E27CA1378008249C0 /* ObjectViewController.swift in Sources */,
 				D01B495427CA1378008249C0 /* BXMediaBrowser+log.swift in Sources */,
@@ -783,6 +812,7 @@
 				D01B498727CA1378008249C0 /* PhotosSource.swift in Sources */,
 				D0BAD10C27D392D700B749FD /* PexelsJSON.swift in Sources */,
 				D01B497427CA1378008249C0 /* MusicSource.swift in Sources */,
+				D05F5F7027E8E840003735C6 /* LightroomCC+JSON.swift in Sources */,
 				D01B498C27CA1378008249C0 /* SearchBar.swift in Sources */,
 				D01B499A27CA1378008249C0 /* FolderSourceView.swift in Sources */,
 				D01B497327CA1378008249C0 /* MusicObject.swift in Sources */,
@@ -800,8 +830,10 @@
 				D0BAD11927D3D3E700B749FD /* PexelsVideoObject.swift in Sources */,
 				D01B497D27CA1378008249C0 /* FolderSource.swift in Sources */,
 				D01B498427CA1378008249C0 /* Dictionary+Extensions.swift in Sources */,
+				D05F5F6E27E8E840003735C6 /* LightroomCC.swift in Sources */,
 				D01B496427CA1378008249C0 /* Container+Cache.swift in Sources */,
 				D01B496F27CA1378008249C0 /* Object.swift in Sources */,
+				D05F5F6D27E8E840003735C6 /* LightroomCCObject.swift in Sources */,
 				D01B495827CA1378008249C0 /* AccessControl.swift in Sources */,
 				D01B499827CA1378008249C0 /* FolderContainerView.swift in Sources */,
 				D01B496727CA1378008249C0 /* Container+Hashable.swift in Sources */,
