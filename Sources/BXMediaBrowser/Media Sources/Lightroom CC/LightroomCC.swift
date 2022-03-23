@@ -70,10 +70,6 @@ public class LightroomCC : ObservableObject
 	
 	public static var redirectURI = ""
 
-    /// The API for checking Lighroom server health
-	
-//    let healthCheckAPI = "https://lr.adobe.io/v2/health"
-
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -116,11 +112,11 @@ public class LightroomCC : ObservableObject
 
 	/// The ID of the current Lightroom catalog
 	
-	public var catalogID:String = ""
+	@Published public var catalogID:String = ""
 	
 	/// The cached list of all albums (loaded at launch time)
 	
-	public var allAlbums:[LightroomCC.Albums.Resource] = []
+	@Published public var allAlbums:[LightroomCC.Albums.Resource] = []
 	
 	
 	public enum Status : Equatable
@@ -190,11 +186,11 @@ public class LightroomCC : ObservableObject
 		data.subdata(in:12..<data.count)
 
 //		guard let string = string(with:data) else { return nil }
-//		
+//
 //		let stripped = string
 //			.replacingOccurrences(of:"while (1) {}", with:"")
 //			.trimmingCharacters(in:.whitespacesAndNewlines)
-//			
+//
 //		return stripped.data(using:.utf8)
 	}
 	
