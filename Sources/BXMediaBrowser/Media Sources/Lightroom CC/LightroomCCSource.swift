@@ -143,27 +143,30 @@ open class LightroomCCSource : Source, AccessControl
 	{
 		LightroomCC.log.verbose {"\(Self.self).\(#function)"}
 
-		// Build a search request with the provided search string (filter)
-		
-		let clientID = LightroomCC.shared.clientID
-		let accessPoint = LightroomCC.shared.healthCheckAPI
-		let urlComponents = URLComponents(string:accessPoint)!
-		guard let url = urlComponents.url else { throw Error.loadFailed }
-
-		var request = URLRequest(url:url)
-		request.httpMethod = "GET"
-		request.setValue(clientID, forHTTPHeaderField:"X-API-Key")
-		
-		// Perform the online search
-		
-		let data = try await URLSession.shared.data(with:request)
-		guard let strippedData = LightroomCC.stripped(data) else { throw Error.loadFailed }
-		
-		// Decode returned JSON to array of UnsplashPhoto
-		
-		let health = try JSONDecoder().decode(LightroomCC.Health.self, from:strippedData)
-
+		let health:LightroomCC.Health = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/health", requiresAccessToken:false)
 		return health
+
+//		// Build a search request with the provided search string (filter)
+//
+//		let clientID = LightroomCC.shared.clientID
+//		let accessPoint = LightroomCC.shared.healthCheckAPI
+//		let urlComponents = URLComponents(string:accessPoint)!
+//		guard let url = urlComponents.url else { throw Error.loadFailed }
+//
+//		var request = URLRequest(url:url)
+//		request.httpMethod = "GET"
+//		request.setValue(clientID, forHTTPHeaderField:"X-API-Key")
+//
+//		// Perform the online search
+//
+//		let data = try await URLSession.shared.data(with:request)
+//		guard let strippedData = LightroomCC.stripped(data) else { throw Error.loadFailed }
+//
+//		// Decode returned JSON to array of UnsplashPhoto
+//
+//		let health = try JSONDecoder().decode(LightroomCC.Health.self, from:strippedData)
+//
+//		return health
 	}
 
 
@@ -240,35 +243,36 @@ open class LightroomCCSource : Source, AccessControl
 	{
 		LightroomCC.log.debug {"\(Self.self).\(#function)"}
 
-		var containers:[Container] = []
+		let catalog:LightroomCC.Catalog = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/catalog")
+		let albums:LightroomCC.Albums = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/catalogs/\(catalog.id)/albums")
 		
-		LightroomCC.log.verbose {"\(Self.self).\(#function)"}
-
-		// Build a search request with the provided search string (filter)
+		LightroomCC.shared.catalogID = catalog.id
+		LightroomCC.shared.allAlbums = albums.resources
+	
+		// Find top-level albums (parent is nil)
 		
-		let clientID = LightroomCC.shared.clientID
-		guard let accessToken = LightroomCC.shared.oauth2.accessToken else { throw Error.loadFailed }
-		let api = "https://lr.adobe.io/v2/catalog"
-		let urlComponents = URLComponents(string:api)!
-		guard let url = urlComponents.url else { throw Error.loadFailed }
-
-		var request = URLRequest(url:url)
-		request.httpMethod = "GET"
-		request.setValue(clientID, forHTTPHeaderField:"X-API-Key")
-		request.setValue("Bearer \(accessToken)", forHTTPHeaderField:"Authorization")
+		let topLevelAlbums = albums.resources.filter
+		{
+			$0.payload.parent == nil
+		}
 		
-		// Perform the online search
+		// Create a Container for each album
 		
-		let data = try await URLSession.shared.data(with:request)
-		guard let strippedData = LightroomCC.stripped(data) else { throw Error.loadFailed }
+		return topLevelAlbums.map
+		{
+			LightroomCCContainer(album:$0, filter:filter)
+		}
 		
-		// Decode returned JSON to array of UnsplashPhoto
-		
-		let str = String(data:strippedData, encoding:.utf8) ?? "nil"
-		print(str)
-		
-		return containers
+//		var containers:[Container] = []
+//		
+//		for album in topLevelAlbums
+//		{
+//			containers += LightroomCCContainer(album:album, filter:filter)
+//		}
+//		
+//		return containers
 	}
+	
 	
 	
 //	/// Creates a new "saved" copy of the live search container

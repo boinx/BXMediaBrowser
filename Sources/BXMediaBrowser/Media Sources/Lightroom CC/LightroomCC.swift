@@ -25,6 +25,7 @@
 
 import BXSwiftUtils
 import Foundation
+import ImageIO
 import OAuth2
 
 
@@ -43,6 +44,8 @@ public class LightroomCC : ObservableObject
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: - Config
+	
     /// Your application clientID that was registered at developer.adobe.com
 	
     public var clientID = ""
@@ -57,13 +60,29 @@ public class LightroomCC : ObservableObject
 
     /// The API for checking Lighroom server health
 	
-    let healthCheckAPI = "https://lr.adobe.io/v2/health"
+//    let healthCheckAPI = "https://lr.adobe.io/v2/health"
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-    /// This object handles the OAuth login and holds accessToken/refreshToken
+ 	// MARK: - OAuth Login
+	
+	
+	public func isOAuthResponse(_ url:URL) -> Bool
+	{
+		url.absoluteString.contains(redirectURI)
+	}
+
+
+	public func handleOAuthResponse(_ url:URL)
+	{
+		LightroomCC.log.verbose {"\(Self.self).\(#function)"}
+		self.oauth2.handleRedirectURL(url)
+	}
+
+
+   /// This object handles the OAuth login and holds the accessToken/refreshToken
 	
 	public var oauth2:OAuth2CodeGrant
 	{
@@ -92,6 +111,15 @@ public class LightroomCC : ObservableObject
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	/// The ID of the current Lightroom catalog
+	
+	public var catalogID:String = ""
+	
+	/// The cached list of all albums (loaded at launch time)
+	
+	public var allAlbums:[LightroomCC.Albums.Resource] = []
+	
+	
 	public enum Status : Equatable
 	{
 		case unknown
@@ -101,40 +129,109 @@ public class LightroomCC : ObservableObject
 		case loggedIn
 	}
 	
-	
-	public func isOAuthResponse(_ url:URL) -> Bool
+	public enum Error : Swift.Error
 	{
-		url.absoluteString.contains(redirectURI)
+		case invalidURL
+		case missingAccessToken
+		case corruptData
+		case loadImageFailed
 	}
-
-
-	public func handleOAuthResponse(_ url:URL)
-	{
-		LightroomCC.log.verbose {"\(Self.self).\(#function)"}
-		self.oauth2.handleRedirectURL(url)
-	}
-	
 	
 //----------------------------------------------------------------------------------------------------------------------
 
 
+ 	// MARK: - Data Transfer
+	
+	/// This re-usable function gets data of generic type T from the specified API accessPoint
+	
+	func getData<T:Codable>(from accessPoint:String, requiresAccessToken:Bool = true) async throws -> T
+	{
+		LightroomCC.log.verbose {"\(Self.self).\(#function)"}
+
+		// Build a search request with the provided search string (filter)
+		
+		let urlComponents = URLComponents(string:accessPoint)!
+		guard let url = urlComponents.url else { throw Error.invalidURL }
+
+		var request = URLRequest(url:url)
+		request.httpMethod = "GET"
+		request.setValue(clientID, forHTTPHeaderField:"X-API-Key")
+		
+		if requiresAccessToken
+		{
+			guard let accessToken = self.oauth2.accessToken else { throw Error.missingAccessToken }
+			request.setValue("Bearer \(accessToken)", forHTTPHeaderField:"Authorization")
+		}
+		
+		// Get the data and strip the prefix
+		
+		let prefixedData = try await URLSession.shared.data(with:request)
+		guard let strippedData = LightroomCC.stripped(prefixedData) else { throw Error.corruptData }
+		
+//		if let string = Self.string(with:strippedData)
+//		{
+//			print(string)
+//		}
+		
+		// Decode returned JSON to specified type T
+		
+		let instance = try JSONDecoder().decode(T.self, from:strippedData)
+		return instance
+	}
+	
+	
 	/// Strips the "while (1) {}" prefix from the returned JSON
 	
 	public static func stripped(_ data:Data) -> Data?
 	{
-		guard let string = String(data:data, encoding:.utf8) else { return nil }
-		
-		let stripped = string
-			.replacingOccurrences(of:"while (1) {}", with:"")
-			.trimmingCharacters(in:.whitespacesAndNewlines)
-			
-		return stripped.data(using:.utf8)
+		data.subdata(in:12..<data.count)
+
+//		guard let string = string(with:data) else { return nil }
+//		
+//		let stripped = string
+//			.replacingOccurrences(of:"while (1) {}", with:"")
+//			.trimmingCharacters(in:.whitespacesAndNewlines)
+//			
+//		return stripped.data(using:.utf8)
+	}
+	
+	static func string(with data:Data) -> String?
+	{
+		String(data:data, encoding:.utf8)
 	}
 
 
+	/// Downloads an image from the specified API accessPoint
+	
+	func image(from accessPoint:String) async throws -> CGImage
+	{
+		LightroomCC.log.verbose {"\(Self.self).\(#function)"}
+
+		// Build a search request with the provided search string (filter)
+		
+		let urlComponents = URLComponents(string:accessPoint)!
+		guard let url = urlComponents.url else { throw Error.invalidURL }
+		guard let accessToken = self.oauth2.accessToken else { throw Error.missingAccessToken }
+
+		var request = URLRequest(url:url)
+		request.httpMethod = "GET"
+		request.setValue(clientID, forHTTPHeaderField:"X-API-Key")
+		request.setValue("Bearer \(accessToken)", forHTTPHeaderField:"Authorization")
+		
+		// Get the data and strip the prefix
+		
+		let data = try await URLSession.shared.data(with:request)
+		guard let source = CGImageSourceCreateWithData(data as CFData,nil) else { throw Error.loadImageFailed }
+		guard let image = CGImageSourceCreateImageAtIndex(source,0,nil) else { throw Error.loadImageFailed }
+		return image
+	}
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 
+ 	// MARK: - Debugging
+	
 	/// A logger for Lightroom related code
 
 	public static var log:BXLogger =

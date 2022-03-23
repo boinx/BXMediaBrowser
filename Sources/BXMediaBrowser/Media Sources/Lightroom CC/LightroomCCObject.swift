@@ -38,53 +38,59 @@ import UIKit
 
 open class LightroomCCObject : Object
 {
-//	/// Creates a new Object for the file at the specified URL
-//
-//	public required init(with photo:LightroomCC.Photo)
-//	{
-//		super.init(
-//			identifier: "PexelsSource:Photo:\(photo.id)",
-//			name: photo.alt,
-//			data: photo,
-//			loadThumbnailHandler: Self.loadThumbnail,
-//			loadMetadataHandler: Self.loadMetadata,
-//			downloadFileHandler: Self.downloadFile)
-//	}
+	/// Creates a new Object for the file at the specified URL
+
+	public required init(with asset:LightroomCC.Asset)
+	{
+		super.init(
+			identifier: "LightroomCC:Asset:\(asset.id)",
+			name: asset.name,
+			data: asset,
+			loadThumbnailHandler: Self.loadThumbnail,
+			loadMetadataHandler: Self.loadMetadata,
+			downloadFileHandler: Self.downloadFile)
+	}
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-//	/// Creates a thumbnail image for the specified local file URL
-//
-//	open class func loadThumbnail(for identifier:String, data:Any) async throws -> CGImage
-//	{
-//		guard let photo = data as? Pexels.Photo else { throw Error.loadThumbnailFailed }
-//		guard let url = URL(string:photo.src.small) else { throw Error.loadThumbnailFailed }
-//
+	/// Downloads the thumbnail image for the specified Lightroom asset
+
+	open class func loadThumbnail(for identifier:String, data:Any) async throws -> CGImage
+	{
+		guard let asset = data as? LightroomCC.Asset else { throw Error.loadThumbnailFailed }
+
 //		let data = try await URLSession.shared.data(with:url)
 //		guard let source = CGImageSourceCreateWithData(data as CFData,nil) else { throw Error.loadThumbnailFailed }
 //		guard let image = CGImageSourceCreateImageAtIndex(source,0,nil) else { throw Error.loadThumbnailFailed }
-//
-//		return image
-//	}
+
+		let catalogID = LightroomCC.shared.catalogID
+		let assetID = asset.id
+		let image = try await LightroomCC.shared.image(from:"https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)/renditions/thumbnail2x")
+
+		return image
+	}
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-//	/// Loads the metadata dictionary for the specified local file URL
-//
-//	open class func loadMetadata(for identifier:String, data:Any) async throws -> [String:Any]
-//	{
-//		LightroomCC.log.verbose {"\(Self.self).\(#function) \(identifier)"}
-//
-//		guard let photo = data as? Pexels.Photo else { throw Error.loadMetadataFailed }
-//
-//		var metadata:[String:Any] = [:]
-//
-//		metadata[.widthKey] = photo.width
-//		metadata[.heightKey] = photo.height
+	/// Loads the metadata dictionary for the specified local file URL
+
+	open class func loadMetadata(for identifier:String, data:Any) async throws -> [String:Any]
+	{
+		LightroomCC.log.verbose {"\(Self.self).\(#function) \(identifier)"}
+
+		guard let asset = data as? LightroomCC.Asset else { throw Error.loadThumbnailFailed }
+
+		var metadata:[String:Any] = [:]
+
+		metadata[.titleKey] = asset.name
+		metadata[.widthKey] = asset.width
+		metadata[.heightKey] = asset.height
+		metadata[.fileSizeKey] = asset.fileSize
+		
 //		metadata[.descriptionKey] = photo.alt
 //		metadata[.authorsKey] = [photo.photographer]
 //		metadata[.whereFromsKey] = [photo.url]
@@ -92,11 +98,11 @@ open class LightroomCCObject : Object
 //		metadata["photographer_url"] = photo.photographer_url
 //		metadata["url"] = photo.url
 //		metadata["photo_src_original"] = photo.src.original
-//
-//		return metadata
-//	}
-//
-//
+
+		return metadata
+	}
+
+
 //	/// Tranforms the metadata dictionary into an order list of human readable information (with optional click actions)
 //
 //	@MainActor override open var localizedMetadata:[ObjectMetadataEntry]
@@ -131,46 +137,44 @@ open class LightroomCCObject : Object
 //----------------------------------------------------------------------------------------------------------------------
 
 
-//	// Returns the filename of the file that will be downloaded
-//
-//	override public var localFileName:String
-//	{
-//		Self.localFileName(for:identifier, data:data)
-//	}
-//
-//	// Unsplash always return image - can we be even more specific with JPEG?
-//
-//	override public var localFileUTI:String
-//	{
-//		kUTTypeJPEG as String
-//	}
-//
-//	static func localFileName(for identifier:String, data:Any) -> String
-//	{
-//		var filename = "PexelsPhoto.jpg"
-//		guard let photo = data as? Pexels.Photo else { return filename }
-//		filename = "Pexels.\(photo.id).jpg"
-//		return filename
-//	}
-//
-//
-//	/// Return the remote URL for a Pexels Photo
-//
-//	class func remoteURL(for identifier:String, data:Any) throws -> URL
-//	{
-//		guard let photo = data as? Pexels.Photo else { throw Error.downloadFileFailed }
-//		let str = photo.src.original
-//		guard let url = URL(string:str) else { throw Error.downloadFileFailed }
-//		return url
-//	}
-//
-//
-//	/// Starts downloading an image file
-//
-//	open class func downloadFile(for identifier:String, data:Any) async throws -> URL
-//	{
-//		LightroomCC.log.debug {"\(Self.self).\(#function) \(identifier)"}
-//
+	// Returns the filename of the file that will be downloaded
+
+	override public var localFileName:String
+	{
+		Self.localFileName(for:identifier, data:data)
+	}
+
+	// Unsplash always return image - can we be even more specific with JPEG?
+
+	override public var localFileUTI:String
+	{
+		kUTTypeJPEG as String
+	}
+
+	static func localFileName(for identifier:String, data:Any) -> String
+	{
+		(data as? LightroomCC.Asset)?.name ?? ""
+	}
+
+
+	/// Return the remote URL for a Pexels Photo
+
+	class func remoteURL(for identifier:String, data:Any) throws -> URL
+	{
+		guard let asset = data as? LightroomCC.Asset else { throw Error.downloadFileFailed }
+		guard let url = URL(string:"https://boinx.com/sample.jpg") else { throw Error.downloadFileFailed }
+		return url
+	}
+
+
+	/// Starts downloading an image file
+
+	open class func downloadFile(for identifier:String, data:Any) async throws -> URL
+	{
+		LightroomCC.log.debug {"\(Self.self).\(#function) \(identifier)"}
+
+		throw Error.downloadFileFailed
+		
 //		// Download the file
 //
 //		let remoteURL = try remoteURL(for:identifier, data:data)
@@ -187,7 +191,7 @@ open class LightroomCCObject : Object
 //
 //		TempFilePool.shared.register(localURL)
 //		return localURL
-//	}
+	}
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -195,17 +199,15 @@ open class LightroomCCObject : Object
 
 	/// QuickLook support
 	
-//	override public var previewItemURL:URL!
-//    {
-//		guard let photo = data as? Pexels.Photo else { return nil }
-//		return URL(string:photo.src.large2x)
-//    }
-//
-//	override open var previewItemTitle: String!
-//    {
-//		guard let photo = data as? Pexels.Photo else { return self.name }
-//		return photo.alt
-//    }
+	override public var previewItemURL:URL!
+    {
+		return try? Self.remoteURL(for:identifier, data:data)
+    }
+
+	override open var previewItemTitle: String!
+    {
+		self.localFileName
+    }
 }
 
 

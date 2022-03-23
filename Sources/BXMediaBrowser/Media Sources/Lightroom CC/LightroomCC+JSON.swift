@@ -39,6 +39,96 @@ extension LightroomCC
 		public let code:Int?
 		public let description:String?
 	}
+
+
+	/// The JSON returned by https://lr.adobe.io/v2/catalog
+
+	public struct Catalog : Codable
+	{
+		public struct Payload : Codable
+		{
+			public let name:String
+			public let parent:Parent?
+		}
+
+		public let id:String
+		public let payload:Payload
+	}
+
+
+	/// The JSON returned by https://lr.adobe.io/v2/catalogs/catalog_id/albums
+
+	public struct Albums : Codable
+	{
+		public struct Resource : Codable
+		{
+			public struct Payload : Codable
+			{
+				public let name:String
+				public let parent:Parent?
+			}
+			
+			public let id:String
+			public let type:String
+			public let subtype:String
+			public let payload:Payload
+		}
+
+		public let resources:[Resource]
+	}
+	
+	
+	/// The JSON returned by https://lr.adobe.io/v2/catalogs/catalog_id/albums/album_id/assets
+
+	public struct AlbumAssets : Codable
+	{
+		public struct Resource : Codable
+		{
+			public let asset:Asset
+		}
+		
+		public let resources:[Resource]
+	}
+
+	public struct Asset : Codable
+	{
+		public struct Payload : Codable
+		{
+			public struct ImportSource : Codable
+			{
+				public let fileName:String
+				public let fileSize:Int
+				public let originalWidth:Int
+				public let originalHeight:Int
+			}
+			
+			public let captureDate:String
+			public let importSource:ImportSource
+		}
+
+		public let id:String
+		public let subtype:String?
+		public let payload:Payload?
+		
+		public var name:String { self.payload?.importSource.fileName ?? ""}
+		public var fileSize:Int { self.payload?.importSource.fileSize ?? 0 }
+		public var width:Int { self.payload?.importSource.originalWidth ?? 0 }
+		public var height:Int { self.payload?.importSource.originalHeight ?? 0 }
+	}
+	
+	
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+extension LightroomCC
+{
+	public struct Parent : Codable
+	{
+		public let id:String
+	}
 }
 
 
