@@ -110,21 +110,25 @@ open class LightroomCCContainer : Container
 			$0.asset.id
 		}
 		
+		print("assetIDs = \(assetIDs)")
+		
 		// Get the info for each asset and wrap it in an Object
 		
-		let assets = try await withThrowingTaskGroup(of:LightroomCC.Asset.self, returning:[LightroomCC.Asset].self)
+		let assets = try await withThrowingTaskGroup(of:(Int,LightroomCC.Asset).self, returning:[(Int,LightroomCC.Asset)].self)
 		{
 			group in
 
-			for assetID in assetIDs
+			for (i,assetID) in assetIDs.enumerated()
 			{
 				group.addTask
 				{
-					try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)")
+					()->(Int,LightroomCC.Asset) in
+					let asset:LightroomCC.Asset = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)")
+					return (i,asset)
 				}
 			}
 				
-			var assets:[LightroomCC.Asset] = []
+			var assets:[(Int,LightroomCC.Asset)] = []
 
 			for try await asset in group
 			{
@@ -136,15 +140,16 @@ open class LightroomCCContainer : Container
 
 //		let assets = try await group.result
 		
-		for asset in assets
+		for (i,asset) in assets.sorted { $0.0 < $1.0 }
 		{
-//			let asset:LightroomCC.Asset = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)")
 			objects += LightroomCCObject(with:asset)
+			
+			print("assetID = \( asset.id)")
 		}
 				
 		// Sort according to specified sort order
 		
-		filter.sort(&objects)
+//		filter.sort(&objects)
 		
 		// Return contents
 		
@@ -155,55 +160,6 @@ open class LightroomCCContainer : Container
 //----------------------------------------------------------------------------------------------------------------------
 
 
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	/// Encodes/decodes a PexelsFilter from Data
-	
-//	var filterData:Data?
-//	{
-//		get
-//		{
-//			guard let pexelsData = self.data as? PexelsData else { return nil }
-//			let filter = pexelsData.lastUsedFilter
-//			let data = try? JSONEncoder().encode(filter)
-//			return data
-//		}
-//		
-//		set
-//		{
-//			guard let data = newValue else { return }
-//			guard let pexelsData = self.data as? PexelsData else { return }
-//			guard let filter = try? JSONDecoder().decode(PexelsFilter.self, from:data) else { return }
-//			pexelsData.lastUsedFilter = filter
-//		}
-//	}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	/// Returns a textual description of the filter params (for displaying in the UI)
-	
-//	var description:String
-//	{
-//		guard let filter = self.filter as? PexelsFilter else { return "" }
-//		return Self.description(with:filter)
-//	}
-//
-//	/// Returns a textual description of the filter params (for displaying in the UI)
-//
-//	class func description(with filter:PexelsFilter) -> String
-//	{
-//		let searchString = filter.searchString
-//		let orientation = filter.orientation != .any ? filter.orientation.localizedName : ""
-//		let color = filter.color != .any ? filter.color.localizedName : ""
-//
-//		var description = searchString
-//		if !orientation.isEmpty { description += ", \(orientation)" }
-//		if !color.isEmpty { description += ", \(color)" }
-//		return description
-//	}
 }
 
 
