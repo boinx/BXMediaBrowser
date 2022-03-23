@@ -108,14 +108,16 @@ public struct LightroomCCSourceView : View
 		else if source.status == .loggedOut
 		{
 			BXImage(systemName:"person.crop.circle")
+				.foregroundColor(.red)
 				.onTapGesture
 				{
 					self.source.grantAccess()
 				}
 		}
-		else if case .loggedIn(let user) = source.status
+		else if source.status == .loggedIn
 		{
 			BXImage(systemName:"person.crop.circle")
+				.foregroundColor(.green)
 				.onTapGesture
 				{
 					self.source.revokeAccess()
