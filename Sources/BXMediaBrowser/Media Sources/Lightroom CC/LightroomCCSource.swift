@@ -24,6 +24,7 @@
 
 
 import BXSwiftUtils
+import OAuth2
 import SwiftUI
 
 
@@ -40,7 +41,7 @@ open class LightroomCCSource : Source, AccessControl
 	
 	/// The current status
 	
-	@MainActor public var status:LightroomCC.Status = .currentlyUnavailable
+	@MainActor public var status:LightroomCC.Status = .unknown
 	{
 		willSet
 		{
@@ -174,21 +175,54 @@ open class LightroomCCSource : Source, AccessControl
 
 	@MainActor public var hasAccess:Bool
 	{
-		if case .loggedIn(let user) = self.status
-		{
-			return true
-		}
-		
-		return false
+		LightroomCC.shared.oauth2.accessToken != nil
 	}
+	
 	
 	@MainActor public func grantAccess(_ completionHandler:@escaping (Bool)->Void = { _ in })
 	{
-		completionHandler(hasAccess)
+		let oauth2 = LightroomCC.shared.oauth2
+		
+		oauth2.authorize()
+		{
+			params,error in
+			
+			if let accessToken = oauth2.accessToken //, let params = params
+			{
+				LightroomCC.log.debug {"\(Self.self).\(#function) accessToken = \(oauth2.accessToken)"}
+				LightroomCC.log.debug {"\(Self.self).\(#function) refreshToken = \(oauth2.refreshToken)"}
+				
+				Task
+				{
+					await MainActor.run
+					{
+						self.status = .loggedIn
+						self.load()
+						completionHandler(self.hasAccess)
+					}
+				}
+			}
+			else if let error = error
+			{
+				LightroomCC.log.error {"\(Self.self).\(#function) OAuth login failed: \(error)"}
+
+				Task
+				{
+					await MainActor.run
+					{
+						self.status = .loggedOut
+						completionHandler(self.hasAccess)
+					}
+				}
+			}
+		}
 	}
 
 	@MainActor public func revokeAccess(_ completionHandler:@escaping (Bool)->Void = { _ in })
 	{
+		LightroomCC.shared.oauth2.forgetTokens()
+//		LightroomCC.shared.oauth2.forgetClient()
+		self.status = .loggedOut
 		completionHandler(hasAccess)
 	}
 
@@ -208,26 +242,30 @@ open class LightroomCCSource : Source, AccessControl
 
 		var containers:[Container] = []
 		
-//		// Add Live Search
-//
-//		guard let filter = filter as? PexelsFilter else { return containers }
-//		let name = NSLocalizedString("Search", tableName:"LightroomCC", bundle:.BXMediaBrowser, comment:"Container Name")
-//		containers += PexelsPhotoContainer(identifier:"PexelsPhotoSource:Search", icon:"magnifyingglass", name:name, filter:filter, saveHandler:
-//		{
-//			[weak self] in self?.saveContainer($0)
-//		})
-//
-//		// Add Saved Searches
-//
-//		if let savedFilterDatas = sourceState?[Self.savedFilterDatasKey] as? [Data]
-//		{
-//			for filterData in savedFilterDatas
-//			{
-//				guard let filter = try? JSONDecoder().decode(PexelsFilter.self, from:filterData) else { continue }
-//				guard let container = self.createContainer(with:filter) else { continue }
-//				containers += container
-//			}
-//		}
+		LightroomCC.log.verbose {"\(Self.self).\(#function)"}
+
+		// Build a search request with the provided search string (filter)
+		
+		let clientID = LightroomCC.shared.clientID
+		guard let accessToken = LightroomCC.shared.oauth2.accessToken else { throw Error.loadFailed }
+		let api = "https://lr.adobe.io/v2/catalog"
+		let urlComponents = URLComponents(string:api)!
+		guard let url = urlComponents.url else { throw Error.loadFailed }
+
+		var request = URLRequest(url:url)
+		request.httpMethod = "GET"
+		request.setValue(clientID, forHTTPHeaderField:"X-API-Key")
+		request.setValue("Bearer \(accessToken)", forHTTPHeaderField:"Authorization")
+		
+		// Perform the online search
+		
+		let data = try await URLSession.shared.data(with:request)
+		guard let strippedData = LightroomCC.stripped(data) else { throw Error.loadFailed }
+		
+		// Decode returned JSON to array of UnsplashPhoto
+		
+		let str = String(data:strippedData, encoding:.utf8) ?? "nil"
+		print(str)
 		
 		return containers
 	}

@@ -115,6 +115,7 @@
 		D01C33CF27CA70F3003337A9 /* NSPasteboard+Objects.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01C33CE27CA70F3003337A9 /* NSPasteboard+Objects.swift */; };
 		D01C33D727CD187D003337A9 /* DraggingProgressMixin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01C33D627CD187D003337A9 /* DraggingProgressMixin.swift */; };
 		D0573FA327E9ADED00788155 /* LightroomCCSourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0573FA227E9ADED00788155 /* LightroomCCSourceView.swift */; };
+		D0573FA627E9D0C900788155 /* OAuth2 in Frameworks */ = {isa = PBXBuildFile; productRef = D0573FA527E9D0C900788155 /* OAuth2 */; };
 		D05F5F6D27E8E840003735C6 /* LightroomCCObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05F5F6827E8E840003735C6 /* LightroomCCObject.swift */; };
 		D05F5F6E27E8E840003735C6 /* LightroomCC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05F5F6927E8E840003735C6 /* LightroomCC.swift */; };
 		D05F5F6F27E8E840003735C6 /* LightroomCCContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05F5F6A27E8E840003735C6 /* LightroomCCContainer.swift */; };
@@ -288,6 +289,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0573FA627E9D0C900788155 /* OAuth2 in Frameworks */,
 				D01B49BA27CA2189008249C0 /* AVFoundation.framework in Frameworks */,
 				D01B49B527CA2145008249C0 /* BXSwiftUI.framework in Frameworks */,
 				D01B49B927CA2189008249C0 /* Foundation.framework in Frameworks */,
@@ -662,6 +664,9 @@
 			dependencies = (
 			);
 			name = BXMediaBrowser;
+			packageProductDependencies = (
+				D0573FA527E9D0C900788155 /* OAuth2 */,
+			);
 			productName = BXMediaBrowser;
 			productReference = D01B48B127CA1313008249C0 /* BXMediaBrowser.framework */;
 			productType = "com.apple.product-type.framework";
@@ -691,6 +696,9 @@
 				fr,
 			);
 			mainGroup = D01B48A727CA1313008249C0;
+			packageReferences = (
+				D0573FA427E9D0C900788155 /* XCRemoteSwiftPackageReference "OAuth2" */,
+			);
 			productRefGroup = D01B48B227CA1313008249C0 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1115,6 +1123,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D0573FA427E9D0C900788155 /* XCRemoteSwiftPackageReference "OAuth2" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/p2/OAuth2.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D0573FA527E9D0C900788155 /* OAuth2 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D0573FA427E9D0C900788155 /* XCRemoteSwiftPackageReference "OAuth2" */;
+			productName = OAuth2;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D01B48A827CA1313008249C0 /* Project object */;
 }
