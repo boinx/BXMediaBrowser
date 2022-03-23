@@ -81,12 +81,24 @@ public class LightroomCC : ObservableObject
  	// MARK: - OAuth Login
 	
 	
+	/// Returns true if there is an unexpired accessToken
+	
+	public var isLoggedIn:Bool
+	{
+		oauth2.hasUnexpiredAccessToken()
+	}
+	
+	
+	/// Returns true if the specified URL is for the Adobe Lightroom OAuth login
+	
 	public func isOAuthResponse(_ url:URL) -> Bool
 	{
-		url.absoluteString.contains(redirectURI)
+		url.absoluteString.contains(Self.redirectURI)
 	}
 
-
+	
+	/// Handles the second step in the Adobe Lightroom OAuth login
+	
 	public func handleOAuthResponse(_ url:URL)
 	{
 		LightroomCC.log.verbose {"\(Self.self).\(#function)"}

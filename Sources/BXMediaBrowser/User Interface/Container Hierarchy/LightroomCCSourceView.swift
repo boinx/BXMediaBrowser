@@ -71,14 +71,26 @@ public struct LightroomCCSourceView : View
 			
 			body:
 			{
-				EfficientVStack(alignment:.leading, spacing:2)
+				if source.status == .loggedIn
 				{
-					ForEach(source.containers)
+					EfficientVStack(alignment:.leading, spacing:2)
 					{
-						viewFactory.containerView(for:$0)
+						ForEach(source.containers)
+						{
+							viewFactory.containerView(for:$0)
+						}
 					}
+					.padding(.leading,20)
 				}
-				.padding(.leading,20)
+				else
+				{
+					Button(NSLocalizedString("Login", bundle:.BXMediaBrowser, comment:"Button Title"))
+					{
+						self.source.grantAccess()
+					}
+					.centerAligned()
+					.padding()
+				}
 			})
 			
 			// Whenever the current state changes, save it to persistent storage
@@ -107,22 +119,47 @@ public struct LightroomCCSourceView : View
 		}
 		else if source.status == .loggedOut
 		{
-			BXImage(systemName:"person.crop.circle")
-				.foregroundColor(.red)
-				.onTapGesture
-				{
-					self.source.grantAccess()
-				}
+			self.button(icon:"person.crop.circle", title:NSLocalizedString("Login", bundle:.BXMediaBrowser, comment:"Button Title"))
+			{
+				self.source.grantAccess()
+			}
 		}
 		else if source.status == .loggedIn
 		{
-			BXImage(systemName:"person.crop.circle")
-				.foregroundColor(.green)
-				.onTapGesture
-				{
-					self.source.revokeAccess()
-				}
+			self.button(icon:"person.crop.circle", title:NSLocalizedString("Logout", bundle:.BXMediaBrowser, comment:"Button Title"))
+			{
+				self.source.revokeAccess()
+			}
 		}
+    }
+    
+    
+    @ViewBuilder func button(icon:String, title:String, action:@escaping ()->Void) -> some View
+    {
+		BXImage(systemName:icon).popupMenu(
+		[
+			BXMenuItemSpec.action(title:title, action:action)
+		])
+
+//		if #available(macOS 11, *)
+//		{
+//			Menu
+//			{
+//				Button(title, action:action)
+//			}
+//			label:
+//			{
+//				BXImage(systemName:icon)
+//			}
+//			.menuStyle(.borderlessButton)
+//		}
+//		else
+//		{
+//			BXImage(systemName:icon).onTapGesture
+//			{
+//				action()
+//			}
+//		}
     }
 }
 

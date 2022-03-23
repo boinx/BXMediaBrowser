@@ -115,7 +115,7 @@ open class LightroomCCSource : Source, AccessControl
 			{
 				await MainActor.run
 				{
-					self.status = .loggedOut
+					self.status = LightroomCC.shared.isLoggedIn ? .loggedIn : .loggedOut
 				}
 			}
 			else if let code = health.code, code == 9999
@@ -178,7 +178,7 @@ open class LightroomCCSource : Source, AccessControl
 
 	@MainActor public var hasAccess:Bool
 	{
-		LightroomCC.shared.oauth2.accessToken != nil
+		LightroomCC.shared.isLoggedIn
 	}
 	
 	
@@ -223,8 +223,11 @@ open class LightroomCCSource : Source, AccessControl
 
 	@MainActor public func revokeAccess(_ completionHandler:@escaping (Bool)->Void = { _ in })
 	{
-		LightroomCC.shared.oauth2.forgetTokens()
 //		LightroomCC.shared.oauth2.forgetClient()
+		LightroomCC.shared.oauth2.forgetTokens()
+		LightroomCC.shared.catalogID = ""
+		LightroomCC.shared.allAlbums = []
+		
 		self.status = .loggedOut
 		completionHandler(hasAccess)
 	}
@@ -243,6 +246,8 @@ open class LightroomCCSource : Source, AccessControl
 	{
 		LightroomCC.log.debug {"\(Self.self).\(#function)"}
 
+		guard LightroomCC.shared.isLoggedIn else { return [] }
+		
 		let catalog:LightroomCC.Catalog = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/catalog")
 		let albums:LightroomCC.Albums = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/catalogs/\(catalog.id)/albums")
 		
