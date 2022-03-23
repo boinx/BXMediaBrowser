@@ -38,6 +38,18 @@ public class LightroomCC : ObservableObject
 	
     private init()
     {
+		let settings:OAuth2JSON =
+		[
+			"client_id": Self.clientID,
+			"client_secret": Self.clientSecret,
+			"authorize_uri": "https://ims-na1.adobelogin.com/ims/authorize/v2",
+			"token_uri": "https://ims-na1.adobelogin.com/ims/token/v3",
+			"redirect_uris": [Self.redirectURI],
+			"scope": "openid, AdobeID, lr_partner_apis, lr_partner_rendition_apis, offline_access",
+		]
+		
+		self.oauth2 = OAuth2CodeGrant(settings:settings)
+		self.oauth2.logger = OAuth2DebugLogger(.debug)
     }
     
 
@@ -48,15 +60,15 @@ public class LightroomCC : ObservableObject
 	
     /// Your application clientID that was registered at developer.adobe.com
 	
-    public var clientID = ""
+    public static var clientID = ""
     
     /// Your application clientSecret that was registered at developer.adobe.com
 	
-	public var clientSecret = ""
+	public static var clientSecret = ""
 	
 	/// The redirectURI that was registered at developer.adobe.com
 	
-	public var redirectURI = ""
+	public static var redirectURI = ""
 
     /// The API for checking Lighroom server health
 	
@@ -84,28 +96,7 @@ public class LightroomCC : ObservableObject
 
    /// This object handles the OAuth login and holds the accessToken/refreshToken
 	
-	public var oauth2:OAuth2CodeGrant
-	{
-		if let oauth2 = _oauth2 { return oauth2 }
-		
-		let settings:OAuth2JSON =
-		[
-			"client_id": clientID,
-			"client_secret": clientSecret,
-			"authorize_uri": "https://ims-na1.adobelogin.com/ims/authorize/v2",
-			"token_uri": "https://ims-na1.adobelogin.com/ims/token/v3",
-			"redirect_uris": [redirectURI],
-			"scope": "openid, AdobeID, lr_partner_apis, lr_partner_rendition_apis, offline_access",
-		]
-		
-		let oauth2 = OAuth2CodeGrant(settings:settings)
-		oauth2.logger = OAuth2DebugLogger(.debug)
-		self._oauth2 = oauth2
-		
-		return oauth2
-	}
-	
-	private var _oauth2:OAuth2CodeGrant? = nil
+	public let oauth2:OAuth2CodeGrant
 	
 	
 //----------------------------------------------------------------------------------------------------------------------
@@ -155,7 +146,7 @@ public class LightroomCC : ObservableObject
 
 		var request = URLRequest(url:url)
 		request.httpMethod = "GET"
-		request.setValue(clientID, forHTTPHeaderField:"X-API-Key")
+		request.setValue(Self.clientID, forHTTPHeaderField:"X-API-Key")
 		
 		if requiresAccessToken
 		{
@@ -215,7 +206,7 @@ public class LightroomCC : ObservableObject
 
 		var request = URLRequest(url:url)
 		request.httpMethod = "GET"
-		request.setValue(clientID, forHTTPHeaderField:"X-API-Key")
+		request.setValue(Self.clientID, forHTTPHeaderField:"X-API-Key")
 		request.setValue("Bearer \(accessToken)", forHTTPHeaderField:"Authorization")
 		
 		// Get the data and strip the prefix
