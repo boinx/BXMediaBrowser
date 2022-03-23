@@ -45,12 +45,24 @@ open class LightroomCCContainer : Container
 	}
 
 
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// Folders can be expanded, but albums cannot
+	
 	override open var canExpand: Bool
 	{
 		guard let album = self.data as? LightroomCC.Albums.Resource else { return false }
 		return album.subtype.contains("set")
 	}
 
+	// Return "Images" instead of "Items"
+	
+    @MainActor override open var localizedObjectCount:String
+    {
+		self.objects.count.localizedImagesString
+    }
+    
 //	/// Returns the list of allowed sort Kinds for this Container
 //
 //	override open var allowedSortTypes:[Object.Filter.SortType]
