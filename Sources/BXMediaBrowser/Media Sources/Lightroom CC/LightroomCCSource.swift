@@ -37,7 +37,7 @@ open class LightroomCCSource : Source, AccessControl
 	/// identifier, even if the class name changes due to refactoring, because the identifier
 	/// might be stored in a preferences file or user documents.
 	
-	static let identifier = "LightroomCCSource:"
+	static let identifier = "LightroomCC:"
 	
 	/// The current status
 	

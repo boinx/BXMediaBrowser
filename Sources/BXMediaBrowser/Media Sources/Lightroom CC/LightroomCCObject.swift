@@ -61,10 +61,6 @@ open class LightroomCCObject : Object
 	{
 		guard let asset = data as? LightroomCC.Asset else { throw Error.loadThumbnailFailed }
 
-//		let data = try await URLSession.shared.data(with:url)
-//		guard let source = CGImageSourceCreateWithData(data as CFData,nil) else { throw Error.loadThumbnailFailed }
-//		guard let image = CGImageSourceCreateImageAtIndex(source,0,nil) else { throw Error.loadThumbnailFailed }
-
 		let catalogID = LightroomCC.shared.catalogID
 		let assetID = asset.id
 		let image = try await LightroomCC.shared.image(from:"https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)/renditions/thumbnail2x")
@@ -103,35 +99,25 @@ open class LightroomCCObject : Object
 	}
 
 
-//	/// Tranforms the metadata dictionary into an order list of human readable information (with optional click actions)
-//
-//	@MainActor override open var localizedMetadata:[ObjectMetadataEntry]
-//    {
-//		guard let photo = data as? Pexels.Photo else { return [] }
-//
-//		let openPhotoPage:()->Void =
-//		{
-//			URL(string:photo.url)?.open()
-//		}
-//
-//		let openUserPage:()->Void =
-//		{
-//			URL(string:photo.photographer_url)?.open()
-//		}
-//
-//		var array:[ObjectMetadataEntry] = []
-//
-//		let photoLabel = NSLocalizedString("Photo", tableName:"Pexels", bundle:.BXMediaBrowser, comment:"Label")
-//		array += ObjectMetadataEntry(label:photoLabel, value:photo.alt, action:openPhotoPage)
-//
-//		let photographerLabel = NSLocalizedString("Photographer", tableName:"Pexels", bundle:.BXMediaBrowser, comment:"Label")
-//		array += ObjectMetadataEntry(label:photographerLabel, value:photo.photographer, action:openUserPage)
-//
-//		let imageSizeLabel = NSLocalizedString("Image Size", tableName:"Pexels", bundle:.BXMediaBrowser, comment:"Label")
-//		array += ObjectMetadataEntry(label:imageSizeLabel, value:"\(photo.width) × \(photo.height) Pixels")
-//
-//		return array
-//    }
+	/// Tranforms the metadata dictionary into an order list of human readable information (with optional click actions)
+
+	@MainActor override open var localizedMetadata:[ObjectMetadataEntry]
+    {
+		guard let asset = data as? LightroomCC.Asset else { return [] }
+
+		var array:[ObjectMetadataEntry] = []
+
+		let photoLabel = NSLocalizedString("File", tableName:"LightroomCC", bundle:.BXMediaBrowser, comment:"Label")
+		array += ObjectMetadataEntry(label:photoLabel, value:asset.name)
+
+		let imageSizeLabel = NSLocalizedString("Image Size", tableName:"LightroomCC", bundle:.BXMediaBrowser, comment:"Label")
+		array += ObjectMetadataEntry(label:imageSizeLabel, value:"\(asset.width) × \(asset.height) Pixels")
+
+		let fileSizeLabel = NSLocalizedString("File Size", tableName:"LightroomCC", bundle:.BXMediaBrowser, comment:"Label")
+		array += ObjectMetadataEntry(label:fileSizeLabel, value:asset.fileSize.fileSizeDescription)
+
+		return array
+    }
     
     
 //----------------------------------------------------------------------------------------------------------------------
@@ -144,7 +130,7 @@ open class LightroomCCObject : Object
 		Self.localFileName(for:identifier, data:data)
 	}
 
-	// Unsplash always return image - can we be even more specific with JPEG?
+	// LightroomCC always returns JPEG files
 
 	override public var localFileUTI:String
 	{
@@ -153,17 +139,8 @@ open class LightroomCCObject : Object
 
 	static func localFileName(for identifier:String, data:Any) -> String
 	{
-		(data as? LightroomCC.Asset)?.name ?? ""
-	}
-
-
-	/// Return the remote URL for a Pexels Photo
-
-	class func remoteURL(for identifier:String, data:Any) throws -> URL
-	{
-		guard let asset = data as? LightroomCC.Asset else { throw Error.downloadFileFailed }
-		guard let url = URL(string:"https://boinx.com/sample.jpg") else { throw Error.downloadFileFailed }
-		return url
+		"\(identifier).jpg"
+//		(data as? LightroomCC.Asset)?.name ?? ""
 	}
 
 
@@ -173,24 +150,26 @@ open class LightroomCCObject : Object
 	{
 		LightroomCC.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
-		throw Error.downloadFileFailed
+		guard let asset = data as? LightroomCC.Asset else { throw Error.downloadFileFailed }
 		
-//		// Download the file
-//
-//		let remoteURL = try remoteURL(for:identifier, data:data)
-//		let tmpURL = try await URLSession.shared.downloadFile(from:remoteURL)
-//
-//		// Rename the file
-//
-//		let folderURL = tmpURL.deletingLastPathComponent()
-//		let filename = self.localFileName(for:identifier, data:data)
-//		let localURL = folderURL.appendingPathComponent(filename)
-//		try FileManager.default.moveItem(at:tmpURL, to:localURL)
-//
-//		// Register in TempFilePool
-//
-//		TempFilePool.shared.register(localURL)
-//		return localURL
+		// Download the file
+
+		let catalogID = LightroomCC.shared.catalogID
+		let assetID = asset.id
+		let request = try LightroomCC.shared.request(for:"https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)/renditions/2048")
+		let tmpURL = try await URLSession.shared.downloadFile(with:request)
+
+		// Rename the file
+
+		let folderURL = tmpURL.deletingLastPathComponent()
+		let filename = self.localFileName(for:identifier, data:data)
+		let localURL = folderURL.appendingPathComponent(filename)
+		try FileManager.default.moveItem(at:tmpURL, to:localURL)
+
+		// Register in TempFilePool
+
+		TempFilePool.shared.register(localURL)
+		return localURL
 	}
 
 
@@ -201,7 +180,10 @@ open class LightroomCCObject : Object
 	
 	override public var previewItemURL:URL!
     {
-		return try? Self.remoteURL(for:identifier, data:data)
+		guard let asset = data as? LightroomCC.Asset else { return nil }
+		let catalogID = LightroomCC.shared.catalogID
+		let assetID = asset.id
+		return URL(string:"https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)/renditions/1280")
     }
 
 	override open var previewItemTitle: String!

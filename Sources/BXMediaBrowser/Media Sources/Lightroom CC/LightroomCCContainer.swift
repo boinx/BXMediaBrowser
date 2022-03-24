@@ -26,22 +26,63 @@
 import BXSwiftUtils
 import Foundation
 
+#if os(macOS)
+import AppKit
+#elseif os(iOS)
+import UIKit
+#endif
+
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
 open class LightroomCCContainer : Container
 {
+	class LightroomCCData
+	{
+		var album:LightroomCC.Albums.Resource
+		var nextAccessPoint:String? = nil
+		var containers:[Container]? = nil
+		var objects:[Object]? = nil
+		var pageIndex:Int = 0
+		
+		init(with album:LightroomCC.Albums.Resource)
+		{
+			self.album = album
+			self.nextAccessPoint = nil
+			self.containers = nil
+			self.objects = nil
+			self.pageIndex = 0
+		}
+	}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
 	/// Creates a new Container for the folder at the specified URL
 	
 	public required init(album:LightroomCC.Albums.Resource, filter:Object.Filter)
 	{
 		super.init(
-			identifier: album.id,
+			identifier: "LightroomCC:Album:\(album.id)",
 			name: album.payload.name,
-			data: album,
+			data: LightroomCCData(with:album),
 			filter: filter,
 			loadHandler: Self.loadContents)
+
+		self.resetPaging()
+		
+		#if os(macOS)
+		
+		self.observers += NotificationCenter.default.publisher(for:NSCollectionView.didScrollToEnd, object:self).sink
+		{
+			[weak self] _ in self?.load(with:nil)
+		}
+		
+		#elseif os(iOS)
+		#warning("TODO: implement")
+		#endif
 	}
 
 
@@ -52,8 +93,8 @@ open class LightroomCCContainer : Container
 	
 	override open var canExpand: Bool
 	{
-		guard let album = self.data as? LightroomCC.Albums.Resource else { return false }
-		return album.subtype.contains("set")
+		guard let data = self.data as? LightroomCCData else { return false }
+		return data.album.subtype.contains("set")
 	}
 
 	// Return "Images" instead of "Items"
@@ -74,92 +115,113 @@ open class LightroomCCContainer : Container
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	func resetPaging()
+	{
+		guard let data = data as? LightroomCCData else { return }
+
+		let catalogID = LightroomCC.shared.catalogID
+		let albumID = data.album.id
+
+		data.nextAccessPoint = "https://lr.adobe.io/v2/catalogs/\(catalogID)/albums/\(albumID)/assets?limit=30&embed=asset;links"
+		data.containers = nil
+		data.objects = nil
+		data.pageIndex = 0
+	}
+	
+	
 	/// Loads the (shallow) contents of this folder
 	
 	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
 	{
-		FolderSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
-
-		var containers:[Container] = []
-		var objects:[Object] = []
-
-		let catalogID = LightroomCC.shared.catalogID
-		let allAlbums = LightroomCC.shared.allAlbums
-	
-		// Find our child albums (parent is self)
+		guard let data = data as? LightroomCCData else { throw Error.loadContentsFailed }
 		
-		let childAlbums = allAlbums.filter
+		// Find our child albums (parent is self) and create a Container for each child
+		
+		if data.containers == nil
 		{
-			guard let id = $0.payload.parent?.id else { return false }
-			return id == identifier
-		}
-		
-		// Create a Container for each child album
-		
-		for album in childAlbums
-		{
-			containers += LightroomCCContainer(album:album, filter:filter)
-		}
-
-		// Get the IDs for all assets in this album
-		
-		let albumContents:LightroomCC.AlbumAssets = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/catalogs/\(catalogID)/albums/\(identifier)/assets")
-
-		let assetIDs = albumContents.resources.map
-		{
-			$0.asset.id
-		}
-		
-		print("assetIDs = \(assetIDs)")
-		
-		// Get the info for each asset and wrap it in an Object
-		
-		let assets = try await withThrowingTaskGroup(of:(Int,LightroomCC.Asset).self, returning:[(Int,LightroomCC.Asset)].self)
-		{
-			group in
-
-			for (i,assetID) in assetIDs.enumerated()
+			let albumID = data.album.id
+			let allAlbums = LightroomCC.shared.allAlbums
+			let childAlbums = allAlbums.filter
 			{
-				group.addTask
-				{
-					()->(Int,LightroomCC.Asset) in
-					let asset:LightroomCC.Asset = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)")
-					return (i,asset)
-				}
-			}
-				
-			var assets:[(Int,LightroomCC.Asset)] = []
-
-			for try await asset in group
-			{
-				assets += asset
+				guard let id = $0.payload.parent?.id else { return false }
+				return id == albumID
 			}
 
-			return assets
-		}
+			var containers:[Container] = []
 
-//		let assets = try await group.result
-		
-		for (i,asset) in assets.sorted { $0.0 < $1.0 }
-		{
-			objects += LightroomCCObject(with:asset)
+			for album in childAlbums
+			{
+				containers += LightroomCCContainer(album:album, filter:filter)
+			}
 			
-			print("assetID = \( asset.id)")
+			data.containers = containers
 		}
-				
+		
+		// Get the next page of assets in this album
+		
+		guard let accessPoint = data.nextAccessPoint else { return (data.containers ?? [],data.objects ?? []) }
+		LightroomCC.log.debug {"\(Self.self).\(#function) \(identifier) - PAGE \(data.pageIndex)"}
+		let page:LightroomCC.AlbumAssets = try await LightroomCC.shared.getData(from:accessPoint, debugLogging:false)
+
+//		dump(page)
+//		print("\n\n")
+
+		for resource in page.resources
+		{
+			let asset = resource.asset
+			let object = LightroomCCObject(with:asset)
+			self.safelyAdd(object, to:data)
+		}
+		
+		data.pageIndex += 1
+
+		// If there is a next page, then store its accessPoint link
+		
+		if let base = page.base, let next = page.links?.next?.href
+		{
+			data.nextAccessPoint = base + next
+		}
+		else
+		{
+			data.nextAccessPoint = nil
+		}
+		
 		// Sort according to specified sort order
 		
+//		var objects:[Object] = data.objects ?? []
 //		filter.sort(&objects)
 		
 		// Return contents
 		
-		return (containers,objects)
+		return (data.containers ?? [],data.objects ?? [])
 	}
-	
-	
-//----------------------------------------------------------------------------------------------------------------------
 
 
+	private class func safelyAdd(_ object:LightroomCCObject, to data:LightroomCCData)
+	{
+		let id = object.identifier
+		
+		// If we do not have an array yet, then create an empty one
+		
+		if data.objects == nil
+		{
+			data.objects = []
+		}
+		
+		// If the new object is already in the array, then replace the old with the new one
+		
+		if let i = data.objects?.firstIndex(where:{ $0.identifier == id })
+		{
+			data.objects?[i] = object
+		}
+		
+		// Otherwise just append at the end
+		
+		else
+		{
+			data.objects?.append(object)
+		}
+	}
 }
 
 

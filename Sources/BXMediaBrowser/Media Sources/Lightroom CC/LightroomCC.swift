@@ -143,13 +143,14 @@ public class LightroomCC : ObservableObject
 	
 	/// This re-usable function gets data of generic type T from the specified API accessPoint
 	
-	func getData<T:Codable>(from accessPoint:String, requiresAccessToken:Bool = true) async throws -> T
+	func getData<T:Codable>(from accessPoint:String?, requiresAccessToken:Bool = true, debugLogging:Bool = false) async throws -> T
 	{
 		LightroomCC.log.verbose {"\(Self.self).\(#function)"}
 
 		// Build a search request with the provided search string (filter)
 		
-		let urlComponents = URLComponents(string:accessPoint)!
+		guard let accessPoint = accessPoint else { throw Error.invalidURL }
+		guard let urlComponents = URLComponents(string:accessPoint) else { throw Error.invalidURL }
 		guard let url = urlComponents.url else { throw Error.invalidURL }
 
 		var request = URLRequest(url:url)
@@ -162,44 +163,25 @@ public class LightroomCC : ObservableObject
 			request.setValue("Bearer \(accessToken)", forHTTPHeaderField:"Authorization")
 		}
 		
-		// Get the data and strip the prefix
+		// Get the data and strip the prefix "while (1) {}" (13 bytes)
 		
 		let prefixedData = try await URLSession.shared.data(with:request)
-		guard let strippedData = LightroomCC.stripped(prefixedData) else { throw Error.corruptData }
+		let data = prefixedData.subdata(in:13 ..< prefixedData.count)
 		
-//		if let string = Self.string(with:strippedData)
-//		{
-//			print(string)
-//		}
+		if debugLogging
+		{
+			let json = String(data:data, encoding:.utf8)
+//			LightroomCC.log.debug {"JSON = \(json)\n"}
+			Swift.print("\nURL = \(url)\nJSON = \(json)\n")
+		}
 		
 		// Decode returned JSON to specified type T
 		
-		let instance = try JSONDecoder().decode(T.self, from:strippedData)
+		let instance = try JSONDecoder().decode(T.self, from:data)
 		return instance
 	}
 	
 	
-	/// Strips the "while (1) {}" prefix from the returned JSON
-	
-	public static func stripped(_ data:Data) -> Data?
-	{
-		data.subdata(in:12..<data.count)
-
-//		guard let string = string(with:data) else { return nil }
-//
-//		let stripped = string
-//			.replacingOccurrences(of:"while (1) {}", with:"")
-//			.trimmingCharacters(in:.whitespacesAndNewlines)
-//
-//		return stripped.data(using:.utf8)
-	}
-	
-	static func string(with data:Data) -> String?
-	{
-		String(data:data, encoding:.utf8)
-	}
-
-
 	/// Downloads an image from the specified API accessPoint
 	
 	func image(from accessPoint:String) async throws -> CGImage
@@ -208,14 +190,16 @@ public class LightroomCC : ObservableObject
 
 		// Build a search request with the provided search string (filter)
 		
-		let urlComponents = URLComponents(string:accessPoint)!
-		guard let url = urlComponents.url else { throw Error.invalidURL }
-		guard let accessToken = self.oauth2.accessToken else { throw Error.missingAccessToken }
-
-		var request = URLRequest(url:url)
-		request.httpMethod = "GET"
-		request.setValue(Self.clientID, forHTTPHeaderField:"X-API-Key")
-		request.setValue("Bearer \(accessToken)", forHTTPHeaderField:"Authorization")
+//		let urlComponents = URLComponents(string:accessPoint)!
+//		guard let url = urlComponents.url else { throw Error.invalidURL }
+//		guard let accessToken = self.oauth2.accessToken else { throw Error.missingAccessToken }
+//
+//		var request = URLRequest(url:url)
+//		request.httpMethod = "GET"
+//		request.setValue(Self.clientID, forHTTPHeaderField:"X-API-Key")
+//		request.setValue("Bearer \(accessToken)", forHTTPHeaderField:"Authorization")
+		
+		let request = try self.request(for:accessPoint, httpMethod:"GET")
 		
 		// Get the data and strip the prefix
 		
@@ -223,6 +207,29 @@ public class LightroomCC : ObservableObject
 		guard let source = CGImageSourceCreateWithData(data as CFData,nil) else { throw Error.loadImageFailed }
 		guard let image = CGImageSourceCreateImageAtIndex(source,0,nil) else { throw Error.loadImageFailed }
 		return image
+	}
+	
+	
+	/// Builds a URLRequest for the specified accessPoint. Default httpMethod is GET.
+	
+	func request(for accessPoint:String, httpMethod:String = "GET", requiresAccessToken:Bool = true) throws -> URLRequest
+	{
+		LightroomCC.log.verbose {"\(Self.self).\(#function)"}
+
+		let urlComponents = URLComponents(string:accessPoint)!
+		guard let url = urlComponents.url else { throw Error.invalidURL }
+
+		var request = URLRequest(url:url)
+		request.httpMethod = httpMethod
+		request.setValue(Self.clientID, forHTTPHeaderField:"X-API-Key")
+		
+		if requiresAccessToken
+		{
+			guard let accessToken = self.oauth2.accessToken else { throw Error.missingAccessToken }
+			request.setValue("Bearer \(accessToken)", forHTTPHeaderField:"Authorization")
+		}
+		
+		return request
 	}
 	
 	

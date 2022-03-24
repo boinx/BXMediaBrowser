@@ -29,6 +29,8 @@ import Foundation
 //----------------------------------------------------------------------------------------------------------------------
 
 
+// For documentation about the following structs refer to https://developer.adobe.com/lightroom/lightroom-api-docs/api/
+
 extension LightroomCC
 {
 	/// The JSON returned by https://lr.adobe.io/v2/health
@@ -51,8 +53,10 @@ extension LightroomCC
 			public let parent:Parent?
 		}
 
+		public let base:String?
 		public let id:String
 		public let payload:Payload
+		public let links:Links?
 	}
 
 
@@ -68,6 +72,7 @@ extension LightroomCC
 				public let parent:Parent?
 			}
 			
+			public let base:String?
 			public let id:String
 			public let type:String
 			public let subtype:String
@@ -75,6 +80,7 @@ extension LightroomCC
 		}
 
 		public let resources:[Resource]
+		public let links:Links?
 	}
 	
 	
@@ -87,7 +93,9 @@ extension LightroomCC
 			public let asset:Asset
 		}
 		
+		public let base:String?
 		public let resources:[Resource]
+		public let links:Links?
 	}
 
 	public struct Asset : Codable
@@ -106,9 +114,11 @@ extension LightroomCC
 			public let importSource:ImportSource
 		}
 
+		public let base:String?
 		public let id:String
 		public let subtype:String?
 		public let payload:Payload?
+		public let links:Links?
 		
 		public var name:String { self.payload?.importSource.fileName ?? ""}
 		public var fileSize:Int { self.payload?.importSource.fileSize ?? 0 }
@@ -128,6 +138,42 @@ extension LightroomCC
 	public struct Parent : Codable
 	{
 		public let id:String
+	}
+	
+	public struct Links : Codable
+	{
+		public struct Link : Codable
+		{
+			let href:String
+			let invalid:Bool?
+		}
+		
+		let `self`:Link?
+		let prev:Link?
+		let next:Link?
+		let asset:Link?
+		let master_create:Link?
+		let xmp_develop_create:Link?
+		let xmp_develop:Link?
+		let rendition_type_thumbnail2x:Link?
+		let rendition_type_1280:Link?
+		let rendition_type_2048:Link?
+		let rendition_type_fullsize:Link?
+		
+		enum CodingKeys: String, CodingKey
+		{
+			case `self` = "self"
+			case prev = "prev"
+			case next = "next"
+			case asset = "/rels/asset"
+			case master_create = "/rels/master_create"
+			case xmp_develop_create = "/rels/xmp_develop_create"
+			case xmp_develop = "/rels/xmp/develop"
+			case rendition_type_thumbnail2x = "/rels/rendition_type/thumbnail2x"
+			case rendition_type_1280 = "/rels/rendition_type/1280"
+			case rendition_type_2048 = "/rels/rendition_type/2048"
+			case rendition_type_fullsize = "/rels/rendition_type/fullsize"
+		}
 	}
 }
 
