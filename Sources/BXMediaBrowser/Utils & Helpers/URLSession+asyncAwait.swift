@@ -138,6 +138,61 @@ extension URLSession
 			task.resume()
 		}
     }
+
+
+	public func downloadFile(with request:URLRequest, delegate:URLSessionTaskDelegate? = nil) async throws -> URL
+    {
+		return try await withCheckedThrowingContinuation
+		{
+			continuation in
+
+			let isParentProgressAvailable = Progress.current() != nil
+		
+			// Download the file from remoteURL
+			
+			let task = self.downloadTask(with:request)
+			{
+				(tmpURL,response,error) in
+
+				// Report potential errors and bail out
+				
+				guard let tmpURL = tmpURL else
+				{
+					let error = error ?? URLError(.badServerResponse)
+					return continuation.resume(throwing:error)
+				}
+
+				// Move file to backup location (because tmpURL will be deleted after lifetime of this completionHandler
+				
+				let tmpURL2 = tmpURL.appendingPathExtension("backup")
+				try? FileManager.default.removeItem(at:tmpURL2)
+				try? FileManager.default.linkItem(at:tmpURL, to:tmpURL2)
+				
+				// Return URL to backup file instead
+				
+				continuation.resume(returning:(tmpURL2))
+			}
+
+			if #available(macOS 12.0, *)
+			{
+				task.delegate = delegate
+			}
+			
+			// If Progress.current is nil, this means that we didn't see the parent Progress object, because it
+			// was created in a different thread (most likely the main thread). In this case we try to attach
+			// to globalParent (which is visible to all threads) as a workaround
+			
+			if !isParentProgressAvailable
+			{
+				Progress.globalParent?.addChild(task.progress, withPendingUnitCount:1)
+			}
+			
+			// Start downloading
+			
+			task.resume()
+		}
+    }
+
 }
 
 
