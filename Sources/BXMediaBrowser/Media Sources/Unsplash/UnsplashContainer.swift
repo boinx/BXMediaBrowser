@@ -70,10 +70,16 @@ open class UnsplashContainer : Container
 			loadHandler: Self.loadContents,
 			removeHandler: removeHandler)
 		
+		#if os(macOS)
+		
 		self.observers += NotificationCenter.default.publisher(for:NSCollectionView.didScrollToEnd, object:self).sink
 		{
 			[weak self] _ in self?.load(with:nil)
 		}
+		
+		#elseif os(iOS)
+		#warning("TODO: implement")
+		#endif
 	}
 
 
