@@ -170,9 +170,14 @@ public class LightroomCC : ObservableObject
 		
 		if debugLogging
 		{
-			let json = String(data:data, encoding:.utf8)
-//			LightroomCC.log.debug {"JSON = \(json)\n"}
-			Swift.print("\nURL = \(url)\nJSON = \(json)\n")
+			let string = String(data:data, encoding:.utf8)
+			let encoder = JSONEncoder()
+			encoder.outputFormatting = .prettyPrinted
+			let prettyData = try encoder.encode(string)
+			var prettyJSON = String(data:prettyData, encoding:.utf8) ?? "nil"
+			prettyJSON = prettyJSON.replacingOccurrences(of:"\\n", with:"\n")
+			prettyJSON = prettyJSON.replacingOccurrences(of:"\\\"", with:"\"")
+			Swift.print("\nURL = \(url)\nJSON = \(prettyJSON)\n")
 		}
 		
 		// Decode returned JSON to specified type T
