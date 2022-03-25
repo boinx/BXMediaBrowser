@@ -267,59 +267,7 @@ open class LightroomCCSource : Source, AccessControl
 		{
 			LightroomCCContainer(album:$0, filter:filter)
 		}
-		
-//		var containers:[Container] = []
-//		
-//		for album in topLevelAlbums
-//		{
-//			containers += LightroomCCContainer(album:album, filter:filter)
-//		}
-//		
-//		return containers
 	}
-	
-	
-	
-//	/// Creates a new "saved" copy of the live search container
-//	
-//	func saveContainer(_ container:Container)
-//	{
-//		LightroomCC.log.debug {"\(Self.self).\(#function)"}
-//	
-//		guard let liveSearchContainer = container as? PexelsPhotoContainer else { return }
-//		guard let liveFilter = liveSearchContainer.filter as? PexelsFilter else { return }
-//		guard let savedContainer = self.createContainer(with:liveFilter.copy) else { return }
-//		self.addContainer(savedContainer)
-//	}
-//
-//
-//	/// Creates a new "saved" PexelsContainer with the specified filter
-//	
-//	func createContainer(with filter:PexelsFilter) -> PexelsPhotoContainer?
-//	{
-//		guard !filter.searchString.isEmpty else { return nil }
-//
-//		let searchString = filter.searchString
-//		let orientation = filter.orientation.rawValue
-//		let color = filter.color.rawValue
-//		let identifier = "PexelsSource:\(searchString)/\(orientation)/\(color)".replacingOccurrences(of:" ", with:"-")
-//		let name = PexelsPhotoContainer.description(with:filter)
-//		
-//		return PexelsPhotoContainer(identifier:identifier, icon:"rectangle.stack", name:name, filter:filter, removeHandler:
-//		{
-//			[weak self] container in
-//			
-//			let title = NSLocalizedString("Alert.title.removeFolder", bundle:.BXMediaBrowser, comment:"Alert Title")
-//			let message = String(format:NSLocalizedString("Alert.message.removeFolder", bundle:.BXMediaBrowser, comment:"Alert Message"), container.name)
-//			let ok = NSLocalizedString("Remove", bundle:.BXMediaBrowser, comment:"Button Title")
-//			let cancel = NSLocalizedString("Cancel", bundle:.BXMediaBrowser, comment:"Button Title")
-//			
-//			NSAlert.presentModal(style:.critical, title:title, message:message, okButton:ok, cancelButton:cancel)
-//			{
-//				[weak self] in self?.removeContainer(container)
-//			}
-//		})
-//	}
 
 
 //----------------------------------------------------------------------------------------------------------------------

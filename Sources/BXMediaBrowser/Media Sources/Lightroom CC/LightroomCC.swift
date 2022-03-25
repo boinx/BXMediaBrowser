@@ -188,22 +188,9 @@ public class LightroomCC : ObservableObject
 	{
 		LightroomCC.log.verbose {"\(Self.self).\(#function)"}
 
-		// Build a search request with the provided search string (filter)
-		
-//		let urlComponents = URLComponents(string:accessPoint)!
-//		guard let url = urlComponents.url else { throw Error.invalidURL }
-//		guard let accessToken = self.oauth2.accessToken else { throw Error.missingAccessToken }
-//
-//		var request = URLRequest(url:url)
-//		request.httpMethod = "GET"
-//		request.setValue(Self.clientID, forHTTPHeaderField:"X-API-Key")
-//		request.setValue("Bearer \(accessToken)", forHTTPHeaderField:"Authorization")
-		
 		let request = try self.request(for:accessPoint, httpMethod:"GET")
-		
-		// Get the data and strip the prefix
-		
 		let data = try await URLSession.shared.data(with:request)
+		
 		guard let source = CGImageSourceCreateWithData(data as CFData,nil) else { throw Error.loadImageFailed }
 		guard let image = CGImageSourceCreateImageAtIndex(source,0,nil) else { throw Error.loadImageFailed }
 		return image

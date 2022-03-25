@@ -157,7 +157,7 @@ open class LightroomCCContainer : Container
 			data.containers = containers
 		}
 		
-		// Get the next page of assets in this album
+		// Get another page of assets in this album
 		
 		guard let accessPoint = data.nextAccessPoint else { return (data.containers ?? [],data.objects ?? []) }
 		LightroomCC.log.debug {"\(Self.self).\(#function) \(identifier) - PAGE \(data.pageIndex)"}
