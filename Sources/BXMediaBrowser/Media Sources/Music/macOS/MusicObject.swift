@@ -62,6 +62,11 @@ public class MusicObject : Object
 		}
 	}
 
+	override nonisolated public var mediaType:MediaType
+	{
+		return .audio
+	}
+
 
 //----------------------------------------------------------------------------------------------------------------------
 

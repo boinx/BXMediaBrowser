@@ -115,6 +115,7 @@
 		D01C33CF27CA70F3003337A9 /* NSPasteboard+Objects.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01C33CE27CA70F3003337A9 /* NSPasteboard+Objects.swift */; };
 		D01C33D727CD187D003337A9 /* DraggingProgressMixin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01C33D627CD187D003337A9 /* DraggingProgressMixin.swift */; };
 		D052BE2027ECB72C0084068A /* LightroomCC.strings in Resources */ = {isa = PBXBuildFile; fileRef = D052BE1E27ECB72C0084068A /* LightroomCC.strings */; };
+		D052BE2427EDCEF50084068A /* Object+MediaType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D052BE2327EDCEF40084068A /* Object+MediaType.swift */; };
 		D0573FA327E9ADED00788155 /* LightroomCCSourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0573FA227E9ADED00788155 /* LightroomCCSourceView.swift */; };
 		D0573FA627E9D0C900788155 /* OAuth2 in Frameworks */ = {isa = PBXBuildFile; productRef = D0573FA527E9D0C900788155 /* OAuth2 */; };
 		D05F5F6D27E8E840003735C6 /* LightroomCCObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05F5F6827E8E840003735C6 /* LightroomCCObject.swift */; };
@@ -264,6 +265,7 @@
 		D052BE1F27ECB72C0084068A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LightroomCC.strings; sourceTree = "<group>"; };
 		D052BE2127ECB7300084068A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/LightroomCC.strings; sourceTree = "<group>"; };
 		D052BE2227ECB7320084068A /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LightroomCC.strings; sourceTree = "<group>"; };
+		D052BE2327EDCEF40084068A /* Object+MediaType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Object+MediaType.swift"; sourceTree = "<group>"; };
 		D0573FA227E9ADED00788155 /* LightroomCCSourceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightroomCCSourceView.swift; sourceTree = "<group>"; };
 		D05F5F6827E8E840003735C6 /* LightroomCCObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LightroomCCObject.swift; sourceTree = "<group>"; };
 		D05F5F6927E8E840003735C6 /* LightroomCC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LightroomCC.swift; sourceTree = "<group>"; };
@@ -424,6 +426,7 @@
 				D01B48FD27CA1378008249C0 /* Object+Filter.swift */,
 				D01B48F927CA1378008249C0 /* Object+Quicklook.swift */,
 				D01B48EF27CA1378008249C0 /* Object+Hashable.swift */,
+				D052BE2327EDCEF40084068A /* Object+MediaType.swift */,
 				D01B48F027CA1378008249C0 /* Object+Error.swift */,
 			);
 			path = "Data Model";
@@ -777,6 +780,7 @@
 				D01B498D27CA1378008249C0 /* MusicFilterBar.swift in Sources */,
 				D01B494527CA1378008249C0 /* ObjectFilePromiseProvider.swift in Sources */,
 				D0BAD10B27D392D700B749FD /* Pexels.swift in Sources */,
+				D052BE2427EDCEF50084068A /* Object+MediaType.swift in Sources */,
 				D01B497227CA1378008249C0 /* ITLibAlbum+Hashable.swift in Sources */,
 				D01C33D727CD187D003337A9 /* DraggingProgressMixin.swift in Sources */,
 				D01B498227CA1378008249C0 /* UnsplashFilter.swift in Sources */,

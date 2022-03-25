@@ -55,6 +55,11 @@ open class PexelsVideoObject : Object
 			downloadFileHandler: Self.downloadFile)
 	}
 
+	override nonisolated public var mediaType:MediaType
+	{
+		return .video
+	}
+
 
 //----------------------------------------------------------------------------------------------------------------------
 

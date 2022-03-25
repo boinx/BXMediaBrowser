@@ -76,6 +76,11 @@ open class VideoFolderContainer : FolderContainer
 
 open class VideoFile : FolderObject
 {
+	override nonisolated public var mediaType:MediaType
+	{
+		return .video
+	}
+
 	/// Creates a thumbnail image for the specified local file URL
 	
 	override open class func loadThumbnail(for identifier:String, data:Any) async throws -> CGImage

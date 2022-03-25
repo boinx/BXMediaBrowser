@@ -53,6 +53,11 @@ open class LightroomCCObject : Object
 			downloadFileHandler: Self.downloadFile)
 	}
 
+	override nonisolated public var mediaType:MediaType
+	{
+		return .image
+	}
+
 
 //----------------------------------------------------------------------------------------------------------------------
 

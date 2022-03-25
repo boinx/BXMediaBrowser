@@ -80,6 +80,11 @@ open class AudioFolderContainer : FolderContainer
 
 open class AudioFile : FolderObject
 {
+	override nonisolated public var mediaType:MediaType
+	{
+		return .audio
+	}
+
 	/// Returns a generic Finder icon for the audio file
 	
 	override open class func loadThumbnail(for identifier:String, data:Any) async throws -> CGImage
