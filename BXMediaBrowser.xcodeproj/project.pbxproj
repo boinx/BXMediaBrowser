@@ -505,11 +505,11 @@
 		D01B491A27CA1378008249C0 /* Photos */ = {
 			isa = PBXGroup;
 			children = (
-				D01B491B27CA1378008249C0 /* PhotosContainer.swift */,
-				D01B491C27CA1378008249C0 /* PHAsset+Info.swift */,
 				D01B491D27CA1378008249C0 /* PhotosSource.swift */,
-				D01B491E27CA1378008249C0 /* PhotosChangeObserver.swift */,
+				D01B491B27CA1378008249C0 /* PhotosContainer.swift */,
 				D01B491F27CA1378008249C0 /* PhotosObject.swift */,
+				D01B491E27CA1378008249C0 /* PhotosChangeObserver.swift */,
+				D01B491C27CA1378008249C0 /* PHAsset+Info.swift */,
 			);
 			path = Photos;
 			sourceTree = "<group>";
