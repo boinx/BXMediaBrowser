@@ -145,28 +145,6 @@ open class LightroomCCSource : Source, AccessControl
 
 		let health:LightroomCC.Health = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/health", requiresAccessToken:false)
 		return health
-
-//		// Build a search request with the provided search string (filter)
-//
-//		let clientID = LightroomCC.shared.clientID
-//		let accessPoint = LightroomCC.shared.healthCheckAPI
-//		let urlComponents = URLComponents(string:accessPoint)!
-//		guard let url = urlComponents.url else { throw Error.loadFailed }
-//
-//		var request = URLRequest(url:url)
-//		request.httpMethod = "GET"
-//		request.setValue(clientID, forHTTPHeaderField:"X-API-Key")
-//
-//		// Perform the online search
-//
-//		let data = try await URLSession.shared.data(with:request)
-//		guard let strippedData = LightroomCC.stripped(data) else { throw Error.loadFailed }
-//
-//		// Decode returned JSON to array of UnsplashPhoto
-//
-//		let health = try JSONDecoder().decode(LightroomCC.Health.self, from:strippedData)
-//
-//		return health
 	}
 
 
@@ -190,10 +168,10 @@ open class LightroomCCSource : Source, AccessControl
 		{
 			params,error in
 			
-			if let accessToken = oauth2.accessToken //, let params = params
+			if oauth2.accessToken != nil
 			{
-				LightroomCC.log.debug {"\(Self.self).\(#function) accessToken = \(oauth2.accessToken)"}
-				LightroomCC.log.debug {"\(Self.self).\(#function) refreshToken = \(oauth2.refreshToken)"}
+				LightroomCC.log.debug {"\(Self.self).\(#function) accessToken = \(oauth2.accessToken ?? "nil")"}
+				LightroomCC.log.debug {"\(Self.self).\(#function) refreshToken = \(oauth2.refreshToken ?? "nil")"}
 				
 				Task
 				{
