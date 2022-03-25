@@ -153,12 +153,45 @@ open class LightroomCCObject : Object
 
 		guard let asset = data as? LightroomCC.Asset else { throw Error.downloadFileFailed }
 		
-		// Download the file
-
 		let catalogID = LightroomCC.shared.catalogID
 		let assetID = asset.id
-		let request = try LightroomCC.shared.request(for:"https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)/renditions/2048")
-		let tmpURL = try await URLSession.shared.downloadFile(with:request)
+		let generateAPI = "https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)/renditions"
+		let downloadAPI = "https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)/renditions/fullsize"
+		
+		// Request the server side generatation of the fullsize file
+
+		var generateRequest = try LightroomCC.shared.request(for:generateAPI, httpMethod:"POST")
+		generateRequest.setValue("fullsize", forHTTPHeaderField:"X-Generate-Renditions")
+		
+		// Poll until the fullsize image is available for downloading
+
+		var shouldRetry = true
+		var retryCount = 0
+		var isAvailable = false
+		var delay:UInt64 = 1_000_000_000
+		
+		while shouldRetry
+		{
+			do
+			{
+				try? await Task.sleep(nanoseconds:delay)
+				try LightroomCC.shared.request(for:downloadAPI, httpMethod:"HEAD")
+				shouldRetry = false
+				isAvailable = true
+			}
+			catch
+			{
+				delay *= 2
+				retryCount += 1
+				if retryCount > 8 { shouldRetry = false }
+			}
+		}
+		
+		// Download the fullsize image file
+
+		guard isAvailable else { throw Error.downloadFileFailed }
+		let downloadRequest = try LightroomCC.shared.request(for:downloadAPI, httpMethod:"GET")
+		let tmpURL = try await URLSession.shared.downloadFile(with:downloadRequest)
 
 		// Rename the file
 
