@@ -224,13 +224,13 @@ open class LightroomCCObject : Object
 		
 		let catalogID = LightroomCC.shared.catalogID
 		let assetID = asset.id
-		let generateAPI = "https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)/renditions"
-		let downloadAPI = "https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)/renditions/fullsize"
 		
-		// Request the server side generatation of the fullsize file
+		// Request the server side generation of the fullsize file
 
+		let generateAPI = "https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)/renditions"
 		var generateRequest = try LightroomCC.shared.request(for:generateAPI, httpMethod:"POST")
 		generateRequest.setValue("fullsize", forHTTPHeaderField:"X-Generate-Renditions")
+		_ = try await URLSession.shared.data(with:generateRequest)
 		
 		// Poll until the fullsize image is available for downloading
 
@@ -238,13 +238,15 @@ open class LightroomCCObject : Object
 		var retryCount = 0
 		var isAvailable = false
 		var delay:UInt64 = 1_000_000_000
+		let downloadAPI = "https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)/renditions/fullsize"
 		
 		while shouldRetry
 		{
 			do
 			{
 				try? await Task.sleep(nanoseconds:delay)
-				try LightroomCC.shared.request(for:downloadAPI, httpMethod:"HEAD")
+				let pollRequest = try LightroomCC.shared.request(for:downloadAPI, httpMethod:"HEAD")
+				_ = try await URLSession.shared.data(with:pollRequest)
 				shouldRetry = false
 				isAvailable = true
 			}
