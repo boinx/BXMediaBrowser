@@ -24,8 +24,10 @@
 
 
 import BXSwiftUtils
+import QuickLookUI
 import Foundation
 import ImageIO
+
 #if os(macOS)
 import AppKit
 #else
@@ -140,7 +142,6 @@ open class LightroomCCObject : Object
 	static func localFileName(for identifier:String, data:Any) -> String
 	{
 		"\(identifier).jpg"
-//		(data as? LightroomCC.Asset)?.name ?? ""
 	}
 
 
@@ -178,13 +179,44 @@ open class LightroomCCObject : Object
 
 	/// QuickLook support
 	
+	private var _previewItemURL:URL? = nil
+	
 	override public var previewItemURL:URL!
     {
-		guard let asset = data as? LightroomCC.Asset else { return nil }
-		let catalogID = LightroomCC.shared.catalogID
-		let assetID = asset.id
-		return URL(string:"https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)/renditions/1280")
-    }
+		if self._previewItemURL == nil, let asset = data as? LightroomCC.Asset
+		{
+			Task
+			{
+				// Download the 1280 version of the image
+				
+				let catalogID = LightroomCC.shared.catalogID
+				let assetID = asset.id
+				let downloadAPI = "https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)/renditions/1280"
+				let request = try LightroomCC.shared.request(for:downloadAPI, httpMethod:"GET")
+				let tmpURL = try await URLSession.shared.downloadFile(with:request)
+				
+				// Rename the file
+				
+				let folderURL = tmpURL.deletingLastPathComponent()
+				let filename = Self.localFileName(for:identifier, data:data).replacingOccurrences(of:".jpg", with:".preview.jpg")
+				let localURL = folderURL.appendingPathComponent(filename)
+				try? FileManager.default.removeItem(at:localURL)
+				try? FileManager.default.moveItem(at:tmpURL, to:localURL)
+				
+				// Store it in the TempFilePool and update the QLPreviewPanel
+				
+				await MainActor.run
+				{
+					TempFilePool.shared.register(localURL)
+					self._previewItemURL = localURL
+					QLPreviewPanel.shared().refreshCurrentPreviewItem()
+					QLPreviewPanel.shared().reloadData()
+				}
+			}
+ 		}
+ 		
+ 		return self._previewItemURL
+   }
 
 	override open var previewItemTitle: String!
     {
