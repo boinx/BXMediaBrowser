@@ -65,7 +65,7 @@ open class LightroomCCSource : Source, AccessControl
 		LightroomCC.log.debug {"\(Self.self).\(#function)"}
 		
 		let icon = Bundle.BXMediaBrowser.image(forResource:"LightroomCC")?.CGImage
-		super.init(identifier:Self.identifier, icon:icon, name:"Adobe Lightroom CC", filter:PexelsFilter())
+		super.init(identifier:Self.identifier, icon:icon, name:"Adobe Lightroom CC", filter:FolderFilter())
 		self.loader = Loader(loadHandler:self.loadContainers)
 
 		self.checkHealth()
