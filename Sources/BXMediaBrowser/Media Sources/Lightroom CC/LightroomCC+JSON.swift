@@ -100,18 +100,47 @@ extension LightroomCC
 
 	public struct Asset : Codable
 	{
+		public struct ImportSource : Codable
+		{
+			public let fileName:String
+			public let fileSize:Int
+			public let originalWidth:Int
+			public let originalHeight:Int
+		}
+		
+		public struct TIFF : Codable
+		{
+			public let Make:String?
+			public let Model:String?
+		}
+		
+		public struct EXIF : Codable
+		{
+			public let ApertureValue:[Int]?
+			public let FNumber:[Int]?
+			public let ExposureTime:[Int]?
+			public let ISOSpeedRatings:Int?
+			public let FocalLengthIn35mmFilm:Double?
+		}
+			
+		public struct Rating : Codable
+		{
+			public let data:String?
+			public let rating:Int?
+		}
+			
+		public struct XMP : Codable
+		{
+			public let tiff:TIFF?
+			public let exif:EXIF?
+		}
+			
 		public struct Payload : Codable
 		{
-			public struct ImportSource : Codable
-			{
-				public let fileName:String
-				public let fileSize:Int
-				public let originalWidth:Int
-				public let originalHeight:Int
-			}
-			
 			public let captureDate:String
 			public let importSource:ImportSource
+			public let xmp:XMP?
+			public let ratings:[String:Rating]?
 		}
 
 		public let base:String?
@@ -124,9 +153,8 @@ extension LightroomCC
 		public var fileSize:Int { self.payload?.importSource.fileSize ?? 0 }
 		public var width:Int { self.payload?.importSource.originalWidth ?? 0 }
 		public var height:Int { self.payload?.importSource.originalHeight ?? 0 }
+		public var rating:Int? { self.payload?.ratings?.values.first?.rating }
 	}
-	
-	
 }
 
 

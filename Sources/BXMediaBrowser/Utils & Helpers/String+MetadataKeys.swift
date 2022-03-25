@@ -44,6 +44,7 @@ public extension String
 	static var widthKey = kMDItemPixelWidth as String
 	static var heightKey = kMDItemPixelHeight as String
 	static var profileNameKey = "ProfileName"
+	static var modelKey = "Model"
 
 	static var exifApertureKey = "ApertureValue"
 	static var exifExposureTimeKey = "ExposureTime"

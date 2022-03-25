@@ -51,6 +51,13 @@ open class LightroomCCObject : Object
 			loadThumbnailHandler: Self.loadThumbnail,
 			loadMetadataHandler: Self.loadMetadata,
 			downloadFileHandler: Self.downloadFile)
+		
+		// If we received a rating from Lightroom, then store it in our database
+		
+		if let rating = asset.rating, rating > StatisticsController.shared.rating(for:self)
+		{
+			StatisticsController.shared.setRating(rating, for:self)
+		}
 	}
 
 	override nonisolated public var mediaType:MediaType
@@ -94,19 +101,36 @@ open class LightroomCCObject : Object
 		metadata[.heightKey] = asset.height
 		metadata[.fileSizeKey] = asset.fileSize
 		
-//		metadata[.descriptionKey] = photo.alt
-//		metadata[.authorsKey] = [photo.photographer]
-//		metadata[.whereFromsKey] = [photo.url]
-//		metadata["photographer"] = photo.photographer
-//		metadata["photographer_url"] = photo.photographer_url
-//		metadata["url"] = photo.url
-//		metadata["photo_src_original"] = photo.src.original
+		if let captureDate = asset.payload?.captureDate
+		{
+			metadata[.exifCaptureDateKey] = captureDate
+		}
+		
+		if let aperture = asset.payload?.xmp?.exif?.FNumber
+		{
+			metadata[.exifApertureKey] = Double(aperture[0]) / Double(aperture[1])
+		}
+		
+		if let exposureTime = asset.payload?.xmp?.exif?.ExposureTime
+		{
+			metadata[.exifExposureTimeKey] = Double(exposureTime[0]) / Double(exposureTime[1])
+		}
+		
+		if let focalLength = asset.payload?.xmp?.exif?.FocalLengthIn35mmFilm
+		{
+			metadata[.exifFocalLengthKey] = focalLength
+		}
+		
+		if let model = asset.payload?.xmp?.tiff?.Model
+		{
+			metadata[.modelKey] = model
+		}
 
 		return metadata
 	}
 
 
-	/// Tranforms the metadata dictionary into an order list of human readable information (with optional click actions)
+	/// Transforms the metadata dictionary into an ordered list of human readable information (with optional click actions)
 
 	@MainActor override open var localizedMetadata:[ObjectMetadataEntry]
     {
@@ -119,9 +143,39 @@ open class LightroomCCObject : Object
 
 		let imageSizeLabel = NSLocalizedString("Image Size", tableName:"LightroomCC", bundle:.BXMediaBrowser, comment:"Label")
 		array += ObjectMetadataEntry(label:imageSizeLabel, value:"\(asset.width) × \(asset.height) Pixels")
-
+		
 		let fileSizeLabel = NSLocalizedString("File Size", tableName:"LightroomCC", bundle:.BXMediaBrowser, comment:"Label")
 		array += ObjectMetadataEntry(label:fileSizeLabel, value:asset.fileSize.fileSizeDescription)
+
+		if let value = asset.payload?.xmp?.tiff?.Model
+		{
+			var str = value
+			if let make = asset.payload?.xmp?.tiff?.Make, !str.hasPrefix(make) { str = make + " " + str }
+			let label = NSLocalizedString("Camera", tableName:"LightroomCC", bundle:.BXMediaBrowser, comment:"Label")
+			array += ObjectMetadataEntry(label:label, value:str)
+		}
+		
+		if let value = asset.payload?.xmp?.exif?.ApertureValue
+		{
+			let aperture = ceil(Double(value[0]) / Double(value[1]) * 10) / 10
+			let label = NSLocalizedString("Aperture", tableName:"LightroomCC", bundle:.BXMediaBrowser, comment:"Label")
+			array += ObjectMetadataEntry(label:label, value:"f\(aperture)")
+		}
+		
+		if let value = asset.payload?.xmp?.exif?.ExposureTime
+		{
+			let time = Double(value[0]) / Double(value[1])
+			let str = Formatter.exposureTimeFormatter.string(for:time) ?? "\(time)s"
+			let label = NSLocalizedString("Exposure Time", tableName:"LightroomCC", bundle:.BXMediaBrowser, comment:"Label")
+			array += ObjectMetadataEntry(label:label, value:str)
+		}
+		
+		if let value = asset.payload?.xmp?.exif?.FocalLengthIn35mmFilm
+		{
+			let mm = Int(value)
+			let label = NSLocalizedString("Focal Length", tableName:"LightroomCC", bundle:.BXMediaBrowser, comment:"Label")
+			array += ObjectMetadataEntry(label:label, value:"\(mm)mm")
+		}
 
 		return array
     }
