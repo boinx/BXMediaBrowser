@@ -45,7 +45,12 @@ open class ImageObjectViewController : ObjectViewController
 	
 	override class var spacing:CGFloat { 10 }
 
-
+	private var hasThumbnail = false
+	{
+		didSet { self.updateHighlight() }
+	}
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -53,6 +58,7 @@ open class ImageObjectViewController : ObjectViewController
 	{
 		super.setup()
 		
+		self.hasThumbnail = false 
 		self.textField?.lineBreakMode = .byTruncatingTail
 		self.imageView?.imageScaling = .scaleProportionallyUpOrDown
 		self.useCountView?.imageScaling = .scaleProportionallyUpOrDown
@@ -76,12 +82,16 @@ open class ImageObjectViewController : ObjectViewController
 
 		// Thumbnail
 		
-		if let thumbnail = object.thumbnailImage
+		let thumbnail = object.thumbnailImage
+		let placeholder = Bundle.BXMediaBrowser.image(forResource:"thumbnail-placeholder")?.CGImage
+		self.hasThumbnail = thumbnail != nil
+		
+		if let image = thumbnail ?? placeholder
 		{
-			let w = thumbnail.width
-			let h = thumbnail.height
+			let w = image.width
+			let h = image.height
 			let size = CGSize(width:w, height:h)
-			self.imageView?.image = NSImage(cgImage:thumbnail, size:size)
+			self.imageView?.image = NSImage(cgImage:image, size:size)
 		}
 	
 		// Name
@@ -155,7 +165,9 @@ open class ImageObjectViewController : ObjectViewController
     
     private var strokeColor:NSColor
     {
-		self.view.effectiveAppearance.isDarkMode ?
+		guard hasThumbnail else { return .clear }
+		
+		return self.view.effectiveAppearance.isDarkMode ?
 			NSColor.white.withAlphaComponent(0.2) :
 			NSColor.black.withAlphaComponent(0.2)
     }
