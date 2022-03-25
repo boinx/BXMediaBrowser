@@ -155,19 +155,29 @@ open class LightroomCCObject : Object
 			array += ObjectMetadataEntry(label:label, value:str)
 		}
 		
-		if let value = asset.payload?.xmp?.exif?.ApertureValue
-		{
-			let aperture = ceil(Double(value[0]) / Double(value[1]) * 10) / 10
-			let label = NSLocalizedString("Aperture", tableName:"LightroomCC", bundle:.BXMediaBrowser, comment:"Label")
-			array += ObjectMetadataEntry(label:label, value:"f\(aperture)")
-		}
+		let exposureTime = asset.payload?.xmp?.exif?.ExposureTime
+		let aperture = asset.payload?.xmp?.exif?.ApertureValue
 		
-		if let value = asset.payload?.xmp?.exif?.ExposureTime
+		if exposureTime != nil || aperture != nil
 		{
-			let time = Double(value[0]) / Double(value[1])
-			let str = Formatter.exposureTimeFormatter.string(for:time) ?? "\(time)s"
-			let label = NSLocalizedString("Exposure Time", tableName:"LightroomCC", bundle:.BXMediaBrowser, comment:"Label")
-			array += ObjectMetadataEntry(label:label, value:str)
+			var string = ""
+			
+			if let aperture = aperture
+			{
+				let f = ceil(Double(aperture[0]) / Double(aperture[1]) * 10) / 10
+				string += "f\(f)"
+			}
+			
+			if let exposureTime = exposureTime
+			{
+				let t = Double(exposureTime[0]) / Double(exposureTime[1])
+				let str = Formatter.exposureTimeFormatter.string(for:t) ?? "\(t)s"
+				if !string.isEmpty { string += " @ " }
+				string += str
+			}
+			
+			let label = NSLocalizedString("Exposure", tableName:"LightroomCC", bundle:.BXMediaBrowser, comment:"Label")
+			array += ObjectMetadataEntry(label:label, value:string)
 		}
 		
 		if let value = asset.payload?.xmp?.exif?.FocalLengthIn35mmFilm
