@@ -41,14 +41,16 @@ open class LightroomCCContainer : Container
 	class LightroomCCData
 	{
 		var album:LightroomCC.Albums.Resource
+		let allowedMediaTypes:[Object.MediaType]
 		var nextAccessPoint:String? = nil
 		var containers:[Container]? = nil
 		var objects:[Object]? = nil
 		var pageIndex:Int = 0
 		
-		init(with album:LightroomCC.Albums.Resource)
+		init(with album:LightroomCC.Albums.Resource, allowedMediaTypes:[Object.MediaType])
 		{
 			self.album = album
+			self.allowedMediaTypes = allowedMediaTypes
 			self.nextAccessPoint = nil
 			self.containers = nil
 			self.objects = nil
@@ -62,12 +64,13 @@ open class LightroomCCContainer : Container
 
 	/// Creates a new Container for the folder at the specified URL
 	
-	public required init(album:LightroomCC.Albums.Resource, filter:Object.Filter)
+	public required init(album:LightroomCC.Albums.Resource, allowedMediaTypes:[Object.MediaType], filter:Object.Filter)
 	{
 		super.init(
 			identifier: "LightroomCC:Album:\(album.id)",
+			icon: album.subtype.contains("set") ? "folder" : "rectangle.stack",
 			name: album.payload.name,
-			data: LightroomCCData(with:album),
+			data: LightroomCCData(with:album, allowedMediaTypes:allowedMediaTypes),
 			filter: filter,
 			loadHandler: Self.loadContents)
 
@@ -121,8 +124,13 @@ open class LightroomCCContainer : Container
 
 		let catalogID = LightroomCC.shared.catalogID
 		let albumID = data.album.id
+		
+		let allowedMediaTypes = data.allowedMediaTypes
+		let subtype = allowedMediaTypes
+			.map { $0.rawValue }
+			.joined(separator:";")
 
-		data.nextAccessPoint = "https://lr.adobe.io/v2/catalogs/\(catalogID)/albums/\(albumID)/assets?limit=30&embed=asset;links"
+		data.nextAccessPoint = "https://lr.adobe.io/v2/catalogs/\(catalogID)/albums/\(albumID)/assets?limit=50&subtype=\(subtype)&embed=asset;links"
 		data.containers = nil
 		data.objects = nil
 		data.pageIndex = 0
@@ -134,6 +142,10 @@ open class LightroomCCContainer : Container
 	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
 	{
 		guard let data = data as? LightroomCCData else { throw Error.loadContentsFailed }
+
+		let allowedMediaTypes = data.allowedMediaTypes
+		let allowImages = allowedMediaTypes.contains(.image)
+		let allowVideos = allowedMediaTypes.contains(.video)
 		
 		// Find our child albums (parent is self) and create a Container for each child
 		
@@ -151,7 +163,7 @@ open class LightroomCCContainer : Container
 
 			for album in childAlbums
 			{
-				containers += LightroomCCContainer(album:album, filter:filter)
+				containers += LightroomCCContainer(album:album, allowedMediaTypes:allowedMediaTypes, filter:filter)
 			}
 			
 			data.containers = containers
@@ -169,8 +181,19 @@ open class LightroomCCContainer : Container
 		for resource in page.resources
 		{
 			let asset = resource.asset
-			let object = LightroomCCObject(with:asset)
-			self.safelyAdd(object, to:data)
+			let subtype = asset.subtype ?? ""
+			print("asset \(subtype) \(asset.id)")
+			
+			if subtype == "image" && allowImages
+			{
+				let object = LightroomCCObject(with:asset)
+				self.safelyAdd(object, to:data)
+			}
+			else if subtype == "video" && allowVideos
+			{
+				let object = LightroomCCObject(with:asset)
+				self.safelyAdd(object, to:data)
+			}
 		}
 		
 		data.pageIndex += 1

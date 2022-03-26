@@ -36,7 +36,7 @@ import QuickLookUI
 
 extension Object
 {
-	public enum MediaType
+	public enum MediaType : String
 	{
 		case image
 		case video

@@ -54,15 +54,19 @@ open class LightroomCCSource : Source, AccessControl
 		}
 	}
 
-
+	public let allowedMediaTypes:[Object.MediaType]
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 
 	/// Creates a new Source for local file system directories
 	
-	public init()
+	public init(allowedMediaTypes:[Object.MediaType])
 	{
 		LightroomCC.log.debug {"\(Self.self).\(#function)"}
+		
+		self.allowedMediaTypes = allowedMediaTypes
 		
 		let icon = Bundle.BXMediaBrowser.image(forResource:"LightroomCC")?.CGImage
 		super.init(identifier:Self.identifier, icon:icon, name:"Adobe Lightroom CC", filter:FolderFilter())
@@ -247,7 +251,7 @@ open class LightroomCCSource : Source, AccessControl
 		
 		return topLevelAlbums.map
 		{
-			LightroomCCContainer(album:$0, filter:filter)
+			LightroomCCContainer(album:$0, allowedMediaTypes:allowedMediaTypes, filter:filter)
 		}
 	}
 
