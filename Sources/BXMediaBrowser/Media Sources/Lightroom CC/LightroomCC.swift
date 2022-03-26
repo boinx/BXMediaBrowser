@@ -110,6 +110,18 @@ public class LightroomCC : ObservableObject
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	/// The ID of the logged in user
+
+	@Published public var userID:String = ""
+
+	/// The name of the logged in user
+
+	@Published public var userName:String? = nil
+
+	/// The email of the logged in user
+
+	@Published public var userEmail:String? = nil
+
 	/// The ID of the current Lightroom catalog
 	
 	@Published public var catalogID:String = ""
@@ -118,6 +130,7 @@ public class LightroomCC : ObservableObject
 	
 	@Published public var allAlbums:[LightroomCC.Albums.Resource] = []
 	
+	/// Possible states for Lightroom access
 	
 	public enum Status : Equatable
 	{
@@ -128,6 +141,8 @@ public class LightroomCC : ObservableObject
 		case loggedIn
 	}
 	
+	/// Error that moight occur when talking to the Lightroom server
+	
 	public enum Error : Swift.Error
 	{
 		case invalidURL
@@ -135,6 +150,7 @@ public class LightroomCC : ObservableObject
 		case corruptData
 		case loadImageFailed
 	}
+	
 	
 //----------------------------------------------------------------------------------------------------------------------
 

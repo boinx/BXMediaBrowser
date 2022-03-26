@@ -227,11 +227,15 @@ open class LightroomCCSource : Source, AccessControl
 		guard LightroomCC.shared.isLoggedIn else { return [] }
 		
 		let catalog:LightroomCC.Catalog = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/catalog")
+		let account:LightroomCC.Account = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/account")  
 		let albums:LightroomCC.Albums = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/catalogs/\(catalog.id)/albums")
 		
 		LightroomCC.shared.catalogID = catalog.id
 		LightroomCC.shared.allAlbums = albums.resources
-	
+		LightroomCC.shared.userID = account.id
+		LightroomCC.shared.userName = account.full_name
+		LightroomCC.shared.userEmail = account.email
+		
 		// Find top-level albums (parent is nil)
 		
 		let topLevelAlbums = albums.resources.filter

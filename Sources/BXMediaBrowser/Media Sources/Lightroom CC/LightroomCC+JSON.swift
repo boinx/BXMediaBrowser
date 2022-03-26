@@ -43,6 +43,19 @@ extension LightroomCC
 	}
 
 
+	/// The JSON returned by https://lr.adobe.io/v2/account
+
+	public struct Account : Codable
+	{
+		public let base:String?
+		public let id:String
+		public let email:String?
+		public let full_name:String?
+		public let first_name:String?
+		public let last_name:String?
+	}
+
+
 	/// The JSON returned by https://lr.adobe.io/v2/catalog
 
 	public struct Catalog : Codable
@@ -106,6 +119,7 @@ extension LightroomCC
 			public let fileSize:Int
 			public let originalWidth:Int
 			public let originalHeight:Int
+			public let contentType:String?
 		}
 		
 		public struct TIFF : Codable

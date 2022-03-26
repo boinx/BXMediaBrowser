@@ -24,6 +24,7 @@
 
 
 import BXSwiftUI
+import BXSwiftUtils
 import SwiftUI
 
 
@@ -119,47 +120,42 @@ public struct LightroomCCSourceView : View
 		}
 		else if source.status == .loggedOut
 		{
-			self.button(icon:"person.crop.circle", title:NSLocalizedString("Login", bundle:.BXMediaBrowser, comment:"Button Title"))
-			{
-				self.source.grantAccess()
-			}
+			self.accountButton()
+				.id("loggedOut")
 		}
-		else if source.status == .loggedIn
+		else
 		{
-			self.button(icon:"person.crop.circle", title:NSLocalizedString("Logout", bundle:.BXMediaBrowser, comment:"Button Title"))
-			{
-				self.source.revokeAccess()
-			}
+			self.accountButton()
+				.id(LightroomCC.shared.userID)
 		}
     }
     
     
-    @ViewBuilder func button(icon:String, title:String, action:@escaping ()->Void) -> some View
+    func accountButton() -> some View
     {
-		BXImage(systemName:icon).popupMenu(
-		[
-			BXMenuItemSpec.action(title:title, action:action)
-		])
-
-//		if #available(macOS 11, *)
-//		{
-//			Menu
-//			{
-//				Button(title, action:action)
-//			}
-//			label:
-//			{
-//				BXImage(systemName:icon)
-//			}
-//			.menuStyle(.borderlessButton)
-//		}
-//		else
-//		{
-//			BXImage(systemName:icon).onTapGesture
-//			{
-//				action()
-//			}
-//		}
+		var items:[BXMenuItemSpec] = []
+		
+		if source.status == .loggedOut
+		{
+			items += BXMenuItemSpec.action(title:NSLocalizedString("Login", bundle:.BXMediaBrowser, comment:"Button Title"))
+			{
+				self.source.grantAccess()
+			}
+		}
+		else
+		{
+			if let user = LightroomCC.shared.userEmail ?? LightroomCC.shared.userName
+			{
+				items += BXMenuItemSpec.regular(title:user, value:0, isEnabled:false)
+			}
+			
+			items += BXMenuItemSpec.action(title:NSLocalizedString("Logout", bundle:.BXMediaBrowser, comment:"Button Title"))
+			{
+				self.source.revokeAccess()
+			}
+		}
+		
+		return BXImage(systemName:"person.crop.circle").popupMenu(items)
     }
 }
 
