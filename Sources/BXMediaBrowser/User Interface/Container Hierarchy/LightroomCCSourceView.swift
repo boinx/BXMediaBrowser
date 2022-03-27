@@ -36,6 +36,7 @@ public struct LightroomCCSourceView : View
 	// Model
 	
 	@ObservedObject var source:LightroomCCSource
+	@ObservedObject var lightroom:LightroomCC
 	
 	// Environment
 	
@@ -44,9 +45,10 @@ public struct LightroomCCSourceView : View
 
 	// Init
 	
-	public init(with source:LightroomCCSource)
+	public init(with source:LightroomCCSource, _ lightroom:LightroomCC)
 	{
 		self.source = source
+		self.lightroom = lightroom
 	}
 	
 	// View
@@ -72,7 +74,7 @@ public struct LightroomCCSourceView : View
 			
 			body:
 			{
-				if source.status == .loggedIn
+				if lightroom.status == .loggedIn
 				{
 					EfficientVStack(alignment:.leading, spacing:2)
 					{
@@ -108,17 +110,17 @@ public struct LightroomCCSourceView : View
     
     @ViewBuilder var statusView: some View
     {
-		if source.status == .invalidClientID
+		if lightroom.status == .invalidClientID
 		{
 			BXImage(systemName:"exclamationmark.octagon.fill")
 				.foregroundColor(.red)
 		}
-		else if source.status == .currentlyUnavailable
+		else if lightroom.status == .currentlyUnavailable
 		{
 			BXImage(systemName:"exclamationmark.triangle.fill")
 				.foregroundColor(.yellow)
 		}
-		else if source.status == .loggedOut
+		else if lightroom.status == .loggedOut
 		{
 			self.accountButton()
 				.id("loggedOut")
@@ -126,7 +128,7 @@ public struct LightroomCCSourceView : View
 		else
 		{
 			self.accountButton()
-				.id(LightroomCC.shared.userID)
+				.id(lightroom.userID)
 		}
     }
     
@@ -135,7 +137,7 @@ public struct LightroomCCSourceView : View
     {
 		var items:[BXMenuItemSpec] = []
 		
-		if source.status == .loggedOut
+		if lightroom.status == .loggedOut
 		{
 			items += BXMenuItemSpec.action(title:NSLocalizedString("Login", bundle:.BXMediaBrowser, comment:"Button Title"))
 			{
@@ -144,7 +146,7 @@ public struct LightroomCCSourceView : View
 		}
 		else
 		{
-			if let user = LightroomCC.shared.userEmail ?? LightroomCC.shared.userName
+			if let user = lightroom.userEmail ?? lightroom.userName
 			{
 				items += BXMenuItemSpec.regular(title:user, value:0, isEnabled:false)
 			}

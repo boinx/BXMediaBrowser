@@ -39,21 +39,6 @@ open class LightroomCCSource : Source, AccessControl
 	
 	static let identifier = "LightroomCC:"
 	
-	/// The current status
-	
-	@MainActor public var status:LightroomCC.Status = .unknown
-	{
-		willSet
-		{
-			self.objectWillChange.send()
-		}
-		
-		didSet
-		{
-			LightroomCC.log.debug {"\(Self.self).\(#function) = \(status)"}
-		}
-	}
-
 	public let allowedMediaTypes:[Object.MediaType]
 	
 	
@@ -119,21 +104,21 @@ open class LightroomCCSource : Source, AccessControl
 			{
 				await MainActor.run
 				{
-					self.status = LightroomCC.shared.isLoggedIn ? .loggedIn : .loggedOut
+					LightroomCC.shared.status = LightroomCC.shared.isLoggedIn ? .loggedIn : .loggedOut
 				}
 			}
 			else if let code = health.code, code == 9999
 			{
 				await MainActor.run
 				{
-					self.status = .currentlyUnavailable
+					LightroomCC.shared.status = .currentlyUnavailable
 				}
 			}
 			else
 			{
 				await MainActor.run
 				{
-					self.status = .invalidClientID
+					LightroomCC.shared.status = .invalidClientID
 				}
 			}
 			
@@ -181,7 +166,7 @@ open class LightroomCCSource : Source, AccessControl
 				{
 					await MainActor.run
 					{
-						self.status = .loggedIn
+						LightroomCC.shared.status = .loggedIn
 						self.load()
 						completionHandler(self.hasAccess)
 					}
@@ -195,7 +180,7 @@ open class LightroomCCSource : Source, AccessControl
 				{
 					await MainActor.run
 					{
-						self.status = .loggedOut
+						LightroomCC.shared.status = .loggedOut
 						completionHandler(self.hasAccess)
 					}
 				}
@@ -210,7 +195,7 @@ open class LightroomCCSource : Source, AccessControl
 		LightroomCC.shared.catalogID = ""
 		LightroomCC.shared.allAlbums = []
 		
-		self.status = .loggedOut
+		LightroomCC.shared.status = .loggedOut
 		completionHandler(hasAccess)
 	}
 
@@ -229,16 +214,21 @@ open class LightroomCCSource : Source, AccessControl
 		LightroomCC.log.debug {"\(Self.self).\(#function)"}
 
 		guard LightroomCC.shared.isLoggedIn else { return [] }
+
+		// Get account & catalog  info
 		
+		let account:LightroomCC.Account = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/account")
 		let catalog:LightroomCC.Catalog = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/catalog")
-		let account:LightroomCC.Account = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/account")  
 		let albums:LightroomCC.Albums = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/catalogs/\(catalog.id)/albums")
 		
-		LightroomCC.shared.catalogID = catalog.id
-		LightroomCC.shared.allAlbums = albums.resources
-		LightroomCC.shared.userID = account.id
-		LightroomCC.shared.userName = account.full_name
-		LightroomCC.shared.userEmail = account.email
+		await MainActor.run
+		{
+			LightroomCC.shared.catalogID = catalog.id
+			LightroomCC.shared.allAlbums = albums.resources
+			LightroomCC.shared.userID = account.id
+			LightroomCC.shared.userName = account.full_name
+			LightroomCC.shared.userEmail = account.email
+		}
 		
 		// Find top-level albums (parent is nil)
 		

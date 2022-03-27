@@ -110,6 +110,25 @@ public class LightroomCC : ObservableObject
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	/// The current status
+	
+	@MainActor @Published public var status:LightroomCC.Status = .unknown
+	{
+		didSet
+		{
+			LightroomCC.log.debug {"\(Self.self).\(#function) = \(status)"}
+		}
+	}
+
+	public enum Status : Equatable
+	{
+		case unknown
+		case invalidClientID
+		case currentlyUnavailable
+		case loggedOut
+		case loggedIn
+	}
+	
 	/// The ID of the logged in user
 
 	@Published public var userID:String = ""
@@ -129,17 +148,6 @@ public class LightroomCC : ObservableObject
 	/// The cached list of all albums (loaded at launch time)
 	
 	@Published public var allAlbums:[LightroomCC.Albums.Resource] = []
-	
-	/// Possible states for Lightroom access
-	
-	public enum Status : Equatable
-	{
-		case unknown
-		case invalidClientID
-		case currentlyUnavailable
-		case loggedOut
-		case loggedIn
-	}
 	
 	/// Error that moight occur when talking to the Lightroom server
 	
