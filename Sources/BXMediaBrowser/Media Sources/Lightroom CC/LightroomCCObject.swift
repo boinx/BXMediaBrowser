@@ -45,7 +45,7 @@ open class LightroomCCObject : Object
 	public required init(with asset:LightroomCC.Asset)
 	{
 		super.init(
-			identifier: "LightroomCC:Asset:\(asset.id)",
+			identifier: Self.identifier(for:asset),
 			name: asset.name,
 			data: asset,
 			loadThumbnailHandler: Self.loadThumbnail,
@@ -60,6 +60,11 @@ open class LightroomCCObject : Object
 		}
 	}
 
+	static func identifier(for asset:LightroomCC.Asset) -> String
+	{
+		"LightroomCC:Asset:\(asset.id)"
+	}
+	
 	override nonisolated public var mediaType:MediaType
 	{
 		return .image

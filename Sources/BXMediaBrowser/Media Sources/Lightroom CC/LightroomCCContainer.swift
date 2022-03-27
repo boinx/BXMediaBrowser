@@ -100,6 +100,14 @@ open class LightroomCCContainer : Container
 		return data.album.subtype.contains("set")
 	}
 
+	/// Returns the list of allowed sort Kinds for this Container
+		
+	override open var allowedSortTypes:[Object.Filter.SortType]
+	{
+		[.alphabetical,.creationDate,.rating]
+	}
+
+
 	// Return "Images" instead of "Items"
 	
     @MainActor override open var localizedObjectCount:String
@@ -182,7 +190,14 @@ open class LightroomCCContainer : Container
 		{
 			let asset = resource.asset
 			let subtype = asset.subtype ?? ""
-			print("asset \(subtype) \(asset.id)")
+			let identifier = LightroomCCObject.identifier(for:asset)
+			
+			// Filter by name and/or rating
+			
+			guard filter.searchString.isEmpty || asset.name.contains(filter.searchString) else { continue }
+			guard filter.rating == 0 || StatisticsController.shared.rating(for:identifier) >= filter.rating else { continue }
+			
+			// Wrap asset in an Object
 			
 			if subtype == "image" && allowImages
 			{
@@ -211,12 +226,13 @@ open class LightroomCCContainer : Container
 		
 		// Sort according to specified sort order
 		
-//		var objects:[Object] = data.objects ?? []
-//		filter.sort(&objects)
+		let containers = data.containers ?? []
+		var objects:[Object] = data.objects ?? []
+		filter.sort(&objects)
 		
 		// Return contents
 		
-		return (data.containers ?? [],data.objects ?? [])
+		return (containers,objects)
 	}
 
 
