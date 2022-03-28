@@ -46,6 +46,7 @@ open class LightroomCCContainer : Container
 		var containers:[Container]? = nil
 		var objects:[Object]? = nil
 		var pageIndex:Int = 0
+		var lastUsedFilter = LightroomCCFilter()
 		
 		init(with album:LightroomCC.Albums.Resource, allowedMediaTypes:[Object.MediaType])
 		{
@@ -62,19 +63,22 @@ open class LightroomCCContainer : Container
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: - Setup
+	
 	/// Creates a new Container for the folder at the specified URL
 	
-	public required init(album:LightroomCC.Albums.Resource, allowedMediaTypes:[Object.MediaType], filter:Object.Filter)
+	public required init(album:LightroomCC.Albums.Resource, allowedMediaTypes:[Object.MediaType], filter:LightroomCCFilter)
 	{
+		let data = LightroomCCData(with:album, allowedMediaTypes:allowedMediaTypes)
 		super.init(
 			identifier: "LightroomCC:Album:\(album.id)",
 			icon: album.subtype.contains("set") ? "folder" : "rectangle.stack",
 			name: album.payload.name,
-			data: LightroomCCData(with:album, allowedMediaTypes:allowedMediaTypes),
+			data: data,
 			filter: filter,
 			loadHandler: Self.loadContents)
 
-		self.resetPaging()
+		Self.resetPaging(with:data,filter)
 		
 		#if os(macOS)
 		
@@ -104,32 +108,29 @@ open class LightroomCCContainer : Container
 		
 	override open var allowedSortTypes:[Object.Filter.SortType]
 	{
-		[.alphabetical,.creationDate,.rating]
+		[.creationDate,.alphabetical]
 	}
 
 
-	// Return "Images" instead of "Items"
+	// Choose unit name depending on allowedMediaTypes
 	
     @MainActor override open var localizedObjectCount:String
     {
-		self.objects.count.localizedImagesString
+		let n = self.objects.count
+		guard let data = data as? LightroomCCData else { return n.localizedItemsString }
+		if data.allowedMediaTypes == [.image] { return n.localizedImagesString }
+		if data.allowedMediaTypes == [.video] { return n.localizedVideosString }
+		return n.localizedItemsString
     }
-    
-//	/// Returns the list of allowed sort Kinds for this Container
-//
-//	override open var allowedSortTypes:[Object.Filter.SortType]
-//	{
-//		[]
-//	}
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	func resetPaging()
+	// MARK: - Loading
+	
+	class func resetPaging(with data:LightroomCCData,_ filter:LightroomCCFilter)
 	{
-		guard let data = data as? LightroomCCData else { return }
-
 		let catalogID = LightroomCC.shared.catalogID
 		let albumID = data.album.id
 		
@@ -137,11 +138,26 @@ open class LightroomCCContainer : Container
 		let subtype = allowedMediaTypes
 			.map { $0.rawValue }
 			.joined(separator:";")
-
-		data.nextAccessPoint = "https://lr.adobe.io/v2/catalogs/\(catalogID)/albums/\(albumID)/assets?limit=50&subtype=\(subtype)&embed=asset;links"
+		
+		var sorting = ""
+		
+		if filter.sortType == .creationDate
+		{
+			sorting = filter.sortDirection == .ascending ? "captured_after=-0001-12-31T23:59:59" : "captured_before=-"
+		}
+		else
+		{
+			sorting = filter.sortDirection == .ascending ? "order_after=-" : "order_before="
+		}
+		
+		data.nextAccessPoint = "https://lr.adobe.io/v2/catalogs/\(catalogID)/albums/\(albumID)/assets?subtype=\(subtype)&\(sorting)&embed=asset;links&limit=50"
 		data.containers = nil
 		data.objects = nil
 		data.pageIndex = 0
+		
+		data.lastUsedFilter.searchString = filter.searchString
+		data.lastUsedFilter.rating = filter.rating
+		data.lastUsedFilter.sortType = filter.sortType
 	}
 	
 	
@@ -150,10 +166,18 @@ open class LightroomCCContainer : Container
 	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
 	{
 		guard let data = data as? LightroomCCData else { throw Error.loadContentsFailed }
-
+		guard let filter = filter as? LightroomCCFilter else { throw Error.loadContentsFailed }
+		
 		let allowedMediaTypes = data.allowedMediaTypes
 		let allowImages = allowedMediaTypes.contains(.image)
 		let allowVideos = allowedMediaTypes.contains(.video)
+		
+		// When the filter has changed, then reset paging data
+		
+		if data.lastUsedFilter != filter
+		{
+			Self.resetPaging(with:data,filter)
+		}
 		
 		// Find our child albums (parent is self) and create a Container for each child
 		
@@ -182,10 +206,11 @@ open class LightroomCCContainer : Container
 		guard let accessPoint = data.nextAccessPoint else { return (data.containers ?? [],data.objects ?? []) }
 		LightroomCC.log.debug {"\(Self.self).\(#function) \(identifier) - PAGE \(data.pageIndex)"}
 		let page:LightroomCC.AlbumAssets = try await LightroomCC.shared.getData(from:accessPoint, debugLogging:false)
-
 //		dump(page)
 //		print("\n\n")
-
+		
+		let searchString = filter.searchString.lowercased()
+		
 		for resource in page.resources
 		{
 			let asset = resource.asset
@@ -194,7 +219,7 @@ open class LightroomCCContainer : Container
 			
 			// Filter by name and/or rating
 			
-			guard filter.searchString.isEmpty || asset.name.contains(filter.searchString) else { continue }
+			guard searchString.isEmpty || asset.name.lowercased().contains(searchString) else { continue }
 			guard filter.rating == 0 || StatisticsController.shared.rating(for:identifier) >= filter.rating else { continue }
 			
 			// Wrap asset in an Object
@@ -227,8 +252,8 @@ open class LightroomCCContainer : Container
 		// Sort according to specified sort order
 		
 		let containers = data.containers ?? []
-		var objects:[Object] = data.objects ?? []
-		filter.sort(&objects)
+		let objects = data.objects ?? []
+//		filter.sort(&objects)
 		
 		// Return contents
 		

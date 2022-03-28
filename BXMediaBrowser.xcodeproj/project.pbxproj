@@ -118,6 +118,8 @@
 		D052BE2427EDCEF50084068A /* Object+MediaType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D052BE2327EDCEF40084068A /* Object+MediaType.swift */; };
 		D052BE2827F075630084068A /* LightroomCCImageObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D052BE2727F075610084068A /* LightroomCCImageObject.swift */; };
 		D052BE2A27F075700084068A /* LightroomCCVideoObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D052BE2927F075700084068A /* LightroomCCVideoObject.swift */; };
+		D052BE2C27F0B97D0084068A /* LightroomCCFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D052BE2B27F0B97D0084068A /* LightroomCCFilter.swift */; };
+		D052BE2E27F0BDA80084068A /* LightroomCCFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D052BE2D27F0BDA80084068A /* LightroomCCFilterBar.swift */; };
 		D0573FA327E9ADED00788155 /* LightroomCCSourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0573FA227E9ADED00788155 /* LightroomCCSourceView.swift */; };
 		D0573FA627E9D0C900788155 /* OAuth2 in Frameworks */ = {isa = PBXBuildFile; productRef = D0573FA527E9D0C900788155 /* OAuth2 */; };
 		D05F5F6D27E8E840003735C6 /* LightroomCCObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05F5F6827E8E840003735C6 /* LightroomCCObject.swift */; };
@@ -270,6 +272,8 @@
 		D052BE2327EDCEF40084068A /* Object+MediaType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Object+MediaType.swift"; sourceTree = "<group>"; };
 		D052BE2727F075610084068A /* LightroomCCImageObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightroomCCImageObject.swift; sourceTree = "<group>"; };
 		D052BE2927F075700084068A /* LightroomCCVideoObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightroomCCVideoObject.swift; sourceTree = "<group>"; };
+		D052BE2B27F0B97D0084068A /* LightroomCCFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightroomCCFilter.swift; sourceTree = "<group>"; };
+		D052BE2D27F0BDA80084068A /* LightroomCCFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightroomCCFilterBar.swift; sourceTree = "<group>"; };
 		D0573FA227E9ADED00788155 /* LightroomCCSourceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightroomCCSourceView.swift; sourceTree = "<group>"; };
 		D05F5F6827E8E840003735C6 /* LightroomCCObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LightroomCCObject.swift; sourceTree = "<group>"; };
 		D05F5F6927E8E840003735C6 /* LightroomCC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LightroomCC.swift; sourceTree = "<group>"; };
@@ -536,11 +540,12 @@
 				D01B492227CA1378008249C0 /* RatingFilterView.swift */,
 				D01B492327CA1378008249C0 /* AudioObjectFooterView.swift */,
 				D01B492427CA1378008249C0 /* SearchBar.swift */,
+				D01B492827CA1378008249C0 /* FolderFilterBar.swift */,
 				D01B492527CA1378008249C0 /* MusicFilterBar.swift */,
 				D01B492627CA1378008249C0 /* UnsplashFilterBar.swift */,
 				D0BAD10D27D3AB0800B749FD /* PexelsFilterBar.swift */,
+				D052BE2D27F0BDA80084068A /* LightroomCCFilterBar.swift */,
 				D01B492727CA1378008249C0 /* DefaultObjectFooterView.swift */,
-				D01B492827CA1378008249C0 /* FolderFilterBar.swift */,
 			);
 			path = "Header & Footer";
 			sourceTree = "<group>";
@@ -628,6 +633,7 @@
 				D05F5F6827E8E840003735C6 /* LightroomCCObject.swift */,
 				D052BE2727F075610084068A /* LightroomCCImageObject.swift */,
 				D052BE2927F075700084068A /* LightroomCCVideoObject.swift */,
+				D052BE2B27F0B97D0084068A /* LightroomCCFilter.swift */,
 				D05F5F6B27E8E840003735C6 /* LightroomCC+JSON.swift */,
 			);
 			path = "Lightroom CC";
@@ -778,6 +784,7 @@
 				D01B497E27CA1378008249C0 /* UnsplashSource.swift in Sources */,
 				D01B498027CA1378008249C0 /* UnsplashJSON.swift in Sources */,
 				D01B495327CA1378008249C0 /* TempFilePool.swift in Sources */,
+				D052BE2C27F0B97D0084068A /* LightroomCCFilter.swift in Sources */,
 				D01B499F27CA1378008249C0 /* ObjectRatingView.swift in Sources */,
 				D01B499327CA1378008249C0 /* BXProgressViewController.swift in Sources */,
 				D01B496027CA1378008249C0 /* Object+Hashable.swift in Sources */,
@@ -839,6 +846,7 @@
 				D0BAD10C27D392D700B749FD /* PexelsJSON.swift in Sources */,
 				D01B497427CA1378008249C0 /* MusicSource.swift in Sources */,
 				D05F5F7027E8E840003735C6 /* LightroomCC+JSON.swift in Sources */,
+				D052BE2E27F0BDA80084068A /* LightroomCCFilterBar.swift in Sources */,
 				D01B498C27CA1378008249C0 /* SearchBar.swift in Sources */,
 				D01B499A27CA1378008249C0 /* FolderSourceView.swift in Sources */,
 				D01B497327CA1378008249C0 /* MusicObject.swift in Sources */,

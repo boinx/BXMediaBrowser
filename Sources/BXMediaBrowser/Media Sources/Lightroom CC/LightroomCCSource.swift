@@ -54,7 +54,7 @@ open class LightroomCCSource : Source, AccessControl
 		self.allowedMediaTypes = allowedMediaTypes
 		
 		let icon = Bundle.BXMediaBrowser.image(forResource:"LightroomCC")?.CGImage
-		super.init(identifier:Self.identifier, icon:icon, name:"Adobe Lightroom CC", filter:FolderFilter())
+		super.init(identifier:Self.identifier, icon:icon, name:"Adobe Lightroom CC", filter:LightroomCCFilter())
 		self.loader = Loader(loadHandler:self.loadContainers)
 
 		self.checkHealth()
@@ -214,7 +214,8 @@ open class LightroomCCSource : Source, AccessControl
 		LightroomCC.log.debug {"\(Self.self).\(#function)"}
 
 		guard LightroomCC.shared.isLoggedIn else { return [] }
-
+		guard let filter = filter as? LightroomCCFilter else { return [] }
+		
 		// Get account & catalog  info
 		
 		let account:LightroomCC.Account = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/account")

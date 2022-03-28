@@ -209,9 +209,9 @@ public extension ViewFactory
 		{
 			PexelsFilterBar(with:container, filter:filter)
 		}
-		else if let container = container as? LightroomCCContainer, let filter = container.filter as? FolderFilter
+		else if let container = container as? LightroomCCContainer, let filter = container.filter as? LightroomCCFilter
 		{
-			FolderFilterBar(with:container, filter:filter)
+			LightroomCCFilterBar(with:container, filter:filter)
 		}
 		else if let container = container as? MusicContainer, let filter = container.filter as? MusicFilter
 		{
