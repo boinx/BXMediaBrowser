@@ -39,7 +39,6 @@ extension Object
 	
 	open class Filter : ObservableObject, Codable, BXSignpostMixin
 	{
-
 		/// The search string is used for Object filtering
 		
 		@Published public var searchString:String = ""

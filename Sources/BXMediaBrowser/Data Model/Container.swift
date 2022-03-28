@@ -164,7 +164,7 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 				self.load()
 			}
 
-		// If this container is set to sort by rating and an Object reating has changed, then also reload
+		// If this container is set to sort by rating and an Object rating has changed, then also reload
 		
 		self.observers += NotificationCenter.default.publisher(for:StatisticsController.ratingNotification, object:nil)
 			.debounce(for:1.0, scheduler:RunLoop.main)
