@@ -32,6 +32,18 @@ import OAuth2
 //----------------------------------------------------------------------------------------------------------------------
 
 
+// For (incomplete) documentation about the Adobe Lightroom REST API refer to:
+//
+//     https://developer.adobe.com/lightroom/lightroom-api-docs/api/
+//
+// Better (more complete) documentation is available at:
+//
+//     https://github.com/AdobeDocs/lightroom-partner-apis/blob/master/docs/api/LightroomPartnerAPIsSpec.json
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
 public class LightroomCC : ObservableObject
 {
 	public static let shared = LightroomCC()
