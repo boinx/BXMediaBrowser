@@ -139,7 +139,7 @@ extension LightroomCC
 			
 		public struct Rating : Codable
 		{
-			public let data:String?
+			public let date:String?
 			public let rating:Int?
 		}
 			
