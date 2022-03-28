@@ -201,12 +201,12 @@ open class LightroomCCContainer : Container
 			
 			if subtype == "image" && allowImages
 			{
-				let object = LightroomCCObject(with:asset)
+				let object = LightroomCCImageObject(with:asset)
 				self.safelyAdd(object, to:data)
 			}
 			else if subtype == "video" && allowVideos
 			{
-				let object = LightroomCCObject(with:asset)
+				let object = LightroomCCVideoObject(with:asset)
 				self.safelyAdd(object, to:data)
 			}
 		}
