@@ -148,12 +148,45 @@ extension LightroomCC
 			public let tiff:TIFF?
 			public let exif:EXIF?
 		}
+		
+		public struct Video : Codable
+		{
+			public let storageWidth:Int?
+			public let storageHeight:Int?
+			public let frameRate:[Int]?
+			public let duration:[Int]?
+			public let displayAspectRatio:[Int]?
+			public let pixelAspectRatio:[Int]?
 			
+			public let videoCodec:String?
+			public let videoBitrate:Int?
+			public let bitDepth:Int?
+			public let chromaSubsampling:String?
+			public let colorMatrix:String?
+			public let colorPrimaries:String?
+			public let transferFunction:String?
+			public let colorRange:String?
+			public let fieldOrder:String?
+			
+			public let audioCodec:String?
+			public let audioBitrate:Int?
+			public let audioChannel:String?
+			public let audioSampleRate:Int?
+			public let audioSampleSize:Int?
+		}
+		
+// "payload":{"video":{"frameRate":[60000,1001],"duration":[2503,500],"audioBitrate":192000,
+// "audioChannel":"stereo","audioCodec":"AAC","audioSampleRate":48000,"audioSampleSize":16,"bitDepth":8,
+// "chromaSubsampling":"4:2:0","colorMatrix":"bt709","colorPrimaries":"bt709","colorRange":"limited",
+// "displayAspectRatio":[16,9],"fieldOrder":"progressive","pixelAspectRatio":[1,1],"storageHeight":2160,
+// "storageWidth":3840,"transferFunction":"bt709","videoBitrate":99999744,"videoCodec":"AVC"}
+		
 		public struct Payload : Codable
 		{
 			public let captureDate:String
 			public let importSource:ImportSource
 			public let xmp:XMP?
+			public let video:Video?
 			public let ratings:[String:Rating]?
 		}
 
