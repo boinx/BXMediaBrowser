@@ -127,6 +127,22 @@ open class LightroomCCContainer : Container
 	// MARK: - Loading
 	
 	
+	/// Clears the caches so that we can reload a Container
+	
+	@MainActor override func invalidateCache()
+	{
+		super.invalidateCache()
+		
+		guard let data = data as? LightroomCCData else { return }
+		data.cachedContainers = nil
+		data.cachedObjects = nil
+		data.objectMap = [:]
+		data.nextAccessPoint = nil
+	}
+	
+	
+	/// Returns the accessPoint URL for the first page of data
+	
 	class func intialAccessPoint(with data:LightroomCCData,_ filter:LightroomCCFilter) -> String
 	{
 		let catalogID = LightroomCC.shared.catalogID
@@ -156,7 +172,10 @@ open class LightroomCCContainer : Container
 		guard let data = data as? LightroomCCData else { throw Error.loadContentsFailed }
 		guard let filter = filter as? LightroomCCFilter else { throw Error.loadContentsFailed }
 		LightroomCC.log.debug {"\(Self.self).\(#function) \(identifier)"}
-		
+
+		let id = self.beginSignpost(in:"LightroomCCContainer", #function)
+		defer { self.endSignpost(with:id, in:"LightroomCCContainer", #function) }
+
 		// Find our child albums (parent is self) and create a Container for each child
 		
 		if data.cachedContainers == nil

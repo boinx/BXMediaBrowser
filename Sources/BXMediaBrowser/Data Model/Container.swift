@@ -338,6 +338,32 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 	}
 	
 	
+	/// If the container caches any expensive data, calling this function will discard any cached data
+	
+	@MainActor func invalidateCache()
+	{
+		// Can be overridden by subclasses
+		
+		self.isLoaded = false
+		self.isLoading	= false
+	}
+	
+	
+	/// Invalidates any cached data and the loads this Container again
+	
+	func reload()
+	{
+		Task
+		{
+			await MainActor.run
+			{
+				self.invalidateCache()
+				self.load()
+			}
+		}
+	}
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 

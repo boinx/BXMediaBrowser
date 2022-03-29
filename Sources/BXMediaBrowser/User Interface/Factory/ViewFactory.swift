@@ -265,7 +265,7 @@ public extension ViewFactory
 		
 		Button(NSLocalizedString("Reload", bundle:.BXMediaBrowser, comment:"Menu Item"))
 		{
-			container.load()
+			container.reload()
 		}
 			
 		if let removeHandler = container.removeHandler
