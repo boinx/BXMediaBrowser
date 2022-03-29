@@ -26,12 +26,6 @@
 import BXSwiftUtils
 import Foundation
 
-#if os(macOS)
-import AppKit
-#elseif os(iOS)
-import UIKit
-#endif
-
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -42,26 +36,24 @@ open class LightroomCCContainer : Container
 	{
 		var album:LightroomCC.Albums.Resource
 		let allowedMediaTypes:[Object.MediaType]
-//		var assets:[LightroomCC.Asset]? = nil
-		var containers:[Container]? = nil
-		var objects:[Object]? = nil
-//		var nextAccessPoint:String? = nil
-//		var pageIndex:Int = 0
-		var lastUsedFilter = LightroomCCFilter()
+		var cachedContainers:[Container]? = nil
+		var cachedObjects:[Object]? = nil
+		var objectMap:[String:Object] = [:]
+		var nextAccessPoint:String? = nil
 		
 		init(with album:LightroomCC.Albums.Resource, allowedMediaTypes:[Object.MediaType])
 		{
 			self.album = album
 			self.allowedMediaTypes = allowedMediaTypes
-//			self.assets = nil
-			self.containers = nil
-			self.objects = nil
-//			self.nextAccessPoint = nil
-//			self.pageIndex = 0
+			self.cachedContainers = nil
+			self.cachedObjects = nil
+			self.nextAccessPoint = nil
 		}
 	}
 
-
+	static let loadNextPageOfAssets = Notification.Name("LightroomCCContainer.loadNextPage")
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -72,27 +64,29 @@ open class LightroomCCContainer : Container
 	public required init(album:LightroomCC.Albums.Resource, allowedMediaTypes:[Object.MediaType], filter:LightroomCCFilter)
 	{
 		let data = LightroomCCData(with:album, allowedMediaTypes:allowedMediaTypes)
+		let identifier = "LightroomCC:Album:\(album.id)"
+		let icon = album.subtype.contains("set") ? "folder" : "rectangle.stack"
+		let name = album.payload.name
 		
 		super.init(
-			identifier: "LightroomCC:Album:\(album.id)",
-			icon: album.subtype.contains("set") ? "folder" : "rectangle.stack",
-			name: album.payload.name,
+			identifier: identifier,
+			icon: icon,
+			name: name,
 			data: data,
 			filter: filter,
 			loadHandler: Self.loadContents)
 
-//		Self.resetPaging(with:data,filter)
+		// If there is another page of assets to be retrieved from the Lightroom server, then reload this container
 		
-//		#if os(macOS)
-//
-//		self.observers += NotificationCenter.default.publisher(for:NSCollectionView.didScrollToEnd, object:self).sink
-//		{
-//			[weak self] _ in self?.load(with:nil)
-//		}
-//
-//		#elseif os(iOS)
-//		#warning("TODO: implement")
-//		#endif
+		self.observers += NotificationCenter.default.publisher(for:Self.loadNextPageOfAssets, object:nil).sink
+		{
+			[weak self] notification in
+			
+			if let id = notification.object as? String, id == identifier
+			{
+				self?.load(with:nil)
+			}
+		}
 	}
 
 
@@ -133,20 +127,6 @@ open class LightroomCCContainer : Container
 	// MARK: - Loading
 	
 	
-	class func resetPaging(with data:LightroomCCData,_ filter:LightroomCCFilter)
-	{
-//		data.nextAccessPoint = Self.intialAccessPoint(with:data,filter)
-//		data.containers = nil
-//		data.objects = nil
-//		data.pageIndex = 0
-		
-		data.lastUsedFilter.searchString = filter.searchString
-		data.lastUsedFilter.rating = filter.rating
-		data.lastUsedFilter.sortType = filter.sortType
-		data.lastUsedFilter.sortDirection = filter.sortDirection
-	}
-	
-	
 	class func intialAccessPoint(with data:LightroomCCData,_ filter:LightroomCCFilter) -> String
 	{
 		let catalogID = LightroomCC.shared.catalogID
@@ -161,37 +141,8 @@ open class LightroomCCContainer : Container
 		[
 			URLQueryItem(name:"subtype", value:mediaTypes),
 			URLQueryItem(name:"embed", value:"asset"),
-//			URLQueryItem(name:"limit", value:"50"),
-//			URLQueryItem(name:"order_after", value:"-"),
+			URLQueryItem(name:"limit", value:"50"),
 		]
-		
-//		if !filter.searchString.isEmpty
-//		{
-//			urlComponents.queryItems? += URLQueryItem(name:"filter[fileName]", value:filter.searchString)
-//		}
-		
-//		if filter.sortType == .creationDate
-//		{
-//			if filter.sortDirection == .ascending
-//			{
-//				urlComponents.queryItems? += URLQueryItem(name:"filter[asset/payload/importSource/fileName]", value:filter.searchString)
-//			}
-//			else
-//			{
-//				urlComponents.queryItems? += URLQueryItem(name:"captured_before", value:"3000-01-01T00:00:00")
-//			}
-//		}
-//		else
-//		{
-//			if filter.sortDirection == .ascending
-//			{
-//				urlComponents.queryItems? += URLQueryItem(name:"order_after", value:"-")
-//			}
-//			else
-//			{
-//				urlComponents.queryItems? += URLQueryItem(name:"order_before", value:"")
-//			}
-//		}
 
 		let string = urlComponents.url?.absoluteString ?? ""
 		return string
@@ -206,21 +157,12 @@ open class LightroomCCContainer : Container
 		guard let filter = filter as? LightroomCCFilter else { throw Error.loadContentsFailed }
 		LightroomCC.log.debug {"\(Self.self).\(#function) \(identifier)"}
 		
-		let allowedMediaTypes = data.allowedMediaTypes
-		let allowImages = allowedMediaTypes.contains(.image)
-		let allowVideos = allowedMediaTypes.contains(.video)
-		
-		// When the filter has changed, then reset paging data
-		
-//		if data.lastUsedFilter != filter
-//		{
-//			Self.resetPaging(with:data,filter)
-//		}
-		
 		// Find our child albums (parent is self) and create a Container for each child
 		
-		if data.containers == nil
+		if data.cachedContainers == nil
 		{
+			data.cachedContainers = []
+			
 			let albumID = data.album.id
 			let allAlbums = LightroomCC.shared.allAlbums
 			let childAlbums = allAlbums.filter
@@ -229,97 +171,67 @@ open class LightroomCCContainer : Container
 				return id == albumID
 			}
 
-			var containers:[Container] = []
-
 			for album in childAlbums
 			{
-				containers += LightroomCCContainer(album:album, allowedMediaTypes:allowedMediaTypes, filter:filter)
+				data.cachedContainers?.append(
+					LightroomCCContainer(
+						album:album,
+						allowedMediaTypes:data.allowedMediaTypes,
+						filter:filter))
 			}
-			
-			data.containers = containers
 		}
-		
-		let containers = data.containers ?? []
 
-		// Get another page of assets in this album
+		let containers = data.cachedContainers ?? []
 		
-		if data.objects == nil
+		// When starting out, load first page of assets in this album
+		
+		if data.cachedObjects == nil
 		{
-			data.objects = []
+			data.cachedObjects = []
 			
 			let accessPoint = Self.intialAccessPoint(with:data,filter)
-			LightroomCC.log.debug {"\(Self.self).\(#function) accessPoint = \(accessPoint)"}
 			
-			let assets = try await self.allAssets(for:accessPoint)
-//			let searchString = filter.searchString.lowercased()
-			
-			for asset in assets
-			{
-				let subtype = asset.subtype ?? ""
-//				let identifier = LightroomCCObject.identifier(for:asset)
-				
-				// Filter by name and/or rating
-				
-//				guard searchString.isEmpty || asset.name.lowercased().contains(searchString) else { continue }
-//				guard filter.rating == 0 || StatisticsController.shared.rating(for:identifier) >= filter.rating else { continue }
-				
-				// Wrap asset in an Object
-				
-				if subtype == "image" && allowImages
-				{
-					let object = LightroomCCImageObject(with:asset)
-					data.objects?.append(object)
-				}
-				else if subtype == "video" && allowVideos
-				{
-					let object = LightroomCCVideoObject(with:asset)
-					data.objects?.append(object)
-				}
-			}
+			let (assets,nextAccessPoint) = try await self.nextPageAssets(for:accessPoint)
+			self.add(assets, to:data)
+			data.nextAccessPoint = nextAccessPoint
 		}
 		
-//		guard let accessPoint = data.nextAccessPoint else { return (data.containers ?? [],data.objects ?? []) }
-//		LightroomCC.log.debug {"\(Self.self).\(#function) \(identifier) - PAGE \(data.pageIndex)"}
-//		let page:LightroomCC.AlbumAssets = try await LightroomCC.shared.getData(from:accessPoint, debugLogging:false)
-//
-////		dump(page)
-////		dump(page.links)
-////		print("\n\n")
+		// Load next page of assets in this album
 		
+		else if let accessPoint = data.nextAccessPoint
+		{
+			LightroomCC.log.debug {"\(Self.self).\(#function) accessPoint = \(accessPoint)"}
+			
+			let (assets,nextAccessPoint) = try await self.nextPageAssets(for:accessPoint)
+			self.add(assets, to:data)
+			data.nextAccessPoint = nextAccessPoint
+		}
+
+		// Filter by name and/or rating
+			
 		let searchString = filter.searchString.lowercased()
 		var objects:[Object] = []
 		
-		for object in data.objects ?? []
+		for object in data.cachedObjects ?? []
 		{
-//			let asset = resource.asset
-//			let subtype = asset.subtype ?? ""
-//			let identifier = LightroomCCObject.identifier(for:asset)
-			
-			// Filter by name and/or rating
-			
 			guard searchString.isEmpty || object.name.lowercased().contains(searchString) else { continue }
 			guard filter.rating == 0 || StatisticsController.shared.rating(for:object) >= filter.rating else { continue }
-			
 			objects += object
 		}
 		
-//		data.pageIndex += 1
-//
-//		// If there is a next page, then store its accessPoint link
-//
-//		if let base = page.base, let next = page.links?.next?.href
-//		{
-//			data.nextAccessPoint = base + next
-//		}
-//		else
-//		{
-//			data.nextAccessPoint = nil
-//		}
-		
 		// Sort according to specified sort order
 		
-//		let objects = data.objects ?? []
 		filter.sort(&objects)
+		
+		// If there is another page then trigger reloading
+		
+		if data.nextAccessPoint != nil
+		{
+			DispatchQueue.main.async
+			{
+				NotificationCenter.default.post(name: Self.loadNextPageOfAssets, object:identifier)
+			}
+		}
 		
 		// Return contents
 		
@@ -327,65 +239,67 @@ open class LightroomCCContainer : Container
 	}
 
 
-	private class func allAssets(for accessPoint:String) async throws -> [LightroomCC.Asset]
+	/// Returns the next page of assets, and if available the accessPoint link to the following page
+	
+	private class func nextPageAssets(for accessPoint:String) async throws -> ([LightroomCC.Asset],String?)
 	{
-		var assets:[LightroomCC.Asset] = []
-		var nextAccessPoint:String? = accessPoint
-		var i = 0
+		// Get next page of assets
+			
+		LightroomCC.log.debug {"\(Self.self).\(#function) accessPoint = \(accessPoint)"}
+		let page:LightroomCC.AlbumAssets = try await LightroomCC.shared.getData(from:accessPoint, debugLogging:false)
+		let assets = page.resources.map { $0.asset }
+			
+		// Check if there is there yet another page
 		
-		// Iterate through all pages
-		
-		while nextAccessPoint != nil
+		var nextAccessPoint:String? = nil
+
+		if let base = page.base, let next = page.links?.next?.href
 		{
-			// Get next page and append to assets array
-			
-			let page:LightroomCC.AlbumAssets = try await LightroomCC.shared.getData(from:nextAccessPoint!, debugLogging:false)
-			assets += page.resources.map { $0.asset }
-			
-			i += 1
-			LightroomCC.log.debug {"\(Self.self).\(#function) PAGE \(i)"}
-			
-			// Is there yet another page?
-			
-			if let base = page.base, let next = page.links?.next?.href
-			{
-				nextAccessPoint = base + next
-			}
-			else
-			{
-				nextAccessPoint = nil
-			}
+			nextAccessPoint = base + next
 		}
 		
-		return assets
+		return (assets,nextAccessPoint)
 	}
 
 
-//	private class func safelyAdd(_ object:LightroomCCObject, to data:LightroomCCData)
-//	{
-//		let id = object.identifier
-//
-//		// If we do not have an array yet, then create an empty one
-//
-//		if data.objects == nil
-//		{
-//			data.objects = []
-//		}
-//
-//		// If the new object is already in the array, then replace the old with the new one
-//
-//		if let i = data.objects?.firstIndex(where:{ $0.identifier == id })
-//		{
-//			data.objects?[i] = object
-//		}
-//
-//		// Otherwise just append at the end
-//
-//		else
-//		{
-//			data.objects?.append(object)
-//		}
-//	}
+	/// Adds a pages of assets to the Object cache of this Container
+	
+	private class func add(_ assets:[LightroomCC.Asset], to data:LightroomCCData)
+	{
+		let allowedMediaTypes = data.allowedMediaTypes
+		let allowImages = allowedMediaTypes.contains(.image)
+		let allowVideos = allowedMediaTypes.contains(.video)
+
+		for asset in assets
+		{
+			let subtype = asset.subtype ?? ""
+
+			if subtype == "image" && allowImages
+			{
+				let object = LightroomCCImageObject(with:asset)
+				let id = object.identifier
+				
+				if data.objectMap[id] == nil
+				{
+					data.cachedObjects?.append(object)
+					data.objectMap[id] = object
+				}
+			}
+			else if subtype == "video" && allowVideos
+			{
+				let object = LightroomCCVideoObject(with:asset)
+				let id = object.identifier
+				
+				if data.objectMap[id] == nil
+				{
+					data.cachedObjects?.append(object)
+					data.objectMap[id] = object
+				}
+			}
+		}
+		
+//		dump(assets)
+	}
 }
 
 
