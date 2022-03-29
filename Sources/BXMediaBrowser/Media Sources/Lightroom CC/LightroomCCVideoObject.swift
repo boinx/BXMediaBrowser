@@ -189,7 +189,7 @@ open class LightroomCCVideoObject : LightroomCCObject
 		
 		let catalogID = LightroomCC.shared.catalogID
 		let assetID = asset.id
-		let downloadAPI = "https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)/master"
+		let downloadAPI = "https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)/renditions/720p"
 
 		// Download the fullsize image file
 
@@ -221,7 +221,7 @@ open class LightroomCCVideoObject : LightroomCCObject
 		guard let asset = data as? LightroomCC.Asset else { return "" }
 		let catalogID = LightroomCC.shared.catalogID
 		let assetID = asset.id
-		return "https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)/renditions/360p"
+		return "https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)/renditions/720p"
 	}
 }
 

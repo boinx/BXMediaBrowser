@@ -103,7 +103,14 @@ extension LightroomCC
 	{
 		public struct Resource : Codable
 		{
+			public struct Payload : Codable
+			{
+				public let order:String?
+				public let key:String?
+			}
+			
 			public let asset:Asset
+			public let payload:Payload?
 		}
 		
 		public let base:String?
@@ -197,9 +204,10 @@ extension LightroomCC
 		public let links:Links?
 		
 		public var name:String { self.payload?.importSource.fileName ?? ""}
-		public var fileSize:Int { self.payload?.importSource.fileSize ?? 0 }
 		public var width:Int { self.payload?.importSource.originalWidth ?? 0 }
 		public var height:Int { self.payload?.importSource.originalHeight ?? 0 }
+		public var fileSize:Int { self.payload?.importSource.fileSize ?? 0 }
+		public var captureDate:String? { self.payload?.captureDate }
 		public var rating:Int? { self.payload?.ratings?.values.first?.rating }
 	}
 }

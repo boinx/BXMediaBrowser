@@ -42,19 +42,19 @@ open class LightroomCCFilter : Object.Filter, Equatable
 	
 	override open var objectComparator : ObjectComparator?
 	{
-		/*if sortType == .alphabetical
+		if sortType == .captureDate
 		{
-			let comparator = Self.compareAlphabetical
+			let comparator = Self.compareCaptureDate
 			if sortDirection == .ascending { return comparator }
 			return { !comparator($0,$1) }
 		}
-		else if sortType == .creationDate
+		else if sortType == .alphabetical
 		{
-			let comparator = Self.compareCreationDate
+			let comparator = FolderFilter.compareAlphabetical
 			if sortDirection == .ascending { return comparator }
 			return { !comparator($0,$1) }
 		}
-		else*/ if sortType == .rating
+		else if sortType == .rating
 		{
 			let comparator = Self.compareRating
 			if sortDirection == .ascending { return comparator }
@@ -72,28 +72,27 @@ open class LightroomCCFilter : Object.Filter, Equatable
 //		let name2 = object2.name
 //		return name1.localizedStandardCompare(name2) == .orderedAscending
 //	}
-//
-//	/// Sorts Objects by creationDate
-//
-//	public static func compareCreationDate(_ object1:Object,_ object2:Object) -> Bool
-//	{
-//		guard let url1 = object1.data as? URL else { return false }
-//		guard let url2 = object2.data as? URL else { return false }
-//		guard let date1 = url1.creationDate else { return false }
-//		guard let date2 = url2.creationDate else { return false }
-//		return date1 < date2
-//	}
+
+	/// Sorts Objects by captureDate
+
+	public static func compareCaptureDate(_ object1:Object,_ object2:Object) -> Bool
+	{
+		guard let asset1 = object1.data as? LightroomCC.Asset else { return false }
+		guard let asset2 = object2.data as? LightroomCC.Asset else { return false }
+		guard let date1 = asset1.captureDate else { return false }
+		guard let date2 = asset2.captureDate else { return false }
+		return date1 < date2
+	}
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-//extension Object.Filter.SortType
-//{
-//	public static let alphabetical = "alphabetical"
-//	public static let creationDate = "creationDate"
-//}
+extension Object.Filter.SortType
+{
+	public static let captureDate = "captureDate"
+}
 
 
 //----------------------------------------------------------------------------------------------------------------------
