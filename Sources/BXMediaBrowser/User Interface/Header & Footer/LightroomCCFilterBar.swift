@@ -24,6 +24,7 @@
 
 
 import BXSwiftUI
+import BXSwiftUtils
 import SwiftUI
 
 
@@ -63,38 +64,15 @@ public struct LightroomCCFilterBar : View
 
 			// Sort order
 			
-			Text(sortByLabel)
-				.lineLimit(1)
-				.truncationMode(.tail)
-				.layoutPriority(-1)
-			
-			MenuButton(filter.sortType.localizedName)
-			{
-				ForEach(selectedContainer.allowedSortTypes, id:\.self)
-				{
-					sortType in
-					
-					Button(sortType.localizedName)
-					{
-						filter.sortType = sortType
-					}
-				}
-			}
-			.fixedSize()
-			
-			BXImage(systemName:directionIcon)
-				.padding(.vertical,6)
-				.padding(.horizontal,2)
-				.contentShape(Rectangle())
-				.onTapGesture
-				{
-					filter.toggleSortDirection()
-				}
+			SortOrderPopup(
+				defaultShapeIcon:"square.grid.2x2",
+				selectedContainer:selectedContainer,
+				filter:filter)
 		}
 		.padding(.horizontal,20)
 		.padding(.vertical,10)
     }
-}
+ }
 
 
 //----------------------------------------------------------------------------------------------------------------------

@@ -63,33 +63,10 @@ public struct FolderFilterBar : View
 
 			// Sort order
 			
-			Text(sortByLabel)
-				.lineLimit(1)
-				.truncationMode(.tail)
-				.layoutPriority(-1)
-			
-			MenuButton(filter.sortType.localizedName)
-			{
-				ForEach(selectedContainer.allowedSortTypes, id:\.self)
-				{
-					sortType in
-					
-					Button(sortType.localizedName)
-					{
-						filter.sortType = sortType
-					}
-				}
-			}
-			.fixedSize()
-			
-			BXImage(systemName:directionIcon)
-				.padding(.vertical,6)
-				.padding(.horizontal,2)
-				.contentShape(Rectangle())
-				.onTapGesture
-				{
-					filter.toggleSortDirection()
-				}
+			SortOrderPopup(
+				defaultShapeIcon:defaultShapeIcon,
+				selectedContainer:selectedContainer,
+				filter:filter)
 		}
 		.padding(.horizontal,20)
 		.padding(.vertical,10)
@@ -102,6 +79,12 @@ public struct FolderFilterBar : View
 
 extension FolderFilterBar
 {
+	var defaultShapeIcon:String
+	{
+		let isAudio = selectedContainer.mediaTypes.contains(.audio)
+		return isAudio ? "text.justify" : "square.grid.2x2"
+	}
+	
     var searchPlaceholder:String
     {
 		NSLocalizedString("Search", bundle:.BXMediaBrowser, comment:"Placeholder")

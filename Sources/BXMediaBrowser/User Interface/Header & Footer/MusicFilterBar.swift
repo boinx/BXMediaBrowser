@@ -64,36 +64,10 @@ public struct MusicFilterBar : View
 
 			// Sort order
 			
-			if !selectedContainer.allowedSortTypes.isEmpty
-			{
-				Text(sortByLabel)
-					.lineLimit(1)
-					.truncationMode(.tail)
-					.layoutPriority(-1)
-				
-				MenuButton(filter.sortType.localizedName)
-				{
-					ForEach(selectedContainer.allowedSortTypes, id:\.self)
-					{
-						sortType in
-						
-						Button(sortType.localizedName)
-						{
-							filter.sortType = sortType
-						}
-					}
-				}
-				.fixedSize()
-				
-				BXImage(systemName:directionIcon)
-					.padding(.vertical,6)
-					.padding(.horizontal,2)
-					.contentShape(Rectangle())
-					.onTapGesture
-					{
-						filter.toggleSortDirection()
-					}
-			}
+			SortOrderPopup(
+				defaultShapeIcon:"text.justify",
+				selectedContainer:selectedContainer,
+				filter:filter)
 		}
 		.padding(.horizontal,20)
 		.padding(.vertical,10)

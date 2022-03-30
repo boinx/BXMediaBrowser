@@ -45,6 +45,12 @@ open class FolderFilter : Object.Filter
 			if sortDirection == .ascending { return comparator }
 			return { !comparator($0,$1) }
 		}
+		else if sortType == .duration
+		{
+			let comparator = Self.compareDuration
+			if sortDirection == .ascending { return comparator }
+			return { !comparator($0,$1) }
+		}
 		else if sortType == .rating
 		{
 			let comparator = Self.compareRating
@@ -73,6 +79,15 @@ open class FolderFilter : Object.Filter
 		guard let date1 = url1.creationDate else { return false }
 		guard let date2 = url2.creationDate else { return false }
 		return date1 < date2
+	}
+
+	/// Sorts Objects by duration
+	
+	public static func compareDuration(_ object1:Object,_ object2:Object) -> Bool
+	{
+		guard let duration1 = object1.previewItemURL?.duration else { return false }
+		guard let duration2 = object2.previewItemURL?.duration else { return false }
+		return duration1 < duration2
 	}
 }
 
