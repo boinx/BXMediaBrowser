@@ -25,14 +25,6 @@
 
 import BXSwiftUtils
 import QuickLookUI
-//import Foundation
-//import ImageIO
-//
-//#if os(macOS)
-//import AppKit
-//#else
-//import UIKit
-//#endif
 
 
 //----------------------------------------------------------------------------------------------------------------------
