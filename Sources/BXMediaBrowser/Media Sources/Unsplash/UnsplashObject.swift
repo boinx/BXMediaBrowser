@@ -47,7 +47,7 @@ open class UnsplashObject : Object
 			downloadFileHandler: Self.downloadFile)
 	}
 
-	override nonisolated public var mediaType:MediaType
+	override nonisolated open var mediaType:MediaType
 	{
 		return .image
 	}

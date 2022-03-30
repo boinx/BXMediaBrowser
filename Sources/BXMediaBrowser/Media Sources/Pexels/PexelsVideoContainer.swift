@@ -66,6 +66,11 @@ open class PexelsVideoContainer : PexelsContainer
 		#endif
 	}
 
+	override nonisolated open var mediaTypes:[Object.MediaType]
+	{
+		return [.video]
+	}
+	
 	/// Returns a description of the contents of this Container
 	
     @MainActor override open var localizedObjectCount:String

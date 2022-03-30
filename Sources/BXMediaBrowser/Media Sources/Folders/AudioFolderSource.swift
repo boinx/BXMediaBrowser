@@ -64,6 +64,11 @@ open class AudioFolderContainer : FolderContainer
 		return AudioFile(url:url)
 	}
 
+	override nonisolated open var mediaTypes:[Object.MediaType]
+	{
+		return [.audio]
+	}
+
     @MainActor override open var localizedObjectCount:String
     {
 		let n = self.objects.count

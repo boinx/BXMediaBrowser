@@ -62,6 +62,11 @@ open class ImageFolderContainer : FolderContainer
 		return ImageFile(url:url)
 	}
 
+	override nonisolated open var mediaTypes:[Object.MediaType]
+	{
+		return [.image]
+	}
+
     @MainActor override open var localizedObjectCount:String
     {
 		let n = self.objects.count

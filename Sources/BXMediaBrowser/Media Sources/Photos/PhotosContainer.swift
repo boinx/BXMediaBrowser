@@ -132,6 +132,11 @@ public class PhotosContainer : Container
 	}
 	
 	
+	override nonisolated open var mediaTypes:[Object.MediaType]
+	{
+		return [.image]
+	}
+
 	// Folders can be expanded, because they have sub-containers
 	
 	override open var canExpand: Bool

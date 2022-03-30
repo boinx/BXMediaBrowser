@@ -107,7 +107,7 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 
 	/// Returns the MediaType of this Object. Subclasses should override this property to return their specific MediaType.
 	
-	nonisolated public var mediaType:MediaType
+	nonisolated open var mediaType:MediaType
 	{
 		return .image
 	}

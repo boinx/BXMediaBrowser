@@ -93,6 +93,13 @@ open class LightroomCCContainer : Container
 //----------------------------------------------------------------------------------------------------------------------
 
 
+
+	override nonisolated open var mediaTypes:[Object.MediaType]
+	{
+		guard let data = self.data as? LightroomCCData else { return [.image] }
+		return data.allowedMediaTypes
+	}
+
 	// Folders can be expanded, but albums cannot
 	
 	override open var canExpand: Bool

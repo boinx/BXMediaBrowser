@@ -66,6 +66,12 @@ open class PexelsPhotoContainer : PexelsContainer
 		#endif
 	}
 
+
+	override nonisolated open var mediaTypes:[Object.MediaType]
+	{
+		return [.image]
+	}
+	
 	/// Returns a description of the contents of this Container
 	
     @MainActor override open var localizedObjectCount:String

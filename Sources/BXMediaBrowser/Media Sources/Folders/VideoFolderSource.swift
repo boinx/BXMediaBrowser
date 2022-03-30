@@ -60,6 +60,11 @@ open class VideoFolderContainer : FolderContainer
 		return VideoFile(url:url)
 	}
 
+	override nonisolated open var mediaTypes:[Object.MediaType]
+	{
+		return [.video]
+	}
+
     @MainActor override open var localizedObjectCount:String
     {
 		let n = self.objects.count

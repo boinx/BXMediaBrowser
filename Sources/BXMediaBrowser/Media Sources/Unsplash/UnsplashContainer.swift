@@ -83,6 +83,11 @@ open class UnsplashContainer : Container
 	}
 
 
+	override nonisolated open var mediaTypes:[Object.MediaType]
+	{
+		return [.image]
+	}
+	
 	// Unsplash Container can never be expanded, as they do not have any sub-containers
 	
 	override open var canExpand: Bool

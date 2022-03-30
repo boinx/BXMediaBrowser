@@ -186,6 +186,13 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 		identifier
 	}
 	
+	/// Returns the MediaType of this hosted by this Container. Subclasses should override this property to return their specific MediaType.
+	
+	nonisolated open var mediaTypes:[Object.MediaType]
+	{
+		return [.image]
+	}
+
 
 //----------------------------------------------------------------------------------------------------------------------
 

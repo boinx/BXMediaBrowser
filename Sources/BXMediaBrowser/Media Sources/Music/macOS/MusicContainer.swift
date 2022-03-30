@@ -85,6 +85,14 @@ public class MusicContainer : Container
 	}
 	
 	
+	// Only audio in this Container
+	
+	override nonisolated open var mediaTypes:[Object.MediaType]
+	{
+		return [.audio]
+	}
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 
