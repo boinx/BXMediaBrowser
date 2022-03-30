@@ -54,9 +54,9 @@ open class LightroomCCObject : Object
 		
 		// If we received a rating from Lightroom, then store it in our database
 		
-		if let rating = asset.rating, rating > StatisticsController.shared.rating(for:self)
+		if let rating = asset.rating, rating > 0 //, rating > StatisticsController.shared.rating(for:self)
 		{
-			StatisticsController.shared.setRating(rating, for:self)
+			StatisticsController.shared.setRating(rating, for:self, sendNotifications:false)
 		}
 	}
 

@@ -144,7 +144,7 @@ public class StatisticsController : ObservableObject
 	
 	/// Sets the rating for the specified Object
 	
-	public func setRating(_ rating:Int, for object:Object)
+	public func setRating(_ rating:Int, for object:Object, sendNotifications:Bool = true )
 	{
 		if rating > 0
 		{
@@ -155,8 +155,11 @@ public class StatisticsController : ObservableObject
 			self._rating[object.identifier] = nil
 		}
 		
-		NotificationCenter.default.post(name: Self.didChangeNotification, object:object)
-		NotificationCenter.default.post(name: Self.ratingNotification, object:object)
+		if sendNotifications
+		{
+			NotificationCenter.default.post(name: Self.didChangeNotification, object:object)
+			NotificationCenter.default.post(name: Self.ratingNotification, object:object)
+		}
 	}
 
 	/// Returns the rating for the specified Object
