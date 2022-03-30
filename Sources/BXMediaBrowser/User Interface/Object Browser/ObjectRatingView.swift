@@ -43,9 +43,13 @@ class ObjectRatingView : NSView
 	
 	public var maxRating:Int = 5
 	
+	/// The rating at mouseDown time
+	
+	private var initialRating:Int = 0
+	
 	/// The size of the star image in pt
 	
-	public var size:CGFloat = 16
+	public var size:CGFloat = 14
 	
 	/// Set to false to disable this control
 	
@@ -165,6 +169,7 @@ class ObjectRatingView : NSView
 	override func mouseDown(with event:NSEvent)
 	{
 		guard isEnabled else { return }
+		self.initialRating = self.rating.wrappedValue
 		self.setRating(with:mouse(for:event))
 	}
 	
@@ -177,7 +182,7 @@ class ObjectRatingView : NSView
 	override func mouseUp(with event:NSEvent)
 	{
 		guard isEnabled else { return }
-		self.setRating(with:mouse(for:event))
+		self.setRating(with:mouse(for:event), isMouseUp:true)
 	}
 	
 	/// Returns the mouse location in this view
@@ -190,10 +195,16 @@ class ObjectRatingView : NSView
 	
 	/// Sets rating depending on mouse location
 	
-	func setRating(with mouse:CGPoint)
+	func setRating(with mouse:CGPoint, isMouseUp:Bool = false)
 	{
 		let x = mouse.x + size
-		let i = Int(x/size)
+		var i = Int(x/size)
+		
+		if isMouseUp && i == initialRating 		// If new rating is same as on mouseDown, then reset to 0.
+		{										// That way clicking the same star toggles.
+			i = 0
+		}
+		
 		self.rating.wrappedValue = i
 		self.needsDisplay = true
 	}

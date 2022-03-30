@@ -32,9 +32,19 @@ import SwiftUI
 
 public struct RatingFilterView : View
 {
+	/// The current rating value of the Object
+	
 	private var rating:Binding<Int>
 	
+	/// The maxRating value determies how many stars will be displayed
+	
 	private var maxRating:Int
+	
+	/// The initial rating at mouse down time
+	
+	@State private var initialRating:Int? = nil
+	
+	/// The controlsize determines the size of the stars
 	
 	@Environment(\.controlSize) private var controlSize
 	
@@ -78,14 +88,16 @@ public struct RatingFilterView : View
 		
 		// On drag change the rating filter value
 		
-//		.contentShape(Rectangle())
+		.contentShape(Rectangle())
+		
 		.gesture( DragGesture(minimumDistance:0).onChanged
 		{
-			setRating(with:$0)
+			if self.initialRating == nil { self.initialRating = self.rating.wrappedValue } // On mouse down store initial rating
+			self.setRating(with:$0)
 		}
 		.onEnded
 		{
-			setRating(with:$0)
+			self.setRating(with:$0, didEndGesture:true)
 		})
 	}
 	
@@ -106,15 +118,29 @@ public struct RatingFilterView : View
 		return index <= rating ? Color.yellow : Color.gray
     }
 
-	/// Changes the rating filter value according to the mouse location
+	/// Changes the rating value according to the mouse location
 	
-	func setRating(with drag:DragGesture.Value)
+	func setRating(with drag:DragGesture.Value, didEndGesture:Bool = false)
 	{
 		let w:CGFloat = CGFloat(maxRating) * size
 		let f = CGFloat(maxRating)
 		let x = drag.location.x + 12
 
-		self.rating.wrappedValue = Int(f*x/w).clipped(to:0...maxRating)
+		// Calculate new rating depending on mouse position
+		
+		var rating = Int(f*x/w).clipped(to:0...maxRating)
+		
+		// If new rating is same as intialRating on mouse up, then reset to 0. This provides a nicer UX.
+		
+		if didEndGesture
+		{
+			if let initialRating = initialRating, rating == initialRating { rating = 0 }
+			self.initialRating = nil
+		}
+		
+		// Store rating in data model
+		
+		self.rating.wrappedValue = rating
 	}
 }
 

@@ -42,16 +42,16 @@
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="xr1-rb-e9I"/>
                 </imageView>
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="fqQ-Fs-MnC" customClass="ObjectRatingView" customModule="BXMediaBrowser">
-                    <rect key="frame" x="20" y="0.0" width="80" height="16"/>
+                    <rect key="frame" x="25" y="1" width="70" height="14"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="80" id="VfP-sV-3gB"/>
-                        <constraint firstAttribute="height" constant="16" id="ikt-wN-Kvm"/>
+                        <constraint firstAttribute="width" constant="70" id="VfP-sV-3gB"/>
+                        <constraint firstAttribute="height" constant="14" id="ikt-wN-Kvm"/>
                     </constraints>
                 </customView>
             </subviews>
             <constraints>
                 <constraint firstItem="fqQ-Fs-MnC" firstAttribute="centerX" secondItem="HUS-pi-5U0" secondAttribute="centerX" id="49t-Na-x7Y"/>
-                <constraint firstAttribute="bottom" secondItem="fqQ-Fs-MnC" secondAttribute="bottom" id="6rz-oa-dSy"/>
+                <constraint firstAttribute="bottom" secondItem="fqQ-Fs-MnC" secondAttribute="bottom" constant="1" id="6rz-oa-dSy"/>
                 <constraint firstItem="BQT-g2-Zqo" firstAttribute="top" secondItem="HUS-pi-5U0" secondAttribute="top" id="AJ3-jD-3Fb"/>
                 <constraint firstAttribute="trailing" secondItem="BQT-g2-Zqo" secondAttribute="trailing" id="KM8-Mv-oGS"/>
                 <constraint firstItem="BQT-g2-Zqo" firstAttribute="leading" secondItem="HUS-pi-5U0" secondAttribute="leading" id="KaJ-FX-VqM"/>
