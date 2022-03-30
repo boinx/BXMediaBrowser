@@ -53,7 +53,7 @@ public struct SortOrderPopup : View
 			HStack(spacing:0)
 			{
 				BXImage(systemName:shapeIcon)
-				BXImage(systemName:arrowIcon)
+				BXImage(systemName:arrowIcon).scaleEffect(0.75)
 			}
 			.id(selectedContainer.identifier)
 			.popupMenu(sortOrderItems)
@@ -79,7 +79,7 @@ public struct SortOrderPopup : View
     
     var arrowIcon:String
     {
-		filter.sortDirection == .ascending ? "arrow.down" : "arrow.up"
+		filter.sortDirection == .ascending ? "chevron.up" : "chevron.down"
     }
     
     var sortOrderItems:[BXMenuItemSpec]
