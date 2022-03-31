@@ -62,8 +62,22 @@ public struct LibraryView : View
 				}
 			}
 		}
-		.environmentObject(library)	// Pass Library reference down the view hierarchy. This is needed for setting the selected Container.
-    }
+		
+		// Pass Library reference down the view hierarchy. This is needed for setting the selected Container.
+		
+		.environmentObject(library)
+
+		// When important properties of the library have changed, then save the current state
+		
+//		.onReceive(library.$selectedContainer)
+//		{
+//			_ in library.saveState()
+//		}
+ 		.onReceive(library.uiState.$thumbnailScale)
+		{
+			_ in library.saveState()
+		}
+   }
 }
 
 

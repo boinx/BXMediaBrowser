@@ -147,6 +147,13 @@ open class Library : ObservableObject, StateSaving
 			}
 		}
 
+		// Load the UIState
+		
+		if let scale = libraryState?[thumbnailScaleKey] as? Double
+		{
+			self.uiState.thumbnailScale = scale
+		}
+
 		// Load the library. This is an async operation that may take a while.
 		
 		for section in sections

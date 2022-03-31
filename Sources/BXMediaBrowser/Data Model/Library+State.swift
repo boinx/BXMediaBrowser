@@ -125,6 +125,7 @@ extension Library
 		}
 		
 		state[selectedContainerIdentifierKey] = self.selectedContainer?.identifier
+		state[thumbnailScaleKey] = self.uiState.thumbnailScale 
 		
 		return state
 	}
@@ -138,10 +139,17 @@ extension Library
 	}
 
 	/// The key for accessing the identifier of the selected Container
-	/// 
+	
 	public var selectedContainerIdentifierKey:String
 	{
 		"selectedContainerIdentifier"
+	}
+
+	/// The key for accessing the thumbnailScale
+	
+	public var thumbnailScaleKey:String
+	{
+		"thumbnailScale"
 	}
 }
 
