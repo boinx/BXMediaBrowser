@@ -56,7 +56,7 @@ open class UIState : ObservableObject
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	public init(prefsKeyPrefix:String)
+	public init(prefsKeyPrefix:String = UUID().uuidString)
 	{
 		self.prefsKeyPrefix = prefsKeyPrefix
 		
