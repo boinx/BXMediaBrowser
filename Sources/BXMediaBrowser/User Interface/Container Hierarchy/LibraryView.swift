@@ -73,10 +73,6 @@ public struct LibraryView : View
 //		{
 //			_ in library.saveState()
 //		}
- 		.onReceive(library.uiState.$thumbnailScale)
-		{
-			_ in library.saveState()
-		}
    }
 }
 

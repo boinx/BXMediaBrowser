@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D00DF1BE27F45BA300DC1D27 /* SortOrderPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00DF1BD27F45BA300DC1D27 /* SortOrderPopup.swift */; };
+		D00DF1C027F613FE00DC1D27 /* UIState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00DF1BF27F613FD00DC1D27 /* UIState.swift */; };
 		D01B48B527CA1313008249C0 /* BXMediaBrowser.h in Headers */ = {isa = PBXBuildFile; fileRef = D01B48B427CA1313008249C0 /* BXMediaBrowser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D01B494527CA1378008249C0 /* ObjectFilePromiseProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48BE27CA1377008249C0 /* ObjectFilePromiseProvider.swift */; };
 		D01B494627CA1378008249C0 /* FolderDropDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48BF27CA1377008249C0 /* FolderDropDestination.swift */; };
@@ -146,6 +147,7 @@
 
 /* Begin PBXFileReference section */
 		D00DF1BD27F45BA300DC1D27 /* SortOrderPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortOrderPopup.swift; sourceTree = "<group>"; };
+		D00DF1BF27F613FD00DC1D27 /* UIState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIState.swift; sourceTree = "<group>"; };
 		D01B48B127CA1313008249C0 /* BXMediaBrowser.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BXMediaBrowser.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D01B48B427CA1313008249C0 /* BXMediaBrowser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BXMediaBrowser.h; sourceTree = "<group>"; };
 		D01B48BE27CA1377008249C0 /* ObjectFilePromiseProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectFilePromiseProvider.swift; sourceTree = "<group>"; };
@@ -549,6 +551,7 @@
 				D01B492327CA1378008249C0 /* AudioObjectFooterView.swift */,
 				D01B492227CA1378008249C0 /* RatingFilterView.swift */,
 				D00DF1BD27F45BA300DC1D27 /* SortOrderPopup.swift */,
+				D00DF1BF27F613FD00DC1D27 /* UIState.swift */,
 			);
 			path = "Header & Footer";
 			sourceTree = "<group>";
@@ -789,6 +792,7 @@
 				D01B498027CA1378008249C0 /* UnsplashJSON.swift in Sources */,
 				D01B495327CA1378008249C0 /* TempFilePool.swift in Sources */,
 				D052BE2C27F0B97D0084068A /* LightroomCCFilter.swift in Sources */,
+				D00DF1C027F613FE00DC1D27 /* UIState.swift in Sources */,
 				D01B499F27CA1378008249C0 /* ObjectRatingView.swift in Sources */,
 				D01B499327CA1378008249C0 /* BXProgressViewController.swift in Sources */,
 				D01B496027CA1378008249C0 /* Object+Hashable.swift in Sources */,

@@ -125,7 +125,6 @@ extension Library
 		}
 		
 		state[selectedContainerIdentifierKey] = self.selectedContainer?.identifier
-		state[thumbnailScaleKey] = self.uiState.thumbnailScale 
 		
 		return state
 	}

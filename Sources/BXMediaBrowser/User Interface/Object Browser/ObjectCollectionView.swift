@@ -48,7 +48,7 @@ public struct ObjectCollectionView<Cell:ObjectViewController> : NSViewRepresenta
 	
 	/// The Library has properties that may affect the display of this view
 	
-	private var library:Library? = nil
+//	private var library:Library? = nil
 	
 	/// The objects of this Container are displayed in the NSCollectionView
 	
@@ -58,17 +58,21 @@ public struct ObjectCollectionView<Cell:ObjectViewController> : NSViewRepresenta
 	
 	private let cellType:Cell.Type
 
-
+	/// The UIState contains the thumbnailScale
+	
+	private var uiState:UIState
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 
 	/// Creates ObjectCollectionView with the specified Container and cell type
 	
-	public init(for library:Library?, container:Container?, cellType:Cell.Type)
+	public init(container:Container?, cellType:Cell.Type, uiState:UIState)
 	{
-		self.library = library
 		self.container = container
 		self.cellType = cellType
+		self.uiState = uiState
 	}
 	
 	/// Builds a view hierarchy with a NSScrollView and a NSCollectionView inside
@@ -122,7 +126,7 @@ public struct ObjectCollectionView<Cell:ObjectViewController> : NSViewRepresenta
 		
 		self.registerCellType(for:collectionView)
 
-		context.coordinator.library = self.library
+		context.coordinator.uiState = self.uiState
 
 		context.coordinator.updateLayoutHandler =
 		{
@@ -156,7 +160,7 @@ public struct ObjectCollectionView<Cell:ObjectViewController> : NSViewRepresenta
 	
 	public func makeCoordinator() -> Coordinator
     {
-		return Coordinator(library:library, container:container, cellType:cellType)
+		return Coordinator(container:container, cellType:cellType, uiState:uiState)
     }
 }
 
@@ -178,7 +182,7 @@ extension ObjectCollectionView
 		let ratio = w / h
 		
 		let rowWidth = max(1.0, collectionView.bounds.width - d)
-		let scale = self.library?.uiState.thumbnailScale ?? 0.4
+		let scale = self.uiState.thumbnailScale ?? 0.4
 		
 		// Item (cell)
 		
@@ -301,16 +305,6 @@ extension ObjectCollectionView
 {
 	public class Coordinator : NSObject, NSCollectionViewDelegate
     {
-		/// Reference to the owning Library
-		
-		@MainActor var library:Library? = nil
-		{
-			didSet
-			{
-				self.updateLayout()
-			}
-		}
-		
 		/// The Container is the data model for the NSCollectionView
 		
 		@MainActor var container:Container? = nil
@@ -325,6 +319,16 @@ extension ObjectCollectionView
 		/// The class type of the Object cell to be displayed in this NSCollectionView
 	
 		@MainActor var cellType:Cell.Type
+
+		/// The UIState is resposible for thumbnailScale
+		
+		@MainActor var uiState:UIState
+		{
+			didSet
+			{
+				self.updateLayout()
+			}
+		}
 
 		/// This handler is called when the layout needs to be recalculated
 		
@@ -354,20 +358,18 @@ extension ObjectCollectionView
  		// MARK: - Setup
  		
  		
-        init(library:Library?, container:Container?, cellType:Cell.Type)
+        init(container:Container?, cellType:Cell.Type, uiState:UIState)
         {
-			self.library = library
 			self.container = container
 			self.cellType = cellType
+			self.uiState = uiState
 			
 			super.init()
         }
 
 		@MainActor func updateLayout()
 		{
-			guard let state = self.library?.uiState else { return }
-			
-			self.layoutObserver = state.$thumbnailScale
+			self.layoutObserver = uiState.$thumbnailScale
 				.throttle(for:0.02, scheduler:DispatchQueue.main, latest:true)
 				.sink
 				{

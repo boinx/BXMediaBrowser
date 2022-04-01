@@ -23,58 +23,59 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 
-import BXSwiftUI
+import BXSwiftUtils
+import Foundation
 import SwiftUI
+
+#if os(macOS)
+import AppKit
+#else
+import UIKit
+#endif
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public struct DefaultObjectFooterView : View
+open class UIState : ObservableObject
 {
-	// Model
+	/// This scale affects the display size of Object cells in a CollectionView
 	
-	@ObservedObject var container:Container
-	@ObservedObject var uiState:UIState
+	@Published public var thumbnailScale:Double = 0.25
 	
-	// Init
+	/// The prefix will be used to build prefs keys for property persistence
 	
-	public init(container:Container, uiState:UIState)
+	private let prefsKeyPrefix:String
+	private var thumbnailKey:String { "\(prefsKeyPrefix)-thumbnailScale"}
+	
+	/// Internal housekeeping
+	
+	private var observers:[Any] = []
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	public init(prefsKeyPrefix:String)
 	{
-		self.container = container
-		self.uiState = uiState
-	}
-	
-	// View
-	
-	public var body: some View
-    {
-		HStack
+		self.prefsKeyPrefix = prefsKeyPrefix
+		
+		let scale = UserDefaults.standard.double(forKey:thumbnailKey)
+		if scale > 0.0 { self.thumbnailScale = scale }
+		
+		#if os(macOS)
+		
+		self.observers += NotificationCenter.default.publisher(for:NSApplication.willTerminateNotification, object:nil).sink
 		{
-			// Thumbnail size
-			
-			Slider(value:self.sliderResponse, in:0.3...1.0)
-				.controlSize(.mini)
-				.frame(width:120)
-			
-			Spacer()
-			
-			// Object count
-			
-			Text(container.localizedObjectCount)
-				.controlSize(.small)
-				.lineLimit(1)
+			[weak self] _ in
+			guard let self = self else { return }
+			UserDefaults.standard.set(self.thumbnailScale, forKey:self.thumbnailKey)
 		}
-		.padding(.horizontal,20)
-		.padding(.vertical,2)
-    }
-    
-    var sliderResponse:Binding<Double>
-    {
-		Binding<Double>(
-			get:{ pow(self.uiState.thumbnailScale,0.5) },
-			set:{ self.uiState.thumbnailScale = pow($0,2) })
-    }
+		
+		#else
+		#warning("TODO: implement")
+		#endif
+	}
 }
 
 

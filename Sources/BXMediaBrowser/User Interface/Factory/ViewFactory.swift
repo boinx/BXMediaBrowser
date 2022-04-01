@@ -74,19 +74,19 @@ public protocol ViewFactoryAPI
 
 	/// Returns a header view that is appropriate for the currently selected Container of the Library
 
-	func objectsHeaderView(for library:Library, container:Container?) -> AnyView
+	func objectsHeaderView(for container:Container?, uiState:UIState) -> AnyView
 
 	/// Returns a footer view that is appropriate for the currently selected Container of the Library
 
-	func objectsFooterView(for library:Library, container:Container?) -> AnyView
+	func objectsFooterView(for container:Container?, uiState:UIState) -> AnyView
+
+	/// Returns the type of ObjectViewController subclass to be used for the specified Container
+
+	func objectViewControllerType(for container:Container?, uiState:UIState) -> ObjectViewController.Type
 
 	/// Provides context menu items for the specified model instance
 
 	func containerContextMenu(for container:Container) -> AnyView
-
-	/// Returns the type of ObjectViewController subclass to be used for the specified Container
-
-	func objectViewControllerType(for container:Container?) -> ObjectViewController.Type
 }
 
 
@@ -117,24 +117,24 @@ open class ViewFactory : ViewFactoryAPI
 		typeErase( Self.defaultContainerView(for:container) )
 	}
 	
-	open func objectsHeaderView(for library:Library, container:Container?) -> AnyView
+	open func objectsHeaderView(for container:Container?, uiState:UIState) -> AnyView
 	{
-		typeErase( Self.defaultHeaderView(for:library, container:container) )
+		typeErase( Self.defaultHeaderView(for:container, uiState:uiState) )
 	}
 
-	open func objectsFooterView(for library:Library, container:Container?) -> AnyView
+	open func objectsFooterView(for container:Container?, uiState:UIState) -> AnyView
 	{
-		typeErase( Self.defaultFooterView(for:library, container:container) )
+		typeErase( Self.defaultFooterView(for:container, uiState:uiState) )
+	}
+
+	open func objectViewControllerType(for container:Container?, uiState:UIState) -> ObjectViewController.Type
+	{
+		Self.defaultObjectViewControllerType(for:container, uiState:uiState)
 	}
 
 	open func containerContextMenu(for container:Container) -> AnyView
 	{
 		typeErase( Self.defaultContainerContextMenu(for:container) )
-	}
-
-	open func objectViewControllerType(for container:Container?) -> ObjectViewController.Type
-	{
-		Self.defaultObjectViewControllerType(for:container)
 	}
 }
 
@@ -195,7 +195,7 @@ public extension ViewFactory
 	}
 
 
-	@ViewBuilder class func defaultHeaderView(for library:Library, container:Container?) -> some View
+	@ViewBuilder class func defaultHeaderView(for container:Container?, uiState:UIState) -> some View
 	{
 		if let container = container as? UnsplashContainer, let filter = container.filter as? UnsplashFilter
 		{
@@ -232,7 +232,7 @@ public extension ViewFactory
 	}
 
 
-	@ViewBuilder class func defaultFooterView(for library:Library, container:Container?) -> some View
+	@ViewBuilder class func defaultFooterView(for container:Container?, uiState:UIState) -> some View
 	{
 		if let container = container as? AudioFolderContainer
 		{
@@ -244,7 +244,7 @@ public extension ViewFactory
 		}
 		else if let container = container
 		{
-			DefaultObjectFooterView(container:container, uiState:library.uiState)
+			DefaultObjectFooterView(container:container, uiState:uiState)
 		}
 		else
 		{
@@ -276,9 +276,7 @@ public extension ViewFactory
 			}
 		}
 	}
-
-
-	class func defaultObjectViewControllerType(for container:Container?) -> ObjectViewController.Type
+	class func defaultObjectViewControllerType(for container:Container?, uiState:UIState) -> ObjectViewController.Type
 	{
 		// For some Container types we want custom ObjectViewControllers
 		
