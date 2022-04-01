@@ -124,6 +124,22 @@ open class LightroomCCObject : Object
 	}
 
 
+	// Shows an indeterminate progress bar
+		
+	open class func showProgress()
+	{
+		DispatchQueue.main.async
+		{
+			if !BXProgressWindowController.shared.isVisible
+			{
+				BXProgressWindowController.shared.title = NSLocalizedString("Importing Media Files", bundle:.BXMediaBrowser, comment:"Progress Title")
+				BXProgressWindowController.shared.isIndeterminate = true
+				BXProgressWindowController.shared.show()
+			}
+		}
+	}
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 

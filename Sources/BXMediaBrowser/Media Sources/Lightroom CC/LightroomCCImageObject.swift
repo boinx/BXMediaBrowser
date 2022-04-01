@@ -191,6 +191,10 @@ open class LightroomCCImageObject : LightroomCCObject
 		let catalogID = LightroomCC.shared.catalogID
 		let assetID = asset.id
 		
+		// Show indeterminate progress
+		
+		Self.showProgress()
+		
 		// Request the server side generation of the fullsize file
 
 		let generateAPI = "https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)/renditions"

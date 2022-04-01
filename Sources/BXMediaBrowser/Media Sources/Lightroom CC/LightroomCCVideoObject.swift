@@ -191,6 +191,14 @@ open class LightroomCCVideoObject : LightroomCCObject
 		let assetID = asset.id
 		let downloadAPI = "https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)/renditions/720p"
 
+		// Show indeterminate progress
+		
+//		if !BXProgressWindowController.shared.isVisible
+//		{
+//			BXProgressWindowController.shared.isIndeterminate = true
+//			BXProgressWindowController.shared.show()
+//		}
+		
 		// Download the fullsize image file
 
 		let downloadRequest = try LightroomCC.shared.request(for:downloadAPI, httpMethod:"GET")

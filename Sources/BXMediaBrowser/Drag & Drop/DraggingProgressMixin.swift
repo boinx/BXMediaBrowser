@@ -64,7 +64,7 @@ extension DraggingProgressMixin
 {
 	/// Creates a root Progress object with the specified totalUnitCount
 	
-	@discardableResult public func prepareProgress(with count:Int) -> Progress
+	@discardableResult public func prepareProgress(with count:Int, showInderminate:Bool = false) -> Progress
 	{
 		// Create root Progress
 		
@@ -92,6 +92,14 @@ extension DraggingProgressMixin
 			[weak self] in self?.cancel()
 		}
 
+		// If requested, show the progress bar immediately
+		
+		if showInderminate && !BXProgressWindowController.shared.isVisible
+		{
+			BXProgressWindowController.shared.title = self.progressTitle ?? NSLocalizedString("Importing Media Files", bundle:.BXMediaBrowser, comment:"Progress Title")
+			BXProgressWindowController.shared.isIndeterminate = false
+		}
+		
 		return progress
 	}
 	
@@ -107,6 +115,7 @@ extension DraggingProgressMixin
 			let percent = Int(fraction*100)
 			
 			BXProgressWindowController.shared.title = self.progressTitle ?? NSLocalizedString("Importing Media Files", bundle:.BXMediaBrowser, comment:"Progress Title")
+			BXProgressWindowController.shared.isIndeterminate = false
 			BXProgressWindowController.shared.value = fraction
 			
 			if !BXProgressWindowController.shared.isVisible && dt>1.0 && fraction<0.6
