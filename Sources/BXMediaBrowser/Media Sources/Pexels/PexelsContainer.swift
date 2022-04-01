@@ -74,8 +74,7 @@ open class PexelsContainer : Container
 	{
 		get
 		{
-			guard let pexelsData = self.data as? PexelsData else { return nil }
-			let filter = pexelsData.lastUsedFilter
+			guard let filter = self.filter as? PexelsFilter else { return nil }
 			let data = try? JSONEncoder().encode(filter)
 			return data
 		}

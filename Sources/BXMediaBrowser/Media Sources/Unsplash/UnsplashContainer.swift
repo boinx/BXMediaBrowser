@@ -232,8 +232,7 @@ open class UnsplashContainer : Container
 	{
 		get
 		{
-			guard let unsplashData = self.data as? UnsplashData else { return nil }
-			let filter = unsplashData.lastUsedFilter
+			guard let filter = self.filter as? UnsplashFilter else { return nil }
 			let data = try? JSONEncoder().encode(filter)
 			return data
 		}
