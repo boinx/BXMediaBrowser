@@ -15,10 +15,8 @@ import Foundation
 
 extension URLSession
 {
-
-//	@available(macOS, deprecated:12.0, message:"Use the built-in API instead")
-//	@available(iOS, deprecated:15.0, message:"Use the built-in API instead")
-
+	/// Downloads some data from the specified URL
+	
     public func data(with url:URL, delegate:URLSessionTaskDelegate? = nil) async throws -> Data
     {
         try await withCheckedThrowingContinuation
@@ -27,15 +25,20 @@ extension URLSession
 
             let task = self.dataTask(with:url)
             {
-				(data,response,error) in
+				(data,response,err) in
 
-                guard let data = data else
-                {
-                    let error = error ?? URLError(.badServerResponse)
-                    return continuation.resume(throwing:error)
-                }
-
-                continuation.resume(returning:(data))
+				if let error = self.error(for:data,response,err)
+				{
+					continuation.resume(throwing:error)
+				}
+				else if let data = data
+				{
+					continuation.resume(returning:(data))
+				}
+				else
+				{
+					continuation.resume(throwing:URLError(.badServerResponse))
+				}
             }
 
 			if #available(macOS 12.0, *)
@@ -48,12 +51,8 @@ extension URLSession
     }
 
 
-//----------------------------------------------------------------------------------------------------------------------
-
-
-//	@available(macOS, deprecated:12.0, message:"Use the built-in API instead")
-//	@available(iOS, deprecated:15.0, message:"Use the built-in API instead")
-
+	/// Downloads some data from the specified URLRequest
+	
     public func data(with request:URLRequest, delegate:URLSessionTaskDelegate? = nil) async throws -> Data
     {
         try await withCheckedThrowingContinuation
@@ -62,15 +61,20 @@ extension URLSession
 
             let task = self.dataTask(with:request)
             {
-				(data,response,error) in
+				(data,response,err) in
 
-                guard let data = data else
-                {
-                    let error = error ?? URLError(.badServerResponse)
-                    return continuation.resume(throwing:error)
-                }
-
-                continuation.resume(returning:(data))
+				if let error = self.error(for:data,response,err)
+				{
+					continuation.resume(throwing:error)
+				}
+				else if let data = data
+				{
+					continuation.resume(returning:(data))
+				}
+				else
+				{
+					continuation.resume(throwing:URLError(.badServerResponse))
+				}
             }
 
 			if #available(macOS 12.0, *)
@@ -83,9 +87,34 @@ extension URLSession
     }
     
  
+	/// This helper function evaluates networking errors, HTTP responses, and received data to return an overall error
+	
+	func error(for data:Data?,_ response:URLResponse?,_ error:Error?) -> Error?
+	{
+		if let error = error
+		{
+			return error
+		}
+		
+		if let response = response as? HTTPURLResponse, response.statusCode < 200 || response.statusCode >= 300
+		{
+			return URLError(.badServerResponse)
+		}
+		
+		if data == nil
+		{
+			return URLError(.badServerResponse)
+		}
+		
+		return nil
+	}
+
+
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	/// Downloads a file from the specified URL
+	
 	public func downloadFile(from remoteURL:URL, delegate:URLSessionTaskDelegate? = nil) async throws -> URL
     {
 		return try await withCheckedThrowingContinuation
@@ -98,25 +127,20 @@ extension URLSession
 			
 			let task = self.downloadTask(with:remoteURL)
 			{
-				(tmpURL,response,error) in
+				(tmpURL,response,err) in
 
-				// Report potential errors and bail out
-				
-				guard let tmpURL = tmpURL else
+				if let error = self.error(for:tmpURL,response,err)
 				{
-					let error = error ?? URLError(.badServerResponse)
-					return continuation.resume(throwing:error)
+					continuation.resume(throwing:error)
 				}
-
-				// Move file to backup location (because tmpURL will be deleted after lifetime of this completionHandler
-				
-				let tmpURL2 = tmpURL.appendingPathExtension("backup")
-				try? FileManager.default.removeItem(at:tmpURL2)
-				try? FileManager.default.linkItem(at:tmpURL, to:tmpURL2)
-				
-				// Return URL to backup file instead
-				
-				continuation.resume(returning:(tmpURL2))
+				else if let url = self.localURL(for:tmpURL)
+				{
+					continuation.resume(returning:(url))
+				}
+				else
+				{
+					continuation.resume(throwing:URLError(.badServerResponse))
+				}
 			}
 
 			if #available(macOS 12.0, *)
@@ -140,6 +164,8 @@ extension URLSession
     }
 
 
+	/// Downloads a file from the specified URLRequest
+	
 	public func downloadFile(with request:URLRequest, delegate:URLSessionTaskDelegate? = nil) async throws -> URL
     {
 		return try await withCheckedThrowingContinuation
@@ -152,25 +178,20 @@ extension URLSession
 			
 			let task = self.downloadTask(with:request)
 			{
-				(tmpURL,response,error) in
+				(tmpURL,response,err) in
 
-				// Report potential errors and bail out
-				
-				guard let tmpURL = tmpURL else
+				if let error = self.error(for:tmpURL,response,err)
 				{
-					let error = error ?? URLError(.badServerResponse)
-					return continuation.resume(throwing:error)
+					continuation.resume(throwing:error)
 				}
-
-				// Move file to backup location (because tmpURL will be deleted after lifetime of this completionHandler
-				
-				let tmpURL2 = tmpURL.appendingPathExtension("backup")
-				try? FileManager.default.removeItem(at:tmpURL2)
-				try? FileManager.default.linkItem(at:tmpURL, to:tmpURL2)
-				
-				// Return URL to backup file instead
-				
-				continuation.resume(returning:(tmpURL2))
+				else if let url = self.localURL(for:tmpURL)
+				{
+					continuation.resume(returning:(url))
+				}
+				else
+				{
+					continuation.resume(throwing:URLError(.badServerResponse))
+				}
 			}
 
 			if #available(macOS 12.0, *)
@@ -193,7 +214,45 @@ extension URLSession
 		}
     }
 
-}
-
-
+	
+	/// This helper function evaluates networking errors, HTTP responses, and downloaded file to return an overall error
+	
+	func error(for url:URL?,_ response:URLResponse?,_ error:Error?) -> Error?
+	{
+		if let error = error
+		{
+			return error
+		}
+		
+		if let response = response as? HTTPURLResponse, response.statusCode < 200 || response.statusCode >= 300
+		{
+			return URLError(.badServerResponse)
+		}
+		
+		if url == nil
+		{
+			return URLError(.badServerResponse)
+		}
+		
+		return nil
+	}
+	
+	
+	/// Moves the file at tmpURL to a backup location (because tmpURL will be deleted after lifetime of the completionHandler)
+					
+	func localURL(for tmpURL:URL?) -> URL?
+	{
+		guard let tmpURL = tmpURL else { return nil }
+		
+		let backupURL = tmpURL.appendingPathExtension("backup")
+		try? FileManager.default.removeItem(at:backupURL)
+		try? FileManager.default.linkItem(at:tmpURL, to:backupURL)
+		
+		return backupURL
+	}
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
+
+
+}
