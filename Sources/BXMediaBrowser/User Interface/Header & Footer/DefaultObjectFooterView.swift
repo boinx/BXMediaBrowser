@@ -49,14 +49,18 @@ public struct DefaultObjectFooterView : View
 	
 	public var body: some View
     {
-		HStack
+		HStack(spacing:4)
 		{
 			// Thumbnail size
 			
-			Slider(value:self.sliderResponse, in:0.3...1.0)
-				.controlSize(.mini)
-				.frame(width:120)
+			BXImage(systemName:"square").scaleEffect(0.5)
 			
+			Slider(value:self.sliderResponse, in:0.4...1.0)
+				.controlSize(.mini)
+				.frame(width:100)
+
+			BXImage(systemName:"square")
+
 			Spacer()
 			
 			// Object count
@@ -71,9 +75,11 @@ public struct DefaultObjectFooterView : View
     
     var sliderResponse:Binding<Double>
     {
-		Binding<Double>(
-			get:{ pow(self.uiState.thumbnailScale,0.5) },
-			set:{ self.uiState.thumbnailScale = pow($0,2) })
+		let response = 3.0
+		
+		return Binding<Double>(
+			get:{ pow(self.uiState.thumbnailScale, 1.0/response) },
+			set:{ self.uiState.thumbnailScale = pow($0,response) })
     }
 }
 
