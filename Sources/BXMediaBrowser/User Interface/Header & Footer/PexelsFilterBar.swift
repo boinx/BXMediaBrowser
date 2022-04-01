@@ -83,19 +83,19 @@ public struct PexelsFilterBar : View
 
 				Spacer()
 				
-					Button(saveTitle)
-					{
-						saveHandler(container)
-					}
-					.disabled(!isSaveEnabled)
+				Button(saveTitle)
+				{
+					saveHandler(container)
+				}
+				.lineLimit(1)
+				.disabled(!isSaveEnabled)
 			}
 			else
 			{
 				Text(description)
 					.centerAligned()
-					.frame(height:20)
+					.frame(height:22)
 			}
-			
 		}
 		.padding(.horizontal,20)
 		.padding(.vertical,10)

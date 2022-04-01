@@ -93,13 +93,14 @@ public struct UnsplashFilterBar : View
 				{
 					saveHandler(container)
 				}
+				.lineLimit(1)
 				.disabled(!isSaveEnabled)
 			}
 			else
 			{
 				Text(description)
 					.centerAligned()
-					.frame(height:20)
+					.frame(height:22)
 			}
 			
 		}
