@@ -253,29 +253,6 @@ public extension ViewFactory
 	}
 
 
-	@ViewBuilder class func defaultContainerContextMenu(for container:Container) -> some View
-	{
-		if let folderContainer = container as? FolderContainer
-		{
-			Button(NSLocalizedString("Reveal in Finder", bundle:.BXMediaBrowser, comment:"Menu Item"))
-			{
-				folderContainer.revealInFinder()
-			}
-		}
-		
-		Button(NSLocalizedString("Reload", bundle:.BXMediaBrowser, comment:"Menu Item"))
-		{
-			container.reload()
-		}
-			
-		if let removeHandler = container.removeHandler
-		{
-			Button(NSLocalizedString("Remove", bundle:.BXMediaBrowser, comment:"Menu Item"))
-			{
-				removeHandler(container)
-			}
-		}
-	}
 	class func defaultObjectViewControllerType(for container:Container?, uiState:UIState) -> ObjectViewController.Type
 	{
 		// For some Container types we want custom ObjectViewControllers
@@ -303,6 +280,31 @@ public extension ViewFactory
 		// Default is a ImageObjectViewController
 		
 		return ImageObjectViewController.self
+	}
+
+
+	@ViewBuilder class func defaultContainerContextMenu(for container:Container) -> some View
+	{
+		if let folderContainer = container as? FolderContainer
+		{
+			Button(NSLocalizedString("Reveal in Finder", bundle:.BXMediaBrowser, comment:"Menu Item"))
+			{
+				folderContainer.revealInFinder()
+			}
+		}
+		
+		Button(NSLocalizedString("Reload", bundle:.BXMediaBrowser, comment:"Menu Item"))
+		{
+			container.reload()
+		}
+			
+		if let removeHandler = container.removeHandler
+		{
+			Button(NSLocalizedString("Remove", bundle:.BXMediaBrowser, comment:"Menu Item"))
+			{
+				removeHandler(container)
+			}
+		}
 	}
 }
 
