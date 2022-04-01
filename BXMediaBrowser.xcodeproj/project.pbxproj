@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		D00DF1BE27F45BA300DC1D27 /* SortOrderPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00DF1BD27F45BA300DC1D27 /* SortOrderPopup.swift */; };
 		D00DF1C027F613FE00DC1D27 /* UIState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00DF1BF27F613FD00DC1D27 /* UIState.swift */; };
+		D00DF1C227F6D41D00DC1D27 /* ObjectBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00DF1C127F6D41D00DC1D27 /* ObjectBrowserView.swift */; };
 		D01B48B527CA1313008249C0 /* BXMediaBrowser.h in Headers */ = {isa = PBXBuildFile; fileRef = D01B48B427CA1313008249C0 /* BXMediaBrowser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D01B494527CA1378008249C0 /* ObjectFilePromiseProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48BE27CA1377008249C0 /* ObjectFilePromiseProvider.swift */; };
 		D01B494627CA1378008249C0 /* FolderDropDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48BF27CA1377008249C0 /* FolderDropDestination.swift */; };
@@ -148,6 +149,7 @@
 /* Begin PBXFileReference section */
 		D00DF1BD27F45BA300DC1D27 /* SortOrderPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortOrderPopup.swift; sourceTree = "<group>"; };
 		D00DF1BF27F613FD00DC1D27 /* UIState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIState.swift; sourceTree = "<group>"; };
+		D00DF1C127F6D41D00DC1D27 /* ObjectBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectBrowserView.swift; sourceTree = "<group>"; };
 		D01B48B127CA1313008249C0 /* BXMediaBrowser.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BXMediaBrowser.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D01B48B427CA1313008249C0 /* BXMediaBrowser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BXMediaBrowser.h; sourceTree = "<group>"; };
 		D01B48BE27CA1377008249C0 /* ObjectFilePromiseProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectFilePromiseProvider.swift; sourceTree = "<group>"; };
@@ -587,6 +589,7 @@
 		D01B493827CA1378008249C0 /* Object Browser */ = {
 			isa = PBXGroup;
 			children = (
+				D00DF1C127F6D41D00DC1D27 /* ObjectBrowserView.swift */,
 				D01B493D27CA1378008249C0 /* QuicklookCollectionView.swift */,
 				D01B493B27CA1378008249C0 /* ObjectCollectionView.swift */,
 				D01B493927CA1378008249C0 /* ObjectViewController.swift */,
@@ -838,6 +841,7 @@
 				D01B496827CA1378008249C0 /* Library+UI.swift in Sources */,
 				D01B494827CA1378008249C0 /* DraggingDestinationMixin.swift in Sources */,
 				D0BAD11B27D3DF8000B749FD /* PexelsVideoContainer.swift in Sources */,
+				D00DF1C227F6D41D00DC1D27 /* ObjectBrowserView.swift in Sources */,
 				D01B497027CA1378008249C0 /* Section+Hashable.swift in Sources */,
 				D01B495627CA1378008249C0 /* StateSaving.swift in Sources */,
 				D01B495527CA1378008249C0 /* FolderObserver.swift in Sources */,
