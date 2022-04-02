@@ -41,7 +41,7 @@ open class UIState : ObservableObject
 {
 	/// This scale affects the display size of Object cells in a CollectionView
 	
-	@Published public var thumbnailScale:Double = 0.25
+	@Published public var thumbnailScale:Double
 	
 	/// The prefix will be used to build prefs keys for property persistence
 	
@@ -56,9 +56,10 @@ open class UIState : ObservableObject
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	public init(prefsKeyPrefix:String = UUID().uuidString)
+	public init(prefsKeyPrefix:String = UUID().uuidString, thumbnailScale:Double = 0.25)
 	{
 		self.prefsKeyPrefix = prefsKeyPrefix
+		self.thumbnailScale = thumbnailScale
 		
 		let scale = UserDefaults.standard.double(forKey:thumbnailKey)
 		if scale > 0.0 { self.thumbnailScale = scale }
