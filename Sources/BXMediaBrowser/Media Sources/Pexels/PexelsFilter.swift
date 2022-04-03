@@ -140,6 +140,17 @@ extension PexelsFilter
 			
 			return NSLocalizedString(identifier, tableName:"Pexels", bundle:.BXMediaBrowser, comment:"Orientation Name")
 		}
+		
+		var icon:String
+		{
+			switch self
+			{
+				case .any: return "rectangle.3.group"
+				case .landscape: return "rectangle"
+				case .portrait: return "rectangle.portrait"
+				case .square: return "square"
+			}
+		}
 	}
 }
 

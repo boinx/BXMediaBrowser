@@ -47,6 +47,8 @@ public struct PexelsFilterBar : View
 		self.searchString = filter.searchString
 	}
 	
+	// Accessors
+	
 	var pexelsContainer:PexelsContainer?
 	{
 		selectedContainer as? PexelsContainer
@@ -62,6 +64,42 @@ public struct PexelsFilterBar : View
 		self.pexelsContainer?.description ?? ""
 	}
 	
+    var searchPlaceholder:String
+    {
+		NSLocalizedString("Search", bundle:.BXMediaBrowser, comment:"Placeholder")
+    }
+    
+    var saveTitle:String
+    {
+		NSLocalizedString("Save", bundle:.BXMediaBrowser, comment:"Button Title")
+    }
+    
+    func colorMenuItems(value:Binding<PexelsFilter.Color>) -> [BXMenuItemSpec]
+    {
+		PexelsFilter.Color.allCases.map
+		{
+			color in
+			
+			BXMenuItemSpec.action(icon:nil, title:color.localizedName, state: { value.wrappedValue == color ? .on : .off })
+			{
+				value.wrappedValue = color
+			}
+		}
+    }
+    
+    func orientationMenuItems(value:Binding<PexelsFilter.Orientation>) -> [BXMenuItemSpec]
+    {
+		PexelsFilter.Orientation.allCases.map
+		{
+			orientation in
+			
+			BXMenuItemSpec.action(icon:nil, title:orientation.localizedName, state: { value.wrappedValue == orientation ? .on : .off })
+			{
+				value.wrappedValue = orientation
+			}
+		}
+    }
+    
 	// View
 	
 	public var body: some View
@@ -77,18 +115,24 @@ public struct PexelsFilterBar : View
 				.textFieldStyle(RoundedBorderTextFieldStyle())
 				.frame(maxWidth:300)
 				
-				PexelsOrientationView(filter:filter)
-				PexelsColorView(filter:filter)
-				RatingFilterView(rating:self.$filter.rating)
+				BXImage(systemName:filter.orientation.icon).font(.system(size:17, weight:.regular))
+					.popupMenu(self.orientationMenuItems(value:self.$filter.orientation))
 
+				ColorIconView(color:filter.color.color)
+					.popupMenu(self.colorMenuItems(value:self.$filter.color))
+				
+				BXImage(systemName:"plus.circle")
+					.font(.system(size:16, weight:.regular))
+					.reducedOpacityWhenDisabled()
+					.disabled(filter.searchString.isEmpty)
+					.onTapGesture
+					{
+						saveHandler(container)
+					}
+					
 				Spacer()
 				
-				Button(saveTitle)
-				{
-					saveHandler(container)
-				}
-				.lineLimit(1)
-				.disabled(!isSaveEnabled)
+				RatingFilterView(rating:self.$filter.rating)
 			}
 			else
 			{
@@ -100,69 +144,6 @@ public struct PexelsFilterBar : View
 		.padding(.horizontal,20)
 		.padding(.vertical,10)
     }
-
-    var searchPlaceholder:String
-    {
-		NSLocalizedString("Search", bundle:.BXMediaBrowser, comment:"Placeholder")
-    }
-    
-    var saveTitle:String
-    {
-		NSLocalizedString("Save", bundle:.BXMediaBrowser, comment:"Button Title")
-    }
-    
-}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-struct PexelsOrientationView : View
-{
-	@ObservedObject var filter:PexelsFilter
-	
-	var body: some View
-	{
-		MenuButton(self.filter.orientation.localizedName)
-		{
-			ForEach(PexelsFilter.Orientation.allCases, id:\.self)
-			{
-				value in
-				
-				Button(value.localizedName)
-				{
-					self.filter.orientation = value
-				}
-			}
-		}
-		.fixedSize()
-	}
-}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-struct PexelsColorView : View
-{
-	@ObservedObject var filter:PexelsFilter
-	
-	var body: some View
-	{
-		MenuButton(self.filter.color.localizedName)
-		{
-			ForEach(PexelsFilter.Color.allCases, id:\.self)
-			{
-				color in
-				
-				Button(action:{ self.filter.color = color })
-				{
-					Text(color.localizedName)
-				}
-			}
-		}
-		.fixedSize()
-	}
 }
 
 
