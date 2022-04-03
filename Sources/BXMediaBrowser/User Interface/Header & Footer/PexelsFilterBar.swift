@@ -136,13 +136,17 @@ public struct PexelsFilterBar : View
 			}
 			else
 			{
-				Text(description)
-					.centerAligned()
-					.frame(height:22)
+				HStack
+				{
+					Text(description)
+					Spacer()
+					RatingFilterView(rating:self.$filter.rating).fixedSize()
+				}
 			}
 		}
 		.padding(.horizontal,20)
 		.padding(.vertical,10)
+		.frame(height:42)
     }
 }
 

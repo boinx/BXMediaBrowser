@@ -52,18 +52,14 @@ public struct LightroomCCFilterBar : View
     {
 		HStack
 		{
-			// Search field
-			
 			TextField(searchPlaceholder, text:self.$filter.searchString)
 				.frame(maxWidth:300)
 				.textFieldStyle(RoundedBorderTextFieldStyle())
 
-			RatingFilterView(rating:self.$filter.rating)
-				
 			Spacer()
 
-			// Sort order
-			
+			RatingFilterView(rating:self.$filter.rating)
+				
 			SortOrderPopup(
 				defaultShapeIcon:"square.grid.2x2",
 				selectedContainer:selectedContainer,

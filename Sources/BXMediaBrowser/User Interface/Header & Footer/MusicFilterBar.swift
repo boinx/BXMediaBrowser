@@ -52,18 +52,14 @@ public struct MusicFilterBar : View
     {
 		HStack
 		{
-			// Search field
-			
 			TextField(searchPlaceholder, text:self.$filter.searchString)
 				.frame(maxWidth:300)
 				.textFieldStyle(RoundedBorderTextFieldStyle())
 
-			RatingFilterView(rating:self.$filter.rating)
-
 			Spacer()
 
-			// Sort order
-			
+			RatingFilterView(rating:self.$filter.rating)
+
 			SortOrderPopup(
 				defaultShapeIcon:"text.justify",
 				selectedContainer:selectedContainer,
