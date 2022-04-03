@@ -123,7 +123,6 @@ open class LightroomCCObject : Object
 		throw Error.downloadFileFailed
 	}
 
-
 	// Shows an indeterminate progress bar
 		
 	open class func showProgress()
@@ -133,6 +132,7 @@ open class LightroomCCObject : Object
 			if !BXProgressWindowController.shared.isVisible
 			{
 				BXProgressWindowController.shared.title = NSLocalizedString("Importing Media Files", bundle:.BXMediaBrowser, comment:"Progress Title")
+				BXProgressWindowController.shared.value = 0.0
 				BXProgressWindowController.shared.isIndeterminate = true
 				BXProgressWindowController.shared.show()
 			}
