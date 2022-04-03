@@ -80,32 +80,42 @@ public struct UnsplashFilterBar : View
 					self.filter.searchString = self.searchString
 				}
 				.textFieldStyle(RoundedBorderTextFieldStyle())
-				.frame(maxWidth:300)
+				.frame(minWidth:32, maxWidth:240)
 				
-				UnsplashOrientationView(filter:filter)
-				UnsplashColorView(filter:filter)
-				
-				RatingFilterView(rating:self.$filter.rating)
+				BXImage(systemName:filter.orientation.icon).font(.system(size:17, weight:.regular))
+					.popupMenu(self.orientationMenuItems(value:self.$filter.orientation))
 
-				Spacer()
+				ColorIconView(color:filter.color.color)
+					.popupMenu(self.colorMenuItems(value:self.$filter.color))
 				
-				Button(saveTitle)
-				{
-					saveHandler(container)
-				}
-				.lineLimit(1)
-				.disabled(!isSaveEnabled)
+				BXImage(systemName:"plus.circle")
+					.font(.system(size:16, weight:.regular))
+					.reducedOpacityWhenDisabled()
+					.disabled(filter.searchString.isEmpty)
+					.onTapGesture
+					{
+						saveHandler(container)
+					}
+				
+				Spacer()
+
+				RatingFilterView(rating:self.$filter.rating)
+					.fixedSize()
 			}
 			else
 			{
-				Text(description)
-					.centerAligned()
-					.frame(height:22)
+				HStack
+				{
+					Text(description)
+					Spacer()
+					RatingFilterView(rating:self.$filter.rating).fixedSize()
+				}
 			}
 			
 		}
 		.padding(.horizontal,20)
 		.padding(.vertical,10)
+		.frame(height:42)
     }
 
     var searchPlaceholder:String
@@ -118,57 +128,64 @@ public struct UnsplashFilterBar : View
 		NSLocalizedString("Save", bundle:.BXMediaBrowser, comment:"Button Title")
     }
     
+    func colorMenuItems(value:Binding<UnsplashFilter.Color>) -> [BXMenuItemSpec]
+    {
+		UnsplashFilter.Color.allCases.map
+		{
+			color in
+			
+			BXMenuItemSpec.action(icon:nil, title:color.localizedName, state: { value.wrappedValue == color ? .on : .off })
+			{
+				value.wrappedValue = color
+			}
+		}
+    }
+    
+    func orientationMenuItems(value:Binding<UnsplashFilter.Orientation>) -> [BXMenuItemSpec]
+    {
+		UnsplashFilter.Orientation.allCases.map
+		{
+			orientation in
+			
+			BXMenuItemSpec.action(icon:nil, title:orientation.localizedName, state: { value.wrappedValue == orientation ? .on : .off })
+			{
+				value.wrappedValue = orientation
+			}
+		}
+    }
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-struct UnsplashOrientationView : View
+struct ColorIconView : View
 {
-	@ObservedObject var filter:UnsplashFilter
+	var color:SwiftUI.Color
+	var size:CGFloat = 16
 	
 	var body: some View
 	{
-		MenuButton(self.filter.orientation.localizedName)
-		{
-			ForEach(UnsplashFilter.Orientation.allCases, id:\.self)
-			{
-				value in
-				
-				Button(value.localizedName)
-				{
-					self.filter.orientation = value
-				}
-			}
-		}
-		.fixedSize()
+		self.patch
+			.cornerRadius(0.5 * size)
+			.frame(width:size, height:size)
+			.overlay(
+				Circle().strokeBorder(Color.primary, lineWidth:1, antialiased:true)
+			)
 	}
-}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-struct UnsplashColorView : View
-{
-	@ObservedObject var filter:UnsplashFilter
 	
-	var body: some View
+	@ViewBuilder var patch: some View
 	{
-		MenuButton(self.filter.color.localizedName)
+		if color == .clear
 		{
-			ForEach(UnsplashFilter.Color.allCases, id:\.self)
-			{
-				color in
-				
-				Button(action:{ self.filter.color = color })
-				{
-					Text(color.localizedName)
-				}
-			}
+			AngularGradient(
+				gradient: Gradient(colors:[.red,.yellow,.green,.blue,.red]),
+				center: .center)
 		}
-		.fixedSize()
+		else
+		{
+			color
+		}
 	}
 }
 

@@ -131,6 +131,17 @@ extension UnsplashFilter
 			
 			return NSLocalizedString(identifier, tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Orientation Name")
 		}
+		
+		var icon:String
+		{
+			switch self
+			{
+				case .any: return "rectangle.3.group"
+				case .landscape: return "rectangle"
+				case .portrait: return "rectangle.portrait"
+				case .squarish: return "square"
+			}
+		}
 	}
 }
 
