@@ -66,7 +66,7 @@ public struct UnsplashUser: Codable
  	public let name: String?
 	public let first_name: String?
     public let last_name: String?
-    public let portfolio_url: URL?
+    public let portfolio_url: String?
     public let location: String?
 }
 
@@ -104,7 +104,9 @@ extension UnsplashUser
 
     func openPortfolioURL()
 	{
-		self.portfolio_url?.open()
+		guard let str = self.portfolio_url else { return }
+		guard let url = URL(string:str) else { return }
+		url.open()
 	}
 }
 
