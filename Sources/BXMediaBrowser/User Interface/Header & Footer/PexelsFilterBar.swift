@@ -104,7 +104,7 @@ public struct PexelsFilterBar : View
 	
 	public var body: some View
     {
-		HStack
+		HStack(spacing:10)
 		{
 			if let container = self.pexelsContainer, let saveHandler = container.saveHandler
 			{
@@ -133,6 +133,7 @@ public struct PexelsFilterBar : View
 				Spacer()
 				
 				RatingFilterView(rating:self.$filter.rating)
+					.padding(.leading,-12)
 			}
 			else
 			{

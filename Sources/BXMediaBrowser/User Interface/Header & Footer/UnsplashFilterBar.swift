@@ -71,7 +71,7 @@ public struct UnsplashFilterBar : View
 	
 	public var body: some View
     {
-		HStack
+		HStack(spacing:10)
 		{
 			if let container = self.unsplashContainer, let saveHandler = self.saveHandler
 			{
@@ -101,6 +101,7 @@ public struct UnsplashFilterBar : View
 
 				RatingFilterView(rating:self.$filter.rating)
 					.fixedSize()
+					.padding(.leading,-12)
 			}
 			else
 			{

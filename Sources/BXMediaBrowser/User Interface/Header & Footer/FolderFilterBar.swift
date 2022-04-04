@@ -49,7 +49,7 @@ public struct FolderFilterBar : View
 	
 	public var body: some View
     {
-		HStack
+		HStack(spacing:10)
 		{
 			TextField(searchPlaceholder, text:self.$filter.searchString)
 				.frame(maxWidth:300)
@@ -58,6 +58,7 @@ public struct FolderFilterBar : View
 			Spacer()
 
 			RatingFilterView(rating:self.$filter.rating)
+				.padding(.leading,-12)
 				
 			SortOrderPopup(
 				defaultShapeIcon:defaultShapeIcon,

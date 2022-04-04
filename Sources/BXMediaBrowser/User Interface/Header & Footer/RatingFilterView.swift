@@ -54,7 +54,7 @@ public struct RatingFilterView : View
 		{
 			case .small: return 12.0
 			case .mini: return 9.0
-			default: return 16.0
+			default: return 14.0
 		}
 	}
 	
@@ -72,7 +72,7 @@ public struct RatingFilterView : View
     {
 		// Draw 5 stars
 		
-		HStack(spacing:2)
+		HStack(spacing:0)
 		{
 			if #available(macOS 11, *)
 			{
@@ -124,11 +124,12 @@ public struct RatingFilterView : View
 	{
 		let w:CGFloat = CGFloat(maxRating) * size
 		let f = CGFloat(maxRating)
-		let x = drag.location.x + 12
-
+		let x = drag.location.x + size
+		let i = Int(f * (x/w))
+		
 		// Calculate new rating depending on mouse position
 		
-		var rating = Int(f*x/w).clipped(to:0...maxRating)
+		var rating = i.clipped(to:0...maxRating)
 		
 		// If new rating is same as intialRating on mouse up, then reset to 0. This provides a nicer UX.
 		
