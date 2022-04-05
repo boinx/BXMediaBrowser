@@ -39,18 +39,39 @@ import UIKit
 
 open class UIState : ObservableObject
 {
+	/// Width of the sidebar in the media browser window
+	
+	@Published public var sidebarWidth:Double = 256
+	{
+		didSet { self.saveToPrefs() }
+	}
+	
+	/// Height of the LibraryView in a single media browser view
+	
+	@Published public var libraryHeight:Double = 256
+	{
+		didSet { self.saveToPrefs() }
+	}
+	
 	/// This scale affects the display size of Object cells in a CollectionView
 	
 	@Published public var thumbnailScale:Double
+	{
+		didSet { self.saveToPrefs() }
+	}
 	
 	/// The prefix will be used to build prefs keys for property persistence
 	
-	private let prefsKeyPrefix:String
+	public var prefsKeyPrefix:String
+	
 	private var thumbnailKey:String { "\(prefsKeyPrefix)-thumbnailScale"}
+	private var sidebarWidthKey:String { "\(prefsKeyPrefix)-sidebarWidth"}
+	private var libraryHeightKey:String { "\(prefsKeyPrefix)-libraryHeight"}
 	
 	/// Internal housekeeping
 	
 	private var observers:[Any] = []
+	private var shouldSaveToPrefs = false
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -60,22 +81,44 @@ open class UIState : ObservableObject
 	{
 		self.prefsKeyPrefix = prefsKeyPrefix
 		self.thumbnailScale = thumbnailScale
-		
-		let scale = UserDefaults.standard.double(forKey:thumbnailKey)
-		if scale > 0.0 { self.thumbnailScale = scale }
+		self.loadFromPrefs()
 		
 		#if os(macOS)
 		
 		self.observers += NotificationCenter.default.publisher(for:NSApplication.willTerminateNotification, object:nil).sink
 		{
-			[weak self] _ in
-			guard let self = self else { return }
-			UserDefaults.standard.set(self.thumbnailScale, forKey:self.thumbnailKey)
+			[weak self] _ in self?.saveToPrefs()
 		}
 		
 		#else
 		#warning("TODO: implement")
 		#endif
+	}
+	
+	private func loadFromPrefs()
+	{
+		let scale = UserDefaults.standard.double(forKey:thumbnailKey)
+		if scale > 0.0 { self.thumbnailScale = scale }
+
+		let width = UserDefaults.standard.double(forKey:sidebarWidthKey)
+		if width > 0.0 { self.sidebarWidth = width }
+
+		let height = UserDefaults.standard.double(forKey:libraryHeightKey)
+		if height > 0.0 { self.libraryHeight = height }
+		
+		self.shouldSaveToPrefs = true
+	}
+	
+	private func saveToPrefs()
+	{
+		guard shouldSaveToPrefs else { return }
+		
+		DispatchQueue.main.coalesce(prefsKeyPrefix)
+		{
+			UserDefaults.standard.set(self.thumbnailScale, forKey:self.thumbnailKey)
+			UserDefaults.standard.set(self.sidebarWidth, forKey:self.sidebarWidthKey)
+			UserDefaults.standard.set(self.libraryHeight, forKey:self.libraryHeightKey)
+		}
 	}
 }
 
