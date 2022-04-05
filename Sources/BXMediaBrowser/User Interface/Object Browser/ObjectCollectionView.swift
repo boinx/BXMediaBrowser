@@ -448,7 +448,8 @@ extension ObjectCollectionView
 		{
 			let n = self.container?.objects.count ?? 0
 			let i = indexPath.item
-			let j = (n - 20).clipped(to:0 ... n-1)
+//			let j = (n - 20).clipped(to:0 ... n-1)
+			let j = (n - 1).clipped(to:0 ... n-1)
 			
 			if i == j
 			{
