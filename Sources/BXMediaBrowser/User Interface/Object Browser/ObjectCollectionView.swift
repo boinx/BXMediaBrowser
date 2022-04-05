@@ -182,7 +182,7 @@ extension ObjectCollectionView
 		let ratio = w / h
 		
 		let rowWidth = max(1.0, collectionView.bounds.width - d)
-		let scale = self.uiState.thumbnailScale ?? 0.4
+		let scale = self.uiState.thumbnailScale
 		
 		// Item (cell)
 		
