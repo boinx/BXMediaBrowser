@@ -25,47 +25,12 @@
 
 import BXSwiftUtils
 
-#if os(macOS)
-import AppKit
-#elseif os(iOS)
-import UIKit
-#endif
-
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
 open class PexelsVideoContainer : PexelsContainer
 {
-	/// Creates a new Container for the folder at the specified URL
-	
-	public required init(identifier:String, icon:String, name:String, filter:PexelsFilter, saveHandler:SaveContainerHandler? = nil, removeHandler:((Container)->Void)? = nil)
-	{
-		Pexels.log.verbose {"\(Self.self).\(#function) \(identifier)"}
-
-		super.init(
-			identifier: identifier,
-			icon: icon,
-			name: name,
-			data: PexelsData(),
-			filter: filter,
-			loadHandler: Self.loadContents,
-			removeHandler: removeHandler)
-		
-		self.saveHandler = saveHandler
-
-		#if os(macOS)
-		
-		self.observers += NotificationCenter.default.publisher(for:NSCollectionView.didScrollToEnd, object:self).sink
-		{
-			[weak self] _ in self?.load(with:nil)
-		}
-		
-		#elseif os(iOS)
-		#warning("TODO: implement")
-		#endif
-	}
-
 	override nonisolated open var mediaTypes:[Object.MediaType]
 	{
 		return [.video]
@@ -88,7 +53,7 @@ open class PexelsVideoContainer : PexelsContainer
 	
 	/// Loads the (shallow) contents of this folder
 	
-	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
+	override class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
 	{
 		Pexels.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
@@ -102,39 +67,39 @@ open class PexelsVideoContainer : PexelsContainer
 		
 		if pexelsFilter != pexelsData.lastUsedFilter
 		{
+			Pexels.log.debug {"    clear search results"}
+
 			pexelsData.page = 0
-			pexelsData.videos = []
+			pexelsData.objects = []
+			pexelsData.didReachEnd = false
+			pexelsData.loadNextPage = true
+			
 			pexelsData.lastUsedFilter.searchString = pexelsFilter.searchString
 			pexelsData.lastUsedFilter.orientation = pexelsFilter.orientation
 			pexelsData.lastUsedFilter.color = pexelsFilter.color
 			pexelsData.lastUsedFilter.size = pexelsFilter.size
-			pexelsData.lastUsedFilter.rating = pexelsFilter.rating
-			Pexels.log.verbose {"    clear search results"}
 		}
 		
 		// Append the next page of search results
 			
-		if !pexelsFilter.searchString.isEmpty
+		if pexelsData.loadNextPage
 		{
 			pexelsData.page += 1
-			pexelsData.videos += try await self.videos(for:pexelsFilter, page:pexelsData.page)
-			Pexels.log.verbose {"    appending page \(pexelsData.page)"}
+			let page = pexelsData.page
+			Pexels.log.debug {"    appending page \(page)"}
+			
+			let newVideos = try await self.videos(for:pexelsFilter, page:page)
+			self.add(newVideos, to:pexelsData)
+
+			pexelsData.loadNextPage = false
+			if newVideos.isEmpty { pexelsData.didReachEnd = true }
 		}
 		
-		// Remove potential duplicates, as that would cause serious issues with NSDiffableDataSource
+		// Filter objects by rating
 		
-		let videos = self.removeDuplicates(from:pexelsData.videos)
-		
-		// Build an Object for each PexelsPhoto in the search results
-		
-		for video in videos
+		objects = pexelsData.objects.filter
 		{
-			let object = PexelsVideoObject(with:video)
-			
-			if StatisticsController.shared.rating(for:object) >= filter.rating
-			{
-				objects += object
-			}
+			StatisticsController.shared.rating(for:$0) >= filter.rating
 		}
 		
 		return (containers,objects)
@@ -177,9 +142,8 @@ open class PexelsVideoContainer : PexelsContainer
 		// Perform the online search
 		
 		let data = try await URLSession.shared.data(with:request)
-
-//let str = String(data:data, encoding:.utf8)
-//print(str)
+//		let str = String(data:data, encoding:.utf8)
+//		print(str)
 
 		// Decode returned JSON to array of Pexels.Video
 		
@@ -188,25 +152,19 @@ open class PexelsVideoContainer : PexelsContainer
 	}
 	
 	
-	/// Removes any duplicate photos from the specified array. The returned array only contains unique entries.
-	/// This is important when using a NSDiffableDataSource with NSCollectionView. Having duplicate identifiers
-	/// would cause fatal exceptions.
+	/// Adds the new videos to the list of cached Objects. To make sure that NSDiffableDataSource doesn't
+	/// complain (and throw an exception), any duplicates will be ignored.
 	
-	private class func removeDuplicates(from videos:[Pexels.Video]) -> [Pexels.Video]
+	private class func add(_ videos:[Pexels.Video], to pexelsData:PexelsData)
 	{
-		var uniqueVideos:[Pexels.Video] = []
-		var identifiers:[Int] = []
-		
 		for video in videos
 		{
-			guard !identifiers.contains(video.id) else { continue }
-			uniqueVideos += video
-			identifiers += video.id
+			let id = video.id
+			guard pexelsData.knownIDs[id] == nil else { continue }
+			pexelsData.knownIDs[id] = true
+			pexelsData.objects += PexelsVideoObject(with:video)
 		}
-		
-		return uniqueVideos
 	}
-
 }
 
 

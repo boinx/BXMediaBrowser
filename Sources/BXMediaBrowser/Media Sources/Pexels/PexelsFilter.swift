@@ -93,8 +93,8 @@ extension PexelsFilter : Equatable
 		lhs.searchString == rhs.searchString &&
 		lhs.orientation == rhs.orientation &&
 		lhs.color == rhs.color &&
-		lhs.size == rhs.size &&
-		lhs.rating == rhs.rating
+		lhs.size == rhs.size //&&
+//		lhs.rating == rhs.rating
 	}
 
 	public var copy: PexelsFilter

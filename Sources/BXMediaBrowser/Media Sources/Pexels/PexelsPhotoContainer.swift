@@ -25,48 +25,12 @@
 
 import BXSwiftUtils
 
-#if os(macOS)
-import AppKit
-#elseif os(iOS)
-import UIKit
-#endif
-
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
 open class PexelsPhotoContainer : PexelsContainer
 {
-	/// Creates a new Container for the folder at the specified URL
-	
-	public required init(identifier:String, icon:String, name:String, filter:PexelsFilter, saveHandler:SaveContainerHandler? = nil, removeHandler:((Container)->Void)? = nil)
-	{
-		Pexels.log.verbose {"\(Self.self).\(#function) \(identifier)"}
-
-		super.init(
-			identifier: identifier,
-			icon: icon,
-			name: name,
-			data: PexelsData(),
-			filter: filter,
-			loadHandler: Self.loadContents,
-			removeHandler: removeHandler)
-
-		self.saveHandler = saveHandler
-
-		#if os(macOS)
-		
-		self.observers += NotificationCenter.default.publisher(for:NSCollectionView.didScrollToEnd, object:self).sink
-		{
-			[weak self] _ in self?.load(with:nil)
-		}
-		
-		#elseif os(iOS)
-		#warning("TODO: implement")
-		#endif
-	}
-
-
 	override nonisolated open var mediaTypes:[Object.MediaType]
 	{
 		return [.image]
@@ -87,7 +51,7 @@ open class PexelsPhotoContainer : PexelsContainer
 
 	/// Loads the (shallow) contents of this folder
 	
-	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
+	override class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
 	{
 		Pexels.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
@@ -101,39 +65,39 @@ open class PexelsPhotoContainer : PexelsContainer
 		
 		if pexelsFilter != pexelsData.lastUsedFilter
 		{
+			Pexels.log.debug {"    clear search results"}
+
 			pexelsData.page = 0
-			pexelsData.photos = []
+			pexelsData.objects = []
+			pexelsData.didReachEnd = false
+			pexelsData.loadNextPage = true
+			
 			pexelsData.lastUsedFilter.searchString = pexelsFilter.searchString
 			pexelsData.lastUsedFilter.orientation = pexelsFilter.orientation
 			pexelsData.lastUsedFilter.color = pexelsFilter.color
 			pexelsData.lastUsedFilter.size = pexelsFilter.size
-			pexelsData.lastUsedFilter.rating = pexelsFilter.rating
-			Pexels.log.verbose {"    clear search results"}
 		}
 		
 		// Append the next page of search results
 			
-		if !pexelsFilter.searchString.isEmpty
+		if pexelsData.loadNextPage
 		{
 			pexelsData.page += 1
-			pexelsData.photos += try await self.photos(for:pexelsFilter, page:pexelsData.page)
-			Pexels.log.verbose {"    appending page \(pexelsData.page)"}
+			let page = pexelsData.page
+			Pexels.log.debug {"    appending page \(page)"}
+			
+			let newPhotos = try await self.photos(for:pexelsFilter, page:page)
+			self.add(newPhotos, to:pexelsData)
+
+			pexelsData.loadNextPage = false
+			if newPhotos.isEmpty { pexelsData.didReachEnd = true }
 		}
 		
-		// Remove potential duplicates, as that would cause serious issues with NSDiffableDataSource
+		// Filter objects by rating
 		
-		let photos = self.removeDuplicates(from:pexelsData.photos)
-		
-		// Build an Object for each PexelsPhoto in the search results
-		
-		for photo in photos
+		objects = pexelsData.objects.filter
 		{
-			let object = PexelsPhotoObject(with:photo)
-			
-			if StatisticsController.shared.rating(for:object) >= filter.rating
-			{
-				objects += object
-			}
+			StatisticsController.shared.rating(for:$0) >= filter.rating
 		}
 		
 		return (containers,objects)
@@ -184,25 +148,19 @@ open class PexelsPhotoContainer : PexelsContainer
 	}
 	
 	
-	/// Removes any duplicate photos from the specified array. The returned array only contains unique entries.
-	/// This is important when using a NSDiffableDataSource with NSCollectionView. Having duplicate identifiers
-	/// would cause fatal exceptions.
+	/// Adds the new photos to the list of cached Objects. To make sure that NSDiffableDataSource doesn't
+	/// complain (and throw an exception), any duplicates will be ignored.
 	
-	private class func removeDuplicates(from photos:[Pexels.Photo]) -> [Pexels.Photo]
+	private class func add(_ photos:[Pexels.Photo], to pexelsData:PexelsData)
 	{
-		var uniquePhotos:[Pexels.Photo] = []
-		var identifiers:[Int] = []
-		
 		for photo in photos
 		{
-			guard !identifiers.contains(photo.id) else { continue }
-			uniquePhotos += photo
-			identifiers += photo.id
+			let id = photo.id
+			guard pexelsData.knownIDs[id] == nil else { continue }
+			pexelsData.knownIDs[id] = true
+			pexelsData.objects += PexelsPhotoObject(with:photo)
 		}
-		
-		return uniquePhotos
 	}
-
 }
 
 

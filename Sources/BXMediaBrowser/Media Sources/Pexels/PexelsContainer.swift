@@ -26,6 +26,12 @@
 import BXSwiftUtils
 import Foundation
 
+#if os(macOS)
+import AppKit
+#elseif os(iOS)
+import UIKit
+#endif
+
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -36,8 +42,10 @@ open class PexelsContainer : Container
 	{
 		var lastUsedFilter = PexelsFilter()
 		var page = 0
-		var photos:[Pexels.Photo] = []
-		var videos:[Pexels.Video] = []
+		var objects:[Object] = []
+		var knownIDs:[Int:Bool] = [:]
+		var didReachEnd = false
+		var loadNextPage = true
 	}
 	
 	/// This handler is called when the user clicks on the Save button - it will permanently save a Pexels search
@@ -49,6 +57,37 @@ open class PexelsContainer : Container
 
 //----------------------------------------------------------------------------------------------------------------------
 
+
+	/// Creates a new Container for the folder at the specified URL
+	
+	public required init(identifier:String, icon:String, name:String, filter:PexelsFilter, saveHandler:SaveContainerHandler? = nil, removeHandler:((Container)->Void)? = nil)
+	{
+		Pexels.log.verbose {"\(Self.self).\(#function) \(identifier)"}
+
+		super.init(
+			identifier: identifier,
+			icon: icon,
+			name: name,
+			data: PexelsData(),
+			filter: filter,
+			loadHandler: Self.loadContents,
+			removeHandler: removeHandler)
+		
+		self.saveHandler = saveHandler
+
+		#if os(macOS)
+		
+		self.observers += NotificationCenter.default.publisher(for:NSCollectionView.didScrollToEnd, object:self).sink
+		{
+			[weak self] _ in self?.didScrollToEnd()
+		}
+		
+		#elseif os(iOS)
+		
+		#warning("TODO: implement")
+		
+		#endif
+	}
 
 	// Pexels Container can never be expanded, as they do not have any sub-containers
 	
@@ -68,6 +107,32 @@ open class PexelsContainer : Container
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	/// This method will be called when the user scrolls to the end of the NSCollectionView.
+	
+	func didScrollToEnd()
+	{
+		guard let pexelsData = data as? PexelsData else { return }
+		guard let pexelsFilter = filter as? PexelsFilter else { return }
+		guard !pexelsFilter.searchString.isEmpty else { return }
+		guard pexelsFilter.rating == 0 else { return }
+
+		// If the content is not being filtered by rating, then load the next page of data
+		
+		if !pexelsData.didReachEnd
+		{
+			pexelsData.loadNextPage = true
+			self.load(with:nil)
+		}
+	}
+	
+	
+	// To be overridden by subclasses
+	
+	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
+	{
+		return ([],[])
+	}
+	
 	/// Encodes/decodes a PexelsFilter from Data
 	
 	var filterData:Data?
