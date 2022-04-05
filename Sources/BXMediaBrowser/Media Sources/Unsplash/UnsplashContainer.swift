@@ -58,6 +58,8 @@ open class UnsplashContainer : Container
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: -
+	
 	/// Creates a new Container for the folder at the specified URL
 	
 	public required init(identifier:String, icon:String, name:String, filter:UnsplashFilter, saveHandler:SaveContainerHandler? = nil, removeHandler:((Container)->Void)? = nil)
@@ -103,10 +105,49 @@ open class UnsplashContainer : Container
 		false
 	}
 	
+	/// Returns the list of allowed sort Kinds for this Container
+		
+	override open var allowedSortTypes:[Object.Filter.SortType]
+	{
+		[]
+	}
+
+	/// Returns a description of the contents of this Container
+	
+    @MainActor override open var localizedObjectCount:String
+    {
+		let n = self.objects.count
+		let str = n.localizedImagesString
+		return str
+    }
+	/// Returns a textual description of the filter params (for displaying in the UI)
+	
+	var description:String
+	{
+		guard let filter = self.filter as? UnsplashFilter else { return "" }
+		return Self.description(with:filter)
+	}
+
+	/// Returns a textual description of the filter params (for displaying in the UI)
+
+	class func description(with filter:UnsplashFilter) -> String
+	{
+		let searchString = filter.searchString
+		let orientation = filter.orientation != .any ? filter.orientation.localizedName : ""
+		let color = filter.color != .any ? filter.color.localizedName : ""
+
+		var description = searchString
+		if !orientation.isEmpty { description += ", \(orientation)" }
+		if !color.isEmpty { description += ", \(color)" }
+		return description
+	}
+
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: - Loading
+	
 	/// This method will be called when the user scrolls to the end of the NSCollectionView.
 	
 	func didScrollToEnd()
@@ -249,6 +290,17 @@ open class UnsplashContainer : Container
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: - Saving
+
+	
+	/// Creates a new Container with the saved search parameters of this Container
+	
+	public func save()
+	{
+		self.saveHandler?(self)
+	}
+	
+	
 	/// Encodes/decodes a UnsplashFilter from Data
 	
 	var filterData:Data?
@@ -269,46 +321,6 @@ open class UnsplashContainer : Container
 		}
 	}
 
-	/// Returns a textual description of the filter params (for displaying in the UI)
-	
-	var description:String
-	{
-		guard let filter = self.filter as? UnsplashFilter else { return "" }
-		return Self.description(with:filter)
-	}
-
-	/// Returns a textual description of the filter params (for displaying in the UI)
-
-	class func description(with filter:UnsplashFilter) -> String
-	{
-		let searchString = filter.searchString
-		let orientation = filter.orientation != .any ? filter.orientation.localizedName : ""
-		let color = filter.color != .any ? filter.color.localizedName : ""
-
-		var description = searchString
-		if !orientation.isEmpty { description += ", \(orientation)" }
-		if !color.isEmpty { description += ", \(color)" }
-		return description
-	}
-
-	/// Returns a description of the contents of this Container
-	
-    @MainActor override open var localizedObjectCount:String
-    {
-		let n = self.objects.count
-		let str = n.localizedImagesString
-		return str
-    }
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	// MARK: - Sorting
-	
-	/// Returns the list of allowed sort Kinds for this Container
-		
-	override open var allowedSortTypes:[Object.Filter.SortType] { [] }
 }
 
 

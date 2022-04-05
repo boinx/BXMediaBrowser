@@ -100,7 +100,25 @@ open class PexelsVideoSource : Source, AccessControl
 		guard let liveSearchContainer = container as? PexelsVideoContainer else { return }
 		guard let liveFilter = liveSearchContainer.filter as? PexelsFilter else { return }
 		guard let savedContainer = self.createContainer(with:liveFilter.copy) else { return }
-		self.addContainer(savedContainer)
+
+		// Only add savedContainer if it is unique
+		
+		Task
+		{
+			let savedContainers = await self.containers
+				.compactMap { $0 as? PexelsContainer }
+				.filter { $0.saveHandler == nil }
+				
+			for container in savedContainers
+			{
+				if container.identifier == savedContainer.identifier { return }
+			}
+			
+			await MainActor.run
+			{
+				self.addContainer(savedContainer)
+			}
+		}
 	}
 
 

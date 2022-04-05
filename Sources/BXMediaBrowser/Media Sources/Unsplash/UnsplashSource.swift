@@ -97,8 +97,26 @@ open class UnsplashSource : Source, AccessControl
 		Unsplash.log.debug {"\(Self.self).\(#function)"}
 
 		guard let liveFilter = liveSearchContainer.filter as? UnsplashFilter else { return }
-		guard let savedContainer = self.createContainer(with:liveFilter.copy) else { return }
-		self.addContainer(savedContainer)
+		guard let newContainer = self.createContainer(with:liveFilter.copy) else { return }
+		
+		// Only add the newContainer if it is unique
+		
+		Task
+		{
+			let savedContainers = await self.containers
+				.compactMap { $0 as? UnsplashContainer }
+				.filter { $0.saveHandler == nil }
+				
+			for container in savedContainers
+			{
+				if container.identifier == newContainer.identifier { return }
+			}
+			
+			await MainActor.run
+			{
+				self.addContainer(newContainer)
+			}
+		}
 	}
 
 
@@ -151,7 +169,6 @@ open class UnsplashSource : Source, AccessControl
 	}
 
 	internal static var savedFilterDatasKey:String { "savedFilterDatas" }
-
 }
 
 

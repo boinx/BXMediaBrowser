@@ -184,7 +184,15 @@ public extension ViewFactory
 
 	@ViewBuilder class func defaultContainerView(for container:Container) -> some View
 	{
-		if container is FolderContainer
+		if let container = container as? UnsplashContainer
+		{
+			UnsplashContainerView(with:container)
+		}
+		else if let container = container as? PexelsContainer
+		{
+			PexelsContainerView(with:container)
+		}
+		else if let container = container as? FolderContainer
 		{
 			FolderContainerView(with:container)
 		}

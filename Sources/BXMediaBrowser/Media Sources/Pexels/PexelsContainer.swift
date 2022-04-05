@@ -47,17 +47,13 @@ open class PexelsContainer : Container
 		var didReachEnd = false
 		var loadNextPage = true
 	}
-	
-	/// This handler is called when the user clicks on the Save button - it will permanently save a Pexels search
-	
-	open var saveHandler:SaveContainerHandler? = nil
-
-	public typealias SaveContainerHandler = (Container)->Void
-	
+		
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: -
+	
 	/// Creates a new Container for the folder at the specified URL
 	
 	public required init(identifier:String, icon:String, name:String, filter:PexelsFilter, saveHandler:SaveContainerHandler? = nil, removeHandler:((Container)->Void)? = nil)
@@ -104,9 +100,35 @@ open class PexelsContainer : Container
 	}
 
 
+	/// Returns a textual description of the filter params (for displaying in the UI)
+	
+	var description:String
+	{
+		guard let filter = self.filter as? PexelsFilter else { return "" }
+		return Self.description(with:filter)
+	}
+
+	/// Returns a textual description of the filter params (for displaying in the UI)
+
+	class func description(with filter:PexelsFilter) -> String
+	{
+		let searchString = filter.searchString
+		let orientation = filter.orientation != .any ? filter.orientation.localizedName : ""
+		let color = filter.color != .any ? filter.color.localizedName : ""
+
+		var description = searchString
+		if !orientation.isEmpty { description += ", \(orientation)" }
+		if !color.isEmpty { description += ", \(color)" }
+		return description
+	}
+
+
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: - Loading
+
+	
 	/// This method will be called when the user scrolls to the end of the NSCollectionView.
 	
 	func didScrollToEnd()
@@ -133,6 +155,28 @@ open class PexelsContainer : Container
 		return ([],[])
 	}
 	
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - Saving
+
+	
+	/// This handler is called when the user clicks on the Save button - it will permanently save a Pexels search
+	
+	open var saveHandler:SaveContainerHandler? = nil
+
+	public typealias SaveContainerHandler = (Container)->Void
+
+
+	/// Creates a new Container with the saved search parameters of this Container
+	
+	public func save()
+	{
+		self.saveHandler?(self)
+	}
+	
+	
 	/// Encodes/decodes a PexelsFilter from Data
 	
 	var filterData:Data?
@@ -153,31 +197,6 @@ open class PexelsContainer : Container
 		}
 	}
 
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	/// Returns a textual description of the filter params (for displaying in the UI)
-	
-	var description:String
-	{
-		guard let filter = self.filter as? PexelsFilter else { return "" }
-		return Self.description(with:filter)
-	}
-
-	/// Returns a textual description of the filter params (for displaying in the UI)
-
-	class func description(with filter:PexelsFilter) -> String
-	{
-		let searchString = filter.searchString
-		let orientation = filter.orientation != .any ? filter.orientation.localizedName : ""
-		let color = filter.color != .any ? filter.color.localizedName : ""
-
-		var description = searchString
-		if !orientation.isEmpty { description += ", \(orientation)" }
-		if !color.isEmpty { description += ", \(color)" }
-		return description
-	}
 }
 
 
