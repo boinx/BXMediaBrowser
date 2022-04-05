@@ -46,7 +46,8 @@ open class UnsplashContainer : Container
 		var page = 0
 		var objects:[UnsplashObject] = []
 		var knownIDs:[String:UnsplashPhoto] = [:]
-		var appendNextPage = true
+		var didReachEnd = false
+		var loadNextPage = true
 	}
 	
 	public typealias SaveContainerHandler = (UnsplashContainer)->Void
@@ -112,12 +113,16 @@ open class UnsplashContainer : Container
 	{
 		guard let unsplashData = data as? UnsplashData else { return }
 		guard let unsplashFilter = filter as? UnsplashFilter else { return }
-
+		guard !unsplashFilter.searchString.isEmpty else { return }
+		guard unsplashFilter.rating == 0 else { return }
+		
 		// If the content is not being filtered by rating, then load the next page of data
 		
-		guard unsplashFilter.rating == 0 else { return }
-		unsplashData.appendNextPage = true
-		self.load(with:nil)
+		if !unsplashData.didReachEnd
+		{
+			unsplashData.loadNextPage = true
+			self.load(with:nil)
+		}
 	}
 	
 	
@@ -137,29 +142,32 @@ open class UnsplashContainer : Container
 		
 		if unsplashFilter != unsplashData.lastUsedFilter
 		{
+			Unsplash.log.debug {"    clear search results"}
+
 			unsplashData.page = 0
 			unsplashData.objects = []
 			unsplashData.knownIDs = [:]
+			unsplashData.didReachEnd = false
+			unsplashData.loadNextPage = true
+
 			unsplashData.lastUsedFilter.searchString = unsplashFilter.searchString
 			unsplashData.lastUsedFilter.orientation = unsplashFilter.orientation
 			unsplashData.lastUsedFilter.color = unsplashFilter.color
-			Unsplash.log.debug {"    clear search results"}
 		}
 		
 		// Append the next page of search results
 
-		if unsplashData.appendNextPage
+		if unsplashData.loadNextPage
 		{
 			unsplashData.page += 1
-			Unsplash.log.debug {"    appending page \(unsplashData.page)"}
-			let newPhotos = try await self.photos(for:unsplashFilter, page:unsplashData.page)
-			self.add(newPhotos, to:unsplashData)
+			let page = unsplashData.page
+			Unsplash.log.debug {"    appending page \(page)"}
 			
-			unsplashData.appendNextPage = false
-		}
-		else
-		{
-			Unsplash.log.debug {"    keep existing pages"}
+			let newPhotos = try await self.photos(for:unsplashFilter, page:page)
+			self.add(newPhotos, to:unsplashData)
+
+			unsplashData.loadNextPage = false
+			if newPhotos.isEmpty { unsplashData.didReachEnd = true }
 		}
 		
 		// Filter objects by rating
