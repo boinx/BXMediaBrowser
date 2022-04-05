@@ -31,7 +31,7 @@ import SwiftUI
 
 /// This struct bundles all parameters for a photo search on Unsplash.com
 
-public class UnsplashFilter : Object.Filter //, Codable
+public class UnsplashFilter : Object.Filter
 {
 	/// If non-nil then search results will be restricted to the specified Orientation
 	
@@ -85,8 +85,8 @@ extension UnsplashFilter : Equatable
 	{
 		lhs.searchString == rhs.searchString &&
 		lhs.orientation == rhs.orientation &&
-		lhs.color == rhs.color &&
-		lhs.rating == rhs.rating
+		lhs.color == rhs.color
+		// ignore rating because it is not part of the official Unsplash API - filtering by rating is done client side
 	}
 
 	public var copy: UnsplashFilter

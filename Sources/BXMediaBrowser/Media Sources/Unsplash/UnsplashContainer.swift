@@ -26,6 +26,8 @@
 import BXSwiftUtils
 import Foundation
 
+// Needed for NSCollectionView
+
 #if os(macOS)
 import AppKit
 #elseif os(iOS)
@@ -42,7 +44,9 @@ open class UnsplashContainer : Container
 	{
 		var lastUsedFilter = UnsplashFilter()
 		var page = 0
-		var photos:[UnsplashPhoto] = []
+		var objects:[UnsplashObject] = []
+		var knownIDs:[String:UnsplashPhoto] = [:]
+		var appendNextPage = true
 	}
 	
 	public typealias SaveContainerHandler = (UnsplashContainer)->Void
@@ -74,15 +78,18 @@ open class UnsplashContainer : Container
 		
 		self.observers += NotificationCenter.default.publisher(for:NSCollectionView.didScrollToEnd, object:self).sink
 		{
-			[weak self] _ in self?.load(with:nil)
+			[weak self] _ in self?.didScrollToEnd()
 		}
 		
 		#elseif os(iOS)
+		
 		#warning("TODO: implement")
+		
 		#endif
 	}
 
-
+	// Unsplash only handles images
+	
 	override nonisolated open var mediaTypes:[Object.MediaType]
 	{
 		return [.image]
@@ -99,6 +106,21 @@ open class UnsplashContainer : Container
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	/// This method will be called when the user scrolls to the end of the NSCollectionView.
+	
+	func didScrollToEnd()
+	{
+		guard let unsplashData = data as? UnsplashData else { return }
+		guard let unsplashFilter = filter as? UnsplashFilter else { return }
+
+		// If the content is not being filtered by rating, then load the next page of data
+		
+		guard unsplashFilter.rating == 0 else { return }
+		unsplashData.appendNextPage = true
+		self.load(with:nil)
+	}
+	
+	
 	/// Loads the (shallow) contents of this folder
 	
 	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
@@ -116,39 +138,37 @@ open class UnsplashContainer : Container
 		if unsplashFilter != unsplashData.lastUsedFilter
 		{
 			unsplashData.page = 0
-			unsplashData.photos = []
+			unsplashData.objects = []
+			unsplashData.knownIDs = [:]
 			unsplashData.lastUsedFilter.searchString = unsplashFilter.searchString
 			unsplashData.lastUsedFilter.orientation = unsplashFilter.orientation
 			unsplashData.lastUsedFilter.color = unsplashFilter.color
-			unsplashData.lastUsedFilter.rating = unsplashFilter.rating
-			Unsplash.log.verbose {"    clear search results"}
+			Unsplash.log.debug {"    clear search results"}
 		}
 		
 		// Append the next page of search results
-			
-		if !unsplashFilter.searchString.isEmpty
+
+		if unsplashData.appendNextPage
 		{
 			unsplashData.page += 1
-			unsplashData.photos += try await self.photos(for:unsplashFilter, page:unsplashData.page)
-			Unsplash.log.verbose {"    appending page \(unsplashData.page)"}
-		}
-		
-		// Remove potential duplicates, as that would cause serious issues with NSDiffableDataSource
-		
-		let photos = self.removeDuplicates(from:unsplashData.photos)
-		
-		// Build an Object for each UnsplashPhoto in the search results
-		
-		for photo in photos
-		{
-			let object = UnsplashObject(with:photo)
+			Unsplash.log.debug {"    appending page \(unsplashData.page)"}
+			let newPhotos = try await self.photos(for:unsplashFilter, page:unsplashData.page)
+			self.add(newPhotos, to:unsplashData)
 			
-			if StatisticsController.shared.rating(for:object) >= filter.rating
-			{
-				objects += object
-			}
+			unsplashData.appendNextPage = false
+		}
+		else
+		{
+			Unsplash.log.debug {"    keep existing pages"}
 		}
 		
+		// Filter objects by rating
+		
+		objects = unsplashData.objects.filter
+		{
+			StatisticsController.shared.rating(for:$0) >= filter.rating
+		}
+
 		return (containers,objects)
 	}
 	
@@ -203,23 +223,18 @@ open class UnsplashContainer : Container
 	}
 	
 	
-	/// Removes any duplicate photos from the specified array. The returned array only contains unique entries.
-	/// This is important when using a NSDiffableDataSource with NSCollectionView. Having duplicate identifiers
-	/// would cause fatal exceptions.
+	/// Adds the new photos to the list of cached Objects. To make sure that NSDiffableDataSource doesn't
+	/// complain (and throw an exception), any duplicates will be ignored.
 	
-	private class func removeDuplicates(from photos:[UnsplashPhoto]) -> [UnsplashPhoto]
+	private class func add(_ photos:[UnsplashPhoto], to unsplashData:UnsplashData)
 	{
-		var uniquePhotos:[UnsplashPhoto] = []
-		var identifiers:[String] = []
-		
 		for photo in photos
 		{
-			guard !identifiers.contains(photo.id) else { continue }
-			uniquePhotos += photo
-			identifiers += photo.id
+			let id = photo.id
+			guard unsplashData.knownIDs[id] == nil else { continue }
+			unsplashData.objects += UnsplashObject(with:photo)
+			unsplashData.knownIDs[id] = photo
 		}
-		
-		return uniquePhotos
 	}
 	
 	
