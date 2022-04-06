@@ -144,7 +144,6 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 		{
 			NotificationCenter.default.post(name:Self.didCreateNotification, object:self)
 		}
-		
 	}
 
 	/// Reloads this Container when the filter changes
