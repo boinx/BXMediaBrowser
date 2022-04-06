@@ -25,78 +25,45 @@
 
 import Photos
 import BXSwiftUtils
-import Foundation
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-extension PHCollectionList
+enum PhotosData
 {
-	public static func years(mediaType:PHAssetMediaType = .image, start:Int? = nil, end:Int? = nil) -> PHCollectionList
-	{
-		let currentYear = end ?? Calendar.current.currentYear
-		let startYear = start ?? currentYear - 20
-		
-		let fetchOptions = PHFetchOptions()
-		fetchOptions.wantsIncrementalChangeDetails = false
-
-		var yearCollections:[PHAssetCollection] = []
-		
-		for year in (startYear...currentYear).reversed()
-		{
-			guard let interval = DateInterval(year:year) else { continue }
-			
-			fetchOptions.predicate = NSPredicate(
-				format: "creationDate > %@ AND creationDate < %@",
-				interval.start as NSDate,
-				interval.end as NSDate)
-
-			let assets = PHAsset.fetchAssets(with:mediaType, options:fetchOptions)
-				
-			if assets.count > 0
-			{
-				yearCollections += PHAssetCollection.transientAssetCollection(withAssetFetchResult:assets, title:"\(year)")
-			}
-		}
-
-		let title = "Years"
-		return PHCollectionList.transientCollectionList(with:yearCollections, title:title)
-	}
-}
-
+	/// Information for the "All Photos" collection (the whole library)
 	
-//----------------------------------------------------------------------------------------------------------------------
-
-
-extension Calendar
-{
-    var currentYear:Int
-    {
-        component(.year, from:Date())
-    }
-    
-    func startOfYear(_ year:Int? = nil) -> Date?
-    {
-        date(from:DateComponents(year:year ?? currentYear))
-    }
+	case library(assets:PHFetchResult<PHAsset>)
+	
+	/// Information that specifies a single album or smart album
+	
+	case album(collection:PHAssetCollection)
+	
+	/// Information that specifies a single folder
+	
+	case folder(collections:[PHCollection])
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-extension DateInterval
+extension PhotosData
 {
-    init?(year:Int)
-    {
-        guard let start = Calendar.current.startOfYear(year), let end = Calendar.current.startOfYear(year + 1) else
-        {
-            return nil
-        }
-        
-        self.init(start:start, end:end)
-    }
+	public static func items<T>(for fetchResult:PHFetchResult<T>) -> [T]
+	{
+		var items:[T] = []
+		let n = fetchResult.count
+		
+		for i in 0 ..< n
+		{
+			let item = fetchResult[i]
+			items += item
+		}
+			
+		return items
+	}
 }
 
 

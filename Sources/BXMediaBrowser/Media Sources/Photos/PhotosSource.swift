@@ -139,29 +139,76 @@ public class PhotosSource : Source, AccessControl
 		PhotosSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
 		var containers:[Container] = []
+	
+		// Sorting
 		
+        let sortOptions = PHFetchOptions()
+        sortOptions.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending:true)]
+
 		// Library
 		
-		let library = PhotosContainer(mediaType:.image, filter:filter)
-		containers += library
+        let allPhotosFetchResult = PHAsset.fetchAssets(with:sortOptions)
+		let allPhotosData = PhotosData.library(assets:allPhotosFetchResult)
+
+		containers += PhotosContainer(
+			identifier: "PhotosSource:Library",
+			icon: "photo.on.rectangle",
+			name: "All Photos",
+			data: allPhotosData,
+			filter: filter)
 
 		// Recently Added
 		
 		let recentsFetchResult = PHAssetCollection.fetchAssetCollections(with:.smartAlbum, subtype:.smartAlbumRecentlyAdded, options:nil)
-			
-		if let recentsAssetCollection = recentsFetchResult.firstObject
+		
+		if let recentsCollection = recentsFetchResult.firstObject
 		{
-			containers += PhotosContainer(with:recentsAssetCollection, icon:"clock", filter:filter)
+			let recentsData = PhotosData.album(collection:recentsCollection)
+			
+			containers += PhotosContainer(
+				identifier: "PhotosSource:\(recentsCollection.localIdentifier)",
+				icon: "clock",
+				name: recentsCollection.localizedTitle ?? "Recents",
+				data: recentsData,
+				filter: filter)
 		}
 
-		// Years
+		// Albums
 		
-//		let yearsFetchResult = PHCollectionList.fetchMomentLists(with:.momentListYear, options:nil)
-//
-//		if let yearsCollectionList = yearsFetchResult.firstObject
+		let albumsFetchResult = PHCollectionList.fetchTopLevelUserCollections(with:nil)
+		let albumsCollections = PhotosData.items(for:albumsFetchResult)
+		let albumsData = PhotosData.folder(collections:albumsCollections)
+
+		containers += PhotosContainer(
+			identifier: "PhotosSource:Albums",
+			icon: "folder",
+			name: "Albums",
+			data: albumsData,
+			filter: filter)
+		
+		// Years
+
+		let yearsCollectionList = PHCollectionList.years(mediaType:.image)
+		let yearsFetchResult = PHCollection.fetchCollections(in:yearsCollectionList, options:nil)
+		let yearsCollections = PhotosData.items(for:yearsFetchResult)
+		let yearsData = PhotosData.folder(collections:yearsCollections)
+
+		containers += PhotosContainer(
+			identifier: "PhotosSource:Years",
+			icon: "folder",
+			name: "Years",
+			data: yearsData,
+			filter: filter)
+		
+//		if allPhotosFetchResult.count > 0
 //		{
-//			containers += PhotosContainer(with:yearsCollectionList, filter:filter)
+//			yearCollections.append(PHAssetCollection.transientAssetCollection(withAssetFetchResult: assets, title: "\(year)"))
 //		}
+//}
+//
+//let phCollectionList = PHCollectionList.transientCollectionList(with: yearCollections, title: "Years")
+
+
 
 		// Smart Albums
 		
@@ -188,13 +235,13 @@ public class PhotosSource : Source, AccessControl
 
 		// User Albums
 		
-		let container = PhotosContainer(
-			with:PHCollectionList.fetchTopLevelUserCollections(with:nil),
-			identifier:"PhotosSource:Albums",
-			name:"Albums",
-			filter:filter)
-			
-		containers += container
+//		let container = PhotosContainer(
+//			with:PHCollectionList.fetchTopLevelUserCollections(with:nil),
+//			identifier:"PhotosSource:Albums",
+//			name:"Albums",
+//			filter:filter)
+//
+//		containers += container
 		
 		return containers
 	}

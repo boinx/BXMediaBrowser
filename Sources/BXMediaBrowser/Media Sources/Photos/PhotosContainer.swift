@@ -38,89 +38,105 @@ public class PhotosContainer : Container
 //----------------------------------------------------------------------------------------------------------------------
 
 
- 	public init(mediaType:PHAssetMediaType, filter:Object.Filter)
+ 	public init(identifier:String, icon:String, name:String, data:Any, filter:Object.Filter)
 	{
-		let identifier = "PhotosSource:Library"
-		let icon = "photo.on.rectangle"
-		let name = "Library"
-
-		let options = PHFetchOptions()
-		options.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending:true)]
-		let assets = PHAsset.fetchAssets(with:mediaType, options:options)
-
-		super.init(
-			identifier:identifier,
-			icon:icon,
-			name:name,
-			data:assets,
-			filter:filter,
-			loadHandler:Self.loadContents)
-
-		self.commonInit()
-	}
-	
-
-  	public init(with albums:PHFetchResult<PHCollection>, identifier:String, name:String, filter:Object.Filter)
-	{
-		super.init(
-			identifier:identifier,
-			name:name,
-			data:albums,
-			filter:filter,
-			loadHandler:Self.loadContents)
-
-		self.commonInit()
-	}
-	
-	
-	public init(with collectionList:PHCollectionList, icon:String? = nil, filter:Object.Filter)
-	{
-		let identifier = "PhotosSource:\(collectionList.localIdentifier)"
-		let name = collectionList.localizedTitle ?? "Album"
-	
-		super.init(
-			identifier:identifier,
-			icon:icon,
-			name:name,
-			data:collectionList,
-			filter:filter,
-			loadHandler:Self.loadContents)
-
-		self.commonInit()
-	}
-
-
-	public init(with assetCollection:PHAssetCollection, icon:String? = "rectangle.stack", filter:Object.Filter)
-	{
-		let identifier = "PhotosSource:\(assetCollection.localIdentifier)"
-		let name = assetCollection.localizedTitle ?? "Album"
+		PhotosSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
 		
 		super.init(
 			identifier:identifier,
 			icon:icon,
 			name:name,
-			data:assetCollection,
+			data:data,
 			filter:filter,
-			loadHandler:Self.loadContents)
+			loadHandler:Self.loadContents,
+			removeHandler:nil)
 
 		self.commonInit()
 	}
-    
-
-	public init(with collection:PHCollection, filter:Object.Filter)
-	{
-		let identifier = "PhotosSource:\(collection.localIdentifier)"
-		let name = collection.localizedTitle ?? "Album"
-
-		super.init(
-			identifier:identifier,
-			name:name,
-			data:collection,
-			filter:filter,
-			loadHandler:Self.loadContents)
-
-		self.commonInit()
-	}
+	
+//	public init(mediaType:PHAssetMediaType, filter:Object.Filter)
+//	{
+//		let identifier = "PhotosSource:Library"
+//		let icon = "photo.on.rectangle"
+//		let name = "Library"
+//
+//		let options = PHFetchOptions()
+//		options.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending:true)]
+//		let assets = PHAsset.fetchAssets(with:mediaType, options:options)
+//
+//		super.init(
+//			identifier:identifier,
+//			icon:icon,
+//			name:name,
+//			data:assets,
+//			filter:filter,
+//			loadHandler:Self.loadContents)
+//
+//		self.commonInit()
+//	}
+//
+//
+//  	public init(with albums:PHFetchResult<PHCollection>, identifier:String, name:String, filter:Object.Filter)
+//	{
+//		super.init(
+//			identifier:identifier,
+//			name:name,
+//			data:albums,
+//			filter:filter,
+//			loadHandler:Self.loadContents)
+//
+//		self.commonInit()
+//	}
+//
+//
+//	public init(with collectionList:PHCollectionList, icon:String? = nil, filter:Object.Filter)
+//	{
+//		let identifier = "PhotosSource:\(collectionList.localIdentifier)"
+//		let name = collectionList.localizedTitle ?? "Album"
+//
+//		super.init(
+//			identifier:identifier,
+//			icon:icon,
+//			name:name,
+//			data:collectionList,
+//			filter:filter,
+//			loadHandler:Self.loadContents)
+//
+//		self.commonInit()
+//	}
+//
+//
+//	public init(with assetCollection:PHAssetCollection, icon:String? = "rectangle.stack", filter:Object.Filter)
+//	{
+//		let identifier = "PhotosSource:\(assetCollection.localIdentifier)"
+//		let name = assetCollection.localizedTitle ?? "Album"
+//
+//		super.init(
+//			identifier:identifier,
+//			icon:icon,
+//			name:name,
+//			data:assetCollection,
+//			filter:filter,
+//			loadHandler:Self.loadContents)
+//
+//		self.commonInit()
+//	}
+//
+//
+//	public init(with collection:PHCollection, filter:Object.Filter)
+//	{
+//		let identifier = "PhotosSource:\(collection.localIdentifier)"
+//		let name = collection.localizedTitle ?? "Album"
+//
+//		super.init(
+//			identifier:identifier,
+//			name:name,
+//			data:collection,
+//			filter:filter,
+//			loadHandler:Self.loadContents)
+//
+//		self.commonInit()
+//	}
 
 
 	func commonInit()
@@ -143,13 +159,19 @@ public class PhotosContainer : Container
 	{
 		if self.identifier == "PhotosSource:Library" { return false }
 		if self.identifier == "PhotosSource:Albums" { return true }
-		return data is PHCollectionList
+		guard let data = self.data as? PhotosData else { return false }
+		
+		switch data
+		{
+			case .folder: return true
+			default: return false
+		}
 	}
 	
 	
 //----------------------------------------------------------------------------------------------------------------------
 
-
+	
 	/// Loads the (shallow) contents of this folder
 	
 	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
@@ -158,102 +180,69 @@ public class PhotosContainer : Container
 
 		var containers:[Container] = []
 		var objects:[Object] = []
+		var assetsFetchResult:PHFetchResult<PHAsset>? = nil
 		
-		// PHCollectionList (Folder) - can contain subfolders and albums, but no images (PHAssets)
-		
-		if let collectionList = data as? PHCollectionList
-		{
-			let collections = PHCollection.fetchCollections(in:collectionList, options:nil)
-			
-			for i in 0 ..< collections.count
-			{
-				let collection = collections[i]
-				
-				// Subfolder
-				
-				if let collectionList = collection as? PHCollectionList
-				{
-					let collections = PHCollection.fetchCollections(in:collectionList, options:nil)
-				
-					for i in 0..<collections.count
-					{
-						let collection = collections[i]
+		guard let data = data as? PhotosData else { return (containers,objects) }
+        let sortOptions = PHFetchOptions()
+        sortOptions.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending:true)]
 
-						if let collectionList = collection as? PHCollectionList
-						{
-							containers += PhotosContainer(with:collectionList, filter:filter)
-						}
-						else if let assetCollection = collection as? PHAssetCollection
-						{
-							containers += PhotosContainer(with:assetCollection, filter:filter)
-						}
-						else if let collection = collection as? PHCollection
-						{
-							containers += PhotosContainer(with:collection, filter:filter)
-						}
+		// Load containers
+
+		switch data
+		{
+			case .library(let allAssets):
+
+				assetsFetchResult = allAssets
+
+			case .album(let assetCollection):
+
+				assetsFetchResult = PHAsset.fetchAssets(in:assetCollection, options:sortOptions)
+
+			case .folder(let collections):
+
+				for collection in collections
+				{
+					if let assetCollection = collection as? PHAssetCollection
+					{
+						let icon = assetCollection.assetCollectionType == .smartAlbum ?
+							"gearshape" :
+							"rectangle.stack"
+							
+						containers += PhotosContainer(
+							identifier: "PhotosSource:\(assetCollection.localIdentifier)",
+							icon: icon,
+							name: assetCollection.localizedTitle ?? "",
+							data: PhotosData.album(collection:assetCollection),
+							filter: filter)
+
+						assetsFetchResult = PHAsset.fetchAssets(in:assetCollection, options:sortOptions)
+					}
+					else if let collectionList = collection as? PHCollectionList
+					{
+						let fetchResult = PHCollection.fetchCollections(in:collectionList, options:nil)
+						let collections = PhotosData.items(for:fetchResult)
+
+						containers += PhotosContainer(
+							identifier: "PhotosSource:\(collectionList.localIdentifier)",
+							icon: "folder",
+							name: collectionList.localizedTitle ?? "",
+							data: PhotosData.folder(collections:collections),
+							filter: filter)
 					}
 				}
-				
-				// Album
-				
-				else if let assetCollection = collection as? PHAssetCollection
-				{
-					let container = PhotosContainer(with:assetCollection, filter:filter)
-					containers += container
-				}
-			}
 		}
-		
-		// PHAssetCollection (Album) - only contains images (PHAssets) but no subfolders
-		
-		else if let album = data as? PHAssetCollection
-		{
-			let assets = PHAsset.fetchAssets(in:album, options:nil)
 
-			for i in 0 ..< assets.count
+		// Load objects
+
+		if let assetsFetchResult = assetsFetchResult
+		{
+			for i in 0 ..< assetsFetchResult.count
 			{
-				let asset = assets[i]
+				let asset = assetsFetchResult[i]
 				objects += PhotosObject(with:asset)
 			}
 		}
 		
-		// Not sure how to deal with this case
-		
-		else if let collection = data as? PHCollection
-		{
-			PhotosSource.log.error {"\(Self.self).\(#function) ERROR encountered abstract PHCollection"}
-		}
-		
-		// Datatype not determined yet, so get it from a PHFetchResult
-		
-		else if let items = data as? PHFetchResult<PHObject>
-		{
-			for i in 0 ..< items.count
-			{
-				let item = items[i]
-				
-				if let collectionList = item as? PHCollectionList
-				{
-					containers += PhotosContainer(with:collectionList, filter:filter)
-				}
-				else if let assetCollection = item as? PHAssetCollection
-				{
-					containers += PhotosContainer(with:assetCollection, filter:filter)
-				}
-				else if let collection = item as? PHCollection
-				{
-					containers += PhotosContainer(with:collection, filter:filter)
-				}
-				else if let asset = item as? PHAsset
-				{
-					objects += PhotosObject(with:asset)
-				}
-				else
-				{
-					PhotosSource.log.error {"\(Self.self).\(#function) ERROR unknown data type \(item)"}
-				}
-			}
-		}
 
 		return (containers,objects)
 	}
