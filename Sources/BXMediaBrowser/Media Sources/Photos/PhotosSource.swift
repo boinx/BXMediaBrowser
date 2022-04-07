@@ -49,15 +49,17 @@ public class PhotosSource : Source, AccessControl
 	
 	/// Creates a new Source for local file system directories
 	
-	public init()
+	public init(allowedMediaTypes:[Object.MediaType])
 	{
 		Photos.log.verbose {"\(Self.self).\(#function) \(Photos.identifier)"}
 
+		let filter = PhotosFilter(allowedMediaTypes:allowedMediaTypes)
+		
 		super.init(
 			identifier:Photos.identifier,
 			icon:Photos.icon,
 			name:Photos.name,
-			filter:Object.Filter())
+			filter:filter)
 		
 		self.loader = Loader(loadHandler:self.loadContainers)
 
@@ -134,23 +136,23 @@ public class PhotosSource : Source, AccessControl
 	{
 		Photos.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
+		guard let filter = filter as? PhotosFilter else { return [] }
+		let fetchOptions = filter.fetchOptions
 		var containers:[Container] = []
-	
-		// Sorting
 		
-        let sortOptions = PHFetchOptions()
-        sortOptions.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending:true)]
-
 		// Library
 		
-        let allPhotosFetchResult = PHAsset.fetchAssets(with:sortOptions)
-		let allPhotosData = PhotosData.library(assets:allPhotosFetchResult)
-
+		let libraryFetchResult = PHAsset.fetchAssets(with:filter.fetchOptions)
+		let libraryData = PhotosData.library(assets:libraryFetchResult)
+		let title = filter.allowedMediaTypes == [.video] ?
+			NSLocalizedString("All Videos", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Container Name") :
+			NSLocalizedString("All Photos", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Container Name")
+	
 		containers += PhotosContainer(
-			identifier: "PhotosSource:Library",
+			identifier: "\(Photos.identifier):Library",
 			icon: "photo.on.rectangle",
-			name: "All Photos",
-			data: allPhotosData,
+			name: title,
+			data: libraryData,
 			filter: filter)
 
 		// Recently Added
@@ -162,7 +164,7 @@ public class PhotosSource : Source, AccessControl
 			let recentsData = PhotosData.album(collection:recentsCollection)
 			
 			containers += PhotosContainer(
-				identifier: "PhotosSource:\(recentsCollection.localIdentifier)",
+				identifier: "Photos:Recents",
 				icon: "clock",
 				name: recentsCollection.localizedTitle ?? "Recents",
 				data: recentsData,
@@ -176,7 +178,7 @@ public class PhotosSource : Source, AccessControl
 		let albumsData = PhotosData.folder(collections:albumsCollections)
 
 		containers += PhotosContainer(
-			identifier: "PhotosSource:Albums",
+			identifier: "Photos:Albums",
 			icon: "folder",
 			name: NSLocalizedString("Albums", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Container Name"),
 			data: albumsData,
@@ -184,6 +186,18 @@ public class PhotosSource : Source, AccessControl
 		
 		// Years
 
+		let yearsCollectionList = PHCollectionList.years(mediaType:filter.assetMediaType)
+		let yearsFetchResult = PHCollection.fetchCollections(in:yearsCollectionList, options:fetchOptions)
+		let yearsCollections = PhotosData.items(for:yearsFetchResult)
+		let yearsData = PhotosData.folder(collections:yearsCollections)
+
+		containers += PhotosContainer(
+			identifier: "Photos:Years",
+			icon: "folder",
+			name: NSLocalizedString("Years", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Container Name"),
+			data: yearsData,
+			filter: filter)
+		
 //		let yearsGroups = PHAsset.groupedByYears(allAssets:allPhotosFetchResult) //-> [(Int,[PHAsset])]
 //		let yearsData = PhotosData.timespan(assets:allPhotosFetchResult, year:nil, month:nil, day:nil)
 //
@@ -194,18 +208,6 @@ public class PhotosSource : Source, AccessControl
 //			data: yearsData,
 //			filter: filter)
 
-		let yearsCollectionList = PHCollectionList.years(mediaType:.image)
-		let yearsFetchResult = PHCollection.fetchCollections(in:yearsCollectionList, options:nil)
-		let yearsCollections = PhotosData.items(for:yearsFetchResult)
-		let yearsData = PhotosData.folder(collections:yearsCollections)
-
-		containers += PhotosContainer(
-			identifier: "PhotosSource:Years",
-			icon: "folder",
-			name: NSLocalizedString("Years", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Container Name"),
-			data: yearsData,
-			filter: filter)
-		
 		// Smart Folders
 
 //		let smartFolders = PHCollectionList.fetchCollectionLists(

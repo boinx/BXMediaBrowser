@@ -37,7 +37,7 @@ public struct Photos
 	/// identifier, even if the class name changes due to refactoring, because the identifier
 	/// might be stored in a preferences file or user documents.
 	
-	static let identifier = "PhotosSource:"
+	static let identifier = "Photos"
 	
 	/// The application icon of Photos.app
 	

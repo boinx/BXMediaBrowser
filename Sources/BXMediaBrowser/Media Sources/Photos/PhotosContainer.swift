@@ -32,12 +32,8 @@ import Photos
 
 public class PhotosContainer : Container
 {
-	var observer = PhotosChangeObserver()
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
+	/// Create a new PhotosContainer
+	
  	public init(identifier:String, icon:String, name:String, data:Any, filter:Object.Filter)
 	{
 		Photos.log.debug {"\(Self.self).\(#function) \(identifier)"}
@@ -58,9 +54,19 @@ public class PhotosContainer : Container
 	}
 
 
+	/// Returns the allowed mediaTypes in this Container
+	
 	override nonisolated open var mediaTypes:[Object.MediaType]
 	{
-		return [.image]
+ 		guard let filter = filter as? PhotosFilter else { return [] }
+		return filter.allowedMediaTypes
+	}
+
+	/// Returns the list of allowed sort Kinds for this Container
+		
+	override open var allowedSortTypes:[Object.Filter.SortType]
+	{
+		[.creationDate,.rating]
 	}
 
 	// Folders can be expanded, because they have sub-containers
@@ -78,25 +84,52 @@ public class PhotosContainer : Container
 		}
 	}
 	
+	/// Returns a description of the contents of this Container
+	
+    @MainActor override open var localizedObjectCount:String
+    {
+		let n = self.objects.count
+		
+		if mediaTypes == [.image]
+		{
+			return n.localizedImagesString
+		}
+		else if mediaTypes == [.video]
+		{
+			return n.localizedVideosString
+		}
+		
+		return n.localizedItemsString
+    }
+	
 	
 //----------------------------------------------------------------------------------------------------------------------
 
 	
-	/// Loads the (shallow) contents of this folder
+	// MARK: - Loading
+	
+	/// Loads the (shallow) contents of this Container
 	
 	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
 	{
+		guard let data = data as? PhotosData else { return ([],[]) }
+ 		guard let filter = filter as? PhotosFilter else { return ([],[]) }
+
 		Photos.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
+		let startTime = CFAbsoluteTimeGetCurrent()
+		defer
+		{
+			let duration = CFAbsoluteTimeGetCurrent() - startTime
+			Photos.log.debug {"\(Self.self).\(#function) \(identifier) loading time = \(duration)s "}
+		}
+		
 		var containers:[Container] = []
 		var objects:[Object] = []
+		let fetchOptions = filter.fetchOptions
 		var assetsFetchResult:PHFetchResult<PHAsset>? = nil
-		
-		guard let data = data as? PhotosData else { return (containers,objects) }
-        let sortOptions = PHFetchOptions()
-        sortOptions.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending:true)]
 
-		// Load containers
+		// Load sub-containers
 
 		switch data
 		{
@@ -106,7 +139,7 @@ public class PhotosContainer : Container
 
 			case .album(let assetCollection):
 
-				assetsFetchResult = PHAsset.fetchAssets(in:assetCollection, options:sortOptions)
+				assetsFetchResult = PHAsset.fetchAssets(in:assetCollection, options:fetchOptions)
 
 			case .folder(let collections):
 
@@ -119,13 +152,13 @@ public class PhotosContainer : Container
 							"rectangle.stack"
 							
 						containers += PhotosContainer(
-							identifier: "PhotosSource:\(assetCollection.localIdentifier)",
+							identifier: "Photos:Album:\(assetCollection.localIdentifier)",
 							icon: icon,
 							name: assetCollection.localizedTitle ?? "",
 							data: PhotosData.album(collection:assetCollection),
 							filter: filter)
 
-						assetsFetchResult = PHAsset.fetchAssets(in:assetCollection, options:sortOptions)
+						assetsFetchResult = PHAsset.fetchAssets(in:assetCollection, options:fetchOptions)
 					}
 					else if let collectionList = collection as? PHCollectionList
 					{
@@ -133,17 +166,21 @@ public class PhotosContainer : Container
 						let collections = PhotosData.items(for:fetchResult)
 
 						containers += PhotosContainer(
-							identifier: "PhotosSource:\(collectionList.localIdentifier)",
+							identifier: "Photos:Folder:\(collectionList.localIdentifier)",
 							icon: "folder",
 							name: collectionList.localizedTitle ?? "",
 							data: PhotosData.folder(collections:collections),
 							filter: filter)
 					}
+					else
+					{
+						print("hmm")
+					}
 				}
 				
 			case .timespan(let assets, let year, let month, let day):
 			
-				print("TODO")
+				#warning("TODO: implement")
 		}
 
 		// Load objects
@@ -153,20 +190,36 @@ public class PhotosContainer : Container
 			for i in 0 ..< assetsFetchResult.count
 			{
 				let asset = assetsFetchResult[i]
-				objects += PhotosObject(with:asset)
+				let mediaType = asset.mediaType
+				
+				if mediaType == .image //&& filter.allowedMediaTypes.contains(.image)
+				{
+					objects += PhotosImageObject(with:asset)
+				}
+				else //if mediaType == .video && filter.allowedMediaTypes.contains(.video)
+				{
+					objects += PhotosVideoObject(with:asset)
+				}
 			}
 		}
 		
-
+		// Return contents of this Container
+		
 		return (containers,objects)
 	}
 
+	
+	/// This object is responsible for detecting changes to the Photos.app library
+	
+	var observer = PhotosChangeObserver()
 
-//----------------------------------------------------------------------------------------------------------------------
 
-
+	// When we get a change notification from Photos.app, then update the data property and reload the Container
+	
 	public func didChange(_ change:PHChange)
     {
+		#warning("FIXME: needs to be updated for new PhotosData enum")
+
 		DispatchQueue.main.async
 		{
 			if let object = self.data as? PHObject
@@ -189,24 +242,6 @@ public class PhotosContainer : Container
     }
 
 
-	/// Returns a description of the contents of this Container
-	
-    @MainActor override open var localizedObjectCount:String
-    {
-		let n = self.objects.count
-		let str = n.localizedImagesString
-		return str
-    }
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	// MARK: - Sorting
-	
-	/// Returns the list of allowed sort Kinds for this Container
-		
-	override open var allowedSortTypes:[Object.Filter.SortType] { [.creationDate,.rating] }
 }
 
 

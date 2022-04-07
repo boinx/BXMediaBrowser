@@ -148,6 +148,9 @@
 		D0D9EDB627FD991800D5D7FB /* PhotosData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDB527FD991800D5D7FB /* PhotosData.swift */; };
 		D0D9EDB927FEE05800D5D7FB /* Photos.strings in Resources */ = {isa = PBXBuildFile; fileRef = D0D9EDB727FEE05800D5D7FB /* Photos.strings */; };
 		D0D9EDBD27FEE16900D5D7FB /* Photos.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDBC27FEE16900D5D7FB /* Photos.swift */; };
+		D0D9EDBF27FEF09500D5D7FB /* PhotosFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDBE27FEF09500D5D7FB /* PhotosFilter.swift */; };
+		D0D9EDC127FEF50100D5D7FB /* PhotosImageObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDC027FEF50000D5D7FB /* PhotosImageObject.swift */; };
+		D0D9EDC327FEF50D00D5D7FB /* PhotosVideoObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDC227FEF50C00D5D7FB /* PhotosVideoObject.swift */; };
 		D0DEF7D527D5E0BD00601E3F /* PexelsVideoSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DEF7D427D5E0BD00601E3F /* PexelsVideoSource.swift */; };
 		D0DEF7DD27D6615D00601E3F /* PexelsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DEF7D627D5FF4400601E3F /* PexelsContainer.swift */; };
 /* End PBXBuildFile section */
@@ -314,6 +317,9 @@
 		D0D9EDBA27FEE0CC00D5D7FB /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Photos.strings; sourceTree = "<group>"; };
 		D0D9EDBB27FEE0CE00D5D7FB /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Photos.strings; sourceTree = "<group>"; };
 		D0D9EDBC27FEE16900D5D7FB /* Photos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photos.swift; sourceTree = "<group>"; };
+		D0D9EDBE27FEF09500D5D7FB /* PhotosFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosFilter.swift; sourceTree = "<group>"; };
+		D0D9EDC027FEF50000D5D7FB /* PhotosImageObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosImageObject.swift; sourceTree = "<group>"; };
+		D0D9EDC227FEF50C00D5D7FB /* PhotosVideoObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosVideoObject.swift; sourceTree = "<group>"; };
 		D0DEF7D427D5E0BD00601E3F /* PexelsVideoSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PexelsVideoSource.swift; sourceTree = "<group>"; };
 		D0DEF7D627D5FF4400601E3F /* PexelsContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PexelsContainer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -538,6 +544,9 @@
 				D01B491D27CA1378008249C0 /* PhotosSource.swift */,
 				D01B491B27CA1378008249C0 /* PhotosContainer.swift */,
 				D01B491F27CA1378008249C0 /* PhotosObject.swift */,
+				D0D9EDC027FEF50000D5D7FB /* PhotosImageObject.swift */,
+				D0D9EDC227FEF50C00D5D7FB /* PhotosVideoObject.swift */,
+				D0D9EDBE27FEF09500D5D7FB /* PhotosFilter.swift */,
 				D01B491E27CA1378008249C0 /* PhotosChangeObserver.swift */,
 				D0D9EDB527FD991800D5D7FB /* PhotosData.swift */,
 				D01B491C27CA1378008249C0 /* PHAsset+Info.swift */,
@@ -828,6 +837,7 @@
 				D01B49A227CA1378008249C0 /* QuicklookCollectionView.swift in Sources */,
 				D01B496127CA1378008249C0 /* Object+Error.swift in Sources */,
 				D01B498D27CA1378008249C0 /* MusicFilterBar.swift in Sources */,
+				D0D9EDC327FEF50D00D5D7FB /* PhotosVideoObject.swift in Sources */,
 				D01B494527CA1378008249C0 /* ObjectFilePromiseProvider.swift in Sources */,
 				D0BAD10B27D392D700B749FD /* Pexels.swift in Sources */,
 				D052BE2427EDCEF50084068A /* Object+MediaType.swift in Sources */,
@@ -838,6 +848,7 @@
 				D01B498A27CA1378008249C0 /* RatingFilterView.swift in Sources */,
 				D01B497B27CA1378008249C0 /* VideoFolderSource.swift in Sources */,
 				D01B494627CA1378008249C0 /* FolderDropDestination.swift in Sources */,
+				D0D9EDC127FEF50100D5D7FB /* PhotosImageObject.swift in Sources */,
 				D052BE2A27F075700084068A /* LightroomCCVideoObject.swift in Sources */,
 				D01B499027CA1378008249C0 /* FolderFilterBar.swift in Sources */,
 				D01B495C27CA1378008249C0 /* Source+Loader.swift in Sources */,
@@ -906,6 +917,7 @@
 				D01B496427CA1378008249C0 /* Container+Cache.swift in Sources */,
 				D01B496F27CA1378008249C0 /* Object.swift in Sources */,
 				D05F5F6D27E8E840003735C6 /* LightroomCCObject.swift in Sources */,
+				D0D9EDBF27FEF09500D5D7FB /* PhotosFilter.swift in Sources */,
 				D01B495827CA1378008249C0 /* AccessControl.swift in Sources */,
 				D01B499827CA1378008249C0 /* FolderContainerView.swift in Sources */,
 				D01B496727CA1378008249C0 /* Container+Hashable.swift in Sources */,

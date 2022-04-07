@@ -33,21 +33,15 @@ public class PhotosObject : Object
 {
 	public init(with asset:PHAsset)
 	{
-		let identifier = "PhotosSource:Asset:\(asset.localIdentifier)"
-		let name = asset.originalFilename ?? ""
+//		let name = asset.originalFilename ?? "" 	// Getting originalFilename is way too expensive at this point!
 		
 		super.init(
-			identifier: identifier,
-			name: name,
+			identifier: "Photos:Asset:\(asset.localIdentifier)",
+			name: "",
 			data: asset,
 			loadThumbnailHandler: Self.loadThumbnail,
 			loadMetadataHandler: Self.loadMetadata,
 			downloadFileHandler: Self.downloadFile)
-	}
-
-	override nonisolated public var mediaType:MediaType
-	{
-		return .image
 	}
 
 
@@ -112,20 +106,18 @@ public class PhotosObject : Object
 	{
 		Photos.log.verbose {"\(Self.self).\(#function) \(identifier)"}
 
+		guard let asset = data as? PHAsset else { throw Object.Error.loadMetadataFailed }
+		
 		var metadata:[String:Any] = [:]
-		
-		guard let asset = data as? PHAsset else
-		{
-			throw Object.Error.loadMetadataFailed
-		}
-		
 		metadata["mediaType"] = asset.mediaType.rawValue
+		metadata[.titleKey] = asset.originalFilename
 		metadata[.widthKey] = asset.pixelWidth
 		metadata[.heightKey] = asset.pixelHeight
 		metadata[.durationKey] = asset.duration
 		metadata[.creationDate] = asset.creationDate
 		metadata[.modificationDateKey] = asset.modificationDate
-	
+//		asset.location
+
 		return metadata
 	}
 
@@ -156,128 +148,87 @@ public class PhotosObject : Object
 
 	// MARK: - Download
 	
-	/// Returns the UTI of the promised local file
-	
-	override public var localFileUTI:String
-	{
-		guard let asset = data as? PHAsset else { return String.imageUTI }
-		return asset.uti
-	}
-
-
-	/// Returns the filename of the local file
-	
-	override public var localFileName:String
-	{
-		// Try to get the original filename from the PHAsset
-		
-		if let asset = data as? PHAsset, let filename = asset.originalFilename
-		{
-			return filename
-		}
-		
-		// Otherwise return a default fallback filename, which could be wrong, since
-		// the image might not be a JPEG file, but could be HEIF, TIFF, PNG, etc...
-		
-		return "Image.jpg"
-	}
-	
-	
-	// Request the URL of an Object. Apple really doesn't want us to work with URLs of PHAssets, so we have to resort
-	// to various tricks. In case of an image we'll pretend to want edit an image file in-place to get the URL. In the
-	// case of a video, we'll pretend we want to play an AVURLAsset with an AVPlayer.
-	// Taken from https://stackoverflow.com/questions/38183613/how-to-get-url-for-a-phasset
+	// To be overridden in subclasses
 	
 	class func downloadFile(for identifier:String, data:Any) async throws -> URL
 	{
-		Photos.log.verbose {"\(Self.self).\(#function) \(identifier)"}
-
-		guard let asset = data as? PHAsset else { throw Object.Error.downloadFileFailed }
-		
-		if asset.mediaType == .image
-		{
-			return try await self.downloadImageFile(for:asset)
-		}
-		else
-		{
-			return try await self.downloadVideoFile(for:asset)
-		}
+		throw Object.Error.downloadFileFailed
 	}
 	
 	
-	// For image files request the full size image URL for "editing"
-
-	class func downloadImageFile(for asset:PHAsset) async throws -> URL
-	{
-//		var continueDownloading = true
-
-		let options = PHContentEditingInputRequestOptions()
-		options.isNetworkAccessAllowed = true
-		options.progressHandler =
-		{
-			progress,outStop in
-
-//			continueDownloading = iOSMediaBrowser.downloadProgressHandler?(self,progress,nil) ?? true
-//			if !continueDownloading { outStop.pointee = true }
-		}
-
-        return try await withCheckedThrowingContinuation
-        {
-			continuation in
-
-			asset.requestContentEditingInput(with:options)
-			{
-				(input:PHContentEditingInput?,_) in
-				
-				if let url = input?.fullSizeImageURL
-				{
-					continuation.resume(returning:url)
-				}
-				else
-				{
-					continuation.resume(throwing:Object.Error.downloadFileFailed)
-				}
-			}
-		}
-	}
-	
-	
-	// For video and audio request an AVURLAsset, which we can query for its URL
-
-	class func downloadVideoFile(for asset:PHAsset) async throws -> URL
-	{
-//		var continueDownloading = true
-	
-		let options = PHVideoRequestOptions()
-		options.version = .original
-		options.isNetworkAccessAllowed = true
-		options.progressHandler =
-		{
-			progress,error,outStop,_ in
-//			continueDownloading = iOSMediaBrowser.downloadProgressHandler?(self,progress,error) ?? true
-//			if !continueDownloading { outStop.pointee = true }
-		}
-			
-        return try await withCheckedThrowingContinuation
-        {
-			continuation in
-
-			PhotosSource.imageManager.requestAVAsset(forVideo:asset, options:options)
-			{
-				(avasset:AVAsset?,_,_) in
-
-				if let urlAsset = avasset as? AVURLAsset
-				{
-					let url = urlAsset.url
-					continuation.resume(returning:url)
-				}
-				else
-				{
-					continuation.resume(throwing:Object.Error.downloadFileFailed)
-				}
-			}
-		}
-	}
+//	// For image files request the full size image URL for "editing"
+//
+//	class func downloadImageFile(for asset:PHAsset) async throws -> URL
+//	{
+////		var continueDownloading = true
+//
+//		let options = PHContentEditingInputRequestOptions()
+//		options.isNetworkAccessAllowed = true
+//		options.progressHandler =
+//		{
+//			progress,outStop in
+//
+////			continueDownloading = iOSMediaBrowser.downloadProgressHandler?(self,progress,nil) ?? true
+////			if !continueDownloading { outStop.pointee = true }
+//		}
+//
+//        return try await withCheckedThrowingContinuation
+//        {
+//			continuation in
+//
+//			asset.requestContentEditingInput(with:options)
+//			{
+//				(input:PHContentEditingInput?,_) in
+//				
+//				if let url = input?.fullSizeImageURL
+//				{
+//					continuation.resume(returning:url)
+//				}
+//				else
+//				{
+//					continuation.resume(throwing:Object.Error.downloadFileFailed)
+//				}
+//			}
+//		}
+//	}
+//	
+//	
+//	// For video and audio request an AVURLAsset, which we can query for its URL
+//
+//	class func downloadVideoFile(for asset:PHAsset) async throws -> URL
+//	{
+////		var continueDownloading = true
+//	
+//		let options = PHVideoRequestOptions()
+//		options.version = .original
+//		options.isNetworkAccessAllowed = true
+//		options.progressHandler =
+//		{
+//			progress,error,outStop,_ in
+////			continueDownloading = iOSMediaBrowser.downloadProgressHandler?(self,progress,error) ?? true
+////			if !continueDownloading { outStop.pointee = true }
+//		}
+//			
+//        return try await withCheckedThrowingContinuation
+//        {
+//			continuation in
+//
+//			PhotosSource.imageManager.requestAVAsset(forVideo:asset, options:options)
+//			{
+//				(avasset:AVAsset?,_,_) in
+//
+//				if let urlAsset = avasset as? AVURLAsset
+//				{
+//					let url = urlAsset.url
+//					continuation.resume(returning:url)
+//				}
+//				else
+//				{
+//					continuation.resume(throwing:Object.Error.downloadFileFailed)
+//				}
+//			}
+//		}
+//	}
 	
 	
 /*
