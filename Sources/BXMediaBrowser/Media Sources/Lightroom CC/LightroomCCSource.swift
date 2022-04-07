@@ -33,13 +33,13 @@ import SwiftUI
 
 open class LightroomCCSource : Source, AccessControl
 {
+	public let allowedMediaTypes:[Object.MediaType]
+	
 	/// The unique identifier of this source must always remain the same. Do not change this
 	/// identifier, even if the class name changes due to refactoring, because the identifier
 	/// might be stored in a preferences file or user documents.
 	
 	static let identifier = "LightroomCC:"
-	
-	public let allowedMediaTypes:[Object.MediaType]
 	
 	
 //----------------------------------------------------------------------------------------------------------------------
@@ -53,8 +53,12 @@ open class LightroomCCSource : Source, AccessControl
 		
 		self.allowedMediaTypes = allowedMediaTypes
 		
-		let icon = Bundle.BXMediaBrowser.image(forResource:"LightroomCC")?.CGImage
-		super.init(identifier:Self.identifier, icon:icon, name:"Adobe Lightroom CC", filter:LightroomCCFilter())
+		super.init(
+			identifier: Self.identifier,
+			icon: Bundle.BXMediaBrowser.image(forResource:"LightroomCC")?.CGImage,
+			name: "Adobe Lightroom CC",
+			filter: LightroomCCFilter())
+		
 		self.loader = Loader(loadHandler:self.loadContainers)
 
 		self.checkHealth()
