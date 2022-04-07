@@ -31,24 +31,9 @@ import Photos
 
 public class PhotosObject : Object
 {
-	private static var thumbnailOptions:PHImageRequestOptions =
-	{
-		let options = PHImageRequestOptions()
-		options.isNetworkAccessAllowed = true
-		options.isSynchronous = true
-		options.resizeMode = .fast
-		return options
-	}()
-
-	private static let thumbnailSize = CGSize(width:256, height:256)
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
 	public init(with asset:PHAsset)
 	{
-		let identifier = "PhotosSource:\(asset.localIdentifier)"
+		let identifier = "PhotosSource:Asset:\(asset.localIdentifier)"
 		let name = asset.originalFilename ?? ""
 		
 		super.init(
@@ -69,6 +54,8 @@ public class PhotosObject : Object
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: - Thumbnails
+	
 	/// Creates a thumbnail image for the PHAsset with the specified identifier
 	
 	class func loadThumbnail(for identifier:String, data:Any) async throws -> CGImage
@@ -101,9 +88,24 @@ public class PhotosObject : Object
 	}
 
 
+	private static var thumbnailOptions:PHImageRequestOptions =
+	{
+		let options = PHImageRequestOptions()
+		options.isNetworkAccessAllowed = true
+		options.isSynchronous = true
+		options.resizeMode = .fast
+		return options
+	}()
+
+
+	private static let thumbnailSize = CGSize(width:256, height:256)
+
+
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: - Metadata
+	
 	/// Loads the metadata dictionary for the specified local file URL
 	
 	class func loadMetadata(for identifier:String, data:Any) async throws -> [String:Any]
@@ -152,6 +154,8 @@ public class PhotosObject : Object
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: - Download
+	
 	/// Returns the UTI of the promised local file
 	
 	override public var localFileUTI:String

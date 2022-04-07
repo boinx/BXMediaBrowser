@@ -51,103 +51,13 @@ public class PhotosContainer : Container
 			loadHandler:Self.loadContents,
 			removeHandler:nil)
 
-		self.commonInit()
-	}
-	
-//	public init(mediaType:PHAssetMediaType, filter:Object.Filter)
-//	{
-//		let identifier = "PhotosSource:Library"
-//		let icon = "photo.on.rectangle"
-//		let name = "Library"
-//
-//		let options = PHFetchOptions()
-//		options.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending:true)]
-//		let assets = PHAsset.fetchAssets(with:mediaType, options:options)
-//
-//		super.init(
-//			identifier:identifier,
-//			icon:icon,
-//			name:name,
-//			data:assets,
-//			filter:filter,
-//			loadHandler:Self.loadContents)
-//
-//		self.commonInit()
-//	}
-//
-//
-//  	public init(with albums:PHFetchResult<PHCollection>, identifier:String, name:String, filter:Object.Filter)
-//	{
-//		super.init(
-//			identifier:identifier,
-//			name:name,
-//			data:albums,
-//			filter:filter,
-//			loadHandler:Self.loadContents)
-//
-//		self.commonInit()
-//	}
-//
-//
-//	public init(with collectionList:PHCollectionList, icon:String? = nil, filter:Object.Filter)
-//	{
-//		let identifier = "PhotosSource:\(collectionList.localIdentifier)"
-//		let name = collectionList.localizedTitle ?? "Album"
-//
-//		super.init(
-//			identifier:identifier,
-//			icon:icon,
-//			name:name,
-//			data:collectionList,
-//			filter:filter,
-//			loadHandler:Self.loadContents)
-//
-//		self.commonInit()
-//	}
-//
-//
-//	public init(with assetCollection:PHAssetCollection, icon:String? = "rectangle.stack", filter:Object.Filter)
-//	{
-//		let identifier = "PhotosSource:\(assetCollection.localIdentifier)"
-//		let name = assetCollection.localizedTitle ?? "Album"
-//
-//		super.init(
-//			identifier:identifier,
-//			icon:icon,
-//			name:name,
-//			data:assetCollection,
-//			filter:filter,
-//			loadHandler:Self.loadContents)
-//
-//		self.commonInit()
-//	}
-//
-//
-//	public init(with collection:PHCollection, filter:Object.Filter)
-//	{
-//		let identifier = "PhotosSource:\(collection.localIdentifier)"
-//		let name = collection.localizedTitle ?? "Album"
-//
-//		super.init(
-//			identifier:identifier,
-//			name:name,
-//			data:collection,
-//			filter:filter,
-//			loadHandler:Self.loadContents)
-//
-//		self.commonInit()
-//	}
-
-
-	func commonInit()
-	{
 		observer.didChangeHandler =
 		{
 			[weak self] in self?.didChange($0)
 		}
 	}
-	
-	
+
+
 	override nonisolated open var mediaTypes:[Object.MediaType]
 	{
 		return [.image]

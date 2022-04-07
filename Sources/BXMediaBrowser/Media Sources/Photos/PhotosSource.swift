@@ -37,20 +37,28 @@ public class PhotosSource : Source, AccessControl
 	
 	static let imageManager:PHImageManager = PHImageManager()
 	
-	///
+	/// This object is reponsible for reporting changes to the Photos library
+	
 	var observer = PhotosChangeObserver()
 	
 	
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: -
+	
 	/// Creates a new Source for local file system directories
 	
 	public init()
 	{
 		Photos.log.verbose {"\(Self.self).\(#function) \(Photos.identifier)"}
 
-		super.init(identifier:Self.identifier, icon:Self.icon, name:"Photos", filter:Object.Filter())
+		super.init(
+			identifier:Photos.identifier,
+			icon:Photos.icon,
+			name:Photos.name,
+			filter:Object.Filter())
+		
 		self.loader = Loader(loadHandler:self.loadContainers)
 
 		// Make sure we can detect changes to the library
@@ -79,6 +87,14 @@ public class PhotosSource : Source, AccessControl
 	}
 
 
+	// When the contents of the Photos library change, then reload the top-level containers
+	
+    public func photoLibraryDidChange(_ change:PHChange)
+    {
+//		self.load()
+    }
+
+
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -105,17 +121,6 @@ public class PhotosSource : Source, AccessControl
 	{
 		completionHandler(hasAccess)
 	}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	// When the contents of the Photos library change, then reload the top-level containers
-	
-    public func photoLibraryDidChange(_ change:PHChange)
-    {
-//		self.load() 
-    }
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -173,11 +178,21 @@ public class PhotosSource : Source, AccessControl
 		containers += PhotosContainer(
 			identifier: "PhotosSource:Albums",
 			icon: "folder",
-			name: "Albums",
+			name: NSLocalizedString("Albums", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Container Name"),
 			data: albumsData,
 			filter: filter)
 		
 		// Years
+
+//		let yearsGroups = PHAsset.groupedByYears(allAssets:allPhotosFetchResult) //-> [(Int,[PHAsset])]
+//		let yearsData = PhotosData.timespan(assets:allPhotosFetchResult, year:nil, month:nil, day:nil)
+//
+//		containers += PhotosContainer(
+//			identifier: "PhotosSource:Years",
+//			icon: "folder",
+//			name: "Years",
+//			data: yearsData,
+//			filter: filter)
 
 		let yearsCollectionList = PHCollectionList.years(mediaType:.image)
 		let yearsFetchResult = PHCollection.fetchCollections(in:yearsCollectionList, options:nil)
@@ -187,28 +202,9 @@ public class PhotosSource : Source, AccessControl
 		containers += PhotosContainer(
 			identifier: "PhotosSource:Years",
 			icon: "folder",
-			name: "Years",
+			name: NSLocalizedString("Years", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Container Name"),
 			data: yearsData,
 			filter: filter)
-		
-//		if allPhotosFetchResult.count > 0
-//		{
-//			yearCollections.append(PHAssetCollection.transientAssetCollection(withAssetFetchResult: assets, title: "\(year)"))
-//		}
-//}
-//
-//let phCollectionList = PHCollectionList.transientCollectionList(with: yearCollections, title: "Years")
-
-
-
-		// Smart Albums
-		
-//		let smartAlbums = PHAssetCollection.fetchAssetCollections( with:.smartAlbum, subtype:.any, options:nil)
-//
-//		for i in 0 ..< smartAlbums.count
-//		{
-//			containers += PhotosContainer(with:smartAlbums[i], filter:filter)
-//		}
 		
 		// Smart Folders
 
@@ -223,16 +219,6 @@ public class PhotosSource : Source, AccessControl
 //			let container = PhotosContainer(with:smartFolder, filter:filter)
 //			containers += container
 //		}
-
-		// User Albums
-		
-//		let container = PhotosContainer(
-//			with:PHCollectionList.fetchTopLevelUserCollections(with:nil),
-//			identifier:"PhotosSource:Albums",
-//			name:"Albums",
-//			filter:filter)
-//
-//		containers += container
 		
 		return containers
 	}
