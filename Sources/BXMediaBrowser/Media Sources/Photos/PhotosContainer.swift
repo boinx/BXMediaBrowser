@@ -140,6 +140,10 @@ public class PhotosContainer : Container
 							filter: filter)
 					}
 				}
+				
+			case .timespan(let assets, let year, let month, let day):
+			
+				print("TODO")
 		}
 
 		// Load objects

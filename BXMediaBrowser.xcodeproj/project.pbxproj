@@ -144,7 +144,7 @@
 		D0BAD11B27D3DF8000B749FD /* PexelsVideoContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BAD11A27D3DF8000B749FD /* PexelsVideoContainer.swift */; };
 		D0D9EDB027FC82E700D5D7FB /* UnsplashContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDAF27FC82E700D5D7FB /* UnsplashContainerView.swift */; };
 		D0D9EDB227FC83E600D5D7FB /* PexelsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDB127FC83E600D5D7FB /* PexelsContainerView.swift */; };
-		D0D9EDB427FCADB100D5D7FB /* PHPhotoLibrary+PHFetchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDB327FCADB100D5D7FB /* PHPhotoLibrary+PHFetchResult.swift */; };
+		D0D9EDB427FCADB100D5D7FB /* PHCollectionList+years.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDB327FCADB100D5D7FB /* PHCollectionList+years.swift */; };
 		D0D9EDB627FD991800D5D7FB /* PhotosData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDB527FD991800D5D7FB /* PhotosData.swift */; };
 		D0D9EDB927FEE05800D5D7FB /* Photos.strings in Resources */ = {isa = PBXBuildFile; fileRef = D0D9EDB727FEE05800D5D7FB /* Photos.strings */; };
 		D0D9EDBD27FEE16900D5D7FB /* Photos.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDBC27FEE16900D5D7FB /* Photos.swift */; };
@@ -308,7 +308,7 @@
 		D0BAD11A27D3DF8000B749FD /* PexelsVideoContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PexelsVideoContainer.swift; sourceTree = "<group>"; };
 		D0D9EDAF27FC82E700D5D7FB /* UnsplashContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnsplashContainerView.swift; sourceTree = "<group>"; };
 		D0D9EDB127FC83E600D5D7FB /* PexelsContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PexelsContainerView.swift; sourceTree = "<group>"; };
-		D0D9EDB327FCADB100D5D7FB /* PHPhotoLibrary+PHFetchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PHPhotoLibrary+PHFetchResult.swift"; sourceTree = "<group>"; };
+		D0D9EDB327FCADB100D5D7FB /* PHCollectionList+years.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PHCollectionList+years.swift"; sourceTree = "<group>"; };
 		D0D9EDB527FD991800D5D7FB /* PhotosData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosData.swift; sourceTree = "<group>"; };
 		D0D9EDB827FEE05800D5D7FB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Photos.strings; sourceTree = "<group>"; };
 		D0D9EDBA27FEE0CC00D5D7FB /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Photos.strings; sourceTree = "<group>"; };
@@ -541,7 +541,7 @@
 				D01B491E27CA1378008249C0 /* PhotosChangeObserver.swift */,
 				D0D9EDB527FD991800D5D7FB /* PhotosData.swift */,
 				D01B491C27CA1378008249C0 /* PHAsset+Info.swift */,
-				D0D9EDB327FCADB100D5D7FB /* PHPhotoLibrary+PHFetchResult.swift */,
+				D0D9EDB327FCADB100D5D7FB /* PHCollectionList+years.swift */,
 			);
 			path = Photos;
 			sourceTree = "<group>";
@@ -797,7 +797,7 @@
 				D01B497C27CA1378008249C0 /* ImageFolderSource.swift in Sources */,
 				D01B499127CA1378008249C0 /* BXProgressWindowController.swift in Sources */,
 				D01B499927CA1378008249C0 /* SectionView.swift in Sources */,
-				D0D9EDB427FCADB100D5D7FB /* PHPhotoLibrary+PHFetchResult.swift in Sources */,
+				D0D9EDB427FCADB100D5D7FB /* PHCollectionList+years.swift in Sources */,
 				D052BE2827F075630084068A /* LightroomCCImageObject.swift in Sources */,
 				D0BAD10627D386B600B749FD /* String+MetadataKeys.swift in Sources */,
 				D01B496627CA1378008249C0 /* Container+Loader.swift in Sources */,
