@@ -147,6 +147,7 @@
 		D0D9EDB427FCADB100D5D7FB /* PHPhotoLibrary+PHFetchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDB327FCADB100D5D7FB /* PHPhotoLibrary+PHFetchResult.swift */; };
 		D0D9EDB627FD991800D5D7FB /* PhotosData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDB527FD991800D5D7FB /* PhotosData.swift */; };
 		D0D9EDB927FEE05800D5D7FB /* Photos.strings in Resources */ = {isa = PBXBuildFile; fileRef = D0D9EDB727FEE05800D5D7FB /* Photos.strings */; };
+		D0D9EDBD27FEE16900D5D7FB /* Photos.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDBC27FEE16900D5D7FB /* Photos.swift */; };
 		D0DEF7D527D5E0BD00601E3F /* PexelsVideoSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DEF7D427D5E0BD00601E3F /* PexelsVideoSource.swift */; };
 		D0DEF7DD27D6615D00601E3F /* PexelsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DEF7D627D5FF4400601E3F /* PexelsContainer.swift */; };
 /* End PBXBuildFile section */
@@ -312,6 +313,7 @@
 		D0D9EDB827FEE05800D5D7FB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Photos.strings; sourceTree = "<group>"; };
 		D0D9EDBA27FEE0CC00D5D7FB /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Photos.strings; sourceTree = "<group>"; };
 		D0D9EDBB27FEE0CE00D5D7FB /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Photos.strings; sourceTree = "<group>"; };
+		D0D9EDBC27FEE16900D5D7FB /* Photos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photos.swift; sourceTree = "<group>"; };
 		D0DEF7D427D5E0BD00601E3F /* PexelsVideoSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PexelsVideoSource.swift; sourceTree = "<group>"; };
 		D0DEF7D627D5FF4400601E3F /* PexelsContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PexelsContainer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -532,6 +534,7 @@
 		D01B491A27CA1378008249C0 /* Photos */ = {
 			isa = PBXGroup;
 			children = (
+				D0D9EDBC27FEE16900D5D7FB /* Photos.swift */,
 				D01B491D27CA1378008249C0 /* PhotosSource.swift */,
 				D01B491B27CA1378008249C0 /* PhotosContainer.swift */,
 				D01B491F27CA1378008249C0 /* PhotosObject.swift */,
@@ -801,6 +804,7 @@
 				D01B495727CA1378008249C0 /* Progress+globalParent.swift in Sources */,
 				D01B495B27CA1378008249C0 /* Object+Loader.swift in Sources */,
 				D01B49A827CA1378008249C0 /* ViewFactory.swift in Sources */,
+				D0D9EDBD27FEE16900D5D7FB /* Photos.swift in Sources */,
 				D0BAD10727D392D700B749FD /* PexelsPhotoSource.swift in Sources */,
 				D01B498527CA1378008249C0 /* PhotosContainer.swift in Sources */,
 				D01B49A127CA1378008249C0 /* ImageObjectViewController.swift in Sources */,

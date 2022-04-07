@@ -40,7 +40,7 @@ public class PhotosContainer : Container
 
  	public init(identifier:String, icon:String, name:String, data:Any, filter:Object.Filter)
 	{
-		PhotosSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
+		Photos.log.debug {"\(Self.self).\(#function) \(identifier)"}
 		
 		super.init(
 			identifier:identifier,
@@ -176,7 +176,7 @@ public class PhotosContainer : Container
 	
 	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
 	{
-		PhotosSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
+		Photos.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
 		var containers:[Container] = []
 		var objects:[Object] = []

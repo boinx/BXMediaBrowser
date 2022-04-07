@@ -33,15 +33,6 @@ import AppKit
 
 public class PhotosSource : Source, AccessControl
 {
-	/// The unique identifier of this source must always remain the same. Do not change this
-	/// identifier, even if the class name changes due to refactoring, because the identifier
-	/// might be stored in a preferences file or user documents.
-	
-	static let identifier = "PhotosSource:"
-	
-	static let icon = NSImage.icon(for:"com.apple.Photos")?.CGImage
-	
-	
 	/// The controller that takes care of loading media assets
 	
 	static let imageManager:PHImageManager = PHImageManager()
@@ -57,7 +48,7 @@ public class PhotosSource : Source, AccessControl
 	
 	public init()
 	{
-		PhotosSource.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
+		Photos.log.verbose {"\(Self.self).\(#function) \(Photos.identifier)"}
 
 		super.init(identifier:Self.identifier, icon:Self.icon, name:"Photos", filter:Object.Filter())
 		self.loader = Loader(loadHandler:self.loadContainers)
@@ -136,7 +127,7 @@ public class PhotosSource : Source, AccessControl
 	
 	private func loadContainers(with sourceState:[String:Any]? = nil, filter:Object.Filter) async throws -> [Container]
 	{
-		PhotosSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
+		Photos.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
 		var containers:[Container] = []
 	
@@ -245,25 +236,6 @@ public class PhotosSource : Source, AccessControl
 		
 		return containers
 	}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	public static var log:BXLogger =
-	{
-		()->BXLogger in
-		
-		var logger = BXLogger()
-
-		logger.addDestination
-		{
-			(level:BXLogger.Level,string:String)->() in
-			BXMediaBrowser.log.print(level:level, force:true) { string }
-		}
-		
-		return logger
-	}()
 }
 
 
