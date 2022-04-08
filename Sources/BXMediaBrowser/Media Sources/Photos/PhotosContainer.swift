@@ -202,7 +202,7 @@ public class PhotosContainer : Container
 								mediaType: filter.assetMediaType)
 							
 							containers += PhotosContainer(
-								identifier: "Photos:Year:\(id)",
+								identifier: "Photos:Date:\(id)",
 								icon: "folder",
 								name: collection.localizedTitle ?? id,
 								data: PhotosData.dateInterval(unit:.year, assetCollection:collection, subCollections:monthCollections),
@@ -222,7 +222,7 @@ public class PhotosContainer : Container
 								mediaType: filter.assetMediaType)
 							
 							containers += PhotosContainer(
-								identifier: "Photos:Month:\(id)",
+								identifier: "Photos:Date:\(id)",
 								icon: "folder",
 								name: collection.localizedTitle ?? id,
 								data: PhotosData.dateInterval(unit:.month, assetCollection:collection, subCollections:dayCollections),
@@ -239,7 +239,7 @@ public class PhotosContainer : Container
 							let id = "\(year)/\(month)/\(day)"
 							
 							containers += PhotosContainer(
-								identifier: "Photos:day:\(id)",
+								identifier: "Photos:Date:\(id)",
 								icon: "folder",
 								name: collection.localizedTitle ?? id,
 								data: PhotosData.dateInterval(unit:.day, assetCollection:collection, subCollections:[]),
