@@ -86,16 +86,6 @@ extension FolderFilterBar
     {
 		NSLocalizedString("Search", bundle:.BXMediaBrowser, comment:"Placeholder")
     }
-    
-    var sortByLabel:String
-    {
-		NSLocalizedString("Sort by:", bundle:.BXMediaBrowser, comment:"Label")
-    }
-    
-    var directionIcon:String
-    {
-		filter.sortDirection == .ascending ? "chevron.up" : "chevron.down"
-    }
 }
 
 
