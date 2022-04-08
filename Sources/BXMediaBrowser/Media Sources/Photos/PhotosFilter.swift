@@ -110,18 +110,12 @@ open class PhotosFilter : Object.Filter, Equatable
 	
 	override open var objectComparator : ObjectComparator?
 	{
-		if sortType == .captureDate
+		if sortType == .creationDate
 		{
-			let comparator = Self.compareCaptureDate
+			let comparator = Self.compareCreationDate
 			if sortDirection == .ascending { return comparator }
 			return { !comparator($0,$1) }
 		}
-//		else if sortType == .alphabetical
-//		{
-//			let comparator = FolderFilter.compareAlphabetical
-//			if sortDirection == .ascending { return comparator }
-//			return { !comparator($0,$1) }
-//		}
 		else if sortType == .rating
 		{
 			let comparator = Self.compareRating
@@ -132,23 +126,14 @@ open class PhotosFilter : Object.Filter, Equatable
 		return nil
 	}
 
-	/// Sorts Objects alphabetically by filename like the Finder
-	
-//	public static func compareAlphabetical(_ object1:Object,_ object2:Object) -> Bool
-//	{
-//		let name1 = object1.name as NSString
-//		let name2 = object2.name
-//		return name1.localizedStandardCompare(name2) == .orderedAscending
-//	}
-
 	/// Sorts Objects by captureDate
 
-	public static func compareCaptureDate(_ object1:Object,_ object2:Object) -> Bool
+	public static func compareCreationDate(_ object1:Object,_ object2:Object) -> Bool
 	{
-		guard let asset1 = object1.data as? LightroomCC.Asset else { return false }
-		guard let asset2 = object2.data as? LightroomCC.Asset else { return false }
-		guard let date1 = asset1.captureDate else { return false }
-		guard let date2 = asset2.captureDate else { return false }
+		guard let asset1 = object1.data as? PHAsset else { return false }
+		guard let asset2 = object2.data as? PHAsset else { return false }
+		guard let date1 = asset1.creationDate else { return false }
+		guard let date2 = asset2.creationDate else { return false }
 		return date1 < date2
 	}
 }

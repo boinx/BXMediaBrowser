@@ -263,6 +263,9 @@ public class PhotosContainer : Container
 			{
 				let asset = assetsFetchResult[i]
 				let mediaType = asset.mediaType
+				let identifier = PhotosObject.identifier(for:asset)
+				guard filter.rating == 0 || StatisticsController.shared.rating(for:identifier) >= filter.rating else { continue }
+
 				if mediaType == .image
 				{
 					objects += PhotosImageObject(with:asset)
@@ -274,6 +277,10 @@ public class PhotosContainer : Container
 			}
 		}
 		
+		// Sort according to specified sort order
+		
+		filter.sort(&objects)
+
 		// Return contents of this Container
 		
 		return (containers,objects)
