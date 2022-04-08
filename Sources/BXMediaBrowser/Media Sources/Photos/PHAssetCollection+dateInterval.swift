@@ -81,7 +81,7 @@ extension PHAssetCollection
 		for day in 1 ... 31
 		{
 			guard let interval = Calendar.current.dateInterval(year:year, month:month, day:day) else { break }
-			let title = DateFormatter.localizedString(from:interval.start, dateStyle:.short, timeStyle:.none)
+			let title = DateFormatter.localizedString(from:interval.start, dateStyle:.medium, timeStyle:.none)
 			
 			if let assetCollection = self.dateIntervalCollection(for:interval, mediaType:mediaType, title:title)
 			{
