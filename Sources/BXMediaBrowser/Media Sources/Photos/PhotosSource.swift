@@ -196,13 +196,32 @@ public class PhotosSource : Source, AccessControl
 			data: yearsData,
 			filter: filter)
 
+		// Smart Albums
+
+		let smartAlbumsFetchResult = PHAssetCollection.fetchAssetCollections(with:.smartAlbum, subtype:.any, options:nil)
+		let smartAlbumsCollections = PhotosData.items(for:smartAlbumsFetchResult)
+		let smartAlbumsData = PhotosData.folder(collections:smartAlbumsCollections)
+
+		containers += PhotosContainer(
+			identifier: "Photos:SmartAlbums",
+			icon: "folder",
+			name: NSLocalizedString("Smart Albums", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Container Name"),
+			data: smartAlbumsData,
+			filter: filter)
+
 		// Smart Folders
 
-//		let smartFolders = PHCollectionList.fetchCollectionLists(
-//			with:.smartFolder,
-//			subtype:.any,
-//			options:nil)
-//
+		let smartFoldersFetchResult = PHCollectionList.fetchCollectionLists(with:.smartFolder, subtype:.any, options:nil)
+		let smartFoldersCollections = PhotosData.items(for:smartFoldersFetchResult)
+		let smartFoldersData = PhotosData.folder(collections:smartFoldersCollections)
+
+		containers += PhotosContainer(
+			identifier: "Photos:SmartFolder",
+			icon: "folder",
+			name: NSLocalizedString("Smart Folders", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Container Name"),
+			data: smartFoldersData,
+			filter: filter)
+
 //		for i in 0 ..< smartFolders.count
 //		{
 //			let smartFolder = smartFolders[i]
