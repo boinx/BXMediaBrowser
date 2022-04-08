@@ -59,7 +59,7 @@ open class PhotosFilter : Object.Filter, Equatable
 
 	/// Returns PHFetchOptions that filter by mediaType and returns the PHAssets already correctly sorted
 	
-	var fetchOptions:PHFetchOptions
+	var assetFetchOptions:PHFetchOptions
 	{
         let options = PHFetchOptions()
 
@@ -70,6 +70,7 @@ open class PhotosFilter : Object.Filter, Equatable
 
 		if sortType == .captureDate
 		{
+			#warning("FIXME: for some reason the sort order doesn't seem to be working")
 			let isAscending = sortDirection == .ascending
 			options.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending:isAscending)]
 		}

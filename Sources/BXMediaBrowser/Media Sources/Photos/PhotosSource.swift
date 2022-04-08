@@ -141,7 +141,7 @@ public class PhotosSource : Source, AccessControl
 		
 		// Library
 		
-		let libraryFetchResult = PHAsset.fetchAssets(with:filter.fetchOptions)
+		let libraryFetchResult = PHAsset.fetchAssets(with:filter.assetFetchOptions)
 		let libraryData = PhotosData.library(assets:libraryFetchResult)
 		let title = filter.allowedMediaTypes == [.video] ?
 			NSLocalizedString("All Videos", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Container Name") :

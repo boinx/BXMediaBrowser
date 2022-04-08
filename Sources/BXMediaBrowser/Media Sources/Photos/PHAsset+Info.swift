@@ -38,7 +38,7 @@ extension PHAsset
 	
     var originalFilename:String?
     {
-		self.primaryResource?.originalFilename
+		self.firstResource?.originalFilename
     }
 
 
@@ -48,7 +48,7 @@ extension PHAsset
     {
 		// First try to get an exact UTI from the PHAsset, e.g. "public.jpeg" or "public.tiff"
 		
-        if let uti = self.primaryResource?.uniformTypeIdentifier
+        if let uti = self.firstResource?.uniformTypeIdentifier
 		{
 			return uti
 		}
@@ -68,6 +68,13 @@ extension PHAsset
     }
 
 
+	/// Returns the first PHAssetResource for this asset
+	
+	var firstResource:PHAssetResource?
+	{
+		PHAssetResource.assetResources(for:self).first
+	}
+	
 	/// Returns the primary (most important) PHAssetResource
 	
     var primaryResource:PHAssetResource?
@@ -90,85 +97,6 @@ extension PHAsset
 }
 	
 	
-//----------------------------------------------------------------------------------------------------------------------
-
-
-extension PHAsset
-{
-	public static func groupedByYears(allAssets:PHFetchResult<PHAsset>) -> [(Int,[PHAsset])]
-	{
-		var grouped:[Int:[PHAsset]] = [:]
-		
-		for i in 0 ..< allAssets.count
-		{
-			let asset = allAssets[i]
-			guard let date = asset.creationDate else { continue }
-			let year = date.year
-			if grouped[year] == nil { grouped[year] = [] }
-			grouped[year]?.append(asset)
-		}
-		
-		let years:[Int] = (grouped as NSDictionary)
-			.allKeys
-			.compactMap { $0 as? Int }
-			.sorted()
-		
-		return years.map
-		{
-			return ($0, grouped[$0] ?? [])
-		}
-	}
-	
-	
-	public static func groupedByMonths(yearAssets:[PHAsset]) -> [(Int,[PHAsset])]
-	{
-		var grouped:[Int:[PHAsset]] = [:]
-		
-		for asset in yearAssets
-		{
-			guard let date = asset.creationDate else { continue }
-			let month = date.month
-			if grouped[month] == nil { grouped[month] = [] }
-			grouped[month]?.append(asset)
-		}
-		
-		let months:[Int] = (grouped as NSDictionary)
-			.allKeys
-			.compactMap { $0 as? Int }
-			.sorted()
-		
-		return months.map
-		{
-			return ($0, grouped[$0] ?? [])
-		}
-	}
-	
-	
-	public static func groupedByDay(monthAssets:[PHAsset]) -> [(Int,[PHAsset])]
-	{
-		var grouped:[Int:[PHAsset]] = [:]
-		
-		for asset in monthAssets
-		{
-			guard let date = asset.creationDate else { continue }
-			let day = date.day
-			if grouped[day] == nil { grouped[day] = [] }
-			grouped[day]?.append(asset)
-		}
-		
-		let days:[Int] = (grouped as NSDictionary)
-			.allKeys
-			.compactMap { $0 as? Int }
-			.sorted()
-		
-		return days.map
-		{
-			return ($0, grouped[$0] ?? [])
-		}
-	}
-}
-
-
 //----------------------------------------------------------------------------------------------------------------------
 
 

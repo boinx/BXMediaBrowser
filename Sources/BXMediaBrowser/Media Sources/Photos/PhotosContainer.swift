@@ -127,7 +127,7 @@ public class PhotosContainer : Container
 		
 		var containers:[Container] = []
 		var objects:[Object] = []
-		let fetchOptions = filter.fetchOptions
+		let fetchOptions = filter.assetFetchOptions
 		var assetsFetchResult:PHFetchResult<PHAsset>? = nil
 
 		// Load sub-containers
@@ -263,12 +263,11 @@ public class PhotosContainer : Container
 			{
 				let asset = assetsFetchResult[i]
 				let mediaType = asset.mediaType
-				
-				if mediaType == .image //&& filter.allowedMediaTypes.contains(.image)
+				if mediaType == .image
 				{
 					objects += PhotosImageObject(with:asset)
 				}
-				else //if mediaType == .video && filter.allowedMediaTypes.contains(.video)
+				else
 				{
 					objects += PhotosVideoObject(with:asset)
 				}

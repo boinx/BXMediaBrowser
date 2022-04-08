@@ -34,16 +34,22 @@ public class PhotosObject : Object
 {
 	public init(with asset:PHAsset)
 	{
-//		let name = asset.originalFilename ?? "" 	// Getting originalFilename is way too expensive at this point!
-		
 		super.init(
-			identifier: "Photos:Asset:\(asset.localIdentifier)",
-			name: "",
+			identifier: Self.identifier(for:asset),
+			name: "", // asset.originalFilename ?? "", 	// Getting originalFilename is way too expensive at this point!
 			data: asset,
 			loadThumbnailHandler: Self.loadThumbnail,
 			loadMetadataHandler: Self.loadMetadata,
 			downloadFileHandler: Self.downloadFile)
 	}
+
+	class func identifier(for asset:PHAsset) -> String
+	{
+		"Photos:Asset:\(asset.localIdentifier)"
+	}
+	
+	
+//----------------------------------------------------------------------------------------------------------------------
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -105,10 +111,10 @@ public class PhotosObject : Object
 	
 	class func loadMetadata(for identifier:String, data:Any) async throws -> [String:Any]
 	{
-		Photos.log.verbose {"\(Self.self).\(#function) \(identifier)"}
-
 		guard let asset = data as? PHAsset else { throw Object.Error.loadMetadataFailed }
 		
+		Photos.log.verbose {"\(Self.self).\(#function) \(identifier)"}
+
 		var metadata:[String:Any] = [:]
 		metadata["mediaType"] = asset.mediaType.rawValue
 		metadata[.titleKey] = asset.originalFilename
