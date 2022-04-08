@@ -24,6 +24,7 @@
 
 
 import Photos
+import QuickLookUI
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -156,153 +157,58 @@ public class PhotosObject : Object
 	}
 	
 	
-//	// For image files request the full size image URL for "editing"
-//
-//	class func downloadImageFile(for asset:PHAsset) async throws -> URL
-//	{
-////		var continueDownloading = true
-//
-//		let options = PHContentEditingInputRequestOptions()
-//		options.isNetworkAccessAllowed = true
-//		options.progressHandler =
-//		{
-//			progress,outStop in
-//
-////			continueDownloading = iOSMediaBrowser.downloadProgressHandler?(self,progress,nil) ?? true
-////			if !continueDownloading { outStop.pointee = true }
-//		}
-//
-//        return try await withCheckedThrowingContinuation
-//        {
-//			continuation in
-//
-//			asset.requestContentEditingInput(with:options)
-//			{
-//				(input:PHContentEditingInput?,_) in
-//				
-//				if let url = input?.fullSizeImageURL
-//				{
-//					continuation.resume(returning:url)
-//				}
-//				else
-//				{
-//					continuation.resume(throwing:Object.Error.downloadFileFailed)
-//				}
-//			}
-//		}
-//	}
-//	
-//	
-//	// For video and audio request an AVURLAsset, which we can query for its URL
-//
-//	class func downloadVideoFile(for asset:PHAsset) async throws -> URL
-//	{
-////		var continueDownloading = true
-//	
-//		let options = PHVideoRequestOptions()
-//		options.version = .original
-//		options.isNetworkAccessAllowed = true
-//		options.progressHandler =
-//		{
-//			progress,error,outStop,_ in
-////			continueDownloading = iOSMediaBrowser.downloadProgressHandler?(self,progress,error) ?? true
-////			if !continueDownloading { outStop.pointee = true }
-//		}
-//			
-//        return try await withCheckedThrowingContinuation
-//        {
-//			continuation in
-//
-//			PhotosSource.imageManager.requestAVAsset(forVideo:asset, options:options)
-//			{
-//				(avasset:AVAsset?,_,_) in
-//
-//				if let urlAsset = avasset as? AVURLAsset
-//				{
-//					let url = urlAsset.url
-//					continuation.resume(returning:url)
-//				}
-//				else
-//				{
-//					continuation.resume(throwing:Object.Error.downloadFileFailed)
-//				}
-//			}
-//		}
-//	}
-	
-	
-/*
+//----------------------------------------------------------------------------------------------------------------------
 
-	// Request the URL of an iOSMediaBrowserItem. Apple really doesn't want us to work with URLs of PHAssets,
-	// so we have to resort to various tricks. In case of an image we'll pretend to want edit an image file in-place
-	// to get the URL. In the case of a video, we'll pretend we want to play an AVURLAsset with an AVPlayer.
-	// Taken from https://stackoverflow.com/questions/38183613/how-to-get-url-for-a-phasset
-	
-	public func requestMediaFileURL(type:iOSMediaBrowserItemURLType = .file,completionHandler:@escaping (URL?,iOSMediaBrowserError?)->())
-	{
-		var continueDownloading = true
-		
-		// For image files request the full size image URL for "editing"
 
-		if self.asset.mediaType == .image
+	// MARK: - QuickLook
+	
+	/// Returns the filename of the local preview file
+	
+	public var previewFilename:String
+    {
+		(data as? PHAsset)?.originalFilename ?? ""
+	}
+	
+	/// Returns the title for the QuickLook panel
+	
+	override open var previewItemTitle: String!
+    {
+		self.localFileName
+    }
+	
+	/// Returns the local file URL to the preview file. If not available yet, it will be downloaded from
+	/// the Lightroom server.
+	
+	override public var previewItemURL:URL!
+    {
+		if self._previewItemURL == nil && !isDownloadingPreview
 		{
-			let options = PHContentEditingInputRequestOptions()
-			options.isNetworkAccessAllowed = true
-    		options.progressHandler =
-    		{
-    			progress,outStop in
-
-				continueDownloading = iOSMediaBrowser.downloadProgressHandler?(self,progress,nil) ?? true
-				if !continueDownloading { outStop.pointee = true }
-     		}
-
-			self.asset.requestContentEditingInput(with:options)
-			{
-				(input:PHContentEditingInput?,_) in
-				
-				if let url = input?.fullSizeImageURL
-				{
-					completionHandler(url,nil)
-				}
-				else
-				{
-					completionHandler(nil,.accessDenied)
- 				}
-			}
-		}
-
-		// For video and audio request an AVURLAsset, which we can query for its URL
-
-		else
-		{
-			let options = PHVideoRequestOptions()
-			options.version = .original
-			options.isNetworkAccessAllowed = true
-			options.progressHandler =
-			{
-				progress,error,outStop,_ in
-				continueDownloading = iOSMediaBrowser.downloadProgressHandler?(self,progress,error) ?? true
-				if !continueDownloading { outStop.pointee = true }
-			}
+			self.isDownloadingPreview = true
 			
-			iOSMediaBrowserSourcePhotosApp.imageManager.requestAVAsset(forVideo:self.asset,options:options)
+			Task
 			{
-				(avasset:AVAsset?,_,_) in
-
-				if let urlAsset = avasset as? AVURLAsset
+				// Download the file (hires)
+				
+				let url = try await Self.downloadFile(for:identifier, data:data)
+				
+				// Store it in the TempFilePool and update the QLPreviewPanel
+				
+				await MainActor.run
 				{
-					completionHandler(urlAsset.url,nil)
-				}
-				else
-				{
-					completionHandler(nil,.accessDenied)
+					self._previewItemURL = url
+					self.isDownloadingPreview = false
+					
+					QLPreviewPanel.shared().refreshCurrentPreviewItem()
+					QLPreviewPanel.shared().reloadData()
 				}
 			}
-		}
+ 		}
+ 		
+ 		return self._previewItemURL
 	}
 
-*/
-	
+	private var _previewItemURL:URL? = nil
+	private var isDownloadingPreview = false
 }
 
 
