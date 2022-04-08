@@ -129,6 +129,11 @@ public class PhotosObject : Object
 	}
 
 
+	@MainActor override open var localizedMetadata:[ObjectMetadataEntry]
+    {
+		return []
+    }
+
 //					if let w = metadata["PixelWidth"] as? Int, let h = metadata["PixelHeight"] as? Int
 //					{
 //						Text("Size: \(w) x \(h) pixels")

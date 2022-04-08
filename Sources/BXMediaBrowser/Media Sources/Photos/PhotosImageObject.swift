@@ -24,6 +24,7 @@
 
 
 import Photos
+import BXSwiftUtils
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -42,6 +43,35 @@ public class PhotosImageObject : PhotosObject
 
 	// MARK: - Metadata
 	
+	/// Transforms the metadata dictionary into an ordered list of human readable information (with optional click actions)
+
+	@MainActor override open var localizedMetadata:[ObjectMetadataEntry]
+    {
+		guard let asset = data as? PHAsset else { return [] }
+
+		var array:[ObjectMetadataEntry] = []
+
+		if let name = asset.originalFilename
+		{
+			let photoLabel = NSLocalizedString("File", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Label")
+			array += ObjectMetadataEntry(label:photoLabel, value:name)
+		}
+		
+		let imageSizeLabel = NSLocalizedString("Image Size", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Label")
+		array += ObjectMetadataEntry(label:imageSizeLabel, value:"\(asset.pixelWidth) × \(asset.pixelHeight) Pixels")
+		
+//		let fileSizeLabel = NSLocalizedString("File Size", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Label")
+//		array += ObjectMetadataEntry(label:fileSizeLabel, value:asset.fileSize.fileSizeDescription)
+
+		if let date = asset.creationDate
+		{
+			let creationDateLabel = NSLocalizedString("Creation Date", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Label")
+			array += ObjectMetadataEntry(label:creationDateLabel, value:String(with:date) )
+		}
+
+		return array
+    }
+    
 
 //----------------------------------------------------------------------------------------------------------------------
 
