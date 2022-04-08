@@ -62,8 +62,10 @@ extension Object
 		public func purge() async
 		{
 			logDataModel.verbose {"Purging data for \(identifier)"}
+			
 			self._thumbnailImage = nil
 			self._metadata = nil
+			self._localFileURL = nil
 		}
 	
 	
