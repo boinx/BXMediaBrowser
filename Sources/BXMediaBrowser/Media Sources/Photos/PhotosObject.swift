@@ -32,6 +32,8 @@ import QuickLookUI
 
 public class PhotosObject : Object
 {
+	/// Creates a new PhotosObject. Please note that this is an abstract base class that should never be instantiated.
+	
 	public init(with asset:PHAsset)
 	{
 		super.init(
@@ -41,8 +43,15 @@ public class PhotosObject : Object
 			loadThumbnailHandler: Self.loadThumbnail,
 			loadMetadataHandler: Self.loadMetadata,
 			downloadFileHandler: Self.downloadFile)
+
+		self.observer.didChangeHandler =
+		{
+			[weak self] in self?.objectDidChange($0)
+		}
 	}
 
+	/// Creates a unique (persistent) identifier for the specified PHAsset
+	
 	class func identifier(for asset:PHAsset) -> String
 	{
 		"Photos:Asset:\(asset.localIdentifier)"
@@ -52,6 +61,27 @@ public class PhotosObject : Object
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// If the PHAsset has changed, then reload the Object properties
+	
+	func objectDidChange(_ change:PHChange)
+	{
+		guard let asset = data as? PHAsset else { return }
+
+		if change.changeDetails(for:asset) != nil
+		{
+			Photos.log.verbose {"\(Self.self).\(#function) \(self.identifier)"}
+
+			Task
+			{
+				await self.loader.purge()
+				self.load()
+			}
+        }
+	}
+	
+	private let observer = PhotosChangeObserver()
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 
