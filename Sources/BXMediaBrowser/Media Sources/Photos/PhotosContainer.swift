@@ -80,6 +80,7 @@ public class PhotosContainer : Container
 		switch data
 		{
 			case .folder: return true
+			case .dateInterval(let unit,_,_): return unit != .day
 			default: return false
 		}
 	}
@@ -133,14 +134,20 @@ public class PhotosContainer : Container
 
 		switch data
 		{
+			// The library contains only assets, but not sub-containers
+			
 			case .library(let allAssets):
 
 				assetsFetchResult = allAssets
 
+			// An album contains only assets, but not sub-containers
+			
 			case .album(let assetCollection):
 
 				assetsFetchResult = PHAsset.fetchAssets(in:assetCollection, options:fetchOptions)
 
+			// A folder contains sub-containers (either albums or folders)
+			
 			case .folder(let collections):
 
 				for collection in collections
@@ -174,13 +181,78 @@ public class PhotosContainer : Container
 					}
 					else
 					{
-						print("hmm")
 					}
 				}
-				
-			case .timespan(let assets, let year, let month, let day):
 			
-				#warning("TODO: implement")
+			// A DateInterval let you drill down by year, month, day
+			
+			case .dateInterval(let unit, let assetCollection, let subCollections):
+			
+				switch unit
+				{
+					case .era:
+					
+						for (interval,collection) in subCollections // years
+						{
+							let year = interval.start.year
+							let id = "\(year)"
+
+							let monthCollections = PHAssetCollection.monthsCollections(
+								year: year,
+								mediaType: filter.assetMediaType)
+							
+							containers += PhotosContainer(
+								identifier: "Photos:Year:\(id)",
+								icon: "folder",
+								name: collection.localizedTitle ?? id,
+								data: PhotosData.dateInterval(unit:.year, assetCollection:collection, subCollections:monthCollections),
+								filter: filter)
+						}
+
+					case .year:
+					
+						for (interval,collection) in subCollections // months of the year
+						{
+							let year = interval.start.year
+							let month = interval.start.month
+							let id = "\(year)/\(month)"
+
+							let dayCollections = PHAssetCollection.daysCollections(
+								year: year, month:month,
+								mediaType: filter.assetMediaType)
+							
+							containers += PhotosContainer(
+								identifier: "Photos:Month:\(id)",
+								icon: "folder",
+								name: collection.localizedTitle ?? id,
+								data: PhotosData.dateInterval(unit:.month, assetCollection:collection, subCollections:dayCollections),
+								filter: filter)
+						}
+					
+					case .month:
+					
+						for (interval,collection) in subCollections // days of the month
+						{
+							let year = interval.start.year
+							let month = interval.start.month
+							let day = interval.start.day
+							let id = "\(year)/\(month)/\(day)"
+							
+							containers += PhotosContainer(
+								identifier: "Photos:day:\(id)",
+								icon: "folder",
+								name: collection.localizedTitle ?? id,
+								data: PhotosData.dateInterval(unit:.day, assetCollection:collection, subCollections:[]),
+								filter: filter)
+						}
+					
+					default: break
+				}
+				
+				if let assetCollection = assetCollection
+				{
+					assetsFetchResult = PHAsset.fetchAssets(in:assetCollection, options:fetchOptions)
+				}
 		}
 
 		// Load objects
@@ -209,6 +281,9 @@ public class PhotosContainer : Container
 	}
 
 	
+//----------------------------------------------------------------------------------------------------------------------
+
+
 	/// This object is responsible for detecting changes to the Photos.app library
 	
 	var observer = PhotosChangeObserver()

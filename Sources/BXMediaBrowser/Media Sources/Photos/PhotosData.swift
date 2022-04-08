@@ -44,9 +44,9 @@ enum PhotosData
 	
 	case folder(collections:[PHCollection])
 	
-	/// Information that specifies smart folder for a timespan
+	/// Information that specifies smart folder for a DateInterval
 	
-	case timespan(assets:[PHAsset], year:Int? = nil, month:Int? = nil, day:Int? = nil)
+	case dateInterval(unit:Calendar.Component, assetCollection:PHAssetCollection?, subCollections:[(DateInterval,PHAssetCollection)])
 }
 
 
@@ -71,65 +71,66 @@ extension PhotosData
 		return items
 	}
 	
-	/// Returns the start and end date for a .timespan
 	
-	public var dateRange:(Date,Date)?
-	{
-		if case .timespan(_, let year, let month, let day) = self
-		{
-			if let year = year
-			{
-				if let month = month
-				{
-					if let day = day
-					{
-						if let start = Date.fromComponents(year:year, month:month, day:day),
-						   let end = Calendar.current.date(byAdding:.day, value:1, to:start, wrappingComponents:true)
-						{
-							return (start,end)
-						}
-					}
-
-					if let start = Date.fromComponents(year:year, month:month, day:0),
-					   let end = Calendar.current.date(byAdding:.month, value:1, to:start, wrappingComponents:true)
-					{
-						return (start,end)
-					}
-				}
-
-				if let start = Date.fromComponents(year:year, month:0, day:0),
-				   let end = Calendar.current.date(byAdding:.year, value:1, to:start, wrappingComponents:true)
-				{
-					return (start,end)
-				}
-			}
-		}
-		
-		return nil
-	}
-	
-	public var timespanTitle:String
-	{
-		if case .timespan(_, let year, let month, let day) = self
-		{
-			if let year = year
-			{
-				if let month = month
-				{
-					if let day = day
-					{
-						return "\(year)/\(month)/\(day)"
-					}
-
-					return "\(year)/\(month)"
-				}
-
-				return "\(year)"
-			}
-		}
-		
-		return ""
-	}
+//	/// Returns the start and end date for a .timespan
+//
+//	public var dateRange:(Date,Date)?
+//	{
+//		if case .timespan(_, let year, let month, let day) = self
+//		{
+//			if let year = year
+//			{
+//				if let month = month
+//				{
+//					if let day = day
+//					{
+//						if let start = Date.fromComponents(year:year, month:month, day:day),
+//						   let end = Calendar.current.date(byAdding:.day, value:1, to:start, wrappingComponents:true)
+//						{
+//							return (start,end)
+//						}
+//					}
+//
+//					if let start = Date.fromComponents(year:year, month:month, day:0),
+//					   let end = Calendar.current.date(byAdding:.month, value:1, to:start, wrappingComponents:true)
+//					{
+//						return (start,end)
+//					}
+//				}
+//
+//				if let start = Date.fromComponents(year:year, month:0, day:0),
+//				   let end = Calendar.current.date(byAdding:.year, value:1, to:start, wrappingComponents:true)
+//				{
+//					return (start,end)
+//				}
+//			}
+//		}
+//
+//		return nil
+//	}
+//
+//	public var timespanTitle:String
+//	{
+//		if case .timespan(_, let year, let month, let day) = self
+//		{
+//			if let year = year
+//			{
+//				if let month = month
+//				{
+//					if let day = day
+//					{
+//						return "\(year)/\(month)/\(day)"
+//					}
+//
+//					return "\(year)/\(month)"
+//				}
+//
+//				return "\(year)"
+//			}
+//		}
+//
+//		return ""
+//	}
 }
 
 

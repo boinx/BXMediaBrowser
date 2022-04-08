@@ -137,7 +137,6 @@ public class PhotosSource : Source, AccessControl
 		Photos.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
 		guard let filter = filter as? PhotosFilter else { return [] }
-		let fetchOptions = filter.fetchOptions
 		var containers:[Container] = []
 		
 		// Library
@@ -186,27 +185,16 @@ public class PhotosSource : Source, AccessControl
 		
 		// Years
 
-		let yearsCollectionList = PHCollectionList.years(mediaType:filter.assetMediaType)
-		let yearsFetchResult = PHCollection.fetchCollections(in:yearsCollectionList, options:fetchOptions)
-		let yearsCollections = PhotosData.items(for:yearsFetchResult)
-		let yearsData = PhotosData.folder(collections:yearsCollections)
-
+		let yearsCollections = PHAssetCollection.yearsCollections(mediaType:filter.assetMediaType)
+//		let yearsData = PhotosData.folder(collections:yearsCollections)
+		let yearsData = PhotosData.dateInterval(unit:.era, assetCollection:nil, subCollections:yearsCollections)
+		
 		containers += PhotosContainer(
 			identifier: "Photos:Years",
 			icon: "folder",
 			name: NSLocalizedString("Years", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Container Name"),
 			data: yearsData,
 			filter: filter)
-		
-//		let yearsGroups = PHAsset.groupedByYears(allAssets:allPhotosFetchResult) //-> [(Int,[PHAsset])]
-//		let yearsData = PhotosData.timespan(assets:allPhotosFetchResult, year:nil, month:nil, day:nil)
-//
-//		containers += PhotosContainer(
-//			identifier: "PhotosSource:Years",
-//			icon: "folder",
-//			name: "Years",
-//			data: yearsData,
-//			filter: filter)
 
 		// Smart Folders
 
