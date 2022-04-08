@@ -221,6 +221,10 @@ public extension ViewFactory
 		{
 			LightroomCCFilterBar(with:container, filter:filter)
 		}
+		else if let container = container as? PhotosContainer, let filter = container.filter as? PhotosFilter
+		{
+			PhotosFilterBar(with:container, filter:filter)
+		}
 		else if let container = container as? MusicContainer, let filter = container.filter as? MusicFilter
 		{
 			MusicFilterBar(with:container, filter:filter)
