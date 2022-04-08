@@ -119,6 +119,8 @@ public class PhotosObject : Object
 	}
 
 
+	/// Options for loading image thumbnails
+	
 	private static var thumbnailOptions:PHImageRequestOptions =
 	{
 		let options = PHImageRequestOptions()
@@ -127,7 +129,6 @@ public class PhotosObject : Object
 		options.resizeMode = .fast
 		return options
 	}()
-
 
 	private static let thumbnailSize = CGSize(width:256, height:256)
 
@@ -163,26 +164,6 @@ public class PhotosObject : Object
     {
 		return []
     }
-
-//					if let w = metadata["PixelWidth"] as? Int, let h = metadata["PixelHeight"] as? Int
-//					{
-//						Text("Size: \(w) x \(h) pixels")
-//							.lineLimit(1)
-//							.opacity(0.5)
-//					}
-//
-//					if let model = metadata["ColorModel"] as? String
-//					{
-//						Text("Type: \(model)")
-//							.lineLimit(1)
-//							.opacity(0.5)
-//					}
-//					if let profile = metadata["ProfileName"] as? String
-//					{
-//						Text("Colorspace: \(profile)")
-//							.lineLimit(1)
-//							.opacity(0.5)
-//					}
 
 
 //----------------------------------------------------------------------------------------------------------------------

@@ -54,6 +54,9 @@ public class PhotosContainer : Container
 	}
 
 
+//----------------------------------------------------------------------------------------------------------------------
+
+
 	/// Returns the allowed mediaTypes in this Container
 	
 	override nonisolated open var mediaTypes:[Object.MediaType]
@@ -62,12 +65,14 @@ public class PhotosContainer : Container
 		return filter.allowedMediaTypes
 	}
 
+
 	/// Returns the list of allowed sort Kinds for this Container
 		
 	override open var allowedSortTypes:[Object.Filter.SortType]
 	{
 		[.creationDate,.rating]
 	}
+
 
 	// Folders can be expanded, because they have sub-containers
 	
@@ -84,6 +89,7 @@ public class PhotosContainer : Container
 			default: return false
 		}
 	}
+	
 	
 	/// Returns a description of the contents of this Container
 	
