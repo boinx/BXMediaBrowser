@@ -64,15 +64,6 @@ open class LightroomCCFilter : Object.Filter, Equatable
 		return nil
 	}
 
-	/// Sorts Objects alphabetically by filename like the Finder
-	
-//	public static func compareAlphabetical(_ object1:Object,_ object2:Object) -> Bool
-//	{
-//		let name1 = object1.name as NSString
-//		let name2 = object2.name
-//		return name1.localizedStandardCompare(name2) == .orderedAscending
-//	}
-
 	/// Sorts Objects by captureDate
 
 	public static func compareCaptureDate(_ object1:Object,_ object2:Object) -> Bool
