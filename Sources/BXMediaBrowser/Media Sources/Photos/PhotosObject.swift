@@ -85,6 +85,26 @@ public class PhotosObject : Object
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// Getting the asset.originalFilename is extremely expensive, so it is only done when enabled by
+	// the user via context menu. The name is retrieved once and then cached locally in _displayName.
+	
+	override open var displayName:String
+	{
+		if Photos.displayFilenames, _displayName.isEmpty, let asset = data as? PHAsset
+		{
+			let name = asset.originalFilename ?? ""
+			self._displayName = name
+		}
+		
+		return _displayName
+	}
+	
+	private var _displayName = ""
+	
+	
+//----------------------------------------------------------------------------------------------------------------------
+
+
 	// MARK: - Thumbnails
 	
 	/// Creates a thumbnail image for the PHAsset with the specified identifier

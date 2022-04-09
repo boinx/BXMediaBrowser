@@ -96,7 +96,7 @@ open class ImageObjectViewController : ObjectViewController
 	
 		// Name
 		
-		self.textField?.stringValue = object.name
+		self.textField?.stringValue = object.displayName
 		
 		if #available(macOS 11, *)
 		{

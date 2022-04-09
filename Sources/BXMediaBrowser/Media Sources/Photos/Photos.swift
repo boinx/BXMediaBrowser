@@ -47,6 +47,11 @@ public struct Photos
 	
 	static let name = NSLocalizedString("Photos", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Source Name")
 	
+	/// This global property controls whether Object filenames are displayed or not. Getting filename has a
+	/// serious performance impact, so it is disabled by default.
+	
+	static var displayFilenames = false
+	
 	/// A BXLogger instance for logging Photos related informations
 	
 	public static var log:BXLogger =

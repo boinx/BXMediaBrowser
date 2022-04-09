@@ -302,6 +302,15 @@ open class ObjectViewController : NSCollectionViewItem
 				musicObject.revealInFinder()
 			}
 		}
+		else if object is PhotosObject
+		{
+			menu.addItem(NSMenuItem.separator())
+			
+			self.addMenuItem(menu:menu, title:NSLocalizedString("Show Filenames", bundle:.BXMediaBrowser, comment:"Menu Item"), state:Photos.displayFilenames ? .on : .off)
+			{
+				Photos.displayFilenames.toggle()
+			}
+		}
 		
 		return menu
 	}
@@ -309,7 +318,7 @@ open class ObjectViewController : NSCollectionViewItem
 
 	/// Adds a new menu item with the specified title and action
 	
-	func addMenuItem(menu:NSMenu?, title:String, action:@escaping ()->Void)
+	func addMenuItem(menu:NSMenu?, title:String, state:NSControl.StateValue = .off, action:@escaping ()->Void)
 	{
 		guard let menu = menu else { return }
 		
@@ -319,7 +328,7 @@ open class ObjectViewController : NSCollectionViewItem
 		item.representedObject = wrapper
 		item.target = wrapper
 		item.action = #selector(ActionWrapper.execute(_:))
-		
+		item.state = state
 		menu.addItem(item)
 	}
 	

@@ -133,7 +133,7 @@ open class AudioObjectViewController : ObjectViewController
 		let duration = metadata[kMDItemDurationSeconds as String] as? Double ?? 0.0
 		let size = metadata[kMDItemFSSize as String] as? Int
 		let kind = metadata[kMDItemKind as String] as? String
-		let name = title ?? object.name
+		let name = title ?? object.displayName
 		
 		// Build description string
 		

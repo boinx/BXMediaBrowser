@@ -112,6 +112,13 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 		return .image
 	}
 	
+	/// Returns a name that is suitable for displaying in the user interface. Subclasses may override this accessor
+	
+	open var displayName:String
+	{
+		self.name
+	}
+	
 	
 //----------------------------------------------------------------------------------------------------------------------
 
