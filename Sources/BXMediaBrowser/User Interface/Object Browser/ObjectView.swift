@@ -37,7 +37,7 @@ class ObjectView : NSView
 	// MARK: - Hovering
 
 
-	/// This externally supplied handler is called whenever the mosue enters or leaves this view
+	/// This externally supplied handler is called whenever the mouse enters or leaves this view
 	
 	public var mouseHoverHandler:((Bool)->Void)? = nil
 

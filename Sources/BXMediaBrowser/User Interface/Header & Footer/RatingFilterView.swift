@@ -78,11 +78,8 @@ public struct RatingFilterView : View
 			{
 				ForEach(1..<maxRating+1)
 				{
-					i in
-
-					BXSwiftUI.Image(systemName:icon(for:i))
-						.foregroundColor(color(for:i))
-				}
+					BXSwiftUI.Image(systemName:icon(for:$0))
+						.foregroundColor(color(for:$0))
 			}
 		}
 		
