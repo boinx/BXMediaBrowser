@@ -216,7 +216,7 @@ extension ObjectCollectionView
 	/// Creates a NSCollectionViewDiffableDataSource. The Coordinator will is the owner of the datasource,
 	/// since it also has access to the data model.
 	
-    private func configureDataSource(for collectionView:NSCollectionView, coordinator:Coordinator)
+    @MainActor private func configureDataSource(for collectionView:NSCollectionView, coordinator:Coordinator)
     {
 		// Setup the cell provider for the dataSource
 		
