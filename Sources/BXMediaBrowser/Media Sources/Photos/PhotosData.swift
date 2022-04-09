@@ -42,7 +42,7 @@ enum PhotosData
 	
 	/// Information that specifies a single folder
 	
-	case folder(collections:[PHCollection])
+	case folder(collections:[PHCollection], fetchResult:Any)
 	
 	/// Information that specifies smart folder for a DateInterval
 	

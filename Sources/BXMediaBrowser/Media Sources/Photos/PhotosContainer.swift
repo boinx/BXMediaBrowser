@@ -154,39 +154,39 @@ public class PhotosContainer : Container
 
 			// A folder contains sub-containers (either albums or folders)
 			
-			case .folder(let collections):
+			case .folder(let collections,_):
 
 				for collection in collections
 				{
 					if let assetCollection = collection as? PHAssetCollection
 					{
-						let icon = assetCollection.assetCollectionType == .smartAlbum ?
-							"gearshape" :
-							"rectangle.stack"
-							
-						containers += PhotosContainer(
+						assetsFetchResult = PHAsset.fetchAssets(in:assetCollection, options:fetchOptions)
+						let icon = assetCollection.assetCollectionType == .smartAlbum ? "gearshape" : "rectangle.stack"
+						let name = assetCollection.localizedTitle ?? ""
+						
+						let container = PhotosContainer(
 							identifier: "Photos:Album:\(assetCollection.localIdentifier)",
 							icon: icon,
-							name: assetCollection.localizedTitle ?? "",
+							name: name,
 							data: PhotosData.album(collection:assetCollection),
 							filter: filter)
-
-						assetsFetchResult = PHAsset.fetchAssets(in:assetCollection, options:fetchOptions)
+						
+						containers += container
 					}
 					else if let collectionList = collection as? PHCollectionList
 					{
 						let fetchResult = PHCollection.fetchCollections(in:collectionList, options:nil)
 						let collections = PhotosData.items(for:fetchResult)
-
-						containers += PhotosContainer(
+						let name = collectionList.localizedTitle ?? ""
+						
+						let container = PhotosContainer(
 							identifier: "Photos:Folder:\(collectionList.localIdentifier)",
 							icon: "folder",
-							name: collectionList.localizedTitle ?? "",
-							data: PhotosData.folder(collections:collections),
+							name: name,
+							data: PhotosData.folder(collections:collections, fetchResult:fetchResult),
 							filter: filter)
-					}
-					else
-					{
+						
+						containers += container
 					}
 				}
 			
@@ -305,24 +305,60 @@ public class PhotosContainer : Container
 	
 	public func didChange(_ change:PHChange)
     {
-		#warning("FIXME: needs to be updated for new PhotosData enum")
-
-		DispatchQueue.main.async
+		guard let data = data as? PhotosData else { return }
+		var requestReload = false
+		
+		switch data
 		{
-			if let object = self.data as? PHObject
-			{
-				if let object = change.changeDetails(for:object)
+			// Reload the "All Photos" library container if the list of objects has changed (e.g. new imports)
+			
+			case .library(let allAssets):
+
+				if change.changeDetails(for:allAssets) != nil
 				{
-					self.data = object
-					self.load()
+					requestReload = true
 				}
-			}
-			else if let fetchResult = self.data as? PHFetchResult<PHObject>
-			{
-				if let fetchResult = change.changeDetails(for:fetchResult)
+			
+			// Reload this album when its list of objects has changed
+			
+			case .album(let assetCollection):
+
+				if change.changeDetails(for:assetCollection) != nil
 				{
-					self.data = fetchResult
-					self.load()
+					requestReload = true
+				}
+			
+			// Reload this folder when its list of sub-containers has changed
+			
+			case .folder(_, let fetchResult):
+
+				if let fetchResult = fetchResult as? PHFetchResult<PHCollectionList>, let details = change.changeDetails(for:fetchResult)
+				{
+					let newFetchResult = details.fetchResultAfterChanges
+					let newCollections = PhotosData.items(for:newFetchResult)
+					self.data = PhotosData.folder(collections:newCollections, fetchResult:newFetchResult)
+					requestReload = true
+				}
+
+			// Reload a year/month/day folder if it list of objects has changed
+			
+			case .dateInterval(_, let assetCollection, _):
+
+				if let assetCollection = assetCollection, change.changeDetails(for:assetCollection) != nil
+				{
+					requestReload = true
+				}
+		}
+		
+		// Only perform a requested reload if a container was loaded before
+		
+		if requestReload
+		{
+			Task
+			{
+				await MainActor.run
+				{
+					if self.isLoaded { self.reload() }
 				}
 			}
 		}

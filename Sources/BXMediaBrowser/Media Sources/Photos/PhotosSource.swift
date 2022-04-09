@@ -174,7 +174,7 @@ public class PhotosSource : Source, AccessControl
 		
 		let albumsFetchResult = PHCollectionList.fetchTopLevelUserCollections(with:nil)
 		let albumsCollections = PhotosData.items(for:albumsFetchResult)
-		let albumsData = PhotosData.folder(collections:albumsCollections)
+		let albumsData = PhotosData.folder(collections:albumsCollections, fetchResult:albumsFetchResult)
 
 		containers += PhotosContainer(
 			identifier: "Photos:Albums",
@@ -200,7 +200,7 @@ public class PhotosSource : Source, AccessControl
 
 		let smartAlbumsFetchResult = PHAssetCollection.fetchAssetCollections(with:.smartAlbum, subtype:.any, options:nil)
 		let smartAlbumsCollections = PhotosData.items(for:smartAlbumsFetchResult)
-		let smartAlbumsData = PhotosData.folder(collections:smartAlbumsCollections)
+		let smartAlbumsData = PhotosData.folder(collections:smartAlbumsCollections, fetchResult:smartAlbumsFetchResult)
 
 		containers += PhotosContainer(
 			identifier: "Photos:SmartAlbums",
@@ -213,7 +213,7 @@ public class PhotosSource : Source, AccessControl
 
 		let smartFoldersFetchResult = PHCollectionList.fetchCollectionLists(with:.smartFolder, subtype:.any, options:nil)
 		let smartFoldersCollections = PhotosData.items(for:smartFoldersFetchResult)
-		let smartFoldersData = PhotosData.folder(collections:smartFoldersCollections)
+		let smartFoldersData = PhotosData.folder(collections:smartFoldersCollections, fetchResult:smartFoldersFetchResult)
 
 		containers += PhotosContainer(
 			identifier: "Photos:SmartFolder",
@@ -221,13 +221,6 @@ public class PhotosSource : Source, AccessControl
 			name: NSLocalizedString("Smart Folders", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Container Name"),
 			data: smartFoldersData,
 			filter: filter)
-
-//		for i in 0 ..< smartFolders.count
-//		{
-//			let smartFolder = smartFolders[i]
-//			let container = PhotosContainer(with:smartFolder, filter:filter)
-//			containers += container
-//		}
 		
 		return containers
 	}
