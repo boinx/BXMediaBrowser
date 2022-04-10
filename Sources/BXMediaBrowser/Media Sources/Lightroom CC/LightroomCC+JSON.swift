@@ -89,6 +89,7 @@ extension LightroomCC
 			public let id:String
 			public let type:String
 			public let subtype:String
+			public let updated:String
 			public let payload:Payload
 		}
 
@@ -200,6 +201,7 @@ extension LightroomCC
 		public let base:String?
 		public let id:String
 		public let subtype:String?
+		public let updated:String
 		public let payload:Payload?
 		public let links:Links?
 		
