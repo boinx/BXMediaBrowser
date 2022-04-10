@@ -361,10 +361,18 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 	{
 		Task
 		{
+			guard await self.isLoaded else { return }
+			
 			await MainActor.run
 			{
 				self.invalidateCache()
 				self.load()
+			}
+
+			for object in await self.objects
+			{
+				object.purge()
+				object.load()
 			}
 		}
 	}
