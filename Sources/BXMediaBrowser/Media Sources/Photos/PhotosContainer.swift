@@ -244,10 +244,16 @@ public class PhotosContainer : Container
 							let day = interval.start.day
 							let id = "\(year)/\(month)/\(day)"
 							
+							var name = collection.localizedTitle ?? id
+							for location in collection.localizedLocationNames
+							{
+								name += ", \(location)"
+							}
+							
 							containers += PhotosContainer(
 								identifier: "Photos:Date:\(id)",
 								icon: "folder",
-								name: collection.localizedTitle ?? id,
+								name: name,
 								data: PhotosData.dateInterval(unit:.day, assetCollection:collection, subCollections:[]),
 								filter: filter)
 						}
