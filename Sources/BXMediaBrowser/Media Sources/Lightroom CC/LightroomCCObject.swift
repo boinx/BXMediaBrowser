@@ -30,8 +30,16 @@ import QuickLookUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-open class LightroomCCObject : Object
+open class LightroomCCObject : Object, AppLifecycleMixin
 {
+	/// Notification subscribers
+	
+	public var observers:[Any] = []
+	
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
 	/// Creates a new Object for the file at the specified URL
 
 	public required init(with asset:LightroomCC.Asset)
@@ -49,6 +57,15 @@ open class LightroomCCObject : Object
 		if let rating = asset.rating, rating > 0 //, rating > StatisticsController.shared.rating(for:self)
 		{
 			StatisticsController.shared.setRating(rating, for:self, sendNotifications:false)
+		}
+
+		// Since Lightroom CC does not have and change notification mechanism yet, we need to poll for changes.
+		// Whenever the app is brought to the foreground (activated), we just assume that a change was made in
+		// Lightroom in the meantime. Perform necessary checks and reload this container if necessary.
+		
+		self.registerDidActivateHandler
+		{
+			[weak self] in self?.reloadIfNeeded()
 		}
 	}
 
@@ -70,7 +87,6 @@ open class LightroomCCObject : Object
 		let catalogID = LightroomCC.shared.catalogID
 		let assetID = asset.id
 		let image = try await LightroomCC.shared.image(from:"https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)/renditions/thumbnail2x")
-
 		return image
 	}
 
@@ -91,6 +107,43 @@ open class LightroomCCObject : Object
     }
     
     
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// Since Lightroom CC does not have and change notification mechanism yet, we need to poll for changes.
+	// Whenever the app is brought to the foreground (activated), we just assume that a change was made in
+	// Lightroom in the meantime. Perform necessary checks and reload this container if necessary.
+
+	private func reloadIfNeeded()
+	{
+		guard let oldAsset = data as? LightroomCC.Asset else { return }
+		
+		Task
+		{
+			guard await self.thumbnailImage != nil else { return }
+			
+			let catalogID = LightroomCC.shared.catalogID
+			let assetID = oldAsset.id
+			let accessPoint = "https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)"
+			let newAsset:LightroomCC.Asset = try await LightroomCC.shared.getData(from:accessPoint, debugLogging:false)
+			let needsReloading = newAsset.updated > oldAsset.updated
+
+			LightroomCC.log.debug {"\(Self.self).\(#function)   oldUpdated = \(oldAsset.updated)    newUpdated = \(newAsset.updated)    needsReloading = \(needsReloading)"}
+
+			if needsReloading
+			{
+				await MainActor.run
+				{
+					LightroomCC.log.debug {"\(Self.self).\(#function)"}
+					self.data = newAsset
+					self.purge()
+					self.load()
+				}
+			}
+		}
+	}
+
+
 //----------------------------------------------------------------------------------------------------------------------
 
 

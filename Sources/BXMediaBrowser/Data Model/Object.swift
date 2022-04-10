@@ -39,11 +39,11 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 	
 	/// The name of the object for UI display purposes
 	
-	public let name:String
+	public var name:String
 	
 	/// This can be any kind of information that subclasses need to their job.
 	
-	public let data:Any
+	public var data:Any
 	
 	/// The Loader is responsible for loading the contents of this Object
 	
