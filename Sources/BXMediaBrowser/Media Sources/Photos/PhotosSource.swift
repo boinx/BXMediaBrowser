@@ -186,7 +186,6 @@ public class PhotosSource : Source, AccessControl
 		// Years
 
 		let yearsCollections = PHAssetCollection.yearsCollections(mediaType:filter.assetMediaType)
-//		let yearsData = PhotosData.folder(collections:yearsCollections)
 		let yearsData = PhotosData.dateInterval(unit:.era, assetCollection:nil, subCollections:yearsCollections)
 		
 		containers += PhotosContainer(
