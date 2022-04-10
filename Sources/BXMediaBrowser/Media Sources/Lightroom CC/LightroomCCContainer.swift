@@ -30,7 +30,7 @@ import Foundation
 //----------------------------------------------------------------------------------------------------------------------
 
 
-open class LightroomCCContainer : Container
+open class LightroomCCContainer : Container, AppLifecycleMixin
 {
 	class LightroomCCData
 	{
@@ -86,6 +86,15 @@ open class LightroomCCContainer : Container
 			{
 				self?.load(with:nil)
 			}
+		}
+		
+		// Since Lightroom CC does not have and change notification mechanism yet, we need to poll for changes.
+		// Whenever the app is brought to the foreground (activated), we just assume that a change was made in
+		// Lightroom in the meantime. Perform necessary checks and reload this container if necessary.
+		
+		self.registerDidActivateHandler
+		{
+			[weak self] in self?.reloadIfNeeded()
 		}
 	}
 
@@ -325,6 +334,38 @@ open class LightroomCCContainer : Container
 		}
 		
 //		dump(assets)
+	}
+	
+	
+	// Since Lightroom CC does not have and change notification mechanism yet, we need to poll for changes.
+	// Whenever the app is brought to the foreground (activated), we just assume that a change was made in
+	// Lightroom in the meantime. Perform necessary checks and reload this container if necessary.
+
+	private func reloadIfNeeded()
+	{
+		guard let data = data as? LightroomCCData else { return }
+		
+		Task
+		{
+			guard await self.isLoaded else { return }
+			
+			let catalogID = LightroomCC.shared.catalogID
+			let albumID = data.album.id
+			let accessPoint = "https://lr.adobe.io/v2/catalogs/\(catalogID)/albums/\(albumID)"
+			let album:LightroomCC.Album = try await LightroomCC.shared.getData(from:accessPoint, debugLogging:false)
+			let needsReloading = album.payload.userUpdated > data.album.updated || album.updated > data.album.updated
+
+			LightroomCC.log.debug {"\(Self.self).\(#function)   name = \(self.name)   oldUpdated = \(data.album.updated)    newUpdated = \(album.updated)    needsReloading = \(needsReloading)"}
+
+			if needsReloading
+			{
+				await MainActor.run
+				{
+					LightroomCC.log.debug {"\(Self.self).\(#function)"}
+					self.reload()
+				}
+			}
+		}
 	}
 }
 

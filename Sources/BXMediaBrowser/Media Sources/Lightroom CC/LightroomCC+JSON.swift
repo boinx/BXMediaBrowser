@@ -89,12 +89,33 @@ extension LightroomCC
 			public let id:String
 			public let type:String
 			public let subtype:String
+			public let created:String
 			public let updated:String
 			public let payload:Payload
 		}
 
 		public let resources:[Resource]
 		public let links:Links?
+	}
+	
+	
+	/// The JSON returned by https://lr.adobe.io/v2/catalogs/catalog_id/albums/album_id
+
+	public struct Album : Codable
+	{
+		public struct Payload : Codable
+		{
+			public let userUpdated:String
+			public let name:String
+		}
+
+		public let base:String?
+		public let id:String
+		public let type:String
+		public let subtype:String
+		public let created:String
+		public let updated:String
+		public let payload:Payload
 	}
 	
 	
