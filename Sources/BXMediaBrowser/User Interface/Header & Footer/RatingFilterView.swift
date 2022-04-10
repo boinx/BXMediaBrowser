@@ -74,12 +74,10 @@ public struct RatingFilterView : View
 		
 		HStack(spacing:0)
 		{
-			if #available(macOS 11, *)
+			ForEach(1 ..< maxRating+1, id:\.self)
 			{
-				ForEach(1..<maxRating+1)
-				{
-					BXSwiftUI.Image(systemName:icon(for:$0))
-						.foregroundColor(color(for:$0))
+				BXSwiftUI.Image(systemName:icon(for:$0))
+					.foregroundColor(color(for:$0))
 			}
 		}
 		
