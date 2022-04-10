@@ -182,7 +182,8 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 	
 	nonisolated public var id:String
 	{
-		identifier
+		
+		"\(identifier)-\(icon ?? "folder")-\(name)"
 	}
 	
 	/// Returns the MediaType of this hosted by this Container. Subclasses should override this property to return their specific MediaType.
