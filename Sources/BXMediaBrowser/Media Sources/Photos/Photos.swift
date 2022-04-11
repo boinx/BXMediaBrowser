@@ -37,20 +37,24 @@ public struct Photos
 	/// identifier, even if the class name changes due to refactoring, because the identifier
 	/// might be stored in a preferences file or user documents.
 	
-	static let identifier = "Photos"
+	public static let identifier = "Photos"
 	
 	/// The application icon of Photos.app
 	
-	static let icon = NSImage.icon(for:"com.apple.Photos")?.CGImage
+	public static let icon = NSImage.icon(for:"com.apple.Photos")?.CGImage
 	
 	/// The name of the Source
 	
-	static let name = NSLocalizedString("Photos", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Source Name")
+	public static let name = NSLocalizedString("Photos", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Source Name")
 	
 	/// This global property controls whether Object filenames are displayed or not. Getting filename has a
 	/// serious performance impact, so it is disabled by default.
 	
-	static var displayFilenames = false
+	public static var displayFilenames = false
+	
+	/// THis settings controls which smart albums (if any) are displayed in the browser
+	
+	public static var allowedSmartAlbums:[PHAssetCollectionSubtype] = [.any]
 	
 	/// A BXLogger instance for logging Photos related informations
 	

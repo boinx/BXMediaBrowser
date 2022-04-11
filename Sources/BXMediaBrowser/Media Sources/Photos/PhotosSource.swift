@@ -197,29 +197,24 @@ public class PhotosSource : Source, AccessControl
 
 		// Smart Albums
 
-		let smartAlbumsFetchResult = PHAssetCollection.fetchAssetCollections(with:.smartAlbum, subtype:.any, options:nil)
-		let smartAlbumsCollections = PhotosData.items(for:smartAlbumsFetchResult)
-		let smartAlbumsData = PhotosData.folder(collections:smartAlbumsCollections, fetchResult:smartAlbumsFetchResult)
+		if !Photos.allowedSmartAlbums.isEmpty
+		{
+			let smartAlbumsFetchResult = PHAssetCollection.fetchAssetCollections(with:.smartAlbum, subtype:.any, options:nil)
 
-		containers += PhotosContainer(
-			identifier: "Photos:SmartAlbums",
-			icon: "folder",
-			name: NSLocalizedString("Smart Albums", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Container Name"),
-			data: smartAlbumsData,
-			filter: filter)
+			let smartAlbumsCollections = PhotosData.items(for:smartAlbumsFetchResult).filter
+			{
+				Photos.allowedSmartAlbums.contains($0.assetCollectionSubtype) || Photos.allowedSmartAlbums == [.any]
+			}
+			
+			let smartAlbumsData = PhotosData.folder(collections:smartAlbumsCollections, fetchResult:smartAlbumsFetchResult)
 
-		// Smart Folders
-
-		let smartFoldersFetchResult = PHCollectionList.fetchCollectionLists(with:.smartFolder, subtype:.any, options:nil)
-		let smartFoldersCollections = PhotosData.items(for:smartFoldersFetchResult)
-		let smartFoldersData = PhotosData.folder(collections:smartFoldersCollections, fetchResult:smartFoldersFetchResult)
-
-		containers += PhotosContainer(
-			identifier: "Photos:SmartFolder",
-			icon: "folder",
-			name: NSLocalizedString("Smart Folders", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Container Name"),
-			data: smartFoldersData,
-			filter: filter)
+			containers += PhotosContainer(
+				identifier: "Photos:SmartAlbums",
+				icon: "folder",
+				name: NSLocalizedString("Smart Albums", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Container Name"),
+				data: smartAlbumsData,
+				filter: filter)
+		}
 		
 		return containers
 	}
