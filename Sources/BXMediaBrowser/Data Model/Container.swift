@@ -351,19 +351,24 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 	{
 		// Can be overridden by subclasses
 		
+		self.containers = []
+		self.objects = []
 		self.isLoaded = false
 		self.isLoading	= false
 	}
 	
 	
-	/// Invalidates any cached data and the loads this Container again
+	/// Invalidates any cached data and then loads this Container again
 	
 	func reload()
 	{
 		Task
 		{
 			guard await self.isLoaded else { return }
-			
+			guard self.isSelected else { return }
+
+			BXMediaBrowser.logDataModel.debug {"\(Self.self).\(#function) \(identifier)"}
+
 			await MainActor.run
 			{
 				self.invalidateCache()
