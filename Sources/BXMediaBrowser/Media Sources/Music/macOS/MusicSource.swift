@@ -85,12 +85,13 @@ public class MusicSource : Source, AccessControl
 		MusicSource.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
 
 		// Configure the Source
-		
-		var name = "Music"
-		if let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier:"com.apple.Music")
-		{
-			name = FileManager.default.displayName(atPath:url.path)
-		}
+
+		let name = NSLocalizedString("Music", tableName:"Music", bundle:.BXMediaBrowser, comment:"Source Name")
+
+//		if let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier:"com.apple.Music")
+//		{
+//			name = FileManager.default.displayName(atPath:url.path)
+//		}
 		
 		super.init(identifier:Self.identifier, icon:Self.icon, name:name, filter:MusicFilter())
 		
