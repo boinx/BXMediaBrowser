@@ -52,9 +52,9 @@ public struct MusicFilterBar : View
     {
 		HStack(spacing:10)
 		{
-			TextField(searchPlaceholder, text:self.$filter.searchString)
+			NativeSearchField(value:self.$filter.searchString, placeholderString:searchPlaceholder)
+				.strokeBorder()
 				.frame(maxWidth:300)
-				.textFieldStyle(RoundedBorderTextFieldStyle())
 
 			Spacer()
 

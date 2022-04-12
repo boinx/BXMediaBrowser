@@ -75,12 +75,9 @@ public struct UnsplashFilterBar : View
 		{
 			if let container = self.unsplashContainer, let saveHandler = self.saveHandler
 			{
-				TextField(searchPlaceholder, text:self.$searchString)
-				{
-					self.filter.searchString = self.searchString
-				}
-				.textFieldStyle(RoundedBorderTextFieldStyle())
-				.frame(minWidth:32, maxWidth:240)
+				NativeSearchField(value:self.$filter.searchString, placeholderString:searchPlaceholder, continuousUpdates:false)
+					.strokeBorder()
+					.frame(minWidth:32, maxWidth:240)
 				
 				BXImage(systemName:filter.orientation.icon).font(.system(size:17, weight:.regular))
 					.popupMenu(self.orientationMenuItems(value:self.$filter.orientation))

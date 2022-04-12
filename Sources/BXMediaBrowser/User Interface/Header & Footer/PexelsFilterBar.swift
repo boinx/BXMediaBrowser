@@ -108,12 +108,9 @@ public struct PexelsFilterBar : View
 		{
 			if let container = self.pexelsContainer, let saveHandler = container.saveHandler
 			{
-				TextField(searchPlaceholder, text:self.$searchString)
-				{
-					self.filter.searchString = self.searchString
-				}
-				.textFieldStyle(RoundedBorderTextFieldStyle())
-				.frame(maxWidth:300)
+				NativeSearchField(value:self.$filter.searchString, placeholderString:searchPlaceholder, continuousUpdates:false)
+					.strokeBorder()
+					.frame(minWidth:32, maxWidth:240)
 				
 				BXImage(systemName:filter.orientation.icon).font(.system(size:17, weight:.regular))
 					.popupMenu(self.orientationMenuItems(value:self.$filter.orientation))
