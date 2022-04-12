@@ -38,9 +38,13 @@ open class UnsplashObject : Object
 	
 	public init(with photo:UnsplashPhoto)
 	{
+		let format = NSLocalizedString("%@ on Unsplash", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Value String")
+		let username = photo.user.name ?? photo.user.username
+		let name = String(format:format, username)
+		
 		super.init(
 			identifier: "UnsplashSource:Photo:\(photo.id)",
-			name: photo.description ?? "",
+			name: name,
 			data: photo,
 			loadThumbnailHandler: Self.loadThumbnail,
 			loadMetadataHandler: Self.loadMetadata,
