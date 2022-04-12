@@ -37,10 +37,6 @@ public class PhotosSource : Source, AccessControl
 	
 	static let imageManager:PHImageManager = PHImageManager()
 	
-	/// This object is reponsible for reporting changes to the Photos library
-	
-	var observer = PhotosChangeObserver()
-	
 	
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -63,13 +59,6 @@ public class PhotosSource : Source, AccessControl
 		
 		self.loader = Loader(loadHandler:self.loadContainers)
 
-		// Make sure we can detect changes to the library
-	
-		observer.didChangeHandler =
-		{
-			[weak self] in self?.photoLibraryDidChange($0)
-		}
-		
 		// Request access to photo library if not available yet. Reload all containers once access has been granted.
 
 		Task
@@ -87,14 +76,6 @@ public class PhotosSource : Source, AccessControl
 			}
 		}
 	}
-
-
-	// When the contents of the Photos library change, then reload the top-level containers
-	
-    public func photoLibraryDidChange(_ change:PHChange)
-    {
-//		self.load()
-    }
 
 
 //----------------------------------------------------------------------------------------------------------------------
