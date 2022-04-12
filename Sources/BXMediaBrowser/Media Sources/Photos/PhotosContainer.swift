@@ -296,6 +296,8 @@ public class PhotosContainer : Container
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: - Change Detection & Reloading
+	
 	/// This object is responsible for detecting changes to the Photos.app library
 	
 	var observer = PhotosChangeObserver()
@@ -365,6 +367,36 @@ public class PhotosContainer : Container
     }
 
 
+	// For any Containers that are not currently selected, remember the reload request
+	
+	override func reload()
+	{
+		if self.isSelected
+		{
+			super.reload()
+		}
+		else
+		{
+			self.didRequestReload = true
+		}
+	}
+
+	private var didRequestReload = false
+	
+	
+	// Once a Container is selected again, reload it now it if was requested before
+	
+	override public var isSelected:Bool
+	{
+		didSet
+		{
+			if isSelected && didRequestReload
+			{
+				self.didRequestReload = false
+				self.reload()
+			}
+		}
+	}
 }
 
 
