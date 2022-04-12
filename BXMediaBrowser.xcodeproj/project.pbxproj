@@ -477,11 +477,11 @@
 		D01B490027CA1378008249C0 /* Media Sources */ = {
 			isa = PBXGroup;
 			children = (
-				D01B490127CA1378008249C0 /* Music */,
 				D01B490927CA1378008249C0 /* Folders */,
+				D01B491A27CA1378008249C0 /* Photos */,
+				D01B490127CA1378008249C0 /* Music */,
 				D01B491127CA1378008249C0 /* Unsplash */,
 				D0BAD0F827D37A4600B749FD /* Pexels */,
-				D01B491A27CA1378008249C0 /* Photos */,
 				D05F5F6727E8E840003735C6 /* Lightroom CC */,
 			);
 			path = "Media Sources";
