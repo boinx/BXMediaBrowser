@@ -62,11 +62,11 @@ public struct ObjectBrowserView : View
 		{
 			viewFactory.objectsHeaderView(for:container, uiState:uiState)
 				
-			Color.primary.opacity(0.15).frame(height:1) // Divider line
+			Color.primary.opacity(0.2).frame(height:1) // Divider line
 			
 			ObjectCollectionView(container:container, cellType:cellType, uiState:uiState)
 			
-			Color.primary.opacity(0.15).frame(height:1) // Divider line
+			Color.primary.opacity(0.2).frame(height:1) // Divider line
 
 			viewFactory.objectsFooterView(for:container, uiState:uiState)
 		}
