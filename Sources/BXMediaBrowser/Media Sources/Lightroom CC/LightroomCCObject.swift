@@ -63,10 +63,10 @@ open class LightroomCCObject : Object, AppLifecycleMixin
 		// Whenever the app is brought to the foreground (activated), we just assume that a change was made in
 		// Lightroom in the meantime. Perform necessary checks and reload this container if necessary.
 		
-		self.registerDidActivateHandler
-		{
-			[weak self] in self?.reloadIfNeeded()
-		}
+//		self.registerDidActivateHandler
+//		{
+//			[weak self] in self?.reloadIfNeeded()
+//		}
 	}
 
 	static func identifier(for asset:LightroomCC.Asset) -> String
