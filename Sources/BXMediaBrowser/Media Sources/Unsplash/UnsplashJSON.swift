@@ -94,7 +94,21 @@ extension UnsplashUser
 
     var profileURL: URL?
     {
-        return URL(string: "https://unsplash.com/@\(username)")
+		let str = "https://unsplash.com/@\(username)"
+		let appName = Unsplash.shared.appName
+		
+		guard var components = URLComponents(string:str) else { return nil }
+		
+		if !appName.isEmpty
+		{
+			components.queryItems =
+			[
+				URLQueryItem(name:"utm_source", value:appName),
+				URLQueryItem(name:"utm_medium", value:"referral"),
+			]
+		}
+		
+		return components.url
     }
     
     func openProfileURL()

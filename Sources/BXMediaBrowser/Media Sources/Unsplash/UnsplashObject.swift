@@ -112,17 +112,31 @@ open class UnsplashObject : Object
 		let openPhotoPage =
 		{
 			guard let str = links.html else { return }
-			guard let url = URL(string:str) else { return }
+			guard var components = URLComponents(string:str) else { return }
+			
+			let appName = Unsplash.shared.appName
+		
+			if !appName.isEmpty
+			{
+				components.queryItems =
+				[
+					URLQueryItem(name:"utm_source", value:appName),
+					URLQueryItem(name:"utm_medium", value:"referral"),
+				]
+			}
+			
+			guard let url = components.url else { return }
 			url.open()
 		}
 		
 		var array:[ObjectMetadataEntry] = []
-		
+		let format = NSLocalizedString("%@ on Unsplash", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Value String")
+
 		let photoLabel = NSLocalizedString("Photo", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Label")
-		array += ObjectMetadataEntry(label:photoLabel, value:"\(photo.id)", action:openPhotoPage)
+		array += ObjectMetadataEntry(label:photoLabel, value:String(format:format,"\(photo.id)"), action:openPhotoPage)
 
 		let photographerLabel = NSLocalizedString("Photographer", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Label")
-		array += ObjectMetadataEntry(label:photographerLabel, value:user.displayName, action:user.openProfileURL)
+		array += ObjectMetadataEntry(label:photographerLabel, value:String(format:format,user.displayName) , action:user.openProfileURL)
 		
 		let imageSizeLabel = NSLocalizedString("Image Size", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Label")
 		array += ObjectMetadataEntry(label:imageSizeLabel, value:"\(photo.width) × \(photo.height) Pixels")

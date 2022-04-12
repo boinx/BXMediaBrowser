@@ -37,17 +37,29 @@ public class Unsplash
 	
     private init() { }
     
-     /// Your application’s access key
+ 
+ //----------------------------------------------------------------------------------------------------------------------
+
+
+    /// Your application’s name as listed in the Unsplash developer portal
+	
+    public var appName = ""
+
+    /// Your application’s access key as listed in the Unsplash developer portal
 	
     public var accessKey = ""
 
-    /// Your application’s secret key
+    /// Your application’s secret key as listed in the Unsplash developer portal
 	
     public var secretKey = ""
 
     /// The Unsplash API url
 	
-    let apiURL = "https://api.unsplash.com/"
+//    let apiURL = "https://api.unsplash.com/"
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
 
 	/// A logger for Unsplash related code
 	
