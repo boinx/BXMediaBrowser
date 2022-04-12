@@ -37,6 +37,7 @@ public struct LightroomCCSourceView : View
 	
 	@ObservedObject var source:LightroomCCSource
 	@ObservedObject var lightroom:LightroomCC
+	@State private var isShowingPopover = false
 	
 	// Environment
 	
@@ -85,7 +86,7 @@ public struct LightroomCCSourceView : View
 					}
 					.padding(.leading,20)
 				}
-				else
+				else if lightroom.status == .loggedOut
 				{
 					Button(NSLocalizedString("Login", bundle:.BXMediaBrowser, comment:"Button Title"))
 					{
@@ -93,6 +94,20 @@ public struct LightroomCCSourceView : View
 					}
 					.centerAligned()
 					.padding()
+				}
+				else if lightroom.status == .currentlyUnavailable
+				{
+					Text(NSLocalizedString("Error.currentlyUnavailable", tableName:"LightroomCC", bundle:.BXMediaBrowser, comment:"Error Message"))
+						.controlSize(.small)
+						.opacity(0.5)
+						.padding(12)
+				}
+				else if lightroom.status == .invalidClientID
+				{
+					Text(NSLocalizedString("Error.invalidClientID", tableName:"LightroomCC", bundle:.BXMediaBrowser, comment:"Error Message"))
+						.controlSize(.small)
+						.opacity(0.5)
+						.padding(12)
 				}
 			})
 			
@@ -108,17 +123,37 @@ public struct LightroomCCSourceView : View
 			}
     }
     
+    /// This view displays login status or any error conditions
+	
     @ViewBuilder var statusView: some View
     {
 		if lightroom.status == .invalidClientID
 		{
 			BXImage(systemName:"exclamationmark.octagon.fill")
 				.foregroundColor(.red)
+				.onTapGesture { self.isShowingPopover = true }
+				.popover(isPresented: self.$isShowingPopover)
+				{
+					Text(NSLocalizedString("Error.invalidClientID", tableName:"LightroomCC", bundle:.BXMediaBrowser, comment:"Error Message"))
+						.controlSize(.small)
+						.lineLimit(nil)
+						.padding()
+						.frame(width:200)
+				}
 		}
 		else if lightroom.status == .currentlyUnavailable
 		{
 			BXImage(systemName:"exclamationmark.triangle.fill")
 				.foregroundColor(.yellow)
+				.onTapGesture { self.isShowingPopover = true }
+				.popover(isPresented: self.$isShowingPopover)
+				{
+					Text(NSLocalizedString("Error.currentlyUnavailable", tableName:"LightroomCC", bundle:.BXMediaBrowser, comment:"Error Message"))
+						.controlSize(.small)
+						.lineLimit(nil)
+						.padding()
+						.frame(width:200)
+				}
 		}
 		else if lightroom.status == .loggedOut
 		{
@@ -132,7 +167,8 @@ public struct LightroomCCSourceView : View
 		}
     }
     
-    
+    /// The account button has a dropdown menu that lets the user login or logout of the account
+	
     func accountButton() -> some View
     {
 		var items:[BXMenuItemSpec] = []
