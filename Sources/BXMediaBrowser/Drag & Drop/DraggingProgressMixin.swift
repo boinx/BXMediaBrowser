@@ -118,7 +118,7 @@ extension DraggingProgressMixin
 			BXProgressWindowController.shared.isIndeterminate = false
 			BXProgressWindowController.shared.value = fraction
 			
-			if !BXProgressWindowController.shared.isVisible && dt>1.0 && fraction<0.6
+			if !BXProgressWindowController.shared.isVisible && dt>0.5 //&& fraction<0.6
 			{
 				logDragAndDrop.debug {"\(Self.self).\(#function)  show progress window"}
 				BXProgressWindowController.shared.show()
