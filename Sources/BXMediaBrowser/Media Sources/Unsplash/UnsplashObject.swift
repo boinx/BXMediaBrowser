@@ -113,6 +113,12 @@ open class UnsplashObject : Object
 		let location = photo.location
 		let metadata = self.metadata ?? [:]
 		
+//		let openUnsplash =
+//		{
+//			guard let url = URL(string:"https://unsplash.com") else { return }
+//			url.open()
+//		}
+		
 		let openPhotoPage =
 		{
 			guard let str = links.html else { return }
@@ -132,15 +138,20 @@ open class UnsplashObject : Object
 			guard let url = components.url else { return }
 			url.open()
 		}
-		
+
 		var array:[ObjectMetadataEntry] = []
-		let format = NSLocalizedString("%@ on Unsplash", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Value String")
+//		let format = NSLocalizedString("%@ on Unsplash", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Value String")
+
+		let sourceLabel = NSLocalizedString("Source", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Label")
+		array += ObjectMetadataEntry(label:sourceLabel, value:"Unsplash.com")
 
 		let photoLabel = NSLocalizedString("Photo", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Label")
-		array += ObjectMetadataEntry(label:photoLabel, value:String(format:format,"\(photo.id)"), action:openPhotoPage)
+		array += ObjectMetadataEntry(label:photoLabel, value:"\(photo.id)", action:openPhotoPage)
+//		array += ObjectMetadataEntry(label:photoLabel, value:String(format:format,"\(photo.id)"), action:openPhotoPage)
 
 		let photographerLabel = NSLocalizedString("Photographer", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Label")
-		array += ObjectMetadataEntry(label:photographerLabel, value:String(format:format,user.displayName) , action:user.openProfileURL)
+		array += ObjectMetadataEntry(label:photographerLabel, value:user.displayName , action:user.openProfileURL)
+//		array += ObjectMetadataEntry(label:photographerLabel, value:String(format:format,user.displayName) , action:user.openProfileURL)
 		
 		let imageSizeLabel = NSLocalizedString("Image Size", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Label")
 		array += ObjectMetadataEntry(label:imageSizeLabel, value:"\(photo.width) × \(photo.height) Pixels")
