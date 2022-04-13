@@ -102,7 +102,7 @@ open class UnsplashObject : Object
 	}
 
 
-	/// Tranforms the metadata dictionary into an order list of human readable information (with optional click actions)
+	/// Transforms the metadata dictionary into an order list of human readable information (with optional click actions)
 	
 	@MainActor override open var localizedMetadata:[ObjectMetadataEntry]
     {
@@ -280,6 +280,10 @@ open class UnsplashObject : Object
 		let remoteURL = try remoteURL(for:identifier, data:data)
 		let tmpURL = try await URLSession.shared.downloadFile(from:remoteURL)
 		
+		// Don't forget to increment download count statistics, or Unsplash won't let your accessKey go into production!
+		
+		try? await self.incrementDownloadCount(for:data)
+		
 		// Rename the file
 		
 		let folderURL = tmpURL.deletingLastPathComponent()
@@ -302,10 +306,29 @@ open class UnsplashObject : Object
 		guard let remoteURL = photo.urls["regular"] else { return nil }
 		return remoteURL
     }
+
+
+	/// Sends a GET request to the download_location link
+
+	class func incrementDownloadCount(for data:Any) async throws
+	{
+		guard let photo = data as? UnsplashPhoto else { throw Error.downloadFileFailed }
+		guard let downloadLink = photo.links.download_location else { throw Error.downloadFileFailed }
+		guard let url = URL(string:downloadLink) else { throw Error.downloadFileFailed }
+		
+		// Build a request with the provided link
+		
+		let accessKey = Unsplash.shared.accessKey
+		let authorization = "Client-ID \(accessKey)"
+		var request = URLRequest(url:url)
+		request.httpMethod = "GET"
+		request.setValue(authorization, forHTTPHeaderField:"Authorization")
+		
+		// Send the GET request - this increments the download counter for this photo on the Unsplash server
+		
+		let _ = try await URLSession.shared.data(with:request)
+	}
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
-
-
-
