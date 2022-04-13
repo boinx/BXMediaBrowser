@@ -43,7 +43,7 @@ open class UnsplashObject : Object
 		let name = String(format:format, username)
 		
 		super.init(
-			identifier: "UnsplashSource:Photo:\(photo.id)",
+			identifier: "Unsplash:Photo:\(photo.id)",
 			name: name,
 			data: photo,
 			loadThumbnailHandler: Self.loadThumbnail,

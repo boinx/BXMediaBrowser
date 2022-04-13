@@ -36,7 +36,7 @@ open class UnsplashSource : Source, AccessControl
 	/// identifier, even if the class name changes due to refactoring, because the identifier
 	/// might be stored in a preferences file or user documents.
 	
-	static let identifier = "UnsplashSource:"
+	static let identifier = "Unsplash:"
 	
 	
 //----------------------------------------------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ open class UnsplashSource : Source, AccessControl
 		// Add Live Search
 		
 		let name = NSLocalizedString("Search", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Container Name")
-		containers += UnsplashContainer(identifier:"UnsplashSource:Search", icon:"magnifyingglass", name:name, filter:UnsplashFilter(), saveHandler:
+		containers += UnsplashContainer(identifier:"Unsplash:Search", icon:"magnifyingglass", name:name, filter:UnsplashFilter(), saveHandler:
 		{
 			[weak self] in self?.saveContainer($0)
 		})
@@ -129,7 +129,7 @@ open class UnsplashSource : Source, AccessControl
 		let searchString = filter.searchString
 		let orientation = filter.orientation.rawValue
 		let color = filter.color.rawValue
-		let identifier = "UnsplashSource:\(searchString)/\(orientation)/\(color)".replacingOccurrences(of:" ", with:"-")
+		let identifier = "Unsplash:\(searchString)/\(orientation)/\(color)".replacingOccurrences(of:" ", with:"-")
 		let name = UnsplashContainer.description(with:filter)
 		
 		return UnsplashContainer(identifier:identifier, icon:"rectangle.stack", name:name, filter:filter, removeHandler:
