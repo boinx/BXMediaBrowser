@@ -130,7 +130,6 @@ extension UnsplashUser
 
 public struct UnsplashLinks: Codable
 {
-	public let `self`: String?
 	public let html: String?
 	public let photos: String?
 	public let likes: String?

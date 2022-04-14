@@ -254,7 +254,6 @@ extension LightroomCC
 			let invalid:Bool?
 		}
 		
-		let `self`:Link?
 		let prev:Link?
 		let next:Link?
 		let asset:Link?
@@ -268,7 +267,6 @@ extension LightroomCC
 		
 		enum CodingKeys: String, CodingKey
 		{
-			case `self` = "self"
 			case prev = "prev"
 			case next = "next"
 			case asset = "/rels/asset"
