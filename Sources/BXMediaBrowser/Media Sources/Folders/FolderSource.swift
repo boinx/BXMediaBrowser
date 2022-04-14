@@ -114,6 +114,41 @@ open class FolderSource : Source, AccessControl
 		}
 	}
 
+
+	/// Adds a new top-level Container for the specified folder URL
+	
+	open func addTopLevelContainer(for _url:URL, filter:FolderFilter)
+	{
+		// Follow any symlinks/aliases in the URL to make sure we are not in ~/Library/Containers/…
+		
+		let url = _url.resolvingSymlinksInPath()
+		
+		// Only add if we have read access rights for this folder
+		
+		guard url.isReadable else { return }
+		
+		Task
+		{
+			// Ignore this url if we already have a top-level container with the same URL
+			
+			for container in await self.containers
+			{
+				guard let otherURL = container.data as? URL, url != otherURL else { return }
+			}
+			
+			// Not yet, so add a new Container
+			
+			await MainActor.run
+			{
+				guard let container = try? self.createContainer(for:url, filter:filter) else { return }
+				self.addContainer(container)
+			}
+		}
+	}
+	
+	
+	/// Removes the specified top-level Container again
+	
 	open func removeTopLevelContainer(_ container:Container)
 	{
 		let title = NSLocalizedString("Alert.title.removeFolder", bundle:.BXMediaBrowser, comment:"Alert Title")

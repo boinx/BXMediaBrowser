@@ -38,6 +38,21 @@ import UIKit
 
 open class AudioFolderSource : FolderSource
 {
+	/// Creates a new AudioFolderSource
+	
+	override public init(filter:FolderFilter = FolderFilter())
+	{
+		super.init(filter:filter)
+		
+		// Try to auto-add "Music" folder in user home directory
+		
+		if let url = FileManager.default.urls(for:.musicDirectory, in:.userDomainMask).first
+		{
+			self.addTopLevelContainer(for:url, filter:filter)
+		}
+	}
+
+
 	/// Creates a Container for the folder at the specified URL
 	
 	override open func createContainer(for url:URL, filter:FolderFilter) throws -> Container?

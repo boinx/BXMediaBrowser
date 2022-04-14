@@ -34,6 +34,21 @@ import Foundation
 
 open class VideoFolderSource : FolderSource
 {
+	/// Creates a new VideoFolderSource
+	
+	override public init(filter:FolderFilter = FolderFilter())
+	{
+		super.init(filter:filter)
+		
+		// Try to auto-add "Movies" folder in user home directory
+		
+		if let url = FileManager.default.urls(for:.moviesDirectory, in:.userDomainMask).first
+		{
+			self.addTopLevelContainer(for:url, filter:filter)
+		}
+	}
+
+
 	/// Creates a Container for the folder at the specified URL
 	
 	override open func createContainer(for url:URL, filter:FolderFilter) throws -> Container?
