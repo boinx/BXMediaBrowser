@@ -102,7 +102,7 @@ open class UnsplashObject : Object
 	}
 
 
-	/// Transforms the metadata dictionary into an order list of human readable information (with optional click actions)
+	/// Transforms the metadata dictionary into an ordered list of human readable information (with optional click actions)
 	
 	@MainActor override open var localizedMetadata:[ObjectMetadataEntry]
     {
@@ -112,12 +112,6 @@ open class UnsplashObject : Object
 		let exif = photo.exif
 		let location = photo.location
 		let metadata = self.metadata ?? [:]
-		
-//		let openUnsplash =
-//		{
-//			guard let url = URL(string:"https://unsplash.com") else { return }
-//			url.open()
-//		}
 		
 		let openPhotoPage =
 		{
@@ -140,18 +134,15 @@ open class UnsplashObject : Object
 		}
 
 		var array:[ObjectMetadataEntry] = []
-//		let format = NSLocalizedString("%@ on Unsplash", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Value String")
 
 		let sourceLabel = NSLocalizedString("Source", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Label")
 		array += ObjectMetadataEntry(label:sourceLabel, value:"Unsplash.com")
 
 		let photoLabel = NSLocalizedString("Photo", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Label")
 		array += ObjectMetadataEntry(label:photoLabel, value:"\(photo.id)", action:openPhotoPage)
-//		array += ObjectMetadataEntry(label:photoLabel, value:String(format:format,"\(photo.id)"), action:openPhotoPage)
 
 		let photographerLabel = NSLocalizedString("Photographer", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Label")
 		array += ObjectMetadataEntry(label:photographerLabel, value:user.displayName , action:user.openProfileURL)
-//		array += ObjectMetadataEntry(label:photographerLabel, value:String(format:format,user.displayName) , action:user.openProfileURL)
 		
 		let imageSizeLabel = NSLocalizedString("Image Size", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Label")
 		array += ObjectMetadataEntry(label:imageSizeLabel, value:"\(photo.width) × \(photo.height) Pixels")

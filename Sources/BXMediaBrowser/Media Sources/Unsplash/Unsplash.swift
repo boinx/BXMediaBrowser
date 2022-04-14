@@ -53,10 +53,6 @@ public class Unsplash
 	
     public var secretKey = ""
 
-    /// The Unsplash API url
-	
-//    let apiURL = "https://api.unsplash.com/"
-
 
 //----------------------------------------------------------------------------------------------------------------------
 
