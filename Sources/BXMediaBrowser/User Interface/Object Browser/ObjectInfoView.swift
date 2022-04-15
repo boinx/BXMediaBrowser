@@ -108,7 +108,7 @@ public struct ObjectInfoView : View
 //----------------------------------------------------------------------------------------------------------------------
 
 
-fileprivate extension View
+public extension View
 {
 	@ViewBuilder func onOptionalTapGesture(_ action:(()->Void)?) -> some View
 	{
@@ -124,7 +124,7 @@ fileprivate extension View
 }
 
 
-fileprivate extension Text
+public extension Text
 {
 	@ViewBuilder func linkStyle(_ action:(()->Void)?) -> some View
 	{

@@ -85,13 +85,24 @@ open class UnsplashObject : Object
 		Unsplash.log.verbose {"\(Self.self).\(#function) \(identifier)"}
 
 		guard let photo = data as? UnsplashPhoto else { throw Error.loadMetadataFailed }
-
+		let format = NSLocalizedString("%@ on Unsplash", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Value String")
+		let username = photo.user.name ?? photo.user.username
+		let copyright = String(format:format, username)
+		
 		var metadata:[String:Any] = [:]
 		
 		metadata[.widthKey] = photo.width
 		metadata[.heightKey] = photo.height
 		metadata[.descriptionKey] = photo.description
 		metadata[.creationDate] = photo.created_at
+		metadata[.authorsKey] = [username]
+		metadata[.copyrightKey] = copyright
+	
+		if let url = photo.photoPageURL(for:Unsplash.shared.appName)
+		{
+			metadata[.whereFromsKey] = [url]
+		}
+		
 		metadata["created_at"] = photo.created_at
 		metadata["location"] = photo.location
 		metadata["urls"] = photo.urls
@@ -108,28 +119,13 @@ open class UnsplashObject : Object
     {
 		guard let photo = data as? UnsplashPhoto else { return [] }
 		let user = photo.user
-		let links = photo.links
 		let exif = photo.exif
 		let location = photo.location
 		let metadata = self.metadata ?? [:]
 		
 		let openPhotoPage =
 		{
-			guard let str = links.html else { return }
-			guard var components = URLComponents(string:str) else { return }
-			
-			let appName = Unsplash.shared.appName
-		
-			if !appName.isEmpty
-			{
-				components.queryItems =
-				[
-					URLQueryItem(name:"utm_source", value:appName),
-					URLQueryItem(name:"utm_medium", value:"referral"),
-				]
-			}
-			
-			guard let url = components.url else { return }
+			guard let url = photo.photoPageURL(for:Unsplash.shared.appName) else { return }
 			url.open()
 		}
 

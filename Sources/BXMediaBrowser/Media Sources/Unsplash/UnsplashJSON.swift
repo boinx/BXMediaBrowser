@@ -56,6 +56,27 @@ public struct UnsplashPhoto : Codable
 }
 
 
+public extension UnsplashPhoto
+{
+	func photoPageURL(for appName:String?) -> URL?
+	{
+		guard let str = links.html else { return nil }
+		guard var components = URLComponents(string:str) else { return nil }
+			
+		if let appName = appName, !appName.isEmpty
+		{
+			components.queryItems =
+			[
+				URLQueryItem(name:"utm_source", value:appName),
+				URLQueryItem(name:"utm_medium", value:"referral"),
+			]
+		}
+		
+		return components.url
+	}
+}
+
+
 //----------------------------------------------------------------------------------------------------------------------
 
 
