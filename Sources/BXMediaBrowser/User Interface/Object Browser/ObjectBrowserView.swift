@@ -61,6 +61,7 @@ public struct ObjectBrowserView : View
 		return VStack(spacing:0)
 		{
 			viewFactory.objectsHeaderView(for:container, uiState:uiState)
+				.id(headerID)
 				
 			Color.primary.opacity(0.2).frame(height:1) // Divider line
 			
@@ -69,8 +70,19 @@ public struct ObjectBrowserView : View
 			Color.primary.opacity(0.2).frame(height:1) // Divider line
 
 			viewFactory.objectsFooterView(for:container, uiState:uiState)
+				.id(footerID)
 		}
 		.frame(minWidth:240, maxWidth:.infinity)
+   }
+   
+   var headerID:String
+   {
+		"ObjectBrowserView.header." + (container?.identifier ?? "")
+   }
+   
+   var footerID:String
+   {
+		"ObjectBrowserView.footer." + (container?.identifier ?? "")
    }
 }
 
