@@ -50,13 +50,15 @@ open class Library : ObservableObject, StateSaving
 		{
 			selectedContainer?.isSelected = false
 			selectedContainer?.purgeCachedDataOfObjects()
+			
+			newValue?.isSelected = true
+			newValue?.cancelPurgeCachedDataOfObjects()
 		}
 		
 		didSet
 		{
-			selectedContainer?.isSelected = true
+			BXMediaBrowser.logDataModel.debug {"\(Self.self).\(#function) = \(selectedContainer?.identifier ?? "nil")"}
 			selectedContainer?.validateSortType()
-			selectedContainer?.cancelPurgeCachedDataOfObjects()
 		}
 	}
 	
