@@ -68,6 +68,8 @@ public extension String
 	static var genreKey = kMDItemMusicalGenre as String
 	static var tempoKey = kMDItemTempo as String
 	static var whereFromsKey = kMDItemWhereFroms as String
+	static var copyrightKey = kMDItemCopyright as String
+	
 }
 
 
