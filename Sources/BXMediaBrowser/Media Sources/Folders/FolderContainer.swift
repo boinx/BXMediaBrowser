@@ -28,6 +28,10 @@ import SwiftUI
 import QuickLook
 import UniformTypeIdentifiers
 
+#if os(macOS)
+import AppKit // for NSWorkspace
+#endif
+
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -70,6 +74,19 @@ open class FolderContainer : Container
 		return folderURL.hasSubfolders
 	}
 	
+
+	/// Returns the list of allowed sort Kinds for this Container
+		
+	override open var allowedSortTypes:[Object.Filter.SortType]
+	{
+		[.alphabetical,.creationDate,.rating]
+	}
+
+	
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - Loading
 	
 	/// Loads the (shallow) contents of this folder
 	
@@ -90,23 +107,12 @@ open class FolderContainer : Container
 		
 		// Get the folder contents
 		
-		var filenames = try self.filenames(in:folderURL)
+		let filenames = try self.filenames(in:folderURL)
 		
-		guard !Task.isCancelled else { throw Error.loadContentsCancelled }
-
-		// First round of filtering by search string
-		
-		let searchString = filter.searchString.lowercased()
-		
-		if !searchString.isEmpty
-		{
-			filenames = filenames.filter { $0.contains(searchString) }
-		}
-		
-		guard !Task.isCancelled else { throw Error.loadContentsCancelled }
-
 		// Convert to file URLs
 		
+		guard !Task.isCancelled else { throw Error.loadContentsCancelled }
+
 		let urls = filenames.compactMap
 		{
 			(filename:String) -> URL? in
@@ -135,7 +141,7 @@ open class FolderContainer : Container
 			
 			// If a file meets the filter criteria create an Object
 			
-			else
+			else if let url = Self.filter(url, with:filter)
 			{
 				if let object = try? Self.createObject(for:url, filter:filter)
 				{
@@ -149,6 +155,8 @@ open class FolderContainer : Container
 		
 		// Sort according to specified sort order
 		
+		guard !Task.isCancelled else { throw Error.loadContentsCancelled }
+
 		filter.sort(&objects)
 		
 		// Return contents
@@ -175,6 +183,18 @@ open class FolderContainer : Container
 	}
 	
 	
+	/// Check if the specified URL meets the filter criteria. Returns the URL itself if yes, or nil if not.
+	
+	open class func filter(_ url:URL, with filter:FolderFilter) -> URL?
+	{
+		let searchString = filter.searchString.lowercased()
+		guard !searchString.isEmpty else { return url }
+		
+		let filename = url.lastPathComponent.lowercased()
+		return filename.contains(searchString) ? url : nil
+	}
+	
+	
 	/// Creates a Container (of same type) for the folder at the specified URL.
 	///
 	/// Subclasses can override this function to filter out some directories.
@@ -193,11 +213,6 @@ open class FolderContainer : Container
 	
 	open class func createObject(for url:URL, filter:FolderFilter) throws -> Object?
 	{
-		// Check if file exists
-		
-		guard url.exists else { throw Container.Error.notFound }
-		guard !url.isDirectory else { throw Container.Error.notFound }
-		
 		// Depending on file UTI create different Object subclass instances
 		
 		if url.isImageFile
@@ -219,6 +234,11 @@ open class FolderContainer : Container
 	}
 	
 	
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - Actions
+	
 	/// Reveals the folder in the Finder
 	
 	open func revealInFinder()
@@ -231,15 +251,6 @@ open class FolderContainer : Container
 		#endif
 	}
 
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	// MARK: - Sorting
-	
-	/// Returns the list of allowed sort Kinds for this Container
-		
-	override open var allowedSortTypes:[Object.Filter.SortType] { [.alphabetical,.creationDate,.rating] }
 }
 
 

@@ -83,10 +83,59 @@ open class AudioFolderSource : FolderSource
 
 open class AudioFolderContainer : FolderContainer
 {
+	// In addition to the filename, this function also searches various audio metadata fields
+	
+	override open class func filter(_ url:URL, with filter:FolderFilter) -> URL?
+	{
+		guard url.isAudioFile else { return nil }
+
+		let searchString = filter.searchString.lowercased()
+		guard !searchString.isEmpty else { return url }
+		
+		let filename = url.lastPathComponent.lowercased()
+		if filename.contains(searchString) { return url }
+
+		let audioMetadata = url.audioMetadata
+
+		if let title = audioMetadata[kMDItemTitle] as? String, title.lowercased().contains(searchString)
+		{
+			return url
+		}
+
+		if let authors = audioMetadata[kMDItemAuthors] as? [String]
+		{
+			for author in authors
+			{
+				if author.lowercased().contains(searchString) { return url }
+			}
+		}
+
+		if let composer = audioMetadata[kMDItemComposer] as? String, composer.lowercased().contains(searchString)
+		{
+			return url
+		}
+		
+		if let album = audioMetadata[kMDItemAlbum] as? String, album.lowercased().contains(searchString)
+		{
+			return url
+		}
+		
+		if let genre = audioMetadata[kMDItemMusicalGenre] as? String, genre.lowercased().contains(searchString)
+		{
+			return url
+		}
+		
+		if let copyright = audioMetadata[kMDItemCopyright] as? String, copyright.lowercased().contains(searchString)
+		{
+			return url
+		}
+		
+		return nil
+	}
+
+
 	override open class func createObject(for url:URL, filter:FolderFilter) throws -> Object?
 	{
-		guard url.exists else { throw Object.Error.notFound }
-		guard url.isAudioFile else { return nil }
 		return AudioFile(url:url)
 	}
 
