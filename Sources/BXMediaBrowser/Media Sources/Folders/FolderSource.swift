@@ -169,6 +169,26 @@ open class FolderSource : Source, AccessControl
 		return didAdd
 	}
 	
+	open func requestReadAccessRights(for folder:URL) -> URL?
+	{
+		if folder.isReadable { return folder }
+		
+		let name = folder.lastPathComponent
+		let format = NSLocalizedString("Panel.message", bundle:.BXMediaBrowser, comment:"Panel Message")
+		let allow = NSLocalizedString("Allow", bundle:.BXMediaBrowser, comment:"Button Title")
+		let message = String(format:format, name)
+		
+		var url:URL? = nil
+		
+		NSOpenPanel.presentModal(title:message, message:message, buttonLabel:allow, directoryURL:folder, canChooseFiles:false, canChooseDirectories:true, allowsMultipleSelection:false)
+		{
+			urls in
+			url = urls.first
+		}
+		
+		return url
+	}
+	
 	
 //----------------------------------------------------------------------------------------------------------------------
 

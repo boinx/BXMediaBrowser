@@ -55,11 +55,23 @@ open class AudioFolderSource : FolderSource
 	{
 		guard !didAddDefaultContainers else { return [] }
 		
-		guard let url = FileManager.default.urls(for:.musicDirectory, in:.userDomainMask).first?.resolvingSymlinksInPath() else { return [] }
-		guard url.isReadable else { return [] }
-		guard let container = try? self.createContainer(for:url, filter:filter) else { return [] }
+		var containers:[Container] = []
+		
+		// ~/Music
+		
+		if let url = FileManager.default.urls(for:.musicDirectory, in:.userDomainMask).first?.resolvingSymlinksInPath(), url.isReadable
+		{
+			containers += try? self.createContainer(for:url, filter:filter)
+		}
+		
+		// /Library/Audio/Apple Loops/Apple
+		
+		if let url = self.requestReadAccessRights(for:URL(fileURLWithPath:"/Library/Audio/Apple Loops/Apple"))
+		{
+			containers += try? self.createContainer(for:url, filter:filter)
+		}
 
-		return [container]
+		return containers
 	}
 }
 
