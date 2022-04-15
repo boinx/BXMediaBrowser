@@ -27,7 +27,7 @@ import BXSwiftUtils
 import Foundation
 
 #if os(macOS)
-import AppKit
+import AppKit	// For NSWorkspace
 #else
 import UIKit
 #endif
@@ -38,21 +38,6 @@ import UIKit
 
 open class AudioFolderSource : FolderSource
 {
-	/// Creates a new AudioFolderSource
-	
-	override public init(filter:FolderFilter = FolderFilter())
-	{
-		super.init(filter:filter)
-		
-		// Try to auto-add "Music" folder in user home directory
-		
-		if let url = FileManager.default.urls(for:.musicDirectory, in:.userDomainMask).first
-		{
-			self.addTopLevelContainer(for:url, filter:filter)
-		}
-	}
-
-
 	/// Creates a Container for the folder at the specified URL
 	
 	override open func createContainer(for url:URL, filter:FolderFilter) throws -> Container?
@@ -61,6 +46,20 @@ open class AudioFolderSource : FolderSource
 		{
 			[weak self] in self?.removeTopLevelContainer($0)
 		}
+	}
+
+
+	/// Returns the user "Music" folder, but only the first time around
+	
+	override open func defaultContainers(with filter:FolderFilter) -> [Container]
+	{
+		guard !didAddDefaultContainers else { return [] }
+		
+		guard let url = FileManager.default.urls(for:.musicDirectory, in:.userDomainMask).first?.resolvingSymlinksInPath() else { return [] }
+		guard url.isReadable else { return [] }
+		guard let container = try? self.createContainer(for:url, filter:filter) else { return [] }
+
+		return [container]
 	}
 }
 
@@ -114,9 +113,17 @@ open class AudioFile : FolderObject
 		guard let url = data as? URL else { throw Error.loadThumbnailFailed }
 		guard url.exists else { throw Error.loadThumbnailFailed }
 		
+		#if os(macOS)
+		
 		let image = NSWorkspace.shared.icon(forFile:url.path)
 		guard let thumbnail = image.cgImage(forProposedRect:nil, context:nil, hints:nil) else { throw Error.loadThumbnailFailed }
 		return thumbnail
+		
+		#else
+		
+		#warning("TODO: implement")
+		
+		#endif
 	}
 
 

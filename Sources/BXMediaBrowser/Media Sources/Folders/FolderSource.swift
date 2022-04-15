@@ -45,6 +45,7 @@ open class FolderSource : Source, AccessControl
 	public init(filter:FolderFilter = FolderFilter())
 	{
 		FolderSource.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
+
 		super.init(identifier:Self.identifier, name:"Finder", filter:filter)
 		self.loader = Loader(loadHandler:self.loadContainers)
 	}
@@ -78,11 +79,13 @@ open class FolderSource : Source, AccessControl
 		
 		guard let filter = filter as? FolderFilter else { throw Container.Error.loadContentsFailed }
 		
+		// Add initial set of default containers
+		
+		var containers:[Container] = self.defaultContainers(with:filter)
+		
 		// Load stored bookmarks from state. Convert each bookmark to a folder url. If the folder
 		// still exists, then create a FolderContainer for it.
 
-		var containers:[Container] = []
-		
 		if let bookmarks = sourceState?[Self.bookmarksKey] as? [Data]
 		{
 			let folderURLs = bookmarks
@@ -92,11 +95,12 @@ open class FolderSource : Source, AccessControl
 				
 			for folderURL in folderURLs
 			{
+				guard !isDuplicate(folderURL, in:containers) else { continue }
 				let container = try self.createContainer(for:folderURL, filter:filter)
 				containers += container
 			}
 		}
-
+		
 		return containers
 	}
 
@@ -115,38 +119,6 @@ open class FolderSource : Source, AccessControl
 	}
 
 
-	/// Adds a new top-level Container for the specified folder URL
-	
-	open func addTopLevelContainer(for _url:URL, filter:FolderFilter)
-	{
-		// Follow any symlinks/aliases in the URL to make sure we are not in ~/Library/Containers/…
-		
-		let url = _url.resolvingSymlinksInPath()
-		
-		// Only add if we have read access rights for this folder
-		
-		guard url.isReadable else { return }
-		
-		Task
-		{
-			// Ignore this url if we already have a top-level container with the same URL
-			
-			for container in await self.containers
-			{
-				guard let otherURL = container.data as? URL, url != otherURL else { return }
-			}
-			
-			// Not yet, so add a new Container
-			
-			await MainActor.run
-			{
-				guard let container = try? self.createContainer(for:url, filter:filter) else { return }
-				self.addContainer(container)
-			}
-		}
-	}
-	
-	
 	/// Removes the specified top-level Container again
 	
 	open func removeTopLevelContainer(_ container:Container)
@@ -160,6 +132,41 @@ open class FolderSource : Source, AccessControl
 		{
 			[weak self] in self?.removeContainer(container)
 		}
+	}
+	
+	
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	/// Returns true if there is already a Container with the specified URL
+	
+	open func isDuplicate(_ url:URL, in containers:[Container]) -> Bool
+	{
+		for container in containers
+		{
+			if let otherURL = container.data as? URL, url == otherURL { return true }
+		}
+		
+		return false
+	}
+	
+	
+	// To be overridden by subclasses
+	
+	open func defaultContainers(with filter:FolderFilter) -> [Container]
+	{
+		return []
+	}
+
+
+	/// Return true if the default containers have been installed
+	
+	open var didAddDefaultContainers:Bool
+	{
+		let key = "BXMediaBrowser-\(Self.self)-didAddDefaultContainers"
+		let didAdd = UserDefaults.standard.bool(forKey:key)
+		UserDefaults.standard.set(true, forKey:key)
+		return didAdd
 	}
 	
 	

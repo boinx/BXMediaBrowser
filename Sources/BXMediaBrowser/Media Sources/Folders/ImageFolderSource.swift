@@ -34,21 +34,6 @@ import QuartzCore
 
 open class ImageFolderSource : FolderSource
 {
-	/// Creates a new ImageFolderSource
-	
-	override public init(filter:FolderFilter = FolderFilter())
-	{
-		super.init(filter:filter)
-		
-		// Try to auto-add "Pictures" folder in user home directory
-		
-		if let url = FileManager.default.urls(for:.picturesDirectory, in:.userDomainMask).first
-		{
-			self.addTopLevelContainer(for:url, filter:filter)
-		}
-	}
-
-
 	/// Creates a Container for the folder at the specified URL
 	
 	override open func createContainer(for url:URL, filter:FolderFilter) throws -> Container?
@@ -59,6 +44,20 @@ open class ImageFolderSource : FolderSource
 		}
 		
 		return container
+	}
+
+
+	/// Returns the user "Pictures" folder, but only the first time around
+	
+	override open func defaultContainers(with filter:FolderFilter) -> [Container]
+	{
+		guard !didAddDefaultContainers else { return [] }
+		
+		guard let url = FileManager.default.urls(for:.picturesDirectory, in:.userDomainMask).first?.resolvingSymlinksInPath() else { return [] }
+		guard url.isReadable else { return [] }
+		guard let container = try? self.createContainer(for:url, filter:filter) else { return [] }
+
+		return [container]
 	}
 }
 
