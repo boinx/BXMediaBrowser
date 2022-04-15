@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="20037" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="20037"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -17,14 +17,13 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customView id="HUS-pi-5U0" customClass="ImageThumbnailView" customModule="BXMediaBrowser">
+        <customView translatesAutoresizingMaskIntoConstraints="NO" id="HUS-pi-5U0" customClass="ImageThumbnailView" customModule="BXMediaBrowser">
             <rect key="frame" x="0.0" y="0.0" width="120" height="96"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Rdh-yM-tEI">
                     <rect key="frame" x="-2" y="0.0" width="124" height="14"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="14" id="qJz-aC-yDY"/>
+                        <constraint firstAttribute="height" priority="999" constant="14" id="qJz-aC-yDY"/>
                     </constraints>
                     <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="center" title="Label" id="d5C-U7-nd7">
                         <font key="font" metaFont="smallSystem"/>
@@ -55,7 +54,7 @@
                 <constraint firstItem="BQT-g2-Zqo" firstAttribute="top" secondItem="HUS-pi-5U0" secondAttribute="top" id="AJ3-jD-3Fb"/>
                 <constraint firstAttribute="trailing" secondItem="BQT-g2-Zqo" secondAttribute="trailing" id="KM8-Mv-oGS"/>
                 <constraint firstItem="BQT-g2-Zqo" firstAttribute="leading" secondItem="HUS-pi-5U0" secondAttribute="leading" id="KaJ-FX-VqM"/>
-                <constraint firstItem="Rdh-yM-tEI" firstAttribute="top" secondItem="BQT-g2-Zqo" secondAttribute="bottom" constant="2" id="NaN-ID-k0f"/>
+                <constraint firstItem="Rdh-yM-tEI" firstAttribute="top" secondItem="BQT-g2-Zqo" secondAttribute="bottom" priority="999" constant="2" id="NaN-ID-k0f"/>
                 <constraint firstAttribute="trailing" secondItem="Rdh-yM-tEI" secondAttribute="trailing" id="PXb-CF-MYz"/>
                 <constraint firstItem="Rdh-yM-tEI" firstAttribute="leading" secondItem="HUS-pi-5U0" secondAttribute="leading" id="Qu8-OJ-dpb"/>
                 <constraint firstAttribute="bottom" secondItem="Rdh-yM-tEI" secondAttribute="bottom" id="kwG-cb-9RD"/>
