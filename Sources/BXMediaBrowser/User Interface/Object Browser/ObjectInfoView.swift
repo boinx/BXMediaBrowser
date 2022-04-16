@@ -70,37 +70,55 @@ public struct ObjectInfoView : View
 	
 	public var body: some View
     {
-		BXGrid(columnCount:2, spacing:CGSize(8,4))
+		LocalizedMetadataView(with:object.localizedMetadata)
+    }
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+public struct LocalizedMetadataView : View
+{
+	// Model
+	
+	var localizedMetadata:[ObjectMetadataEntry]
+	
+	// Init
+	
+	public init(with localizedMetadata:[ObjectMetadataEntry])
+	{
+		self.localizedMetadata = localizedMetadata
+	}
+	
+	// View
+	
+	public var body: some View
+    {
+		BXLabelGroup
 		{
-			ForEach(object.localizedMetadata)
+			VStack(alignment:.leading, spacing:4)
 			{
-				entry in
-				
-				BXGridRow
+				ForEach(localizedMetadata)
 				{
-					BXGridCell(0, alignment:.trailing)
-					{
-						Text(entry.label)
-							.bold()
-					}
-					
-					BXGridCell(1, alignment:.leading)
+					entry in
+
+					BXLabelView(label:entry.label, alignment:.trailing)
 					{
 						Text(entry.value)
-							.linkStyle(entry.action)
+							.metadataValueStyle(for:entry.action)
 							.onOptionalTapGesture(entry.action)
 							.lineLimit(nil)
-//							.border(Color.green)
-							.frame(minWidth:20, idealWidth:60, maxWidth:180, alignment:.leading)
+							.fixedSize(horizontal:false, vertical:true)
 					}
-//					.frame(minWidth:20, idealWidth:60, maxWidth:180, alignment:.leading)
-//					.border(Color.red)
 				}
 			}
 		}
 		.controlSize(.small)
 		.foregroundColor(.primary)
-		.padding(12)
+		.frame(maxWidth:280)
+		.fixedSize()
+		.padding(16)
     }
 }
 
@@ -137,6 +155,19 @@ public extension Text
 		else
 		{
 			self
+		}
+	}
+	
+	
+	@ViewBuilder func metadataValueStyle(for action:(()->Void)?) -> some View
+	{
+		if action != nil
+		{
+			self.linkStyle(action)
+		}
+		else
+		{
+			self.opacity(0.7)
 		}
 	}
 }
