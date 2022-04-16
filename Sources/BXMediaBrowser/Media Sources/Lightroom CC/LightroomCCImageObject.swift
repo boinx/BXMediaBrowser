@@ -233,6 +233,8 @@ open class LightroomCCImageObject : LightroomCCObject
 		let folderURL = tmpURL.deletingLastPathComponent()
 		let filename = self.localFileName(for:identifier, data:data)
 		let localURL = folderURL.appendingPathComponent(filename)
+
+		try? FileManager.default.removeItem(at:localURL)
 		try FileManager.default.moveItem(at:tmpURL, to:localURL)
 
 		// Register in TempFilePool
