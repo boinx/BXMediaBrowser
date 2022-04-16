@@ -98,7 +98,7 @@ open class UnsplashObject : Object
 		metadata[.authorsKey] = [username]
 		metadata[.copyrightKey] = copyright
 	
-		if let url = photo.photoPageURL(for:Unsplash.shared.appName)
+		if let url = photo.photoPageURL(for:nil)
 		{
 			metadata[.whereFromsKey] = [url.absoluteString]
 		}
