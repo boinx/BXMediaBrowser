@@ -97,8 +97,7 @@ open class PexelsVideoObject : Object
 		metadata[.durationKey] = [video.duration]
 		metadata[.whereFromsKey] = [video.url]
 		metadata[.authorsKey] = [video.user.name]
-		metadata["user"] = video.user.name
-		metadata["user_url"] = video.user.url
+		metadata[.authorAddressesKey] = [video.user.url]
 		
 		return metadata
 	}
@@ -123,7 +122,7 @@ open class PexelsVideoObject : Object
 		var array:[ObjectMetadataEntry] = []
 		
 		let photoLabel = NSLocalizedString("Video", tableName:"Pexels", bundle:.BXMediaBrowser, comment:"Label")
-		array += ObjectMetadataEntry(label:photoLabel, value:"Video", action:openPhotoPage)
+		array += ObjectMetadataEntry(label:photoLabel, value:"Pexels.com", action:openPhotoPage)
 
 		let photographerLabel = NSLocalizedString("Photographer", tableName:"Pexels", bundle:.BXMediaBrowser, comment:"Label")
 		array += ObjectMetadataEntry(label:photographerLabel, value:video.user.name, action:openUserPage)

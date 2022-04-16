@@ -93,10 +93,12 @@ open class PexelsPhotoObject : Object
 		metadata[.descriptionKey] = photo.alt
 		metadata[.authorsKey] = [photo.photographer]
 		metadata[.whereFromsKey] = [photo.url]
-		metadata["photographer"] = photo.photographer
-		metadata["photographer_url"] = photo.photographer_url
-		metadata["url"] = photo.url
-		metadata["photo_src_original"] = photo.src.original
+		metadata[.authorAddressesKey] = [photo.photographer_url]
+
+//		metadata["photographer"] = photo.photographer
+//		metadata["photographer_url"] = photo.photographer_url
+//		metadata["url"] = photo.url
+//		metadata["photo_src_original"] = photo.src.original
 		
 		return metadata
 	}
