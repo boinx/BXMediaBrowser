@@ -94,20 +94,27 @@ open class UnsplashObject : Object
 		metadata[.widthKey] = photo.width
 		metadata[.heightKey] = photo.height
 		metadata[.descriptionKey] = photo.description
-		metadata[.creationDate] = photo.created_at
+		metadata[.creationDateKey] = photo.created_at
 		metadata[.authorsKey] = [username]
 		metadata[.copyrightKey] = copyright
 	
 		if let url = photo.photoPageURL(for:Unsplash.shared.appName)
 		{
-			metadata[.whereFromsKey] = [url]
+			metadata[.whereFromsKey] = [url.absoluteString]
 		}
 		
-		metadata["created_at"] = photo.created_at
-		metadata["location"] = photo.location
-		metadata["urls"] = photo.urls
-		metadata["public_domain"] = photo.public_domain
-		metadata["user"] = photo.user
+		if let url = photo.user.profileURL
+		{
+			metadata[.authorAddressesKey] = [url.absoluteString]
+		}
+		
+		if let exif = photo.exif
+		{
+			metadata[.exifApertureKey] = exif.aperture
+			metadata[.exifExposureTimeKey] = exif.exposure_time
+			metadata[.exifFocalLengthKey] = exif.focal_length
+			metadata[.exifISOSpeedKey] = exif.iso
+		}
 		
 		return metadata
 	}
