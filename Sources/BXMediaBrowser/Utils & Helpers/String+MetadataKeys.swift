@@ -78,6 +78,10 @@ public extension String
 	static var composerKey = kMDItemComposer as String
 	static var genreKey = kMDItemMusicalGenre as String
 	static var tempoKey = kMDItemTempo as String
+	static var keySignatureKey = kMDItemKeySignature as String
+	static var timeSignatureKey = kMDItemTimeSignature as String
+	static var audioSampleRateKey = kMDItemAudioSampleRate as String
+	static var audioChannelCountKey = kMDItemAudioChannelCount as String
 }
 
 
