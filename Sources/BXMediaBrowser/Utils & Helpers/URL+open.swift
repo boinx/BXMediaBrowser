@@ -41,7 +41,14 @@ extension URL
 	{
 		#if os(macOS)
 		
-		NSWorkspace.shared.open(self)
+		if self.isFileURL
+		{
+			self.reveal()
+		}
+		else
+		{
+			NSWorkspace.shared.open(self)
+		}
 		
 		#else
 		
