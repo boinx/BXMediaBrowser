@@ -42,9 +42,8 @@ open class PexelsVideoObject : Object
 	
 	public required init(with video:Pexels.Video)
 	{
-		#warning("TODO: is there any info we can use to generate a better name?")
-		
-		let name = NSLocalizedString("Video", tableName:"Pexels", bundle:.BXMediaBrowser, comment:"Label") + " \(video.id)"
+		let format = NSLocalizedString("%@ on Pexels", tableName:"Pexels", bundle:.BXMediaBrowser, comment:"Label")
+		let name = String(format:format, video.user.name)
 		
 		super.init(
 			identifier: "PexelsSource:Video:\(video.id)",
