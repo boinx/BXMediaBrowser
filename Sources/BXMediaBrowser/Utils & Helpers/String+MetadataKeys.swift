@@ -35,27 +35,38 @@ public extension String
 	
 	static var fileSizeKey = kMDItemFSSize as String
 	static var kindKey = kMDItemKind as String
-	static var descriptionKey = "description"
-	static var creationDateKey = "creationDate"
-	static var modificationDateKey = "modificationDate"
-	
+	static var descriptionKey = kMDItemDescription as String //"description"
+	static var creationDateKey = kMDItemFSCreationDate as String //"creationDate"
+	static var modificationDateKey = kMDItemFSContentChangeDate as String //"modificationDate"
+	static var whereFromsKey = kMDItemWhereFroms as String
+	static var copyrightKey = kMDItemCopyright as String
+	static var authorAddressesKey = kMDItemAuthorAddresses as String
+
 	// Image metadata
 	
 	static var widthKey = kMDItemPixelWidth as String
 	static var heightKey = kMDItemPixelHeight as String
-	static var profileNameKey = "ProfileName"
-	static var modelKey = "Model"
+	static var profileNameKey = kMDItemProfileName as String //"ProfileName"
+	static var modelKey = kMDItemColorSpace as String //"Model"
 
-	static var exifApertureKey = "ApertureValue"
-	static var exifExposureTimeKey = "ExposureTime"
-	static var exifFocalLengthKey = "FocalLenIn35mmFilm"
+	static var exifApertureKey = kMDItemAperture as String //"ApertureValue"
+	static var exifExposureTimeKey = kMDItemExposureTimeSeconds as String //"ExposureTime"
+	static var exifFocalLengthKey = kMDItemFocalLength35mm as String //"FocalLenIn35mmFilm"
+	static var exifISOSpeedKey = kMDItemISOSpeed as String //"FocalLenIn35mmFilm"
 	static var exifCaptureDateKey = "DateTimeOriginal"
-	
+
+	static var alititudeKey = kMDItemAltitude as String
+	static var latitudeKey = kMDItemLatitude as String
+	static var longitudeKey = kMDItemLongitude as String
+	static var locationNameKey = kMDItemNamedLocation as String
+
 	// Video metadata
 	
 	static var codecsKey = kMDItemCodecs as String
 	static var videoCodecKey = "videoCodec"
 	static var audioCodecKey = "audioCodec"
+	static var videoBitRateKey = kMDItemVideoBitRate as String
+	static var audioBitRateKey = kMDItemAudioBitRate as String
 	static var fpsKey = "fps"
 
 	// Audio metadata
@@ -67,9 +78,6 @@ public extension String
 	static var composerKey = kMDItemComposer as String
 	static var genreKey = kMDItemMusicalGenre as String
 	static var tempoKey = kMDItemTempo as String
-	static var whereFromsKey = kMDItemWhereFroms as String
-	static var copyrightKey = kMDItemCopyright as String
-	
 }
 
 
