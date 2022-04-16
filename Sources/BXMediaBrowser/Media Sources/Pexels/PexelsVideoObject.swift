@@ -89,6 +89,8 @@ open class PexelsVideoObject : Object
 		Pexels.log.verbose {"\(Self.self).\(#function) \(identifier)"}
 
 		guard let video = data as? Pexels.Video else { throw Error.loadMetadataFailed }
+		let format = NSLocalizedString("%@ on Pexels", tableName:"Pexels", bundle:.BXMediaBrowser, comment:"Label")
+		let copyright = String(format:format, video.user.name)
 
 		var metadata:[String:Any] = [:]
 		
@@ -98,7 +100,8 @@ open class PexelsVideoObject : Object
 		metadata[.whereFromsKey] = [video.url]
 		metadata[.authorsKey] = [video.user.name]
 		metadata[.authorAddressesKey] = [video.user.url]
-		
+		metadata[.copyrightKey] = copyright
+
 		return metadata
 	}
 
