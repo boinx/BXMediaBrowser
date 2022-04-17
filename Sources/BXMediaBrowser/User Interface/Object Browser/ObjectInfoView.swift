@@ -151,6 +151,7 @@ public extension Text
 			self
 				.underline()
 				.foregroundColor(.accentColor)
+				.cursor(.pointingHand, for:[])
 		}
 		else
 		{
