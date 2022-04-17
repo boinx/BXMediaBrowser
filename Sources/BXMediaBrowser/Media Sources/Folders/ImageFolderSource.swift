@@ -166,11 +166,15 @@ open class ImageFile : FolderObject
 		guard let url = data as? URL else { return [] }
 		let metadata = self.metadata ?? [:]
 		let exif = metadata["{Exif}"] as? [String:Any] ?? [:]
+		let w = (metadata[.widthKey] as? Int) ?? (metadata["PixelWidth"] as? Int)
+		let h = (metadata[.heightKey] as? Int) ?? (metadata["PixelHeight"] as? Int)
+		let profile = (metadata[.profileNameKey] as? String) ?? (metadata["ProfileName"] as? String)
+
 		var array:[ObjectMetadataEntry] = []
 		
 		array += ObjectMetadataEntry(label:"File", value:"\(self.name)", action:url.reveal)
 
-		if let w = metadata[.widthKey] as? Int, let h = metadata[.heightKey] as? Int
+		if let w = w, let h = h
 		{
 			array += ObjectMetadataEntry(label:"Image Size", value:"\(w) × \(h) Pixels")
 		}
@@ -195,7 +199,7 @@ open class ImageFile : FolderObject
 			array += ObjectMetadataEntry(label:"Focal Length", value:"\(value)mm")
 		}
 		
-		if let value = metadata[.profileNameKey] as? String
+		if let value = profile
 		{
 			array += ObjectMetadataEntry(label:"Color Space", value:value)
 		}
@@ -204,7 +208,7 @@ open class ImageFile : FolderObject
 		{
 			array += ObjectMetadataEntry(label:"Capture Date", value:String(with:date))
 		}
-		else if let value = metadata[.creationDate] as? Date
+		else if let value = metadata[.creationDateKey] as? Date
 		{
 			array += ObjectMetadataEntry(label:"Creation Date", value:String(with:value))
 		}
