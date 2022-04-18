@@ -157,6 +157,11 @@ open class LightroomCCSource : Source, AccessControl
 	{
 		let oauth2 = LightroomCC.shared.oauth2
 		
+		if oauth2.isAuthorizing
+		{
+			oauth2.abortAuthorization()
+		}
+		
 		oauth2.authorize()
 		{
 			params,error in
