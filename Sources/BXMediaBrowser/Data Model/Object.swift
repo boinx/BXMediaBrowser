@@ -211,13 +211,7 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 	
 	@MainActor open var useCount:Int
 	{
-		set
-		{
-			self.objectWillChange.send()
-			StatisticsController.shared.setUseCount(newValue, for:self)
-		}
-		
-		get { StatisticsController.shared.useCount(for:self) }
+		StatisticsController.shared.useCount(for:self)
 	}
 
 	/// This optional comment can be displayed in the user interface, e.g. as a tooltip
