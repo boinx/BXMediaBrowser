@@ -29,6 +29,7 @@ let package = Package(
     [
         .package(url:"git@github.com:boinx/BXSwiftUtils.git", .branch("master")),
         .package(url:"git@github.com:boinx/BXSwiftUI.git", .branch("master")),
+        .package(url:"https://github.com/p2/OAuth2.git", .upToNextMajor(from:"5.0.0")),
     ],
     
 	// Targets are the basic building blocks of a package. A target can define a module or a test suite.
