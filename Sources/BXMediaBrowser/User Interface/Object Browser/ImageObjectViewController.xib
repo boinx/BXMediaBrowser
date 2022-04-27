@@ -11,7 +11,7 @@
                 <outlet property="imageView" destination="BQT-g2-Zqo" id="WCB-FM-pe3"/>
                 <outlet property="ratingView" destination="fqQ-Fs-MnC" id="bVW-6e-6J0"/>
                 <outlet property="textField" destination="Rdh-yM-tEI" id="jwC-v4-uzl"/>
-                <outlet property="useCountView" destination="VE0-2j-XEE" id="CTa-Zf-qfg"/>
+                <outlet property="useCountView" destination="KIS-XH-qz5" id="R7l-si-eMD"/>
                 <outlet property="view" destination="HUS-pi-5U0" id="ONe-pe-1qO"/>
             </connections>
         </customObject>
@@ -35,11 +35,6 @@
                     <rect key="frame" x="0.0" y="16" width="120" height="80"/>
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="dHu-aH-m63"/>
                 </imageView>
-                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VE0-2j-XEE">
-                    <rect key="frame" x="96" y="72" width="20" height="20"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="xr1-rb-e9I"/>
-                </imageView>
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="fqQ-Fs-MnC" customClass="ObjectRatingView" customModule="BXMediaBrowser">
                     <rect key="frame" x="25" y="1" width="70" height="14"/>
                     <constraints>
@@ -47,6 +42,15 @@
                         <constraint firstAttribute="height" constant="14" id="ikt-wN-Kvm"/>
                     </constraints>
                 </customView>
+                <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KIS-XH-qz5">
+                    <rect key="frame" x="97" y="72" width="19" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" lineBreakMode="truncatingTail" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" id="g3R-Kb-umO">
+                        <font key="font" metaFont="systemBold" size="11"/>
+                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.0" green="0.50196078431372548" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </textFieldCell>
+                </textField>
             </subviews>
             <constraints>
                 <constraint firstItem="fqQ-Fs-MnC" firstAttribute="centerX" secondItem="HUS-pi-5U0" secondAttribute="centerX" id="49t-Na-x7Y"/>

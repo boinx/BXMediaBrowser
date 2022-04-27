@@ -59,7 +59,7 @@ open class ObjectViewController : NSCollectionViewItem
 	// Outlets to subviews
 	
 	@IBOutlet var ratingView:ObjectRatingView?
-	@IBOutlet var useCountView:NSImageView?
+	@IBOutlet var useCountView:NSTextField?
 
 	/// References to subscriptions
 	
@@ -159,9 +159,22 @@ open class ObjectViewController : NSCollectionViewItem
 		
 		// When statistics for our object change also redraw
 		
-		self.observers += NotificationCenter.default.publisher(for:StatisticsController.didChangeNotification, object:object).sink
+		self.observers += NotificationCenter.default.publisher(for:StatisticsController.didChangeNotification, object:nil).sink
 		{
-			[weak self] _ in DispatchQueue.main.asyncIfNeeded { self?.redraw() }
+			[weak self] notification in
+			guard let self = self else { return }
+			
+			var shouldRedraw = notification.object == nil
+
+			if let id = notification.object as? String, id == object.identifier
+			{
+				shouldRedraw = true
+			}
+			
+			if shouldRedraw
+			{
+				DispatchQueue.main.asyncIfNeeded { self.redraw() }
+			}
 		}
 			
 		// Configure context menu

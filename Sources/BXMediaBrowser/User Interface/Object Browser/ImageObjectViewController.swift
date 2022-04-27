@@ -27,6 +27,7 @@
 
 import AppKit
 import BXSwiftUI
+import BXUIKit
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -61,16 +62,21 @@ open class ImageObjectViewController : ObjectViewController
 		self.hasThumbnail = false 
 		self.textField?.lineBreakMode = .byTruncatingTail
 		self.imageView?.imageScaling = .scaleProportionallyUpOrDown
-		self.useCountView?.imageScaling = .scaleProportionallyUpOrDown
 		
 		guard let thumbnail = self.imageView?.subviews.first else { return }
 		guard let useCountView = useCountView else { return }
 		
+		useCountView.cell = PillTextFieldCell()
+		useCountView.textColor = .white
+		useCountView.backgroundColor = NSColor(calibratedRed:0.0, green:0.5, blue:0.0, alpha:1.0)
+		useCountView.font = NSFont.systemFont(ofSize:11, weight:.bold)
+		useCountView.alignment = .center
+		
 		useCountView.translatesAutoresizingMaskIntoConstraints = false
 		useCountView.rightAnchor.constraint(equalTo:thumbnail.rightAnchor, constant:-4).isActive = true
 		useCountView.topAnchor.constraint(equalTo:thumbnail.topAnchor, constant:4).isActive = true
-		useCountView.widthAnchor.constraint(equalToConstant:20).isActive = true
-		useCountView.heightAnchor.constraint(equalToConstant:20).isActive = true
+		useCountView.heightAnchor.constraint(equalToConstant:18).isActive = true
+		useCountView.widthAnchor.constraint(greaterThanOrEqualTo:useCountView.heightAnchor, constant:0).isActive = true
 	}
 	
 	
@@ -98,16 +104,12 @@ open class ImageObjectViewController : ObjectViewController
 		
 		self.textField?.stringValue = object.displayName
 		
-		if #available(macOS 11, *)
-		{
-			// Use count badge
-			
-			let n = StatisticsController.shared.useCount(for:object)
-			let useCountImage = n>0 ? NSImage(systemSymbolName:"\(n).circle.fill", accessibilityDescription:nil) : nil
-			self.useCountView?.image = useCountImage
-			self.useCountView?.contentTintColor = NSColor.systemGreen
-		}
+		// Use count badge
 		
+		let n = StatisticsController.shared.useCount(for:object)
+		self.useCountView?.stringValue = "\(n)"
+		self.useCountView?.isHidden = n == 0
+
 		// Gray out cell if Object is not enabled
 		
 		let isEnabled = self.isEnabled
@@ -133,8 +135,8 @@ open class ImageObjectViewController : ObjectViewController
 			self.imageView?.toolTip = comment
 		}
 	}
-	
-	
+
+
 //----------------------------------------------------------------------------------------------------------------------
 
 
