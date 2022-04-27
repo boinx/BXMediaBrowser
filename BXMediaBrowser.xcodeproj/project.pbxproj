@@ -126,6 +126,7 @@
 		D052BE2E27F0BDA80084068A /* LightroomCCFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D052BE2D27F0BDA80084068A /* LightroomCCFilterBar.swift */; };
 		D0573FA327E9ADED00788155 /* LightroomCCSourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0573FA227E9ADED00788155 /* LightroomCCSourceView.swift */; };
 		D0573FA627E9D0C900788155 /* OAuth2 in Frameworks */ = {isa = PBXBuildFile; productRef = D0573FA527E9D0C900788155 /* OAuth2 */; };
+		D05A15EE28195A3C00E011D5 /* PillTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05A15ED28195A3B00E011D5 /* PillTextFieldCell.swift */; };
 		D05F5F6D27E8E840003735C6 /* LightroomCCObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05F5F6827E8E840003735C6 /* LightroomCCObject.swift */; };
 		D05F5F6E27E8E840003735C6 /* LightroomCC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05F5F6927E8E840003735C6 /* LightroomCC.swift */; };
 		D05F5F6F27E8E840003735C6 /* LightroomCCContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05F5F6A27E8E840003735C6 /* LightroomCCContainer.swift */; };
@@ -293,6 +294,7 @@
 		D052BE2B27F0B97D0084068A /* LightroomCCFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightroomCCFilter.swift; sourceTree = "<group>"; };
 		D052BE2D27F0BDA80084068A /* LightroomCCFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightroomCCFilterBar.swift; sourceTree = "<group>"; };
 		D0573FA227E9ADED00788155 /* LightroomCCSourceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightroomCCSourceView.swift; sourceTree = "<group>"; };
+		D05A15ED28195A3B00E011D5 /* PillTextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillTextFieldCell.swift; sourceTree = "<group>"; };
 		D05F5F6827E8E840003735C6 /* LightroomCCObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LightroomCCObject.swift; sourceTree = "<group>"; };
 		D05F5F6927E8E840003735C6 /* LightroomCC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LightroomCC.swift; sourceTree = "<group>"; };
 		D05F5F6A27E8E840003735C6 /* LightroomCCContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LightroomCCContainer.swift; sourceTree = "<group>"; };
@@ -633,6 +635,7 @@
 				D01B493E27CA1378008249C0 /* AudioObjectViewController.swift */,
 				D01B494027CA1378008249C0 /* AudioObjectViewController.xib */,
 				D01B493A27CA1378008249C0 /* ObjectRatingView.swift */,
+				D05A15ED28195A3B00E011D5 /* PillTextFieldCell.swift */,
 				D01B494127CA1378008249C0 /* ObjectView.swift */,
 				D01B494227CA1378008249C0 /* ObjectInfoView.swift */,
 			);
@@ -909,6 +912,7 @@
 				D01B497327CA1378008249C0 /* MusicObject.swift in Sources */,
 				D01B495927CA1378008249C0 /* AudioPreviewController.swift in Sources */,
 				D01B497727CA1378008249C0 /* FolderContainer.swift in Sources */,
+				D05A15EE28195A3C00E011D5 /* PillTextFieldCell.swift in Sources */,
 				D01B496E27CA1378008249C0 /* Object+Filter.swift in Sources */,
 				D01B498E27CA1378008249C0 /* UnsplashFilterBar.swift in Sources */,
 				D01B499627CA1378008249C0 /* CustomDisclosureButton.swift in Sources */,
