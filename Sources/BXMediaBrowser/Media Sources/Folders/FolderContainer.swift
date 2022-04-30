@@ -64,7 +64,9 @@ open class FolderContainer : Container
 		
 		self.folderObserver.resume()
 		
+		#if os(macOS)
 		self.fileDropDestination = FolderDropDestination(folderURL:url)
+		#endif
 	}
 
 
@@ -172,7 +174,7 @@ open class FolderContainer : Container
 	
 	class func filenames(in folderURL:URL) throws -> [String]
 	{
-		if #available(macOS 12,*)
+		if #available(macOS 12, iOS 15, *)
 		{
 			return try FileManager.default
 				.contentsOfDirectory(atPath:folderURL.path)
@@ -250,7 +252,13 @@ open class FolderContainer : Container
 		guard url.exists else { return }
 		
 		#if os(macOS)
+		
 		NSWorkspace.shared.selectFile(url.path, inFileViewerRootedAtPath:url.deletingLastPathComponent().path)
+	
+		#else
+		
+		#warning("TODO: implement for iOS")
+		
 		#endif
 	}
 

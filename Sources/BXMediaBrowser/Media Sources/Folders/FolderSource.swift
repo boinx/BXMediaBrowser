@@ -94,6 +94,8 @@ open class FolderSource : Source, AccessControl
 		// Load stored bookmarks from state. Convert each bookmark to a folder url. If the folder
 		// still exists, then create a FolderContainer for it.
 
+		#if os(macOS)
+		
 		if let bookmarks = sourceState?[Self.bookmarksKey] as? [Data]
 		{
 			let folderURLs = bookmarks
@@ -108,6 +110,8 @@ open class FolderSource : Source, AccessControl
 				containers += container
 			}
 		}
+		
+		#endif
 		
 		return containers
 	}
@@ -136,10 +140,18 @@ open class FolderSource : Source, AccessControl
 		let ok = NSLocalizedString("Remove", bundle:.BXMediaBrowser, comment:"Button Title")
 		let cancel = NSLocalizedString("Cancel", bundle:.BXMediaBrowser, comment:"Button Title")
 		
+		#if os(macOS)
+		
 		NSAlert.presentModal(style:.critical, title:title, message:message, okButton:ok, cancelButton:cancel)
 		{
 			[weak self] in self?.removeContainer(container)
 		}
+		
+		#else
+		
+		#warning("TODO: implement for iOS")
+		
+		#endif
 	}
 	
 	

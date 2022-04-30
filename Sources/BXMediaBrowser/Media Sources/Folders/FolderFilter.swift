@@ -99,6 +99,7 @@ extension Object.Filter.SortType
 {
 	public static let alphabetical = "alphabetical"
 	public static let creationDate = "creationDate"
+	public static let duration = "duration"
 }
 
 
