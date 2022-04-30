@@ -256,7 +256,7 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 	
 	open var localFileUTI:String
 	{
-		if #available(macOS 12, *)
+		if #available(macOS 12, iOS 14, *)
 		{
 			return UTType.fileURL.identifier
 		}

@@ -41,7 +41,7 @@ extension URLSession
 				}
             }
 
-			if #available(macOS 12.0, *)
+			if #available(macOS 12.0, iOS 15, *)
 			{
 				task.delegate = delegate
 			}
@@ -77,7 +77,7 @@ extension URLSession
 				}
             }
 
-			if #available(macOS 12.0, *)
+			if #available(macOS 12.0, iOS 15, *)
 			{
 				task.delegate = delegate
 			}
@@ -143,7 +143,7 @@ extension URLSession
 				}
 			}
 
-			if #available(macOS 12.0, *)
+			if #available(macOS 12.0, iOS 15, *)
 			{
 				task.delegate = delegate
 			}
@@ -194,7 +194,7 @@ extension URLSession
 				}
 			}
 
-			if #available(macOS 12.0, *)
+			if #available(macOS 12.0, iOS 15, *)
 			{
 				task.delegate = delegate
 			}
