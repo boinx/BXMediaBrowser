@@ -129,7 +129,13 @@ public class PhotosObject : Object
 			{
 				image,_ in
 				
-				if let image = image, let thumbnail = image.cgImage(forProposedRect:nil, context:nil, hints:nil)
+				#if os(macOS)
+				let thumbnail = image?.cgImage(forProposedRect:nil, context:nil, hints:nil)
+				#else
+				let thumbnail = image?.cgImage
+				#endif
+				
+				if let thumbnail = thumbnail
 				{
 					continuation.resume(returning:thumbnail)
 				}
@@ -243,8 +249,10 @@ public class PhotosObject : Object
 					self._previewItemURL = url
 					self.isDownloadingPreview = false
 					
+					#if os(macOS)
 					QLPreviewPanel.shared().refreshCurrentPreviewItem()
 					QLPreviewPanel.shared().reloadData()
+					#endif
 				}
 			}
  		}

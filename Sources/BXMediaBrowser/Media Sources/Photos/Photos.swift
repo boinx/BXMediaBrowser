@@ -25,7 +25,14 @@
 
 import BXSwiftUtils
 import Photos
+
+#if canImport(AppKit)
 import AppKit
+#endif
+
+#if canImport(UIKit)
+import UIKit
+#endif
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -41,7 +48,14 @@ public struct Photos
 	
 	/// The application icon of Photos.app
 	
-	public static let icon = NSImage.icon(for:"com.apple.Photos")?.CGImage
+	public static let icon =
+	{
+		#if os(macOS)
+		NSImage.icon(for:"com.apple.Photos")?.CGImage
+		#else
+		UIImage(named:"Photos", in:.BXMediaBrowser, with:nil)?.cgImage
+		#endif
+	}()
 	
 	/// The name of the Source
 	
