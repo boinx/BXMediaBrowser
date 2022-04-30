@@ -30,7 +30,7 @@ import SwiftUI
 #if os(macOS)
 import AppKit
 #else
-import UIKIt
+import UIKit
 #endif
 
 

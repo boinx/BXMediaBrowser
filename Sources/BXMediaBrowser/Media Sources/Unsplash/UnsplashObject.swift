@@ -26,7 +26,6 @@
 import BXSwiftUtils
 import Foundation
 import ImageIO
-import AppKit
 
 
 //----------------------------------------------------------------------------------------------------------------------
