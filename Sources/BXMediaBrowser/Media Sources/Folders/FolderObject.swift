@@ -27,6 +27,10 @@ import BXSwiftUtils
 import SwiftUI
 import QuickLook
 
+#if canImport(QuickLookThumbnailing)
+import QuickLookThumbnailing
+#endif
+
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -62,8 +66,10 @@ open class FolderObject : Object
 
 		guard let url = data as? URL else { throw Error.loadThumbnailFailed }
 		guard url.exists else { throw Error.loadThumbnailFailed }
-		
     	let size = CGSize(width:256, height:256)
+    	
+    	#if os(macOS)
+    	
         let options = [ kQLThumbnailOptionIconModeKey : kCFBooleanFalse ]
         
         let ref = QLThumbnailImageCreate(
@@ -74,6 +80,12 @@ open class FolderObject : Object
         
         guard let thumbnail = ref?.takeUnretainedValue() else { throw Error.loadThumbnailFailed }
 		return thumbnail
+		
+		#else
+		
+		return try await QLThumbnailGenerator.shared.thumbnail(with:url, maxSize:size)
+		
+		#endif
 	}
 
 

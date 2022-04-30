@@ -131,12 +131,20 @@ open class VideoFile : FolderObject
 		
 		catch let error
 		{
+			#if os(macOS)
+			
 			if let image = QLThumbnailImageCreate(kCFAllocatorDefault, url as CFURL, size, nil)?.takeRetainedValue()
 			{
 				return image
 			}
 			
 			throw error
+			
+			#else
+			
+			return try await QLThumbnailGenerator.shared.thumbnail(with:url, maxSize:size)
+
+			#endif
 		}
 	}
 

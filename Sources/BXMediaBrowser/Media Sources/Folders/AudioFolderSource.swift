@@ -26,10 +26,12 @@
 import BXSwiftUtils
 import Foundation
 
-#if os(macOS)
-import AppKit	// For NSWorkspace
-#else
-import UIKit
+#if canImport(AppKit)
+import AppKit // for NSWorkspace
+#endif
+
+#if canImport(QuickLookThumbnailing)
+import QuickLookThumbnailing // for QLThumbnailGenerator
 #endif
 
 
@@ -182,7 +184,8 @@ open class AudioFile : FolderObject
 		
 		#else
 		
-		#warning("TODO: implement")
+		let size = CGSize(256,256)
+		return try await QLThumbnailGenerator.shared.thumbnail(with:url, maxSize:size, type:.icon)
 		
 		#endif
 	}
