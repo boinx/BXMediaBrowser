@@ -27,6 +27,7 @@ import BXSwiftUtils
 import BXSwiftUI
 import Foundation
 import QuartzCore
+import ImageIO
 
 
 //----------------------------------------------------------------------------------------------------------------------

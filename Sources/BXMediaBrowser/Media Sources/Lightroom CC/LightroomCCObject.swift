@@ -24,7 +24,15 @@
 
 
 import BXSwiftUtils
+import CoreGraphics
+
+#if canImport(QuickLookUI)
 import QuickLookUI
+#endif
+
+#if canImport(MobileCoreServices)
+import MobileCoreServices
+#endif
 
 
 //----------------------------------------------------------------------------------------------------------------------

@@ -26,10 +26,17 @@
 import BXSwiftUtils
 import Foundation
 import ImageIO
-#if os(macOS)
+
+#if canImport(AppKit)
 import AppKit
-#else
+#endif
+
+#if canImport(AppKit)
 import UIKit
+#endif
+
+#if canImport(MobileCoreServices)
+import MobileCoreServices
 #endif
 
 

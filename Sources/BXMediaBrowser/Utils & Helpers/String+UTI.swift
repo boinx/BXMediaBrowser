@@ -29,6 +29,10 @@ import Foundation
 import UniformTypeIdentifiers
 #endif
 
+#if canImport(MobileCoreServices)
+import MobileCoreServices
+#endif
+
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -37,7 +41,7 @@ public extension String
 {
 	static var fileUTI:String
 	{
-		if #available(macOS 11,*)
+		if #available(macOS 11, iOS 14, *)
 		{
 			return UTType.fileURL.identifier
 		}
@@ -49,7 +53,7 @@ public extension String
 
 	static var imageUTI:String
 	{
-		if #available(macOS 11,*)
+		if #available(macOS 11, iOS 14, *)
 		{
 			return UTType.image.identifier
 		}
@@ -61,7 +65,7 @@ public extension String
 
 	static var movieUTI:String
 	{
-		if #available(macOS 11,*)
+		if #available(macOS 11, iOS 14, *)
 		{
 			return UTType.movie.identifier
 		}
@@ -73,7 +77,7 @@ public extension String
 
 	static var audioUTI:String
 	{
-		if #available(macOS 11,*)
+		if #available(macOS 11, iOS 14, *)
 		{
 			return UTType.audio.identifier
 		}

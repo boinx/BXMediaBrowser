@@ -25,7 +25,14 @@
 
 import SwiftUI
 import BXSwiftUtils
+
+#if canImport(UniformTypeIdentifiers)
 import UniformTypeIdentifiers
+#endif
+
+#if canImport(MobileCoreServices)
+import MobileCoreServices
+#endif
 
 
 //----------------------------------------------------------------------------------------------------------------------

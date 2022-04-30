@@ -26,10 +26,13 @@
 import BXSwiftUtils
 import SwiftUI
 import QuickLook
-import UniformTypeIdentifiers
 
-#if os(macOS)
-import AppKit // for NSWorkspace
+#if canImport(UniformTypeIdentifiers)
+import UniformTypeIdentifiers
+#endif
+
+#if canImport(AppKit)
+import AppKit
 #endif
 
 
