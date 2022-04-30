@@ -31,7 +31,7 @@ import ImageIO
 import AppKit
 #endif
 
-#if canImport(AppKit)
+#if canImport(UIKit)
 import UIKit
 #endif
 
