@@ -47,7 +47,7 @@ open class PexelsVideoSource : Source, AccessControl
 	public init()
 	{
 		Pexels.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
-		let icon = Bundle.BXMediaBrowser.image(forResource:"Pexels")?.CGImage
+		let icon = CGImage.image(named:"Pexels", in:.BXMediaBrowser)
 		super.init(identifier:Self.identifier, icon:icon, name:"Pexels", filter:PexelsFilter())
 		self.loader = Loader(loadHandler:self.loadContainers)
 	}
@@ -143,10 +143,18 @@ open class PexelsVideoSource : Source, AccessControl
 			let ok = NSLocalizedString("Remove", bundle:.BXMediaBrowser, comment:"Button Title")
 			let cancel = NSLocalizedString("Cancel", bundle:.BXMediaBrowser, comment:"Button Title")
 			
+			#if os(macOS)
+			
 			NSAlert.presentModal(style:.critical, title:title, message:message, okButton:ok, cancelButton:cancel)
 			{
 				[weak self] in self?.removeContainer(container)
 			}
+			
+			#else
+			
+			#warning("TODO: implement for iOS")
+			
+			#endif
 		})
 	}
 

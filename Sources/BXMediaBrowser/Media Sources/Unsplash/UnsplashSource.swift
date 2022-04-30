@@ -26,13 +26,6 @@
 import BXSwiftUtils
 import SwiftUI
 
-#if canImport(AppKit)
-import AppKit
-#endif
-
-#if canImport(UIKit)
-import UIKit
-#endif
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -55,12 +48,7 @@ open class UnsplashSource : Source, AccessControl
 	{
 		Unsplash.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
 		
-		#if os(macOS)
-		let icon = Bundle.BXMediaBrowser.image(forResource:"Unsplash")?.CGImage
-		#else
-		let icon = UIImage(named:"Unsplash", in:.BXMediaBrowser, with:nil)?.cgImage
-		#endif
-		
+		let icon = CGImage.image(named:"Unsplash", in:.BXMediaBrowser)
 		super.init(identifier:Self.identifier, icon:icon, name:"Unsplash", filter:UnsplashFilter())
 		self.loader = Loader(loadHandler:self.loadContainers)
 	}
