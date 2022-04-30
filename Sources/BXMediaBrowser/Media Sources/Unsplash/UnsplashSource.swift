@@ -26,6 +26,13 @@
 import BXSwiftUtils
 import SwiftUI
 
+#if canImport(AppKit)
+import AppKit
+#endif
+
+#if canImport(UIKit)
+import UIKit
+#endif
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -47,7 +54,13 @@ open class UnsplashSource : Source, AccessControl
 	public init()
 	{
 		Unsplash.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
+		
+		#if os(macOS)
 		let icon = Bundle.BXMediaBrowser.image(forResource:"Unsplash")?.CGImage
+		#else
+		let icon = UIImage(named:"Unsplash", in:.BXMediaBrowser, with:nil)?.cgImage
+		#endif
+		
 		super.init(identifier:Self.identifier, icon:icon, name:"Unsplash", filter:UnsplashFilter())
 		self.loader = Loader(loadHandler:self.loadContainers)
 	}
@@ -141,10 +154,18 @@ open class UnsplashSource : Source, AccessControl
 			let ok = NSLocalizedString("Remove", bundle:.BXMediaBrowser, comment:"Button Title")
 			let cancel = NSLocalizedString("Cancel", bundle:.BXMediaBrowser, comment:"Button Title")
 			
+			#if os(macOS)
+			
 			NSAlert.presentModal(style:.critical, title:title, message:message, okButton:ok, cancelButton:cancel)
 			{
 				[weak self] in self?.removeContainer(container)
 			}
+			
+			#else
+			
+			#warning("TODO: implement for iOS")
+			
+			#endif
 		})
 	}
 
