@@ -23,76 +23,85 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 
-#if canImport(iTunesLibrary)
+#if os(macOS)
 
-import BXSwiftUI
 import SwiftUI
+import AppKit
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public struct MusicFilterBar : View
+struct NativeSearchField: NSViewRepresentable
 {
-	// Model
-	
-	@ObservedObject var selectedContainer:Container
-	@ObservedObject var filter:MusicFilter
-	@EnvironmentObject var statisticsController:StatisticsController
+    @Binding var value: String
+	public var placeholderString:String?
+	public var continuousUpdates = true
 
-	// Init
-	
-	public init(with selectedContainer:Container, filter:MusicFilter)
-	{
-		self.selectedContainer = selectedContainer
-		self.filter = filter
-	}
-	
-	// View
-	
-	public var body: some View
+	public func makeNSView(context:Context) -> NSSearchField
     {
-		HStack(spacing:10)
+        let searchField = NSSearchField(frame:.zero)
+        searchField.delegate = context.coordinator
+        searchField.stringValue = self.value
+        searchField.placeholderString = self.placeholderString
+		return searchField
+    }
+
+	public func updateNSView(_ searchField:NSSearchField, context:Context)
+    {
+        searchField.stringValue = self.value
+	}
+
+    func makeCoordinator() -> Coordinator
+    {
+        return Coordinator(value:$value, continuousUpdates:continuousUpdates)
+    }
+
+    class Coordinator: NSObject, NSSearchFieldDelegate
+    {
+		var value:Binding<String>
+		var continuousUpdates = true
+		init(value:Binding<String>, continuousUpdates:Bool)
 		{
-			NativeSearchField(value:self.$filter.searchString, placeholderString:searchPlaceholder)
-				.strokeBorder()
-				.frame(maxWidth:300)
-
-			Spacer()
-
-			RatingFilterView(rating:self.$filter.rating)
-				.padding(.leading,-12)
-
-			SortOrderPopup(
-				defaultShapeIcon:"text.justify",
-				selectedContainer:selectedContainer,
-				filter:filter)
+			self.value = value
+			self.continuousUpdates = continuousUpdates
 		}
-		.padding(.horizontal,20)
-		.padding(.vertical,10)
+		
+		func controlTextDidChange(_ notification:Notification)
+		{
+			guard let searchField = notification.object as? NSSearchField else { return }
+			guard continuousUpdates else { return }
+			self.value.wrappedValue = searchField.stringValue
+		}
+		
+		func controlTextDidEndEditing(_ notification:Notification)
+		{
+			guard let searchField = notification.object as? NSSearchField else { return }
+			self.value.wrappedValue = searchField.stringValue
+		}
+
+		func searchFieldDidEndSearching(_ searchField:NSSearchField)
+		{
+			self.value.wrappedValue = searchField.stringValue
+		}
     }
 }
-
-
+ 
+ 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-extension MusicFilterBar
+extension NativeSearchField
 {
-    var searchPlaceholder:String
-    {
-		NSLocalizedString("Search", bundle:.BXMediaBrowser, comment:"Placeholder")
-    }
-    
-    var sortByLabel:String
-    {
-		NSLocalizedString("Sort by:", bundle:.BXMediaBrowser, comment:"Label")
-    }
-    
-    var directionIcon:String
-    {
-		filter.sortDirection == .ascending ? "chevron.up" : "chevron.down"
-    }
+	func strokeBorder() -> some View
+	{
+		self.overlay(
+		
+			RoundedRectangle(cornerRadius:6)
+				.strokeBorder(Color.primary.opacity(0.3), lineWidth:0.5)
+				.padding(0.5)
+		)
+	}
 }
 
 

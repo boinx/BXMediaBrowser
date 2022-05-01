@@ -52,13 +52,17 @@ public struct FolderContainerView : View
     {
 		ContainerView(with:container)
 
+			#if os(macOS)
 			.background(dropDestinationView)
+			#endif
     }
     
+    #if os(macOS)
     var dropDestinationView: some View
     {
 		FileDropDestinationView(with:container.fileDropDestination)
     }
+    #endif
 }
 
 

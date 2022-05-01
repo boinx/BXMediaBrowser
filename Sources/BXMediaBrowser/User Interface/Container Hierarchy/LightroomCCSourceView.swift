@@ -98,16 +98,20 @@ public struct LightroomCCSourceView : View
 				else if lightroom.status == .currentlyUnavailable
 				{
 					Text(NSLocalizedString("Error.currentlyUnavailable", tableName:"LightroomCC", bundle:.BXMediaBrowser, comment:"Error Message"))
-						.controlSize(.small)
 						.opacity(0.5)
 						.padding(12)
+						#if os(macOS)
+						.controlSize(.small)
+						#endif
 				}
 				else if lightroom.status == .invalidClientID
 				{
 					Text(NSLocalizedString("Error.invalidClientID", tableName:"LightroomCC", bundle:.BXMediaBrowser, comment:"Error Message"))
-						.controlSize(.small)
 						.opacity(0.5)
 						.padding(12)
+						#if os(macOS)
+						.controlSize(.small)
+						#endif
 				}
 			})
 			
@@ -135,10 +139,12 @@ public struct LightroomCCSourceView : View
 				.popover(isPresented: self.$isShowingPopover)
 				{
 					Text(NSLocalizedString("Error.invalidClientID", tableName:"LightroomCC", bundle:.BXMediaBrowser, comment:"Error Message"))
-						.controlSize(.small)
 						.lineLimit(nil)
 						.padding()
 						.frame(width:200)
+						#if os(macOS)
+						.controlSize(.small)
+						#endif
 				}
 		}
 		else if lightroom.status == .currentlyUnavailable
@@ -149,10 +155,12 @@ public struct LightroomCCSourceView : View
 				.popover(isPresented: self.$isShowingPopover)
 				{
 					Text(NSLocalizedString("Error.currentlyUnavailable", tableName:"LightroomCC", bundle:.BXMediaBrowser, comment:"Error Message"))
-						.controlSize(.small)
 						.lineLimit(nil)
 						.padding()
 						.frame(width:200)
+						#if os(macOS)
+						.controlSize(.small)
+						#endif
 				}
 		}
 		else if lightroom.status == .loggedOut

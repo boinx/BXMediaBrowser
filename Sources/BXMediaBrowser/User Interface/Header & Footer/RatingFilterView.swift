@@ -46,6 +46,8 @@ public struct RatingFilterView : View
 	
 	/// The controlsize determines the size of the stars
 	
+	#if os(macOS)
+	
 	@Environment(\.controlSize) private var controlSize
 	
 	var size:CGFloat
@@ -57,6 +59,12 @@ public struct RatingFilterView : View
 			default: return 14.0
 		}
 	}
+	
+	#else
+	
+	var size:CGFloat { 16.0 }
+	
+	#endif
 	
 	// Init
 	
@@ -76,7 +84,7 @@ public struct RatingFilterView : View
 		{
 			ForEach(1 ..< maxRating+1, id:\.self)
 			{
-				BXSwiftUI.Image(systemName:icon(for:$0))
+				BXImage(systemName:icon(for:$0))
 					.foregroundColor(color(for:$0))
 			}
 		}

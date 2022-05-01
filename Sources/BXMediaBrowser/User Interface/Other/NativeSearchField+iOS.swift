@@ -23,30 +23,33 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 
+#if os(iOS)
+
 import SwiftUI
+import UIKit
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-struct NativeSearchField: NSViewRepresentable
+struct NativeSearchField: UIViewRepresentable
 {
     @Binding var value: String
 	public var placeholderString:String?
 	public var continuousUpdates = true
 
-	public func makeNSView(context:Context) -> NSSearchField
+	public func makeUIView(context:Context) -> UISearchTextField
     {
-        let searchField = NSSearchField(frame:.zero)
+        let searchField = UISearchTextField(frame:.zero)
         searchField.delegate = context.coordinator
-        searchField.stringValue = self.value
-        searchField.placeholderString = self.placeholderString
+        searchField.text = self.value
+        searchField.placeholder = self.placeholderString
 		return searchField
     }
 
-	public func updateNSView(_ searchField:NSSearchField, context:Context)
+	public func updateUIView(_ searchField:UISearchTextField, context:Context)
     {
-        searchField.stringValue = self.value
+        searchField.text = self.value
 	}
 
     func makeCoordinator() -> Coordinator
@@ -54,32 +57,20 @@ struct NativeSearchField: NSViewRepresentable
         return Coordinator(value:$value, continuousUpdates:continuousUpdates)
     }
 
-    class Coordinator: NSObject, NSSearchFieldDelegate
+    class Coordinator: NSObject, UISearchTextFieldDelegate
     {
 		var value:Binding<String>
 		var continuousUpdates = true
+		
 		init(value:Binding<String>, continuousUpdates:Bool)
 		{
 			self.value = value
 			self.continuousUpdates = continuousUpdates
 		}
 		
-		func controlTextDidChange(_ notification:Notification)
+		func textFieldDidEndEditing(_ textField:UITextField)
 		{
-			guard let searchField = notification.object as? NSSearchField else { return }
-			guard continuousUpdates else { return }
-			self.value.wrappedValue = searchField.stringValue
-		}
-		
-		func controlTextDidEndEditing(_ notification:Notification)
-		{
-			guard let searchField = notification.object as? NSSearchField else { return }
-			self.value.wrappedValue = searchField.stringValue
-		}
-
-		func searchFieldDidEndSearching(_ searchField:NSSearchField)
-		{
-			self.value.wrappedValue = searchField.stringValue
+			self.value.wrappedValue = textField.text ?? ""
 		}
     }
 }
@@ -105,3 +96,4 @@ extension NativeSearchField
 //----------------------------------------------------------------------------------------------------------------------
 
 
+#endif

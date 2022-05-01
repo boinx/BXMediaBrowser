@@ -116,7 +116,7 @@ public struct SortOrderPopup : View
 		
 		return items
     }
-    
+
     func state(for sortType:Object.Filter.SortType) -> NSControl.StateValue
     {
 		self.filter.sortType == sortType ? .on : .off
@@ -127,6 +127,126 @@ public struct SortOrderPopup : View
 		self.filter.sortDirection == sortDirection ? .on : .off
     }
 }
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+//#if os(iOS)
+//
+//public struct SortOrderPopup : View
+//{
+//	// Model
+//
+//	var defaultShapeIcon = "square.grid.2x2"
+//
+//	@ObservedObject var selectedContainer:Container
+//	@ObservedObject var filter:Object.Filter
+//
+//	// View
+//
+//	public var body: some View
+//    {
+//		if selectedContainer.allowedSortTypes.isEmpty
+//		{
+//			EmptyView()
+//		}
+//		else
+//		{
+//			if #available(iOS 14, *)
+//			{
+//				Menu( content:
+//				{
+//					ForEach(selectedContainer.allowedSortTypes, id:\.self)
+//					{
+//						self.button(for:$0)
+//					}
+//
+//					self.button(for:.ascending)
+//					self.button(for:.descending)
+//				},
+//				label:
+//				{
+//					HStack(spacing:0)
+//					{
+//						BXImage(systemName:shapeIcon)
+//						BXImage(systemName:arrowIcon).scaleEffect(0.75)
+//					}
+//				})
+//
+//				.id(selectedContainer.identifier)
+//			}
+//
+//		}
+//    }
+//
+//    var shapeIcon:String
+//    {
+//		switch filter.sortType
+//		{
+//			case .captureDate: return "clock"
+//			case .creationDate: return "clock"
+//			case .duration: return "clock"
+//			case .alphabetical: return "character"
+//			case .rating: return "star"
+//			case .artist: return "person"
+//			case .album: return "square.stack"
+//			case .genre: return "guitars"
+//
+//			default: return defaultShapeIcon
+//		}
+//    }
+//
+//    var arrowIcon:String
+//    {
+//		filter.sortDirection == .ascending ? "chevron.up" : "chevron.down"
+//    }
+//
+//    func button(for sortType:Object.Filter.SortType) -> some View
+//    {
+//		Button
+//		{
+//			filter.sortType = sortType
+//		}
+//		label:
+//		{
+//			HStack
+//			{
+//				Text(icon(for:sortType))
+//				Text(sortType.localizedName)
+//			}
+//		}
+//    }
+//
+//	func button(for sortDirection:Object.Filter.SortDirection) -> some View
+//    {
+//		HStack
+//		{
+//			Text(icon(for:sortDirection))
+//
+//			if sortDirection == .ascending
+//			{
+//				Text(NSLocalizedString("Ascending", bundle:.BXMediaBrowser, comment:"Menu Item"))
+//			}
+//			else
+//			{
+//				Text(NSLocalizedString("Descending", bundle:.BXMediaBrowser, comment:"Menu Item"))
+//			}
+//		}
+//    }
+//
+//	func icon(for sortType:Object.Filter.SortType) -> String
+//    {
+//		self.filter.sortType == sortType ? "✓" : " "
+//    }
+//
+//    func icon(for sortDirection:Object.Filter.SortDirection) -> String
+//    {
+//		self.filter.sortDirection == sortDirection ? "✓" : " "
+//    }
+//}
+//
+//#endif
 
 
 //----------------------------------------------------------------------------------------------------------------------

@@ -56,8 +56,10 @@ public struct DefaultObjectFooterView : View
 			BXImage(systemName:"square").scaleEffect(0.5)
 			
 			Slider(value:self.sliderResponse, in:0.4...1.0)
-				.controlSize(.mini)
 				.frame(width:100)
+				#if os(macOS)
+				.controlSize(.mini)
+				#endif
 
 			BXImage(systemName:"square")
 
@@ -66,8 +68,10 @@ public struct DefaultObjectFooterView : View
 			// Object count
 			
 			Text(container.localizedObjectCount)
-				.controlSize(.small)
 				.lineLimit(1)
+				#if os(macOS)
+				.controlSize(.small)
+				#endif
 		}
 		.padding(.horizontal,20)
 		.padding(.vertical,2)

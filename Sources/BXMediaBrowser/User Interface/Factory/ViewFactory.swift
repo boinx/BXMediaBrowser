@@ -275,10 +275,14 @@ public extension ViewFactory
 			{
 				return AudioObjectViewController.self
 			}
-			else if container is MusicContainer
+
+			#if os(macOS)
+			if container is MusicContainer
 			{
 				return AudioObjectViewController.self
 			}
+			#endif
+			
 //			else if container is VideoFolderContainer
 //			{
 //				return VideoObjectViewController.self

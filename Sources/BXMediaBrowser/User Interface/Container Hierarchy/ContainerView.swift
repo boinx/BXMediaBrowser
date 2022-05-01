@@ -68,7 +68,11 @@ public struct ContainerView : View
 					
 					if container.isLoading
 					{
+						#if os(macOS)
 						BXSpinningWheel(size:.small).colorScheme(.dark)
+						#else
+						BXSpinningWheel().colorScheme(.dark)
+						#endif
 					}
 					
 					// Optional remove button

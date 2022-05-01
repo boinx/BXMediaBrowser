@@ -52,8 +52,10 @@ public struct AudioObjectFooterView : View
 			AudioPlayerView()
 
 			Text(container.localizedObjectCount)
-				.controlSize(.small)
 				.lineLimit(1)
+				#if os(macOS)
+				.controlSize(.small)
+				#endif
 		}
 		.padding(.horizontal,20)
 		.padding(.vertical,8)

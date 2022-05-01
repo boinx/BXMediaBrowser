@@ -114,11 +114,14 @@ public struct LocalizedMetadataView : View
 				}
 			}
 		}
-		.controlSize(.small)
 		.foregroundColor(.primary)
 		.frame(maxWidth:280)
 		.fixedSize()
 		.padding(16)
+		
+		#if os(macOS)
+		.controlSize(.small)
+		#endif
     }
 }
 
@@ -151,7 +154,10 @@ public extension Text
 			self
 				.underline()
 				.foregroundColor(.accentColor)
+				
+				#if os(macOS)
 				.cursor(.pointingHand, for:[])
+				#endif
 		}
 		else
 		{
