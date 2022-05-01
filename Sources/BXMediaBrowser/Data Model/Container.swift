@@ -103,7 +103,9 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 	
 	/// An optional helper that can copy dropped file to this Container
 	
+	#if os(macOS)
 	public var fileDropDestination:FolderDropDestination? = nil
+	#endif
 	
 	/// This notification is sent after a new Container was created. The notification object
 	/// is the Container.

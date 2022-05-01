@@ -55,7 +55,7 @@ open class LightroomCCSource : Source, AccessControl
 		
 		super.init(
 			identifier: Self.identifier,
-			icon: Bundle.BXMediaBrowser.image(forResource:"LightroomCC")?.CGImage,
+			icon: CGImage.image(named:"LightroomCC", in:.BXMediaBrowser),
 			name: "Adobe Lightroom CC",
 			filter: LightroomCCFilter())
 		

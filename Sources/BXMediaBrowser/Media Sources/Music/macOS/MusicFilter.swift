@@ -23,7 +23,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 
-#if os(macOS)
+#if canImport(iTunesLibrary)
 
 import iTunesLibrary
 
@@ -177,6 +177,8 @@ open class MusicFilter : Object.Filter
 	}
 }
 
+#endif
+
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -186,11 +188,7 @@ extension Object.Filter.SortType
 	public static let artist = "artist"
 	public static let album = "album"
 	public static let genre = "genre"
-	public static let duration = "duration"
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
-
-
-#endif

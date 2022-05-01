@@ -190,6 +190,8 @@ open class LightroomCCObject : Object, AppLifecycleMixin
 	{
 		DispatchQueue.main.async
 		{
+			#if os(macOS)
+			
 			if !BXProgressWindowController.shared.isVisible
 			{
 				BXProgressWindowController.shared.title = NSLocalizedString("Importing Media Files", bundle:.BXMediaBrowser, comment:"Progress Title")
@@ -197,6 +199,12 @@ open class LightroomCCObject : Object, AppLifecycleMixin
 				BXProgressWindowController.shared.isIndeterminate = true
 				BXProgressWindowController.shared.show()
 			}
+			
+			#else
+			
+			#warning("TODO: implement for iOS")
+			
+			#endif
 		}
 	}
 	
@@ -206,6 +214,7 @@ open class LightroomCCObject : Object, AppLifecycleMixin
 
 	// MARK: - QuickLook
 	
+
 	/// Returns the filename of the local preview file
 	
 	public var previewFilename:String
@@ -263,8 +272,11 @@ open class LightroomCCObject : Object, AppLifecycleMixin
 				{
 					TempFilePool.shared.register(localURL)
 					self._previewItemURL = localURL
+					
+					#if os(macOS)
 					QLPreviewPanel.shared().refreshCurrentPreviewItem()
 					QLPreviewPanel.shared().reloadData()
+					#endif
 				}
 			}
  		}

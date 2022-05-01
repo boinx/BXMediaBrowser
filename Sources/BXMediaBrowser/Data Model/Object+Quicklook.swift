@@ -34,6 +34,8 @@ import QuickLookUI
 // MARK: -
 
 
+#if canImport(QuickLookUI)
+
 extension Object : QLPreviewItem
 {
 	open var previewItemURL:URL!
@@ -46,6 +48,23 @@ extension Object : QLPreviewItem
 		self.name
     }
 }
+
+#else
+
+extension Object
+{
+	@objc open var previewItemURL:URL!
+    {
+		nil
+    }
+
+	@objc open var previewItemTitle: String!
+    {
+		self.name
+    }
+}
+
+#endif
 
 
 //----------------------------------------------------------------------------------------------------------------------

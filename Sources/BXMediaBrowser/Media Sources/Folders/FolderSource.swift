@@ -200,11 +200,15 @@ open class FolderSource : Source, AccessControl
 		
 		var url:URL? = nil
 		
+		#if os(macOS)
+		
 		NSOpenPanel.presentModal(title:message, message:message, buttonLabel:allow, directoryURL:folder, canChooseFiles:false, canChooseDirectories:true, allowsMultipleSelection:false)
 		{
 			urls in
 			url = urls.first
 		}
+		
+		#endif
 		
 		return url
 	}

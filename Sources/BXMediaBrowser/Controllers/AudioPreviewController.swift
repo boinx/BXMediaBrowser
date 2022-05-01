@@ -89,10 +89,21 @@ public class AudioPreviewController : NSObject, ObservableObject, AVAudioPlayerD
 	{
 		super.init()
 		
+		#if os(macOS)
+		
 		self.objectObserver = NotificationCenter.default.publisher(for:NSCollectionView.didSelectObjects, object:nil).sink
 		{
 			[weak self] in self?.updateObject(with:$0)
 		}
+		
+		#else
+		
+		self.objectObserver = NotificationCenter.default.publisher(for:UICollectionView.didSelectObjects, object:nil).sink
+		{
+			[weak self] in self?.updateObject(with:$0)
+		}
+		
+		#endif
 	}
 	
 	/// Called when new Object are selected in the ObjectCollectionView. If a single Object was selected, and

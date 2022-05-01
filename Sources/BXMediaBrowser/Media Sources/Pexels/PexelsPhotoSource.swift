@@ -143,10 +143,18 @@ open class PexelsPhotoSource : Source, AccessControl
 			let ok = NSLocalizedString("Remove", bundle:.BXMediaBrowser, comment:"Button Title")
 			let cancel = NSLocalizedString("Cancel", bundle:.BXMediaBrowser, comment:"Button Title")
 			
+			#if os(macOS)
+			
 			NSAlert.presentModal(style:.critical, title:title, message:message, okButton:ok, cancelButton:cancel)
 			{
 				[weak self] in self?.removeContainer(container)
 			}
+			
+			#else
+			
+			#warning("TODO: implement for iOS")
+			
+			#endif
 		})
 	}
 
