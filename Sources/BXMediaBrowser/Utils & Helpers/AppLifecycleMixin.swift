@@ -67,7 +67,7 @@ public extension AppLifecycleMixin
 		
 		#else
 		
-		self.observers += NotificationCenter.default.publisher(for:UIApplicationDelegate.willTerminateNotification, object:nil).sink
+		self.observers += NotificationCenter.default.publisher(for:UIApplication.willTerminateNotification, object:nil).sink
 		{
 			_ in handler()
 		}
@@ -86,7 +86,7 @@ public extension AppLifecycleMixin
 		
 		#else
 		
-		self.observers += NotificationCenter.default.publisher(for:UIApplicationDelegate.applicationDidBecomeActive, object:nil).sink
+		self.observers += NotificationCenter.default.publisher(for:UIApplication.didBecomeActiveNotification, object:nil).sink
 		{
 			_ in handler()
 		}

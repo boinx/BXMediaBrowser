@@ -23,6 +23,8 @@ import QuickLookThumbnailing
 
 extension QLThumbnailGenerator
 {
+	/// Creates a thumbnail image for the specified URL and size
+	
     public func thumbnail(with url:URL, maxSize:CGSize, type:QLThumbnailGenerator.Request.RepresentationTypes = .thumbnail) async throws -> CGImage
     {
         try await withCheckedThrowingContinuation
