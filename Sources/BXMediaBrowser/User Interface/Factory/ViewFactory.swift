@@ -205,6 +205,14 @@ public extension ViewFactory
 
 	@ViewBuilder class func defaultHeaderView(for container:Container?, uiState:UIState) -> some View
 	{
+		#if os(macOS)
+		if let container = container as? MusicContainer, let filter = container.filter as? MusicFilter
+		{
+			MusicFilterBar(with:container, filter:filter)
+			return
+		}
+		#endif
+
 		if let container = container as? UnsplashContainer, let filter = container.filter as? UnsplashFilter
 		{
 			UnsplashFilterBar(with:container, filter:filter)
@@ -225,10 +233,10 @@ public extension ViewFactory
 		{
 			PhotosFilterBar(with:container, filter:filter)
 		}
-		else if let container = container as? MusicContainer, let filter = container.filter as? MusicFilter
-		{
-			MusicFilterBar(with:container, filter:filter)
-		}
+//		else if let container = container as? MusicContainer, let filter = container.filter as? MusicFilter
+//		{
+//			MusicFilterBar(with:container, filter:filter)
+//		}
 		else if let container = container as? FolderContainer, let filter = container.filter as? FolderFilter
 		{
 			FolderFilterBar(with:container, filter:filter)
@@ -246,14 +254,22 @@ public extension ViewFactory
 
 	@ViewBuilder class func defaultFooterView(for container:Container?, uiState:UIState) -> some View
 	{
+		#if os(macOS)
+		if let container = container as? MusicContainer
+		{
+			AudioObjectFooterView(container:container)
+			return
+		}
+		#endif
+		
 		if let container = container as? AudioFolderContainer
 		{
 			AudioObjectFooterView(container:container)
 		}
-		else if let container = container as? MusicContainer
-		{
-			AudioObjectFooterView(container:container)
-		}
+//		else if let container = container as? MusicContainer
+//		{
+//			AudioObjectFooterView(container:container)
+//		}
 		else if let container = container
 		{
 			DefaultObjectFooterView(container:container, uiState:uiState)
