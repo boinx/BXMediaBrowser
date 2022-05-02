@@ -52,15 +52,13 @@ open class AudioObjectViewController : ObjectViewController
     	NSUserInterfaceItemIdentifier("BXMediaBrowser.AudioObjectViewController")
 	}
 	
-	// width 0 means full width of the view
-	
-	override class var width:CGFloat { 0 }
-	
-	// The cell is 46pt high
+	override open var nibName:NSNib.Name? { nil }
+
+	override open var nibBundle:Bundle? { nil }
+
+	override class var width:CGFloat { 0 }	// width 0 means full width of the view
 	
 	override class var height:CGFloat { 46 }
-	
-	// No spacing between cells - to make it look like a NSTableView
 	
 	override class var spacing:CGFloat { 0 }
 
@@ -76,6 +74,121 @@ open class AudioObjectViewController : ObjectViewController
 
 
 	// MARK: - Setup
+	
+
+	/// Builds the view hierarchy for a single cell
+	
+	override open func loadView()
+	{
+		self.view = ObjectView(frame:CGRect(x:0, y:0, width:946, height:46))
+		self.view.translatesAutoresizingMaskIntoConstraints = false
+		
+		let imageView = NSImageView(frame:CGRect(x:6, y:7, width:32, height:32))
+		self.imageView = imageView
+		self.view.addSubview(imageView)
+		
+		let nameField = NSTextField(frame:CGRect(x:40, y:24, width:4, height:16))
+		self.nameField = nameField
+		self.view.addSubview(nameField)
+		
+		let ratingView = ObjectRatingView(frame: CGRect(x:46, y:24, width:90, height:16))
+		self.ratingView = ratingView
+		self.view.addSubview(ratingView)
+		
+		let durationField = NSTextField(frame:CGRect(x:924, y:24, width:4, height:16))
+		self.durationField = durationField
+		self.view.addSubview(durationField)
+		
+		let metadataField = NSTextField(frame:CGRect(x:40, y:6, width:880, height:14))
+		self.metadataField = metadataField
+		self.view.addSubview(metadataField)
+		
+		let sizeField = NSTextField(frame:CGRect(x:924, y:6, width:4, height:14))
+		self.sizeField = sizeField
+		self.view.addSubview(sizeField)
+		
+		imageView.translatesAutoresizingMaskIntoConstraints = false
+		imageView.leadingAnchor.constraint(equalTo:view.leadingAnchor, constant:6).isActive = true
+		imageView.topAnchor.constraint(equalTo:view.topAnchor, constant:7).isActive = true
+		imageView.widthAnchor.constraint(equalToConstant:32).isActive = true
+		imageView.heightAnchor.constraint(equalToConstant:32).isActive = true
+		imageView.imageScaling = .scaleProportionallyUpOrDown
+
+		nameField.translatesAutoresizingMaskIntoConstraints = false
+		nameField.topAnchor.constraint(equalTo:view.topAnchor, constant:6).isActive = true
+		nameField.leadingAnchor.constraint(equalTo:imageView.trailingAnchor, constant:4).isActive = true
+		nameField.widthAnchor.constraint(greaterThanOrEqualToConstant:32).isActive = true
+		nameField.heightAnchor.constraint(equalToConstant:16).isActive = true
+		nameField.font = NSFont.systemFont(ofSize:NSFont.systemFontSize)
+		nameField.alignment = .left
+		nameField.lineBreakMode = .byTruncatingTail
+		nameField.drawsBackground = false
+		nameField.isBezeled = false
+		nameField.isBordered = false
+		nameField.isEditable = false
+		nameField.isSelectable = false
+
+		ratingView.translatesAutoresizingMaskIntoConstraints = false
+		ratingView.topAnchor.constraint(equalTo:view.topAnchor, constant:7).isActive = true
+		ratingView.leadingAnchor.constraint(equalTo:nameField.trailingAnchor, constant:4).isActive = true
+		ratingView.heightAnchor.constraint(equalToConstant:16).isActive = true
+		let width1 = ratingView.widthAnchor.constraint(equalToConstant:90)
+		width1.priority = .defaultHigh
+		width1.isActive = true
+
+		durationField.translatesAutoresizingMaskIntoConstraints = false
+		durationField.topAnchor.constraint(equalTo:view.topAnchor, constant:6).isActive = true
+		durationField.leadingAnchor.constraint(greaterThanOrEqualTo:ratingView.trailingAnchor, constant:4).isActive = true
+		durationField.trailingAnchor.constraint(equalTo:view.trailingAnchor, constant:-20).isActive = true
+		durationField.heightAnchor.constraint(equalToConstant:16).isActive = true
+		let width2 = durationField.widthAnchor.constraint(greaterThanOrEqualToConstant:60)
+		width2.priority = .defaultHigh
+		width2.isActive = true
+		durationField.font = NSFont.systemFont(ofSize:NSFont.systemFontSize)
+		durationField.alignment = .right
+		durationField.lineBreakMode = .byTruncatingTail
+		durationField.drawsBackground = false
+		durationField.isBezeled = false
+		durationField.isBordered = false
+		durationField.isEditable = false
+		durationField.isSelectable = false
+
+		metadataField.translatesAutoresizingMaskIntoConstraints = false
+		metadataField.topAnchor.constraint(equalTo:nameField.bottomAnchor, constant:4).isActive = true
+		metadataField.leadingAnchor.constraint(equalTo:imageView.trailingAnchor, constant:4).isActive = true
+		metadataField.widthAnchor.constraint(greaterThanOrEqualToConstant:32).isActive = true
+		metadataField.heightAnchor.constraint(equalToConstant:14).isActive = true
+		metadataField.font = NSFont.systemFont(ofSize:NSFont.smallSystemFontSize)
+		metadataField.alignment = .left
+		metadataField.lineBreakMode = .byTruncatingTail
+		metadataField.drawsBackground = false
+		metadataField.isBezeled = false
+		metadataField.isBordered = false
+		metadataField.isEditable = false
+		metadataField.isSelectable = false
+		metadataField.alphaValue = 0.5
+
+		sizeField.translatesAutoresizingMaskIntoConstraints = false
+		sizeField.topAnchor.constraint(equalTo:nameField.bottomAnchor, constant:4).isActive = true
+		sizeField.leadingAnchor.constraint(greaterThanOrEqualTo:metadataField.trailingAnchor, constant:2).isActive = true
+		sizeField.heightAnchor.constraint(equalToConstant:14).isActive = true
+		sizeField.trailingAnchor.constraint(equalTo:view.trailingAnchor, constant:-20).isActive = true
+		let width3 = sizeField.widthAnchor.constraint(equalToConstant:52)
+		width3.priority = .defaultHigh
+		width3.isActive = true
+		sizeField.font = NSFont.systemFont(ofSize:NSFont.smallSystemFontSize)
+		sizeField.alignment = .right
+		sizeField.lineBreakMode = .byTruncatingTail
+		sizeField.drawsBackground = false
+		sizeField.isBezeled = false
+		sizeField.isBordered = false
+		sizeField.isEditable = false
+		sizeField.isSelectable = false
+		sizeField.alphaValue = 0.5
+		
+		self.view.needsLayout = true
+	}
+	
 	
 	override open func setup()
 	{
@@ -170,7 +283,9 @@ open class AudioObjectViewController : ObjectViewController
 		self.durationField?.stringValue = duration.shortTimecodeString()
 		self.sizeField?.stringValue = size?.fileSizeDescription ?? ""
 		
-		self.nameField?.alphaValue = object.isLocallyAvailable ? 1.0 : 0.5
+		let alpha:CGFloat = object.isLocallyAvailable ? 1.0 : 0.5
+		self.nameField?.alphaValue = alpha
+		self.nameField?.alphaValue = alpha
 	}
 	
 	
