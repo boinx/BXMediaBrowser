@@ -25,6 +25,7 @@
 
 import BXSwiftUtils
 import CoreGraphics
+import Foundation
 
 #if canImport(QuickLookUI)
 import QuickLookUI
