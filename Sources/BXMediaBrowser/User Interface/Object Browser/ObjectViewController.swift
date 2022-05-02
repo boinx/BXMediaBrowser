@@ -128,6 +128,10 @@ open class ObjectViewController : NSCollectionViewItem
 	{
 		guard let object = object else { return }
 
+		// Load the view lazily
+		
+		_ = self.view
+
 		// Reset
 		
 		self.imageView?.image = nil
@@ -238,7 +242,8 @@ open class ObjectViewController : NSCollectionViewItem
 	
 	open func showRatingControl(_ isInside:Bool)
 	{
-		let showRating = isInside || self.object.rating > 0
+		let rating = self.object?.rating ?? 0
+		let showRating = isInside || rating > 0
 		self.textField?.isHidden = showRating
 		self.ratingView?.isHidden = !showRating
 	}

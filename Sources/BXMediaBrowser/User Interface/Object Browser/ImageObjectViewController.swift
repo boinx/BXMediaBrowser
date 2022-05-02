@@ -39,6 +39,20 @@ open class ImageObjectViewController : ObjectViewController
     	NSUserInterfaceItemIdentifier("BXMediaBrowser.ImageObjectViewController")
 	}
 	
+	// Look for a Nib file with the same name as the class.
+	
+	override open var nibName:NSNib.Name?
+    {
+		nil
+	}
+
+	// Look for the Nib file in the BXMediaBrowser bundle instead of the app bundle
+	
+	override open var nibBundle:Bundle?
+    {
+		nil
+	}
+
 	override class var width:CGFloat { 120 }
 	
 	override class var height:CGFloat { 96 }
@@ -50,27 +64,78 @@ open class ImageObjectViewController : ObjectViewController
 		didSet { self.updateHighlight() }
 	}
 	
+	private var retainedImageView:NSImageView? = nil
+	private var retainedTextField:NSTextField? = nil
+	
 	
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	override open func setup()
+	override open func loadView()
 	{
-		super.setup()
+		self.view = ObjectView(frame:CGRect(x:0, y:0, width:120, height:96))
 		
-		self.hasThumbnail = false 
-		self.textField?.lineBreakMode = .byTruncatingTail
-		self.imageView?.imageScaling = .scaleProportionallyUpOrDown
+		let imageView = NSImageView(frame:CGRect(x:0, y:16, width:120, height:80))
+		self.retainedImageView = imageView
+		self.imageView = imageView
+		self.view.addSubview(imageView)
 		
-		guard let thumbnail = self.imageView?.subviews.first else { return }
-		guard let useCountView = useCountView else { return }
+		let textField = NSTextField(frame:CGRect(x:0, y:0, width:120, height:14))
+		self.retainedTextField = textField
+		self.textField = textField
+		self.view.addSubview(textField)
 		
+		let useCountView = NSTextField(frame:CGRect(x:0, y:0, width:18, height:18))
+		self.useCountView = useCountView
+		self.view.addSubview(useCountView)
+
+		let ratingView = ObjectRatingView(frame: CGRect(x:0, y:0, width:70, height:14))
+		self.ratingView = ratingView
+		self.view.addSubview(ratingView)
+		
+		imageView.imageScaling = .scaleProportionallyUpOrDown
+		imageView.translatesAutoresizingMaskIntoConstraints = false
+		imageView.topAnchor.constraint(equalTo:view.topAnchor, constant:0).isActive = true
+		imageView.bottomAnchor.constraint(equalTo:view.bottomAnchor, constant:-16).isActive = true
+		imageView.leadingAnchor.constraint(equalTo:view.leadingAnchor, constant:0).isActive = true
+		imageView.trailingAnchor.constraint(equalTo:view.trailingAnchor, constant:0).isActive = true
+
+		textField.controlSize = .small
+		textField.alignment = .center
+		textField.textColor = .secondaryLabelColor
+		textField.lineBreakMode = .byTruncatingTail
+		textField.isBezeled = false
+		textField.isBordered = false
+		textField.isEditable = false
+		textField.isSelectable = false
+		textField.translatesAutoresizingMaskIntoConstraints = false
+		textField.heightAnchor.constraint(equalToConstant:14).isActive = true
+		textField.bottomAnchor.constraint(equalTo:view.bottomAnchor, constant:0).isActive = true
+		textField.leadingAnchor.constraint(equalTo:view.leadingAnchor, constant:0).isActive = true
+		textField.trailingAnchor.constraint(equalTo:view.trailingAnchor, constant:0).isActive = true
+
+		ratingView.translatesAutoresizingMaskIntoConstraints = false
+		ratingView.heightAnchor.constraint(equalToConstant:14).isActive = true
+		ratingView.bottomAnchor.constraint(equalTo:view.bottomAnchor, constant:1).isActive = true
+		ratingView.widthAnchor.constraint(equalToConstant:70).isActive = true
+		ratingView.centerXAnchor.constraint(equalTo:view.centerXAnchor, constant:0).isActive = true
+
 		useCountView.cell = PillTextFieldCell()
 		useCountView.textColor = .white
 		useCountView.backgroundColor = NSColor(calibratedRed:0.0, green:0.5, blue:0.0, alpha:1.0)
 		useCountView.font = NSFont.systemFont(ofSize:11, weight:.bold)
 		useCountView.alignment = .center
-		
+	}
+	
+	override open func setup()
+	{
+		super.setup()
+
+		self.hasThumbnail = false
+
+		guard let thumbnail = self.imageView?.subviews.first else { return }
+		guard let useCountView = useCountView else { return }
+
 		useCountView.translatesAutoresizingMaskIntoConstraints = false
 		useCountView.rightAnchor.constraint(equalTo:thumbnail.rightAnchor, constant:-4).isActive = true
 		useCountView.topAnchor.constraint(equalTo:thumbnail.topAnchor, constant:4).isActive = true
