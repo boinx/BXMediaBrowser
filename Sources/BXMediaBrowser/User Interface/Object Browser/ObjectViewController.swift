@@ -219,7 +219,21 @@ open class ObjectViewController : NSCollectionViewItem
 		}
 	}
 	
-
+	
+	func setupTextField(_ textField:NSTextField, size:CGFloat = NSFont.systemFontSize, alignment:NSTextAlignment = .left, alpha:CGFloat = 1.0)
+	{
+		textField.font = NSFont.systemFont(ofSize:size)
+		textField.alignment = alignment
+		textField.lineBreakMode = .byTruncatingTail
+		textField.drawsBackground = false
+		textField.isBezeled = false
+		textField.isBordered = false
+		textField.isEditable = false
+		textField.isSelectable = false
+		textField.alphaValue = alpha
+	}
+	
+	
 	/// A double-click on the thumbnail executes the externally supplied doubleClickHandler.
 	
 	func setupDoubleClick()

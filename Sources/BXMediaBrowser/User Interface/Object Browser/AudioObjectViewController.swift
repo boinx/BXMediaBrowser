@@ -112,21 +112,14 @@ open class AudioObjectViewController : ObjectViewController
 		imageView.topAnchor.constraint(equalTo:view.topAnchor, constant:7).isActive = true
 		imageView.widthAnchor.constraint(equalToConstant:32).isActive = true
 		imageView.heightAnchor.constraint(equalToConstant:32).isActive = true
-		imageView.imageScaling = .scaleProportionallyUpOrDown
+		imageView.imageScaling = .scaleProportionallyDown
 
 		nameField.translatesAutoresizingMaskIntoConstraints = false
 		nameField.topAnchor.constraint(equalTo:view.topAnchor, constant:6).isActive = true
 		nameField.leadingAnchor.constraint(equalTo:imageView.trailingAnchor, constant:4).isActive = true
 		nameField.widthAnchor.constraint(greaterThanOrEqualToConstant:32).isActive = true
 		nameField.heightAnchor.constraint(equalToConstant:16).isActive = true
-		nameField.font = NSFont.systemFont(ofSize:NSFont.systemFontSize)
-		nameField.alignment = .left
-		nameField.lineBreakMode = .byTruncatingTail
-		nameField.drawsBackground = false
-		nameField.isBezeled = false
-		nameField.isBordered = false
-		nameField.isEditable = false
-		nameField.isSelectable = false
+		self.setupTextField(nameField, size:NSFont.systemFontSize, alignment:.left)
 
 		ratingView.translatesAutoresizingMaskIntoConstraints = false
 		ratingView.topAnchor.constraint(equalTo:view.topAnchor, constant:7).isActive = true
@@ -144,13 +137,7 @@ open class AudioObjectViewController : ObjectViewController
 		let width2 = durationField.widthAnchor.constraint(greaterThanOrEqualToConstant:60)
 		width2.priority = .defaultHigh
 		width2.isActive = true
-		durationField.font = NSFont.systemFont(ofSize:NSFont.systemFontSize)
-		durationField.alignment = .right
-		durationField.lineBreakMode = .byTruncatingTail
-		durationField.drawsBackground = false
-		durationField.isBezeled = false
-		durationField.isBordered = false
-		durationField.isEditable = false
+		self.setupTextField(durationField, size:NSFont.systemFontSize, alignment:.right)
 		durationField.isSelectable = false
 
 		metadataField.translatesAutoresizingMaskIntoConstraints = false
@@ -158,15 +145,7 @@ open class AudioObjectViewController : ObjectViewController
 		metadataField.leadingAnchor.constraint(equalTo:imageView.trailingAnchor, constant:4).isActive = true
 		metadataField.widthAnchor.constraint(greaterThanOrEqualToConstant:32).isActive = true
 		metadataField.heightAnchor.constraint(equalToConstant:14).isActive = true
-		metadataField.font = NSFont.systemFont(ofSize:NSFont.smallSystemFontSize)
-		metadataField.alignment = .left
-		metadataField.lineBreakMode = .byTruncatingTail
-		metadataField.drawsBackground = false
-		metadataField.isBezeled = false
-		metadataField.isBordered = false
-		metadataField.isEditable = false
-		metadataField.isSelectable = false
-		metadataField.alphaValue = 0.5
+		self.setupTextField(metadataField, size:NSFont.smallSystemFontSize, alignment:.left, alpha:0.5)
 
 		sizeField.translatesAutoresizingMaskIntoConstraints = false
 		sizeField.topAnchor.constraint(equalTo:nameField.bottomAnchor, constant:4).isActive = true
@@ -176,15 +155,7 @@ open class AudioObjectViewController : ObjectViewController
 		let width3 = sizeField.widthAnchor.constraint(equalToConstant:52)
 		width3.priority = .defaultHigh
 		width3.isActive = true
-		sizeField.font = NSFont.systemFont(ofSize:NSFont.smallSystemFontSize)
-		sizeField.alignment = .right
-		sizeField.lineBreakMode = .byTruncatingTail
-		sizeField.drawsBackground = false
-		sizeField.isBezeled = false
-		sizeField.isBordered = false
-		sizeField.isEditable = false
-		sizeField.isSelectable = false
-		sizeField.alphaValue = 0.5
+		self.setupTextField(sizeField, size:NSFont.smallSystemFontSize, alignment:.right, alpha:0.5)
 		
 		self.view.needsLayout = true
 	}

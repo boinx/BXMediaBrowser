@@ -86,20 +86,12 @@ open class ImageObjectViewController : ObjectViewController
 		bottom.priority = NSLayoutConstraint.Priority(999)
 		bottom.isActive = true
 
-		textField.controlSize = .small
-		textField.alignment = .center
-		textField.textColor = .secondaryLabelColor
-		textField.lineBreakMode = .byTruncatingTail
-		textField.drawsBackground = false
-		textField.isBezeled = false
-		textField.isBordered = false
-		textField.isEditable = false
-		textField.isSelectable = false
 		textField.translatesAutoresizingMaskIntoConstraints = false
 		textField.heightAnchor.constraint(equalToConstant:14).isActive = true
 		textField.bottomAnchor.constraint(equalTo:view.bottomAnchor, constant:0).isActive = true
 		textField.leadingAnchor.constraint(equalTo:view.leadingAnchor, constant:0).isActive = true
 		textField.trailingAnchor.constraint(equalTo:view.trailingAnchor, constant:0).isActive = true
+		self.setupTextField(textField, size:NSFont.smallSystemFontSize, alignment:.center, alpha:0.5)
 
 		ratingView.translatesAutoresizingMaskIntoConstraints = false
 		ratingView.heightAnchor.constraint(equalToConstant:14).isActive = true
@@ -165,7 +157,7 @@ open class ImageObjectViewController : ObjectViewController
 		self.textField?.isEnabled = isEnabled
 		self.ratingView?.isEnabled = isEnabled
 		self.imageView?.layer?.opacity = alpha
-		self.textField?.layer?.opacity = alpha
+		self.textField?.layer?.opacity = 0.66 * alpha
 		self.useCountView?.layer?.opacity = alpha
 	}
 	
