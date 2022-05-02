@@ -39,53 +39,37 @@ open class ImageObjectViewController : ObjectViewController
     	NSUserInterfaceItemIdentifier("BXMediaBrowser.ImageObjectViewController")
 	}
 	
-	// Look for a Nib file with the same name as the class.
-	
-	override open var nibName:NSNib.Name?
-    {
-		nil
-	}
+	override open var nibName:NSNib.Name? { nil }
 
-	// Look for the Nib file in the BXMediaBrowser bundle instead of the app bundle
-	
-	override open var nibBundle:Bundle?
-    {
-		nil
-	}
+	override open var nibBundle:Bundle? { nil }
 
 	override class var width:CGFloat { 120 }
 	
 	override class var height:CGFloat { 96 }
 	
 	override class var spacing:CGFloat { 10 }
-
-	private var hasThumbnail = false
-	{
-		didSet { self.updateHighlight() }
-	}
-	
-	private var retainedImageView:NSImageView? = nil
-	private var retainedTextField:NSTextField? = nil
 	
 	
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	/// Builds the view hierarchy for a single cell
+	
 	override open func loadView()
 	{
 		self.view = ObjectView(frame:CGRect(x:0, y:0, width:120, height:96))
+		self.view.translatesAutoresizingMaskIntoConstraints = false
 		
 		let imageView = NSImageView(frame:CGRect(x:0, y:16, width:120, height:80))
-		self.retainedImageView = imageView
+		imageView.image = Bundle.BXMediaBrowser.image(forResource:"thumbnail-placeholder")
 		self.imageView = imageView
 		self.view.addSubview(imageView)
 		
 		let textField = NSTextField(frame:CGRect(x:0, y:0, width:120, height:14))
-		self.retainedTextField = textField
 		self.textField = textField
 		self.view.addSubview(textField)
 		
-		let useCountView = NSTextField(frame:CGRect(x:0, y:0, width:18, height:18))
+		let useCountView = NSTextField(frame:CGRect(x:98, y:74, width:18, height:18))
 		self.useCountView = useCountView
 		self.view.addSubview(useCountView)
 
@@ -95,15 +79,18 @@ open class ImageObjectViewController : ObjectViewController
 		
 		imageView.imageScaling = .scaleProportionallyUpOrDown
 		imageView.translatesAutoresizingMaskIntoConstraints = false
-		imageView.topAnchor.constraint(equalTo:view.topAnchor, constant:0).isActive = true
-		imageView.bottomAnchor.constraint(equalTo:view.bottomAnchor, constant:-16).isActive = true
 		imageView.leadingAnchor.constraint(equalTo:view.leadingAnchor, constant:0).isActive = true
 		imageView.trailingAnchor.constraint(equalTo:view.trailingAnchor, constant:0).isActive = true
+		imageView.topAnchor.constraint(equalTo:view.topAnchor, constant:0).isActive = true
+		let bottom = imageView.bottomAnchor.constraint(equalTo:view.bottomAnchor, constant:-16)
+		bottom.priority = NSLayoutConstraint.Priority(999)
+		bottom.isActive = true
 
 		textField.controlSize = .small
 		textField.alignment = .center
 		textField.textColor = .secondaryLabelColor
 		textField.lineBreakMode = .byTruncatingTail
+		textField.drawsBackground = false
 		textField.isBezeled = false
 		textField.isBordered = false
 		textField.isEditable = false
@@ -125,22 +112,31 @@ open class ImageObjectViewController : ObjectViewController
 		useCountView.backgroundColor = NSColor(calibratedRed:0.0, green:0.5, blue:0.0, alpha:1.0)
 		useCountView.font = NSFont.systemFont(ofSize:11, weight:.bold)
 		useCountView.alignment = .center
+		self.configureUseCountLayout()
+		
+		self.view.needsLayout = true
 	}
 	
+	
+	func configureUseCountLayout()
+	{
+		if let useCountView = useCountView, let thumbnail = self.imageView?.subviews.first
+		{
+			useCountView.constraints.forEach { $0.isActive = false }
+			
+			useCountView.translatesAutoresizingMaskIntoConstraints = false
+			useCountView.trailingAnchor.constraint(equalTo:thumbnail.trailingAnchor, constant:-4).isActive = true
+			useCountView.topAnchor.constraint(equalTo:thumbnail.topAnchor, constant:4).isActive = true
+			useCountView.heightAnchor.constraint(equalToConstant:18).isActive = true
+			useCountView.widthAnchor.constraint(greaterThanOrEqualTo:useCountView.heightAnchor, constant:0).isActive = true
+		}
+	}
+	
+
 	override open func setup()
 	{
 		super.setup()
-
 		self.hasThumbnail = false
-
-		guard let thumbnail = self.imageView?.subviews.first else { return }
-		guard let useCountView = useCountView else { return }
-
-		useCountView.translatesAutoresizingMaskIntoConstraints = false
-		useCountView.rightAnchor.constraint(equalTo:thumbnail.rightAnchor, constant:-4).isActive = true
-		useCountView.topAnchor.constraint(equalTo:thumbnail.topAnchor, constant:4).isActive = true
-		useCountView.heightAnchor.constraint(equalToConstant:18).isActive = true
-		useCountView.widthAnchor.constraint(greaterThanOrEqualTo:useCountView.heightAnchor, constant:0).isActive = true
 	}
 	
 	
@@ -162,6 +158,7 @@ open class ImageObjectViewController : ObjectViewController
 			let h = image.height
 			let size = CGSize(width:w, height:h)
 			self.imageView?.image = NSImage(cgImage:image, size:size)
+			self.configureUseCountLayout()
 		}
 	
 		// Name
@@ -206,6 +203,11 @@ open class ImageObjectViewController : ObjectViewController
 
 	// MARK: -
 	
+	private var hasThumbnail = false
+	{
+		didSet { self.updateHighlight() }
+	}
+
     override public var isSelected:Bool
     {
         didSet { self.updateHighlight() }
