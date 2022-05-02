@@ -23,69 +23,19 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 
-#if os(macOS)
+#if os(iOS)
 
-import SwiftUI
+import UIKit
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-/// ObjectBrowserView displays a header, ObjectCollectionView, and a footer.
-///
-/// Depending on the currenty selected Container, different subviews will be displayed.
-
-public struct ObjectBrowserView : View
+open class ObjectCell : UICollectionViewCell
 {
-	// Model
-	
-	var container:Container?
-	@ObservedObject var uiState:UIState
-	
-	// Environment
-	
-	@Environment(\.viewFactory) private var viewFactory
-	
-	// Init
-	
-	public init(for container:Container?, uiState:UIState)
-	{
-		self.container = container
-		self.uiState = uiState
-	}
-	
-	// View
-	
-	public var body: some View
-    {
-		let cellType = viewFactory.objectCellType(for:container, uiState:uiState)
-		
-		return VStack(spacing:0)
-		{
-			viewFactory.objectsHeaderView(for:container, uiState:uiState)
-				.id(headerID)
-				
-			Color.primary.opacity(0.2).frame(height:1) // Divider line
-			
-			ObjectCollectionView(container:container, cellType:cellType, uiState:uiState)
-			
-			Color.primary.opacity(0.2).frame(height:1) // Divider line
+	/// The data model for this cell
 
-			viewFactory.objectsFooterView(for:container, uiState:uiState)
-				.id(footerID)
-		}
-		.frame(minWidth:240, maxWidth:.infinity)
-   }
-   
-   var headerID:String
-   {
-		"ObjectBrowserView.header." + (container?.identifier ?? "")
-   }
-   
-   var footerID:String
-   {
-		"ObjectBrowserView.footer." + (container?.identifier ?? "")
-   }
+	public var object:Object!
 }
 
 
