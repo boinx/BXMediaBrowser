@@ -106,7 +106,6 @@
 		D01B49A127CA1378008249C0 /* ImageObjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B493C27CA1378008249C0 /* ImageObjectViewController.swift */; };
 		D01B49A227CA1378008249C0 /* QuicklookCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B493D27CA1378008249C0 /* QuicklookCollectionView.swift */; };
 		D01B49A327CA1378008249C0 /* AudioObjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B493E27CA1378008249C0 /* AudioObjectViewController.swift */; };
-		D01B49A527CA1378008249C0 /* AudioObjectViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D01B494027CA1378008249C0 /* AudioObjectViewController.xib */; };
 		D01B49A627CA1378008249C0 /* ObjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B494127CA1378008249C0 /* ObjectView.swift */; };
 		D01B49A727CA1378008249C0 /* ObjectInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B494227CA1378008249C0 /* ObjectInfoView.swift */; };
 		D01B49A827CA1378008249C0 /* ViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B494427CA1378008249C0 /* ViewFactory.swift */; };
@@ -272,7 +271,6 @@
 		D01B493C27CA1378008249C0 /* ImageObjectViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageObjectViewController.swift; sourceTree = "<group>"; };
 		D01B493D27CA1378008249C0 /* QuicklookCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuicklookCollectionView.swift; sourceTree = "<group>"; };
 		D01B493E27CA1378008249C0 /* AudioObjectViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioObjectViewController.swift; sourceTree = "<group>"; };
-		D01B494027CA1378008249C0 /* AudioObjectViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioObjectViewController.xib; sourceTree = "<group>"; };
 		D01B494127CA1378008249C0 /* ObjectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectView.swift; sourceTree = "<group>"; };
 		D01B494227CA1378008249C0 /* ObjectInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectInfoView.swift; sourceTree = "<group>"; };
 		D01B494427CA1378008249C0 /* ViewFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewFactory.swift; sourceTree = "<group>"; };
@@ -637,7 +635,6 @@
 				D01B493927CA1378008249C0 /* ObjectViewController.swift */,
 				D01B493C27CA1378008249C0 /* ImageObjectViewController.swift */,
 				D01B493E27CA1378008249C0 /* AudioObjectViewController.swift */,
-				D01B494027CA1378008249C0 /* AudioObjectViewController.xib */,
 				D01B493A27CA1378008249C0 /* ObjectRatingView.swift */,
 				D05A15ED28195A3B00E011D5 /* PillTextFieldCell.swift */,
 				D01B494127CA1378008249C0 /* ObjectView.swift */,
@@ -793,7 +790,6 @@
 				D0D9EDB927FEE05800D5D7FB /* Photos.strings in Resources */,
 				D01B494B27CA1378008249C0 /* Music.strings in Resources */,
 				D01B494E27CA1378008249C0 /* Unsplash.strings in Resources */,
-				D01B49A527CA1378008249C0 /* AudioObjectViewController.xib in Resources */,
 				D01B494927CA1378008249C0 /* Library.strings in Resources */,
 				D0BAD11127D3BF5600B749FD /* Pexels.strings in Resources */,
 				D0BAD11527D3C42400B749FD /* Icons.xcassets in Resources */,
