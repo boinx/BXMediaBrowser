@@ -7,9 +7,7 @@
 //**********************************************************************************************************************
 
 
-#if os(macOS)
-import AppKit
-#endif
+import SwiftUI
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -17,24 +15,23 @@ import AppKit
 
 #if os(macOS)
 
-open class BXProgressViewController : NSViewController
+import AppKit
+
+open class BXProgressViewController : NSViewController, ObservableObject
 {
-	@IBOutlet weak var titleField:NSTextField? = nil
-	@IBOutlet weak var progressBar:NSProgressIndicator? = nil
-	@IBOutlet weak var messageField:NSTextField? = nil
-	@IBOutlet weak var cancelButton:NSButton? = nil
-	
+	@Published open var progressTitle:String? = nil
+	@Published open var isIndeterminate:Bool = false
+	@Published open var fraction:Double = 0.0
+	@Published open var progressMessage:String? = nil
 	open var cancelHandler:(()->Void)? = nil
 
-	override open func viewDidLoad()
+	override open func loadView()
 	{
-		super.viewDidLoad()
-		self.progressBar?.usesThreadedAnimation = true
-	}
-
-	@IBAction func cancel(_ sender:NSButton!)
-	{
-		self.cancelHandler?()
+		self.view = BXProgressBackgroundView(frame:CGRect(x:0, y:0, width:360, height:104))
+		
+		let hostView = NSHostingView(rootView: BXProgressView(controller:self))
+		hostView.autoresizingMask = [.width,.height]
+		self.view.addSubview(hostView)
 	}
 }
 
@@ -43,6 +40,31 @@ public class BXProgressBackgroundView : NSView
 	override public var mouseDownCanMoveWindow: Bool
 	{
 		return true
+	}
+}
+
+
+#endif
+
+	
+//----------------------------------------------------------------------------------------------------------------------
+
+
+#if os(iOS)
+
+import UIKit
+
+open class BXProgressViewController : UIHostingController<BXProgressView>, ObservableObject
+{
+	@Published open var progressTitle:String? = nil
+	@Published open var isIndeterminate:Bool = false
+	@Published open var fraction:Double = 0.0
+	@Published open var progressMessage:String? = nil
+	open var cancelHandler:(()->Void)? = nil
+
+	override open func loadView()
+	{
+		self.rootView = BXProgressView(controller:self)
 	}
 }
 

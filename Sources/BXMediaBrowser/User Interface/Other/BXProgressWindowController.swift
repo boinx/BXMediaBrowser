@@ -100,19 +100,10 @@ open class BXProgressWindowController : NSWindowController
 		{
 			guard let progressViewController = self.progressViewController else { return }
 			
-			progressViewController.titleField?.stringValue = self.title
-			progressViewController.messageField?.stringValue = self.message
-			progressViewController.progressBar?.doubleValue = self.value
-			progressViewController.progressBar?.isIndeterminate = self.isIndeterminate
-			
-			if self.isIndeterminate
-			{
-				progressViewController.progressBar?.startAnimation(nil)
-			}
-			else
-			{
-				progressViewController.progressBar?.stopAnimation(nil)
-			}
+			progressViewController.progressTitle = self.title
+			progressViewController.progressMessage = self.message
+			progressViewController.fraction = self.value
+			progressViewController.isIndeterminate = self.isIndeterminate
 		}
 	}
 }
