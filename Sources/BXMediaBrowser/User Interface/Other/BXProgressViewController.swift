@@ -27,10 +27,13 @@ open class BXProgressViewController : NSViewController, ObservableObject
 
 	override open func loadView()
 	{
-		self.view = BXProgressBackgroundView(frame:CGRect(x:0, y:0, width:360, height:104))
+		let frame = CGRect(x:0, y:0, width:360, height:104)
 		
 		let hostView = NSHostingView(rootView: BXProgressView(controller:self))
+		hostView.frame = frame
 		hostView.autoresizingMask = [.width,.height]
+		
+		self.view = BXProgressBackgroundView(frame:frame)
 		self.view.addSubview(hostView)
 	}
 }
@@ -39,7 +42,12 @@ public class BXProgressBackgroundView : NSView
 {
 	override public var mouseDownCanMoveWindow: Bool
 	{
-		return true
+		true
+	}
+	
+	override public var canBecomeKeyView: Bool
+	{
+		true
 	}
 }
 

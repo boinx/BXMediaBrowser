@@ -28,7 +28,7 @@ public struct BXProgressView : View
 	
 	public var body: some View
 	{
-		VStack(alignment:.leading, spacing:12)
+		VStack(alignment:.leading, spacing:8)
 		{
 			if let title = controller.progressTitle
 			{

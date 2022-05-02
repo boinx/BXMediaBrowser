@@ -20,20 +20,35 @@ open class BXProgressWindowController : NSWindowController
 {
 	public static let shared:BXProgressWindowController =
 	{
-		let bundle = Bundle.BXMediaBrowser //(for:BXProgressWindowController.self)
-		let storyboard = NSStoryboard(name:"BXProgressViewController", bundle:bundle)
-		let controller = storyboard.instantiateInitialController() as! BXProgressWindowController
+		let window = NSWindow(
+			contentRect: CGRect(x:0, y:0, width:360, height:104),
+			styleMask: .utilityWindow,
+			backing: .buffered,
+			defer: false)
 		
-		controller.window?.isMovableByWindowBackground = true
+		window.styleMask = [.utilityWindow,.fullSizeContentView]
+		window.isMovableByWindowBackground = true
+		window.titlebarAppearsTransparent = true
+		window.titleVisibility = .hidden
+		window.hasShadow = true
 		
-		return controller
+		return BXProgressWindowController(window:window)
 	}()
 
-
-	var progressViewController:BXProgressViewController?
+	override public init(window:NSWindow?)
 	{
-		return self.contentViewController as? BXProgressViewController
+		let viewController = BXProgressViewController(nibName:nil, bundle:nil)
+		self.viewController = viewController
+		window?.contentView = viewController.view
+		super.init(window:window)
 	}
+	
+	public required init?(coder:NSCoder)
+	{
+		fatalError("init(coder:) has not been implemented")
+	}
+	
+	private var viewController:BXProgressViewController? = nil
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -66,8 +81,8 @@ open class BXProgressWindowController : NSWindowController
 	
 	open var cancelHandler:(()->Void)?
 	{
-		set { self.progressViewController?.cancelHandler = newValue }
-		get { self.progressViewController?.cancelHandler }
+		set { self.viewController?.cancelHandler = newValue }
+		get { self.viewController?.cancelHandler }
 	}
 	
 	
@@ -98,12 +113,11 @@ open class BXProgressWindowController : NSWindowController
 	{
 		DispatchQueue.main.asyncIfNeeded
 		{
-			guard let progressViewController = self.progressViewController else { return }
-			
-			progressViewController.progressTitle = self.title
-			progressViewController.progressMessage = self.message
-			progressViewController.fraction = self.value
-			progressViewController.isIndeterminate = self.isIndeterminate
+			guard let viewController = self.viewController else { return }
+			viewController.progressTitle = self.title
+			viewController.progressMessage = self.message
+			viewController.fraction = self.value
+			viewController.isIndeterminate = self.isIndeterminate
 		}
 	}
 }
