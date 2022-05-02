@@ -32,7 +32,7 @@ import BXSwiftUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-open class ImageObjectViewController : ObjectViewController
+open class ImageObjectCell : ObjectCell
 {
     override open class var identifier:NSUserInterfaceItemIdentifier
     {

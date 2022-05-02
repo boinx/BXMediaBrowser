@@ -32,7 +32,7 @@ import AppKit
 //----------------------------------------------------------------------------------------------------------------------
 
 
-open class AudioObjectViewController : ObjectViewController
+open class AudioObjectCell : ObjectCell
 {
 	// Outlets
 	

@@ -71,7 +71,7 @@ class QuicklookCollectionView : NSCollectionView, QLPreviewPanelDataSource , QLP
 		// If a single item is selected, then go through the preview() function of this item as this offers
 		// some subclass customization possibilities.
 		
-		if indexPaths.count == 1, let indexPath = indexPaths.first, let item = self.item(at:indexPath) as? ObjectViewController
+		if indexPaths.count == 1, let indexPath = indexPaths.first, let item = self.item(at:indexPath) as? ObjectCell
 		{
 			item.preview(with:event)
 		}
@@ -147,7 +147,7 @@ class QuicklookCollectionView : NSCollectionView, QLPreviewPanelDataSource , QLP
 	{
 		let indexPaths = Array(self.selectionIndexPaths).sorted()
 		let indexPath = indexPaths[index]
-		guard let objectViewController = self.item(at:indexPath) as? ObjectViewController else { return nil }
+		guard let objectViewController = self.item(at:indexPath) as? ObjectCell else { return nil }
 		return objectViewController
 	}
 
@@ -162,7 +162,7 @@ class QuicklookCollectionView : NSCollectionView, QLPreviewPanelDataSource , QLP
 	
 	public func previewPanel(_ panel:QLPreviewPanel!, sourceFrameOnScreenFor item:QLPreviewItem!) -> NSRect
 	{
-		guard let objectViewController = item as? ObjectViewController else { return .zero }
+		guard let objectViewController = item as? ObjectCell else { return .zero }
 		return objectViewController.previewScreenRect
 	}
 	
@@ -170,7 +170,7 @@ class QuicklookCollectionView : NSCollectionView, QLPreviewPanelDataSource , QLP
 	
 	public func previewPanel(_ panel:QLPreviewPanel!, transitionImageFor item:QLPreviewItem!, contentRect:UnsafeMutablePointer<NSRect>!) -> Any!
 	{
-		guard let objectViewController = item as? ObjectViewController else { return nil }
+		guard let objectViewController = item as? ObjectCell else { return nil }
 		return objectViewController.previewTransitionImage
 	}
 	

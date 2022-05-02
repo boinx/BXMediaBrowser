@@ -36,7 +36,7 @@ import QuickLookUI
 
 /// This subclass of NSCollectionView can display the Objects of a Container
 
-public struct ObjectCollectionView<Cell:ObjectViewController> : NSViewRepresentable
+public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 {
 	// This NSViewRepresentable doesn't return a single view, but a whole hierarchy:
 	//
@@ -432,7 +432,7 @@ extension ObjectCollectionView
 			
 			// Configure the cell with the model object
 			
-			if let cell = item as? ObjectViewController
+			if let cell = item as? ObjectCell
 			{
 				cell.object = object
 			}
@@ -516,7 +516,7 @@ extension ObjectCollectionView
 		func sendDidSelectObjectsNotification(for collectionView:NSCollectionView)
 		{
 			let objects = collectionView.selectionIndexPaths
-				.compactMap { collectionView.item(at:$0) as? ObjectViewController }
+				.compactMap { collectionView.item(at:$0) as? ObjectCell }
 				.compactMap { $0.object }
 			
 			if objects.isEmpty

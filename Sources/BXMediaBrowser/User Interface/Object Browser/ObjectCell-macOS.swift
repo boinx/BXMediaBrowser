@@ -35,7 +35,7 @@ import QuickLookUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-open class ObjectViewController : NSCollectionViewItem
+open class ObjectCell : NSCollectionViewItem
 {
 	/// The data model for this cell
 	
@@ -449,7 +449,7 @@ open class ObjectViewController : NSCollectionViewItem
 // MARK: - QuickLook
 
 
-extension ObjectViewController : QLPreviewItem
+extension ObjectCell : QLPreviewItem
 {
 	@MainActor public var previewItemURL:URL!
     {

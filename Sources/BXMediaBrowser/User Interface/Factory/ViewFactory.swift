@@ -82,7 +82,7 @@ public protocol ViewFactoryAPI
 
 	/// Returns the type of ObjectViewController subclass to be used for the specified Container
 
-	func objectViewControllerType(for container:Container?, uiState:UIState) -> ObjectViewController.Type
+	func objectCellType(for container:Container?, uiState:UIState) -> ObjectCell.Type
 
 	/// Provides context menu items for the specified model instance
 
@@ -127,9 +127,9 @@ open class ViewFactory : ViewFactoryAPI
 		typeErase( Self.defaultFooterView(for:container, uiState:uiState) )
 	}
 
-	open func objectViewControllerType(for container:Container?, uiState:UIState) -> ObjectViewController.Type
+	open func objectCellType(for container:Container?, uiState:UIState) -> ObjectCell.Type
 	{
-		Self.defaultObjectViewControllerType(for:container, uiState:uiState)
+		Self.defaultObjectCellType(for:container, uiState:uiState)
 	}
 
 	open func containerContextMenu(for container:Container) -> AnyView
@@ -324,7 +324,7 @@ public extension ViewFactory
 	}
 
 
-	class func defaultObjectViewControllerType(for container:Container?, uiState:UIState) -> ObjectViewController.Type
+	class func defaultObjectCellType(for container:Container?, uiState:UIState) -> ObjectCell.Type
 	{
 		// For some Container types we want custom ObjectViewControllers
 		
@@ -332,29 +332,29 @@ public extension ViewFactory
 		{
 			if container is AudioFolderContainer
 			{
-				return AudioObjectViewController.self
+				return AudioObjectCell.self
 			}
 
 			#if os(macOS)
 			if container is MusicContainer
 			{
-				return AudioObjectViewController.self
+				return AudioObjectCell.self
 			}
 			#endif
 			
 //			else if container is VideoFolderContainer
 //			{
-//				return VideoObjectViewController.self
+//				return VideoObjectCell.self
 //			}
 //			else if container is PhotosContainer
 //			{
-//				return ImageObjectViewController.self
+//				return ImageObjectCell.self
 //			}
 		}
 		
 		// Default is a ImageObjectViewController
 		
-		return ImageObjectViewController.self
+		return ImageObjectCell.self
 	}
 
 
