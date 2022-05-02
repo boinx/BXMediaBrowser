@@ -112,27 +112,12 @@ open class ImageObjectViewController : ObjectViewController
 		useCountView.backgroundColor = NSColor(calibratedRed:0.0, green:0.5, blue:0.0, alpha:1.0)
 		useCountView.font = NSFont.systemFont(ofSize:11, weight:.bold)
 		useCountView.alignment = .center
-		self.configureUseCountLayout()
+		self.setupUseCountLayout()
 		
 		self.view.needsLayout = true
 	}
 	
 	
-	func configureUseCountLayout()
-	{
-		if let useCountView = useCountView, let thumbnail = self.imageView?.subviews.first
-		{
-			useCountView.constraints.forEach { $0.isActive = false }
-			
-			useCountView.translatesAutoresizingMaskIntoConstraints = false
-			useCountView.trailingAnchor.constraint(equalTo:thumbnail.trailingAnchor, constant:-4).isActive = true
-			useCountView.topAnchor.constraint(equalTo:thumbnail.topAnchor, constant:4).isActive = true
-			useCountView.heightAnchor.constraint(equalToConstant:18).isActive = true
-			useCountView.widthAnchor.constraint(greaterThanOrEqualTo:useCountView.heightAnchor, constant:0).isActive = true
-		}
-	}
-	
-
 	override open func setup()
 	{
 		super.setup()
@@ -158,7 +143,7 @@ open class ImageObjectViewController : ObjectViewController
 			let h = image.height
 			let size = CGSize(width:w, height:h)
 			self.imageView?.image = NSImage(cgImage:image, size:size)
-			self.configureUseCountLayout()
+			self.setupUseCountLayout()
 		}
 	
 		// Name

@@ -203,6 +203,23 @@ open class ObjectViewController : NSCollectionViewItem
 	}
 	
 
+	/// Configures auto-layout for the use count icon
+	
+	func setupUseCountLayout()
+	{
+		if let useCountView = useCountView, let thumbnail = self.imageView?.subviews.first
+		{
+			useCountView.constraints.forEach { $0.isActive = false }
+			
+			useCountView.translatesAutoresizingMaskIntoConstraints = false
+			useCountView.trailingAnchor.constraint(equalTo:thumbnail.trailingAnchor, constant:-4).isActive = true
+			useCountView.topAnchor.constraint(equalTo:thumbnail.topAnchor, constant:4).isActive = true
+			useCountView.heightAnchor.constraint(equalToConstant:18).isActive = true
+			useCountView.widthAnchor.constraint(greaterThanOrEqualTo:useCountView.heightAnchor, constant:0).isActive = true
+		}
+	}
+	
+
 	/// A double-click on the thumbnail executes the externally supplied doubleClickHandler.
 	
 	func setupDoubleClick()
