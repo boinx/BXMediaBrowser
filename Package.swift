@@ -28,7 +28,7 @@ let package = Package(
     dependencies:
     [
         .package(url:"git@github.com:boinx/BXSwiftUtils.git", .branch("master")),
-        .package(url:"git@github.com:boinx/BXSwiftUI.git", .branch("master")),
+        .package(url:"git@github.com:boinx/BXSwiftUI.git", .branch("iOS-compatibility")),
         .package(url:"https://github.com/p2/OAuth2.git", .upToNextMajor(from:"5.0.0")),
     ],
     
