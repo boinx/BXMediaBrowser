@@ -63,7 +63,6 @@ public struct SectionView : View
 				HStack
 				{
 					Text(name.uppercased())
-//						.font(.system(size:11))
 						.font(.caption)
 						.opacity(0.6)
 						

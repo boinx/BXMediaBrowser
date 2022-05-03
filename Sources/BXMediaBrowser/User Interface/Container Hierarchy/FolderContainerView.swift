@@ -58,10 +58,12 @@ public struct FolderContainerView : View
     }
     
     #if os(macOS)
+    
     var dropDestinationView: some View
     {
 		FileDropDestinationView(with:container.fileDropDestination)
     }
+    
     #endif
 }
 

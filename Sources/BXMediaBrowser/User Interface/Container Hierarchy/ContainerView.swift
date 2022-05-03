@@ -82,7 +82,6 @@ public struct ContainerView : View
 						self.removeButton(for:removeHandler)
 					}
 				}
-//				.font(.system(size:13))
 				
 				// Styling
 				

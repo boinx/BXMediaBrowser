@@ -64,7 +64,6 @@ public struct LightroomCCSourceView : View
 				{
 					CustomDisclosureButton(icon:source.icon, label:source.name, isExpanded:self.$source.isExpanded)
 						.leftAligned()
-//						.font(.system(size:13))
 						.padding(.vertical,2)
 						
 					Spacer()
