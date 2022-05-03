@@ -38,6 +38,15 @@ open class ObjectCell : UICollectionViewCell
 	public var object:Object!
 }
 
+open class ImageObjectCell : ObjectCell
+{
+
+}
+
+open class AudioObjectCell : ObjectCell
+{
+
+}
 
 //----------------------------------------------------------------------------------------------------------------------
 

@@ -30,7 +30,22 @@ import UIKit
 import BXSwiftUtils
 import QuickLookThumbnailing
 
-//
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+extension UICollectionView
+{
+	/// This notification is sent when Objects are selected
+		
+	public static let didSelectObjects = NSNotification.Name("UICollectionView.didSelectObjects")
+
+	/// This notification is sent when the user scrolls down to the bottom
+		
+	public static let didScrollToEnd = NSNotification.Name("UICollectionView.didScrollToEnd")
+}
+
+
 ////----------------------------------------------------------------------------------------------------------------------
 //
 //
