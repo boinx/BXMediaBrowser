@@ -37,8 +37,12 @@ public struct BXProgressView : View
 			
 			HStack
 			{
+				#if os(macOS)
 				BXSwiftUI.BXProgressBar(isIndeterminate:controller.isIndeterminate, value:controller.fraction, minValue:0, maxValue:1, size:.regular)
-	
+				#else
+				
+				#endif
+				
 				if let cancelHandler = cancelHandler
 				{
 					Button(action:cancelHandler)
