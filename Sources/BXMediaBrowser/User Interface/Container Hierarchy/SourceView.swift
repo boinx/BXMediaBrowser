@@ -58,7 +58,8 @@ public struct SourceView : View
 			{
 				CustomDisclosureButton(icon:source.icon, label:source.name, isExpanded:self.$source.isExpanded)
 					.leftAligned()
-					.font(.system(size:13))
+//					.font(.system(size:13))
+//					.font(.body)
 					.padding(.vertical,2)
 			},
 			

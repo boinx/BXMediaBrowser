@@ -82,7 +82,7 @@ public struct ContainerView : View
 						self.removeButton(for:removeHandler)
 					}
 				}
-				.font(.system(size:13))
+//				.font(.system(size:13))
 				
 				// Styling
 				
@@ -164,6 +164,7 @@ extension ContainerView
 		
 		Text(container.name)
 			.lineLimit(1)
+//			.font(.body)
 			.truncationMode(.tail)
 			.padding(.trailing,-15)
     }

@@ -112,7 +112,8 @@ public struct PexelsFilterBar : View
 					.strokeBorder()
 					.frame(minWidth:32, maxWidth:240)
 				
-				BXImage(systemName:filter.orientation.icon).font(.system(size:17, weight:.regular))
+				BXImage(systemName:filter.orientation.icon)
+					.font(.system(size:17, weight:.regular))
 					.popupMenu(self.orientationMenuItems(value:self.$filter.orientation))
 
 				ColorIconView(color:filter.color.color)
