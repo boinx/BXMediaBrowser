@@ -2,7 +2,7 @@
 //
 //  BXProgressWindowController.swift
 //	A progress bar window that can be presented modally or as a sheet
-//  Copyright ©2020 Peter Baumgartner. All rights reserved.
+//  Copyright ©2020-2022 Peter Baumgartner. All rights reserved.
 //
 //**********************************************************************************************************************
 
@@ -11,6 +11,7 @@
 
 import BXSwiftUtils
 import AppKit
+import SwiftUI
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -18,45 +19,63 @@ import AppKit
 
 open class BXProgressWindowController : NSWindowController
 {
-	public static let shared:BXProgressWindowController =
+	/// Shared singleton instance of the BXProgressWindowController
+	
+	public static let shared = BXProgressWindowController(window:nil)
+
+	/// The window for this controller is loaded lazily when accessing this property
+	
+	override open var window:NSWindow?
 	{
-		let style:NSWindow.StyleMask = [.utilityWindow,.unifiedTitleAndToolbar]
+		set
+		{
+			super.window = newValue
+		}
 		
-		let window = NSWindow(
-			contentRect: CGRect(x:0, y:0, width:360, height:104),
-			styleMask: style,
-			backing: .buffered,
-			defer: true)
+		get
+		{
+			if super.window == nil { self.loadWindow() }
+			return super.window
+		}
+	}
+	
+	/// Returns the observable BXProgressViewController
+	
+	var viewController:BXProgressViewController?
+	{
+		self.contentViewController as? BXProgressViewController
+	}
+	
+	/// Loads the window and its view hierarchy
+	
+	override open func loadWindow()
+	{
+		let frame = CGRect(x:0, y:0, width:360, height:88)
+		let style:NSWindow.StyleMask = [.utilityWindow,.titled,.fullSizeContentView]
+		let window = NSWindow(contentRect:frame, styleMask:style, backing:.buffered, defer:true)
 		
-		window.styleMask = style
-		window.isMovableByWindowBackground = true
-		window.titlebarAppearsTransparent = true
 		window.titleVisibility = .hidden
+		window.titlebarAppearsTransparent = true
 		window.hasShadow = true
-		
-		return BXProgressWindowController(window:window)
-	}()
+		window.isMovable = true
+		window.isMovableByWindowBackground = true
+		window.contentViewController = BXProgressViewController(nibName:nil, bundle:nil)
 
-	override public init(window:NSWindow?)
-	{
-		let viewController = BXProgressViewController(nibName:nil, bundle:nil)
-		self.viewController = viewController
-		window?.contentView = viewController.view
-		
-		super.init(window:window)
+		self.window = window
 	}
 	
-	public required init?(coder:NSCoder)
+	
+	func unloadWindow()
 	{
-		fatalError("init(coder:) has not been implemented")
+		self.window = nil
 	}
 	
-	private var viewController:BXProgressViewController? = nil
-
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: -
+	
 	open var title:String = ""
 	{
 		didSet { self.update() }
@@ -92,12 +111,14 @@ open class BXProgressWindowController : NSWindowController
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: -
+	
 	open func show()
 	{
-		DispatchQueue.main.asyncIfNeeded
+		DispatchQueue.main.async
 		{
 			self.window?.center()
-			self.showWindow(nil)
+//			self.showWindow(nil)
 			self.window?.makeKeyAndOrderFront(nil)
 		}
 	}
@@ -111,12 +132,18 @@ open class BXProgressWindowController : NSWindowController
 		}
 	}
 
+	override open func close()
+	{
+		super.close()
+		self.unloadWindow()
+	}
 
-	func update()
+	private func update()
 	{
 		DispatchQueue.main.asyncIfNeeded
 		{
 			guard let viewController = self.viewController else { return }
+			
 			viewController.progressTitle = self.title
 			viewController.progressMessage = self.message
 			viewController.fraction = self.value

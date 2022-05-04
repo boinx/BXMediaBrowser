@@ -28,20 +28,17 @@ public struct BXProgressView : View
 	
 	public var body: some View
 	{
-		VStack(alignment:.leading, spacing:8)
+		let title  = controller.progressTitle ?? " "
+		let message = controller.progressMessage ?? " "
+		
+		VStack(alignment:.leading, spacing:4)
 		{
-			if let title = controller.progressTitle
-			{
-				Text(title)
-			}
-			
+			Text(title)
+				.lineLimit(1)
+				
 			HStack
 			{
-				#if os(macOS)
-				BXSwiftUI.BXProgressBar(isIndeterminate:controller.isIndeterminate, value:controller.fraction, minValue:0, maxValue:1, size:.regular)
-				#else
-				
-				#endif
+				BXProgressBar(isIndeterminate:controller.isIndeterminate, value:controller.fraction, minValue:0, maxValue:1)
 				
 				if let cancelHandler = cancelHandler
 				{
@@ -52,12 +49,13 @@ public struct BXProgressView : View
 				}
 			}
 			
-			if let message = controller.progressMessage
-			{
-				Text(message)
-			}
+			Text(message)
+				.font(.caption)
+				.lineLimit(1)
+				.opacity(0.5)
 		}
 		.padding()
+		.edgesIgnoringSafeArea(.all) // This is essential to make the view extend below transparent titlebar of an NSWindow!
 	}
 }
 

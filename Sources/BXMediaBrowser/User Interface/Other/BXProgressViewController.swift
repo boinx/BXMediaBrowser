@@ -2,7 +2,7 @@
 //
 //  BXProgressViewController.swift
 //	A progress bar window that can be presented modally or as a sheet
-//  Copyright ©2020 Peter Baumgartner. All rights reserved.
+//  Copyright ©2020-2022 Peter Baumgartner. All rights reserved.
 //
 //**********************************************************************************************************************
 
@@ -27,17 +27,18 @@ open class BXProgressViewController : NSViewController, ObservableObject
 
 	override open func loadView()
 	{
-		let frame = CGRect(x:0, y:0, width:360, height:104)
+		let frame = CGRect(x:0, y:0, width:360, height:88)
+		self.view = BXProgressBackgroundView(frame:frame)
+		self.view.wantsLayer = true
 		
 		let hostView = NSHostingView(rootView: BXProgressView(controller:self))
 		hostView.frame = frame
-		hostView.autoresizingMask = [.width,.height]
-		
-		self.view = BXProgressBackgroundView(frame:frame)
 		self.view.addSubview(hostView)
-		
-		self.view.wantsLayer = true
-		self.view.layer?.cornerRadius = 6.0
+		hostView.translatesAutoresizingMaskIntoConstraints = false
+		hostView.topAnchor.constraint(equalTo:view.topAnchor, constant:0).isActive = true
+		hostView.bottomAnchor.constraint(equalTo:view.bottomAnchor, constant:0).isActive = true
+		hostView.leadingAnchor.constraint(equalTo:view.leadingAnchor, constant:0).isActive = true
+		hostView.trailingAnchor.constraint(equalTo:view.trailingAnchor, constant:0).isActive = true
 	}
 }
 
