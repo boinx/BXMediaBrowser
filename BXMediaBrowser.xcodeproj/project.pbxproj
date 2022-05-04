@@ -87,9 +87,7 @@
 		D01B498E27CA1378008249C0 /* UnsplashFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B492627CA1378008249C0 /* UnsplashFilterBar.swift */; };
 		D01B498F27CA1378008249C0 /* DefaultObjectFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B492727CA1378008249C0 /* DefaultObjectFooterView.swift */; };
 		D01B499027CA1378008249C0 /* FolderFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B492827CA1378008249C0 /* FolderFilterBar.swift */; };
-		D01B499127CA1378008249C0 /* BXProgressWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B492A27CA1378008249C0 /* BXProgressWindowController.swift */; };
 		D01B499227CA1378008249C0 /* MenuAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B492B27CA1378008249C0 /* MenuAction.swift */; };
-		D01B499327CA1378008249C0 /* BXProgressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B492C27CA1378008249C0 /* BXProgressViewController.swift */; };
 		D01B499527CA1378008249C0 /* EfficientVStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B492E27CA1378008249C0 /* EfficientVStack.swift */; };
 		D01B499627CA1378008249C0 /* CustomDisclosureButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B492F27CA1378008249C0 /* CustomDisclosureButton.swift */; };
 		D01B499727CA1378008249C0 /* SourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B493127CA1378008249C0 /* SourceView.swift */; };
@@ -131,7 +129,6 @@
 		D0AA8FC7282038C20009A890 /* AudioObjectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0AA8FBF282038C20009A890 /* AudioObjectCell.swift */; };
 		D0AA8FCB282038CE0009A890 /* ObjectCell-iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0AA8FC9282038CE0009A890 /* ObjectCell-iOS.swift */; };
 		D0AA8FCC282038CE0009A890 /* ObjectCollectionView-iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0AA8FCA282038CE0009A890 /* ObjectCollectionView-iOS.swift */; };
-		D0AA8FCE282038E40009A890 /* BXProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0AA8FCD282038E40009A890 /* BXProgressView.swift */; };
 		D0BAD10727D392D700B749FD /* PexelsPhotoSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BAD0FE27D37A9A00B749FD /* PexelsPhotoSource.swift */; };
 		D0BAD10827D392D700B749FD /* PexelsPhotoContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BAD0FB27D37A9A00B749FD /* PexelsPhotoContainer.swift */; };
 		D0BAD10927D392D700B749FD /* PexelsPhotoObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BAD0F927D37A9A00B749FD /* PexelsPhotoObject.swift */; };
@@ -254,9 +251,7 @@
 		D01B492627CA1378008249C0 /* UnsplashFilterBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnsplashFilterBar.swift; sourceTree = "<group>"; };
 		D01B492727CA1378008249C0 /* DefaultObjectFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultObjectFooterView.swift; sourceTree = "<group>"; };
 		D01B492827CA1378008249C0 /* FolderFilterBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderFilterBar.swift; sourceTree = "<group>"; };
-		D01B492A27CA1378008249C0 /* BXProgressWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BXProgressWindowController.swift; sourceTree = "<group>"; };
 		D01B492B27CA1378008249C0 /* MenuAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuAction.swift; sourceTree = "<group>"; };
-		D01B492C27CA1378008249C0 /* BXProgressViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BXProgressViewController.swift; sourceTree = "<group>"; };
 		D01B492E27CA1378008249C0 /* EfficientVStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EfficientVStack.swift; sourceTree = "<group>"; };
 		D01B492F27CA1378008249C0 /* CustomDisclosureButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomDisclosureButton.swift; sourceTree = "<group>"; };
 		D01B493127CA1378008249C0 /* SourceView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceView.swift; sourceTree = "<group>"; };
@@ -302,7 +297,6 @@
 		D0AA8FBF282038C20009A890 /* AudioObjectCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioObjectCell.swift; sourceTree = "<group>"; };
 		D0AA8FC9282038CE0009A890 /* ObjectCell-iOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ObjectCell-iOS.swift"; sourceTree = "<group>"; };
 		D0AA8FCA282038CE0009A890 /* ObjectCollectionView-iOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ObjectCollectionView-iOS.swift"; sourceTree = "<group>"; };
-		D0AA8FCD282038E40009A890 /* BXProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BXProgressView.swift; sourceTree = "<group>"; };
 		D0BAD0F927D37A9A00B749FD /* PexelsPhotoObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PexelsPhotoObject.swift; sourceTree = "<group>"; };
 		D0BAD0FA27D37A9A00B749FD /* PexelsFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PexelsFilter.swift; sourceTree = "<group>"; };
 		D0BAD0FB27D37A9A00B749FD /* PexelsPhotoContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PexelsPhotoContainer.swift; sourceTree = "<group>"; };
@@ -601,9 +595,6 @@
 		D01B492927CA1378008249C0 /* Other */ = {
 			isa = PBXGroup;
 			children = (
-				D01B492A27CA1378008249C0 /* BXProgressWindowController.swift */,
-				D01B492C27CA1378008249C0 /* BXProgressViewController.swift */,
-				D0AA8FCD282038E40009A890 /* BXProgressView.swift */,
 				D01B492F27CA1378008249C0 /* CustomDisclosureButton.swift */,
 				D01B492E27CA1378008249C0 /* EfficientVStack.swift */,
 				D061B1F22805A35700B365E6 /* NativeSearchField+macOS.swift */,
@@ -836,7 +827,6 @@
 				D01B498927CA1378008249C0 /* PhotosObject.swift in Sources */,
 				D01B495D27CA1378008249C0 /* Source.swift in Sources */,
 				D01B497C27CA1378008249C0 /* ImageFolderSource.swift in Sources */,
-				D01B499127CA1378008249C0 /* BXProgressWindowController.swift in Sources */,
 				D027F92B2802D81B004D4264 /* AppLifecycleMixin.swift in Sources */,
 				D01B499927CA1378008249C0 /* SectionView.swift in Sources */,
 				D0D9EDB427FCADB100D5D7FB /* PHAssetCollection+dateInterval.swift in Sources */,
@@ -865,7 +855,6 @@
 				D01B495327CA1378008249C0 /* TempFilePool.swift in Sources */,
 				D052BE2C27F0B97D0084068A /* LightroomCCFilter.swift in Sources */,
 				D00DF1C027F613FE00DC1D27 /* UIState.swift in Sources */,
-				D01B499327CA1378008249C0 /* BXProgressViewController.swift in Sources */,
 				D0AA8FC5282038C20009A890 /* ImageObjectCell.swift in Sources */,
 				D01B496027CA1378008249C0 /* Object+Hashable.swift in Sources */,
 				D0D9EDC527FF3CF300D5D7FB /* PhotosFilterBar.swift in Sources */,
@@ -929,7 +918,6 @@
 				D01B498727CA1378008249C0 /* PhotosSource.swift in Sources */,
 				D0BAD10C27D392D700B749FD /* PexelsJSON.swift in Sources */,
 				D01B497427CA1378008249C0 /* MusicSource.swift in Sources */,
-				D0AA8FCE282038E40009A890 /* BXProgressView.swift in Sources */,
 				D05F5F7027E8E840003735C6 /* LightroomCC+JSON.swift in Sources */,
 				D052BE2E27F0BDA80084068A /* LightroomCCFilterBar.swift in Sources */,
 				D01B498C27CA1378008249C0 /* SearchBar.swift in Sources */,

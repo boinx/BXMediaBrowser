@@ -24,6 +24,7 @@
 
 
 import BXSwiftUtils
+import BXSwiftUI
 import CoreGraphics
 import Foundation
 
@@ -196,6 +197,7 @@ open class LightroomCCObject : Object, AppLifecycleMixin
 			if !BXProgressWindowController.shared.isVisible
 			{
 				BXProgressWindowController.shared.title = NSLocalizedString("Importing Media Files", bundle:.BXMediaBrowser, comment:"Progress Title")
+				BXProgressWindowController.shared.message = NSLocalizedString("Downloading", bundle:.BXMediaBrowser, comment:"Progress Title")
 				BXProgressWindowController.shared.value = 0.0
 				BXProgressWindowController.shared.isIndeterminate = true
 				BXProgressWindowController.shared.show()
