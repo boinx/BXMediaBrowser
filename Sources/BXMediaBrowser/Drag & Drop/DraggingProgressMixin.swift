@@ -92,12 +92,18 @@ extension DraggingProgressMixin
 			[weak self] in self?.cancel()
 		}
 
+		// Initial values
+		
+		BXProgressWindowController.shared.title = self.progressTitle ?? NSLocalizedString("Importing Media Files", bundle:.BXMediaBrowser, comment:"Progress Title")
+		BXProgressWindowController.shared.message = NSLocalizedString("Downloading", bundle:.BXMediaBrowser, comment:"Progress Message")
+		BXProgressWindowController.shared.value = 0.0
+		BXProgressWindowController.shared.isIndeterminate = false
+
 		// If requested, show the progress bar immediately
 		
 		if showImmediately && !BXProgressWindowController.shared.isVisible
 		{
-			BXProgressWindowController.shared.title = self.progressTitle ?? NSLocalizedString("Importing Media Files", bundle:.BXMediaBrowser, comment:"Progress Title")
-			BXProgressWindowController.shared.isIndeterminate = false
+			BXProgressWindowController.shared.show()
 		}
 		
 		return progress
