@@ -35,6 +35,9 @@ open class BXProgressViewController : NSViewController, ObservableObject
 		
 		self.view = BXProgressBackgroundView(frame:frame)
 		self.view.addSubview(hostView)
+		
+		self.view.wantsLayer = true
+		self.view.layer?.cornerRadius = 6.0
 	}
 }
 

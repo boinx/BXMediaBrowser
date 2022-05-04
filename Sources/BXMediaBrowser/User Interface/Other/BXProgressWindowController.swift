@@ -20,13 +20,15 @@ open class BXProgressWindowController : NSWindowController
 {
 	public static let shared:BXProgressWindowController =
 	{
+		let style:NSWindow.StyleMask = [.utilityWindow,.unifiedTitleAndToolbar]
+		
 		let window = NSWindow(
 			contentRect: CGRect(x:0, y:0, width:360, height:104),
-			styleMask: .utilityWindow,
+			styleMask: style,
 			backing: .buffered,
-			defer: false)
+			defer: true)
 		
-		window.styleMask = [.utilityWindow,.fullSizeContentView]
+		window.styleMask = style
 		window.isMovableByWindowBackground = true
 		window.titlebarAppearsTransparent = true
 		window.titleVisibility = .hidden
@@ -40,6 +42,7 @@ open class BXProgressWindowController : NSWindowController
 		let viewController = BXProgressViewController(nibName:nil, bundle:nil)
 		self.viewController = viewController
 		window?.contentView = viewController.view
+		
 		super.init(window:window)
 	}
 	
