@@ -64,7 +64,7 @@ extension DraggingProgressMixin
 {
 	/// Creates a root Progress object with the specified totalUnitCount
 	
-	@discardableResult public func prepareProgress(with count:Int, showInderminate:Bool = false) -> Progress
+	@discardableResult public func prepareProgress(with count:Int, showImmediately:Bool = false) -> Progress
 	{
 		// Create root Progress
 		
@@ -94,7 +94,7 @@ extension DraggingProgressMixin
 
 		// If requested, show the progress bar immediately
 		
-		if showInderminate && !BXProgressWindowController.shared.isVisible
+		if showImmediately && !BXProgressWindowController.shared.isVisible
 		{
 			BXProgressWindowController.shared.title = self.progressTitle ?? NSLocalizedString("Importing Media Files", bundle:.BXMediaBrowser, comment:"Progress Title")
 			BXProgressWindowController.shared.isIndeterminate = false
