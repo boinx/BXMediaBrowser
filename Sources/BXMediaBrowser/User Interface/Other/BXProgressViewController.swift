@@ -48,11 +48,6 @@ public class BXProgressBackgroundView : NSView
 	{
 		true
 	}
-	
-	override public var canBecomeKeyView: Bool
-	{
-		true
-	}
 }
 
 
