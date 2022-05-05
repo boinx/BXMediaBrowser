@@ -76,8 +76,9 @@ public class FolderObserver : NSObject
 		
 		// Open the folder referenced by URL for monitoring only
 		
-		fileDescriptor = open(url.path, O_EVTONLY)
-    
+		self.fileDescriptor = open(url.path, O_EVTONLY)
+ 		guard fileDescriptor != -1 else { return }
+		
 		// Define a dispatch source monitoring the folder for additions, deletions, and renamings
 		
 		monitorSource = DispatchSource.makeFileSystemObjectSource(fileDescriptor:fileDescriptor, eventMask:.write, queue:DispatchQueue.main)
