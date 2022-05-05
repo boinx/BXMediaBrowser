@@ -70,34 +70,36 @@ extension DraggingProgressMixin
 	
 	@discardableResult public func prepareProgress(with count:Int, showImmediately:Bool = false) -> Progress
 	{
-		// Create root Progress
-		
 		if let progress = Progress.current()
 		{
-			print("Progress.current() = \(progress)")
+			print("WARNING: Progress.current() = \(progress)")
 		}
 		
-		let progress = Progress(totalUnitCount:Int64(count))
+		if let progress = Progress.globalParent
+		{
+			print("WARNING: Progress.globalParent = \(progress)")
+		}
+		
+		// Create root Progress
+		
+		Progress.globalParent = nil
+		
+		let progress = Progress(parent:nil, userInfo:nil)		// Using this init doesn't link parent to possibly still existing Progress.current()
+        progress.totalUnitCount = Int64(count)
 		self.progress = progress
+		
 		Progress.globalParent = progress
 
 		// Register KVO observers
 		
-		self.progressObserver = KVO(object:progress, keyPath:"fractionCompleted", options:[.new])
+		self.progressObserver = progress.publisher(for:\.fractionCompleted, options:.new).sink
 		{
-			[weak self, weak progress] _,_ in
-			guard let self = self else { return }
-			guard let progress = progress else { return }
-			guard !progress.isCancelled else { return }
-			let fraction = progress.fractionCompleted
-			self.updateProgress(fraction)
+			[weak self] in self?.updateProgress($0)
 		}
 		
 		BXProgressWindowController.shared.cancelHandler =
 		{
-			[weak self, weak progress] in
-			progress?.cancel()
-			self?.cancelProgress()
+			[weak self] in self?.cancelProgress()
 		}
 
 		// Initial values
@@ -153,12 +155,10 @@ extension DraggingProgressMixin
 	
 	public func hideProgress()
 	{
-		DispatchQueue.main.async
-		{
-			logDragAndDrop.debug {"\(Self.self).\(#function)"}
-			BXProgressWindowController.shared.hide()
-			self.cleanupProgress()
-		}
+		logDragAndDrop.debug {"\(Self.self).\(#function)"}
+		
+		BXProgressWindowController.shared.hide()
+		self.cleanupProgress()
 	}
 
 
@@ -167,15 +167,21 @@ extension DraggingProgressMixin
 	public func cancelProgress()
 	{
 		logDragAndDrop.debug {"\(Self.self).\(#function)"}
+		
 		self.progress?.cancel()
 		self.cleanupProgress()
 	}
 	
 	public func cleanupProgress()
 	{
+		logDragAndDrop.debug {"\(Self.self).\(#function)"}
+		
 		self.progress = nil
 		Progress.globalParent = nil
 		self.progressObserver = nil
+		
+		BXProgressWindowController.shared.cancelHandler = nil
+		BXProgressWindowController.shared.hide()
 	}
 }
 
