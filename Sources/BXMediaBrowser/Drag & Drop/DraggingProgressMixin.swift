@@ -113,7 +113,7 @@ extension DraggingProgressMixin
 	}
 	
 	
-	/// Update the progress UI with the specified fraction
+	/// Updates the progress UI with the specified fraction
 	
 	private func updateProgress(_ fraction:Double)
 	{
@@ -135,6 +135,8 @@ extension DraggingProgressMixin
 		}
 	}
 	
+	/// Update the progress UI with the specified fraction
+	
 	private func setProgress(_ fraction:Double)
 	{
 		BXProgressWindowController.shared.title = self.progressTitle ?? NSLocalizedString("Importing Media Files", bundle:.BXMediaBrowser, comment:"Progress Title")
@@ -147,15 +149,11 @@ extension DraggingProgressMixin
 	
 	public func hideProgress()
 	{
-		DispatchQueue.main.asyncIfNeeded
+		DispatchQueue.main.async
 		{
 			logDragAndDrop.debug {"\(Self.self).\(#function)"}
-			
 			BXProgressWindowController.shared.hide()
-		
-			Progress.globalParent = nil
-			self.progress = nil
-			self.progressObserver = nil
+			self.cleanupProgress()
 		}
 	}
 
