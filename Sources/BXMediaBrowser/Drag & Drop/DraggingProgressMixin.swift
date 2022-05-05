@@ -179,9 +179,7 @@ extension DraggingProgressMixin
 		self.progress = nil
 		Progress.globalParent = nil
 		self.progressObserver = nil
-		
 		BXProgressWindowController.shared.cancelHandler = nil
-		BXProgressWindowController.shared.hide()
 	}
 }
 
