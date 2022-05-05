@@ -41,7 +41,11 @@ public protocol DraggingProgressMixin : AnyObject
 	
 	var progressTitle:String? { get }
 	
-    /// The Progress object for the current download/copy operation
+ 	/// The (optional) message for the download progress window
+	
+	var progressMessage:String? { get }
+	
+   /// The Progress object for the current download/copy operation
 	
     var progress:Progress? { set get }
     
@@ -94,10 +98,9 @@ extension DraggingProgressMixin
 
 		// Initial values
 		
-		BXProgressWindowController.shared.title = self.progressTitle ?? NSLocalizedString("Importing Media Files", bundle:.BXMediaBrowser, comment:"Progress Title")
-		BXProgressWindowController.shared.message = NSLocalizedString("Downloading", bundle:.BXMediaBrowser, comment:"Progress Message")
-		BXProgressWindowController.shared.value = 0.0
-		BXProgressWindowController.shared.isIndeterminate = false
+		self.progressStartTime = CFAbsoluteTimeGetCurrent()
+
+		self.setProgress(0.0)
 
 		// If requested, show the progress bar immediately
 		
@@ -120,9 +123,7 @@ extension DraggingProgressMixin
 			let dt = now - self.progressStartTime
 			let percent = Int(fraction*100)
 			
-			BXProgressWindowController.shared.title = self.progressTitle ?? NSLocalizedString("Importing Media Files", bundle:.BXMediaBrowser, comment:"Progress Title")
-			BXProgressWindowController.shared.isIndeterminate = false
-			BXProgressWindowController.shared.value = fraction
+			self.setProgress(fraction)
 			
 			if !BXProgressWindowController.shared.isVisible && dt>0.5 //&& fraction<0.6
 			{
@@ -134,6 +135,13 @@ extension DraggingProgressMixin
 		}
 	}
 	
+	private func setProgress(_ fraction:Double)
+	{
+		BXProgressWindowController.shared.title = self.progressTitle ?? NSLocalizedString("Importing Media Files", bundle:.BXMediaBrowser, comment:"Progress Title")
+		BXProgressWindowController.shared.message = self.progressMessage ?? NSLocalizedString("Downloading", bundle:.BXMediaBrowser, comment:"Progress Message")
+		BXProgressWindowController.shared.value = fraction
+		BXProgressWindowController.shared.isIndeterminate = false
+	}
 	
 	/// Hides the progress UI
 	

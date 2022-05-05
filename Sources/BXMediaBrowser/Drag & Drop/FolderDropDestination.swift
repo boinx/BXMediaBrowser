@@ -72,6 +72,10 @@ public class FolderDropDestination : NSObject, NSDraggingDestination, DraggingDe
 	
 	public var progressTitle:String? { nil }
 	
+    /// Returns the optional message for the download progress
+	
+	public var progressMessage:String? { nil }
+	
 	
 //----------------------------------------------------------------------------------------------------------------------
 
