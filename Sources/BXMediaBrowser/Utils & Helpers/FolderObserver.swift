@@ -33,15 +33,15 @@ public class FolderObserver : NSObject
 {
 	/// The URL of the directory to be observed
 	
-    private let url: URL
+    private let url:URL
     
     /// An externally supplied closure that will be called when the directory (or its contents) is modififed
 	
-	public var folderDidChange:(() -> Void)? = nil
+	public var folderDidChange:(()->Void)? = nil
 	
 	/// A file descriptor for the monitored directory
 	
-    private var fileDescriptor: CInt = -1
+    private var fileDescriptor:CInt = -1
     
     /// A dispatch source to monitor a file descriptor created from the directory
 	
@@ -69,10 +69,7 @@ public class FolderObserver : NSObject
 
     func resume()
     {
-		guard monitorSource == nil && fileDescriptor == -1 else
-		{
-			return
-		}
+		guard monitorSource == nil && fileDescriptor == -1 else { return }
 		
 		// Open the folder referenced by URL for monitoring only
 		
@@ -81,11 +78,11 @@ public class FolderObserver : NSObject
 		
 		// Define a dispatch source monitoring the folder for additions, deletions, and renamings
 		
-		monitorSource = DispatchSource.makeFileSystemObjectSource(fileDescriptor:fileDescriptor, eventMask:.write, queue:DispatchQueue.main)
+		self.monitorSource = DispatchSource.makeFileSystemObjectSource(fileDescriptor:fileDescriptor, eventMask:.write, queue:DispatchQueue.main)
     
 		// Define the block to call when a file change is detected
 		
-		monitorSource?.setEventHandler
+		self.monitorSource?.setEventHandler
 		{
 			[weak self] in self?._folderDidChange()
 		}
