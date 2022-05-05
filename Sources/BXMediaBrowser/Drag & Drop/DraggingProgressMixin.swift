@@ -72,20 +72,22 @@ extension DraggingProgressMixin
 	{
 		// Create root Progress
 		
+		if let progress = Progress.current()
+		{
+			print("Progress.current() = \(progress)")
+		}
+		
 		let progress = Progress(totalUnitCount:Int64(count))
 		self.progress = progress
 		Progress.globalParent = progress
 
-		// Store starting time
-		
-		self.progressStartTime = CFAbsoluteTimeGetCurrent()
-		
 		// Register KVO observers
 		
 		self.progressObserver = KVO(object:progress, keyPath:"fractionCompleted", options:[.new])
 		{
-			[weak self] _,_ in
+			[weak self, weak progress] _,_ in
 			guard let self = self else { return }
+			guard let progress = progress else { return }
 			guard !progress.isCancelled else { return }
 			let fraction = progress.fractionCompleted
 			self.updateProgress(fraction)
@@ -93,7 +95,9 @@ extension DraggingProgressMixin
 		
 		BXProgressWindowController.shared.cancelHandler =
 		{
-			[weak self] in self?.cancel()
+			[weak self, weak progress] in
+			progress?.cancel()
+			self?.cancelProgress()
 		}
 
 		// Initial values
@@ -160,11 +164,18 @@ extension DraggingProgressMixin
 
 	/// Cancels the currently running download/copy operation
 	
-	public func cancel()
+	public func cancelProgress()
 	{
 		logDragAndDrop.debug {"\(Self.self).\(#function)"}
 		self.progress?.cancel()
-		self.hideProgress()
+		self.cleanupProgress()
+	}
+	
+	public func cleanupProgress()
+	{
+		self.progress = nil
+		Progress.globalParent = nil
+		self.progressObserver = nil
 	}
 }
 

@@ -19,7 +19,7 @@ extension Progress
 	/// is not visible from the current thread (because it was made current in a different thread). In this case it
 	/// may help to resort to globalParent - which is available across all threads.
 	
-	static var globalParent:Progress?
+	public static var globalParent:Progress?
 	{
 		set
 		{
