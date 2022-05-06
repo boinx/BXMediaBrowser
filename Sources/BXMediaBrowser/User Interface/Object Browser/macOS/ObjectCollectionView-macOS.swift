@@ -155,34 +155,8 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 			defer { self.restoreScrollPos(for:collectionView, with:pos) }
 
 			let layout = self.createLayout(for:collectionView, newSize:newSize)
-			
-//			do
-//			{
-//				try NSException.toSwiftError
-//				{
-					collectionView.collectionViewLayout = layout
-//				}
-//			}
-//			catch
-//			{
-//				print("CRASH due to NSCollectionView exception")
-//			}
-			
+			collectionView.collectionViewLayout = layout
 		}
-		
-//		scrollView.postsFrameChangedNotifications = true
-//
-//		coordinator.frameObserver = NotificationCenter.default.publisher(for:NSView.frameDidChangeNotification, object:scrollView)
-////			.throttle(for:0.02, scheduler:DispatchQueue.main, latest:true)
-//			.sink
-//			{
-//				[weak coordinator] _ in
-//
-////				DispatchQueue.main.async
-////				{
-//					coordinator?.updateLayoutHandler?()
-////				}
-//			}
 			
 		coordinator.updateLayoutHandler?()
 		coordinator.cellType = self.cellType
@@ -238,7 +212,7 @@ extension ObjectCollectionView
 			itemHeight = .absolute(h)
 			item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension:itemWidth, heightDimension:itemHeight))
 		}
-//		else if cellWidth >= maxWidth-10 || viewWidth < minWidth
+//		else if cellWidth >= maxWidth-10 || viewWidth < minWidth // Avoid crash due to an exception when setting a new layout while the old layout's absolute cell size is larger that the view size
 //		{
 //			itemWidth = .fractionalWidth(1.0)
 //			itemHeight = .fractionalWidth(1.0/ratio)
