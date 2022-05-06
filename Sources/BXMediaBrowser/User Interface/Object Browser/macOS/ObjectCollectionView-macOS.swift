@@ -84,7 +84,7 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 		// Configure layout
 		
 		self.registerCellType(for:collectionView)
-        let (layout,_) = self.createLayout(for:collectionView)
+        let layout = self.createLayout(for:collectionView)
         collectionView.collectionViewLayout = layout
         
         // Configure selection handling
@@ -123,32 +123,50 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 	public func updateNSView(_ scrollView:NSScrollView, context:Context)
 	{
 		guard let collectionView = scrollView.documentView as? QuicklookCollectionView else { return }
+		let coordinator = context.coordinator
+
+		coordinator.uiState = self.uiState
+		
+		// Register new CellType
 		
 		self.registerCellType(for:collectionView)
 
-		context.coordinator.uiState = self.uiState
-
+		// Update layout for CellType
+		
 		context.coordinator.updateLayoutHandler =
 		{
+			guard collectionView.bounds.width > 0.0 else { return }
+			
 			let pos = self.saveScrollPos(for:collectionView)
 			defer { self.restoreScrollPos(for:collectionView, with:pos) }
 			
-			let (layout,columns) = self.createLayout(for:collectionView)
-			let needsAnimation = false //context.coordinator.columnCount != columns
-			context.coordinator.columnCount = columns
+			let layout = self.createLayout(for:collectionView)
+//			let (layout,columns) = self.createLayout(for:collectionView)
+//			context.coordinator.columnCount = columns
 			
-			if needsAnimation
-			{
-				collectionView.animator().collectionViewLayout = layout
-			}
-			else
-			{
-				collectionView.collectionViewLayout = layout
-			}
+//			collectionView.collectionViewLayout?.invalidateLayout()
+			collectionView.collectionViewLayout = layout
+			
 		}
 		
-		context.coordinator.updateLayoutHandler?()
-		context.coordinator.cellType = self.cellType
+		// Observe view size changes so that layout can be adjusted as needed
+		
+		scrollView.postsFrameChangedNotifications = true
+
+		coordinator.frameObserver = NotificationCenter.default.publisher(for:NSView.frameDidChangeNotification, object:scrollView)
+//			.throttle(for:0.02, scheduler:DispatchQueue.main, latest:true)
+			.sink
+			{
+				[weak coordinator] _ in
+				
+//				DispatchQueue.main.async
+//				{
+					coordinator?.updateLayoutHandler?()
+//				}
+			}
+			
+		coordinator.updateLayoutHandler?()
+		coordinator.cellType = self.cellType
 		
 		// Setting the Container triggers reload of NSCollectionView of the datasource, so this must be done last
 		
@@ -174,42 +192,61 @@ extension ObjectCollectionView
 {
 	/// Creates a NSCollectionViewCompositionalLayout that looks similar to regular flow layout
 	
-    private func createLayout(for collectionView:NSCollectionView) -> (NSCollectionViewLayout,Int)
+    private func createLayout(for collectionView:NSCollectionView) -> NSCollectionViewLayout
     {
 		let w:CGFloat = cellType.width
 		let h:CGFloat = cellType.height
 		let d:CGFloat = cellType.spacing
 		let ratio = w / h
 		
-		let rowWidth = max(1.0, collectionView.bounds.width - d)
-		let scale = self.uiState.thumbnailScale
+		let viewWidth = collectionView.bounds.width
+		let minWidth:CGFloat = 70 // This is the minimum width to display ObjectRatingView without clipping
+		let maxWidth = max(minWidth, viewWidth-4*d)
+		let size = self.uiState.thumbnailSize
 		
 		// Item (cell)
 		
-		let cellWidth = (scale * rowWidth - d).clipped(to:1.0...rowWidth)
+		let cellWidth = size.clipped(to:minWidth...maxWidth)
 		let cellHeight = cellWidth / ratio
-		let width:NSCollectionLayoutDimension = w>0 ? .absolute(cellWidth) : .fractionalWidth(1.0)
-		let height:NSCollectionLayoutDimension = w>0 ? .absolute(cellHeight) : .absolute(h)
-		let itemSize = NSCollectionLayoutSize(widthDimension:width, heightDimension:height)
-        let item = NSCollectionLayoutItem(layoutSize:itemSize)
 
+		var itemWidth:NSCollectionLayoutDimension = .absolute(cellWidth)
+		var itemHeight:NSCollectionLayoutDimension = .absolute(cellHeight)
+        var item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension:itemWidth, heightDimension:itemHeight))
+		
+		if w == 0	// Use full view width and hard-coded height as specified (used for AudioObjectCells)
+		{
+			itemWidth = .fractionalWidth(1.0)
+			itemHeight = .absolute(h)
+			item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension:itemWidth, heightDimension:itemHeight))
+		}
+//		else if cellWidth >= maxWidth-10 || viewWidth < minWidth
+//		{
+//			itemWidth = .fractionalWidth(1.0)
+//			itemHeight = .fractionalWidth(1.0/ratio)
+//			item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension:itemWidth, heightDimension:itemHeight))
+//		}
+		
 		// Group (row)
 		
-        let groupSize = NSCollectionLayoutSize(widthDimension:.fractionalWidth(1.0), heightDimension:height)
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize:groupSize, subitems:[item])
+        let groupSize = NSCollectionLayoutSize(widthDimension:.fractionalWidth(1.0), heightDimension:itemHeight)
+ 		let group = NSCollectionLayoutGroup.horizontal(layoutSize:groupSize, subitems:[item])
+//		let count = Int((availableWidth+d) / (cellWidth+d))
+//        let group = NSCollectionLayoutGroup.horizontal(layoutSize:groupSize, subitem:item, count:16)	// Fix for crash #2818747896u was suggested at https://stackoverflow.com/questions/63748268/uicollectionviewdiffabledatasource-crash-invalid-parameter-not-satisfying-item
 		group.interItemSpacing = .fixed(d)
+		group.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading:.flexible(0), top:nil, trailing:.flexible(0), bottom:nil)
 		
 		// Section
 		
         let section = NSCollectionLayoutSection(group:group)
-        section.contentInsets = NSDirectionalEdgeInsets(top:d, leading:d, bottom:d, trailing:d)
         section.interGroupSpacing = d
+        section.contentInsets = NSDirectionalEdgeInsets(top:d, leading:d, bottom:d, trailing:d)
         
         // View
         
         let layout = NSCollectionViewCompositionalLayout(section:section)
-		let columns = Int(rowWidth / (cellWidth+d))
-		return (layout,columns)
+//		let columns = Int((maxWidth+d) / (cellWidth+d))
+//		return (layout,columns)
+		return layout
     }
 
 
@@ -320,7 +357,7 @@ extension ObjectCollectionView
 	
 		@MainActor var cellType:Cell.Type
 
-		/// The UIState is resposible for thumbnailScale
+		/// The UIState is responsible for thumbnailScale
 		
 		@MainActor var uiState:UIState
 		{
@@ -340,7 +377,7 @@ extension ObjectCollectionView
 		
 		/// The number of cells that fit inside a single row
 		
-		var columnCount = 0
+//		var columnCount = 0
 		
 		/// Set this property to true if data model changes should be animated in the view (e.g. objects inserted or deleted)
 		
@@ -349,6 +386,7 @@ extension ObjectCollectionView
 		/// References to internal subscriptions
 		
 		private var layoutObserver:Any? = nil
+		internal var frameObserver:Any? = nil
 		private var dataSourceObserver:Any? = nil
 		
 		
@@ -369,7 +407,8 @@ extension ObjectCollectionView
 
 		@MainActor func updateLayout()
 		{
-			self.layoutObserver = uiState.$thumbnailScale
+//			self.layoutObserver = uiState.$thumbnailScale
+			self.layoutObserver = uiState.$thumbnailSize
 				.throttle(for:0.02, scheduler:DispatchQueue.main, latest:true)
 				.sink
 				{
