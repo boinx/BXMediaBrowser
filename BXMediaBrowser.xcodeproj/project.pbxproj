@@ -119,6 +119,7 @@
 		D05F5F7027E8E840003735C6 /* LightroomCC+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05F5F6B27E8E840003735C6 /* LightroomCC+JSON.swift */; };
 		D05F5F7127E8E840003735C6 /* LightroomCCSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05F5F6C27E8E840003735C6 /* LightroomCCSource.swift */; };
 		D061B1F32805A35700B365E6 /* NativeSearchField+macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = D061B1F22805A35700B365E6 /* NativeSearchField+macOS.swift */; };
+		D06503B728255442002E52BE /* BXCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D06503B628255442002E52BE /* BXCollectionView.swift */; };
 		D0AA8FC0282038C20009A890 /* ObjectCollectionView-macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0AA8FB8282038C20009A890 /* ObjectCollectionView-macOS.swift */; };
 		D0AA8FC1282038C20009A890 /* ObjectRatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0AA8FB9282038C20009A890 /* ObjectRatingView.swift */; };
 		D0AA8FC2282038C20009A890 /* QuicklookCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0AA8FBA282038C20009A890 /* QuicklookCollectionView.swift */; };
@@ -287,6 +288,7 @@
 		D05F5F6B27E8E840003735C6 /* LightroomCC+JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LightroomCC+JSON.swift"; sourceTree = "<group>"; };
 		D05F5F6C27E8E840003735C6 /* LightroomCCSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LightroomCCSource.swift; sourceTree = "<group>"; };
 		D061B1F22805A35700B365E6 /* NativeSearchField+macOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NativeSearchField+macOS.swift"; sourceTree = "<group>"; };
+		D06503B628255442002E52BE /* BXCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BXCollectionView.swift; sourceTree = "<group>"; };
 		D0AA8FB8282038C20009A890 /* ObjectCollectionView-macOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ObjectCollectionView-macOS.swift"; sourceTree = "<group>"; };
 		D0AA8FB9282038C20009A890 /* ObjectRatingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectRatingView.swift; sourceTree = "<group>"; };
 		D0AA8FBA282038C20009A890 /* QuicklookCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuicklookCollectionView.swift; sourceTree = "<group>"; };
@@ -681,13 +683,14 @@
 			isa = PBXGroup;
 			children = (
 				D0AA8FB8282038C20009A890 /* ObjectCollectionView-macOS.swift */,
-				D0AA8FB9282038C20009A890 /* ObjectRatingView.swift */,
 				D0AA8FBA282038C20009A890 /* QuicklookCollectionView.swift */,
+				D06503B628255442002E52BE /* BXCollectionView.swift */,
 				D0AA8FBB282038C20009A890 /* ObjectCell-macOS.swift */,
-				D0AA8FBC282038C20009A890 /* ObjectView.swift */,
 				D0AA8FBD282038C20009A890 /* ImageObjectCell.swift */,
-				D0AA8FBE282038C20009A890 /* PillTextFieldCell.swift */,
 				D0AA8FBF282038C20009A890 /* AudioObjectCell.swift */,
+				D0AA8FBC282038C20009A890 /* ObjectView.swift */,
+				D0AA8FB9282038C20009A890 /* ObjectRatingView.swift */,
+				D0AA8FBE282038C20009A890 /* PillTextFieldCell.swift */,
 			);
 			path = macOS;
 			sourceTree = "<group>";
@@ -820,6 +823,7 @@
 				D01B496527CA1378008249C0 /* Library+State.swift in Sources */,
 				D01B497A27CA1378008249C0 /* AudioFolderSource.swift in Sources */,
 				D01C33CF27CA70F3003337A9 /* NSPasteboard+Objects.swift in Sources */,
+				D06503B728255442002E52BE /* BXCollectionView.swift in Sources */,
 				D0BAD10827D392D700B749FD /* PexelsPhotoContainer.swift in Sources */,
 				D00DF1BE27F45BA300DC1D27 /* SortOrderPopup.swift in Sources */,
 				D01B497127CA1378008249C0 /* MusicFilter.swift in Sources */,

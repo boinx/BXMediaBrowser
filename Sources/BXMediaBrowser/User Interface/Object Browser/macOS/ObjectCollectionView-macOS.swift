@@ -79,7 +79,7 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 	
 	public func makeNSView(context:Context) -> NSScrollView
 	{
-		let collectionView = QuicklookCollectionView(frame:.zero)
+		let collectionView = BXCollectionView(frame:.zero)
  		
 		// Configure layout
 		
@@ -122,7 +122,7 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 	
 	public func updateNSView(_ scrollView:NSScrollView, context:Context)
 	{
-		guard let collectionView = scrollView.documentView as? QuicklookCollectionView else { return }
+		guard let collectionView = scrollView.documentView as? BXCollectionView else { return }
 		let coordinator = context.coordinator
 
 		coordinator.uiState = self.uiState
@@ -141,29 +141,48 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 			defer { self.restoreScrollPos(for:collectionView, with:pos) }
 			
 			let layout = self.createLayout(for:collectionView)
-//			let (layout,columns) = self.createLayout(for:collectionView)
-//			context.coordinator.columnCount = columns
-			
-//			collectionView.collectionViewLayout?.invalidateLayout()
 			collectionView.collectionViewLayout = layout
-			
 		}
 		
 		// Observe view size changes so that layout can be adjusted as needed
 		
-		scrollView.postsFrameChangedNotifications = true
+		collectionView.willSetFrameSizeHandler =
+		{
+			[weak collectionView] newSize in
+			guard let collectionView = collectionView else { return }
 
-		coordinator.frameObserver = NotificationCenter.default.publisher(for:NSView.frameDidChangeNotification, object:scrollView)
-//			.throttle(for:0.02, scheduler:DispatchQueue.main, latest:true)
-			.sink
-			{
-				[weak coordinator] _ in
-				
-//				DispatchQueue.main.async
+			let pos = self.saveScrollPos(for:collectionView)
+			defer { self.restoreScrollPos(for:collectionView, with:pos) }
+
+			let layout = self.createLayout(for:collectionView, newSize:newSize)
+			
+//			do
+//			{
+//				try NSException.toSwiftError
 //				{
-					coordinator?.updateLayoutHandler?()
+					collectionView.collectionViewLayout = layout
 //				}
-			}
+//			}
+//			catch
+//			{
+//				print("CRASH due to NSCollectionView exception")
+//			}
+			
+		}
+		
+//		scrollView.postsFrameChangedNotifications = true
+//
+//		coordinator.frameObserver = NotificationCenter.default.publisher(for:NSView.frameDidChangeNotification, object:scrollView)
+////			.throttle(for:0.02, scheduler:DispatchQueue.main, latest:true)
+//			.sink
+//			{
+//				[weak coordinator] _ in
+//
+////				DispatchQueue.main.async
+////				{
+//					coordinator?.updateLayoutHandler?()
+////				}
+//			}
 			
 		coordinator.updateLayoutHandler?()
 		coordinator.cellType = self.cellType
@@ -192,16 +211,16 @@ extension ObjectCollectionView
 {
 	/// Creates a NSCollectionViewCompositionalLayout that looks similar to regular flow layout
 	
-    private func createLayout(for collectionView:NSCollectionView) -> NSCollectionViewLayout
+    private func createLayout(for collectionView:NSCollectionView, newSize:NSSize? = nil) -> NSCollectionViewLayout
     {
 		let w:CGFloat = cellType.width
 		let h:CGFloat = cellType.height
 		let d:CGFloat = cellType.spacing
 		let ratio = w / h
 		
-		let viewWidth = collectionView.bounds.width
+		let viewWidth = newSize?.width ?? collectionView.bounds.width
 		let minWidth:CGFloat = 70 // This is the minimum width to display ObjectRatingView without clipping
-		let maxWidth = max(minWidth, viewWidth-4*d)
+		let maxWidth = max(minWidth, viewWidth - 2*d - 20)
 		let size = self.uiState.thumbnailSize
 		
 		// Item (cell)
@@ -230,10 +249,7 @@ extension ObjectCollectionView
 		
         let groupSize = NSCollectionLayoutSize(widthDimension:.fractionalWidth(1.0), heightDimension:itemHeight)
  		let group = NSCollectionLayoutGroup.horizontal(layoutSize:groupSize, subitems:[item])
-//		let count = Int((availableWidth+d) / (cellWidth+d))
-//        let group = NSCollectionLayoutGroup.horizontal(layoutSize:groupSize, subitem:item, count:16)	// Fix for crash #2818747896u was suggested at https://stackoverflow.com/questions/63748268/uicollectionviewdiffabledatasource-crash-invalid-parameter-not-satisfying-item
 		group.interItemSpacing = .fixed(d)
-		group.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading:.flexible(0), top:nil, trailing:.flexible(0), bottom:nil)
 		
 		// Section
 		
@@ -243,10 +259,7 @@ extension ObjectCollectionView
         
         // View
         
-        let layout = NSCollectionViewCompositionalLayout(section:section)
-//		let columns = Int((maxWidth+d) / (cellWidth+d))
-//		return (layout,columns)
-		return layout
+        return NSCollectionViewCompositionalLayout(section:section)
     }
 
 
