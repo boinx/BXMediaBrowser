@@ -55,7 +55,7 @@ open class UIState : ObservableObject
 	
 	/// This scale affects the display size of Object cells in a CollectionView
 	
-	@Published public var thumbnailScale:Double
+	@Published public var thumbnailSize:Double
 	{
 		didSet { self.saveToPrefs() }
 	}
@@ -64,7 +64,7 @@ open class UIState : ObservableObject
 	
 	public var prefsKeyPrefix:String
 	
-	private var thumbnailKey:String { "\(prefsKeyPrefix)-thumbnailScale"}
+	private var thumbnailSizeKey:String { "\(prefsKeyPrefix)-thumbnailSize"}
 	private var sidebarWidthKey:String { "\(prefsKeyPrefix)-sidebarWidth"}
 	private var libraryHeightKey:String { "\(prefsKeyPrefix)-libraryHeight"}
 	
@@ -77,10 +77,10 @@ open class UIState : ObservableObject
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	public init(prefsKeyPrefix:String = UUID().uuidString, thumbnailScale:Double = 0.25)
+	public init(prefsKeyPrefix:String = UUID().uuidString, thumbnailSize:Double = 120)
 	{
 		self.prefsKeyPrefix = prefsKeyPrefix
-		self.thumbnailScale = thumbnailScale
+		self.thumbnailSize = thumbnailSize
 		self.loadFromPrefs()
 		
 		#if os(macOS)
@@ -97,8 +97,8 @@ open class UIState : ObservableObject
 	
 	private func loadFromPrefs()
 	{
-		let scale = UserDefaults.standard.double(forKey:thumbnailKey)
-		if scale > 0.0 { self.thumbnailScale = scale }
+		let size = UserDefaults.standard.double(forKey:thumbnailSizeKey)
+		if size > 0.0 { self.thumbnailSize = size }
 
 		let width = UserDefaults.standard.double(forKey:sidebarWidthKey)
 		if width > 0.0 { self.sidebarWidth = width }
@@ -115,7 +115,7 @@ open class UIState : ObservableObject
 		
 		DispatchQueue.main.coalesce(prefsKeyPrefix)
 		{
-			UserDefaults.standard.set(self.thumbnailScale, forKey:self.thumbnailKey)
+			UserDefaults.standard.set(self.thumbnailSize, forKey:self.thumbnailSizeKey)
 			UserDefaults.standard.set(self.sidebarWidth, forKey:self.sidebarWidthKey)
 			UserDefaults.standard.set(self.libraryHeight, forKey:self.libraryHeightKey)
 		}

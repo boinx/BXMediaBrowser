@@ -55,7 +55,7 @@ public struct DefaultObjectFooterView : View
 			
 			BXImage(systemName:"square").scaleEffect(0.5)
 			
-			Slider(value:self.sliderResponse, in:0.4...1.0)
+			Slider(value:self.thumbnailSizeBinding, in:70.0...320)
 				.frame(width:100)
 				#if os(macOS)
 				.controlSize(.mini)
@@ -77,13 +77,11 @@ public struct DefaultObjectFooterView : View
 		.padding(.vertical,2)
     }
     
-    var sliderResponse:Binding<Double>
+    var thumbnailSizeBinding:Binding<Double>
     {
-		let response = 3.0
-		
 		return Binding<Double>(
-			get:{ pow(self.uiState.thumbnailScale, 1.0/response) },
-			set:{ self.uiState.thumbnailScale = pow($0,response) })
+			get:{ self.uiState.thumbnailSize },
+			set:{ self.uiState.thumbnailSize = $0 })
     }
 }
 
