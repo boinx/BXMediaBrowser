@@ -180,6 +180,34 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 
 
 // MARK: - Setup
+
+// ATTENTION
+// ---------
+
+// The layout created by this function contains a nasty edge case bug that causes an exception inside Apple's
+// layout solving code, and thus leads to a crash: When using and .absolute(cellWidth) the layout is fine as
+// long as the view is wide enough to accommodate at least one cell. But when resizing the view (by resizing
+// the window or the sidebar), so that it get narrower that one cell, creating and assigning a new layout
+// causes the exception and thus a crash.
+
+// WORKAROUNDS
+// -----------
+
+// 1) Using .fractionalWidth layout does not exhibit the crashing behavior. One know workaround to avoiding the
+// crash is to switch to .fractionalWidth(1.0) layout BEFORE reaching the small view width. The only way I figured
+// out was to apply a "safety" margin e.g. 10pt, so when reaching the safety size, we switch to .fractionalWidth
+// layout. That way we are already at .fractionalWidth when reaching the fatal small view size and the crash is
+// avoided. However, if the user moves the moouse really fast when resizing the view, we go from a large view size
+// to a fatally small one in one step, any we never make the required switch to .fractionalWidth beforehand!
+
+// 2) Another workaround would be to stop using .absolute layout altogehter and simulate its behavior with the
+// safer .fractionalWidth layout. However, I never managed to get the exact same behavior. It always came with
+// some undesirable side effects.
+
+// 3) A third workaround would be to disallow resizing the view to fatally small sizes at the UI level - e.g. by
+// applying frame(minWidth:...) in SwitftUI views. Unless we can discover a better solution this will be the
+// chosen workaround for now - so look for minWidth constraints at other places in the UI classes. It should be
+// marked width a WORKAROUND 3 comment.
 	
 extension ObjectCollectionView
 {
@@ -194,7 +222,7 @@ extension ObjectCollectionView
 		
 		let viewWidth = newSize?.width ?? collectionView.bounds.width
 		let minWidth:CGFloat = 70 // This is the minimum width to display ObjectRatingView without clipping
-		let maxWidth = max(minWidth, viewWidth - 2*d - 20)
+		let maxWidth = max(minWidth, viewWidth - 2*d - 2)
 		let size = self.uiState.thumbnailSize
 		
 		// Item (cell)
@@ -212,7 +240,7 @@ extension ObjectCollectionView
 			itemHeight = .absolute(h)
 			item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension:itemWidth, heightDimension:itemHeight))
 		}
-//		else if cellWidth >= maxWidth-10 || viewWidth < minWidth // Avoid crash due to an exception when setting a new layout while the old layout's absolute cell size is larger that the view size
+//		else if cellWidth >= maxWidth-10 || viewWidth < minWidth // Workaround 1 (see above)
 //		{
 //			itemWidth = .fractionalWidth(1.0)
 //			itemHeight = .fractionalWidth(1.0/ratio)

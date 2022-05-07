@@ -68,13 +68,13 @@ public struct ObjectBrowserView : View
 			Color.primary.opacity(0.2).frame(height:1) // Divider line
 			
 			ObjectCollectionView(container:container, cellType:cellType, uiState:uiState)
-			
+				
 			Color.primary.opacity(0.2).frame(height:1) // Divider line
 
 			viewFactory.objectsFooterView(for:container, uiState:uiState)
 				.id(footerID)
 		}
-		.frame(minWidth:240, maxWidth:.infinity)
+		.frame(minWidth:340, maxWidth:.infinity) // WORKAROUND 3 (see ObjectCollectionView-macOS.swift)
    }
    
    var headerID:String
