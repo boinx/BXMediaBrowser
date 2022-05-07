@@ -55,7 +55,7 @@ open class UIState : ObservableObject
 	
 	/// This scale affects the display size of Object cells in a CollectionView
 	
-	@Published public var thumbnailSize:Double
+	@Published public var thumbnailSize:Double = 150
 	{
 		didSet { self.saveToPrefs() }
 	}
@@ -77,7 +77,7 @@ open class UIState : ObservableObject
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	public init(prefsKeyPrefix:String = UUID().uuidString, thumbnailSize:Double = 120)
+	public init(prefsKeyPrefix:String = UUID().uuidString, thumbnailSize:Double = 150)
 	{
 		self.prefsKeyPrefix = prefsKeyPrefix
 		self.thumbnailSize = thumbnailSize
