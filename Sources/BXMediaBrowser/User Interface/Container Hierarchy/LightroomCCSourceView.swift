@@ -184,7 +184,7 @@ public struct LightroomCCSourceView : View
 		{
 			items += BXMenuItemSpec.action(title:NSLocalizedString("Login", bundle:.BXMediaBrowser, comment:"Button Title"))
 			{
-				self.source.grantAccess()
+				[weak source] in source?.grantAccess()
 			}
 		}
 		else
@@ -196,7 +196,7 @@ public struct LightroomCCSourceView : View
 			
 			items += BXMenuItemSpec.action(title:NSLocalizedString("Logout", bundle:.BXMediaBrowser, comment:"Button Title"))
 			{
-				self.source.revokeAccess()
+				[weak source] in source?.revokeAccess()
 			}
 		}
 		
