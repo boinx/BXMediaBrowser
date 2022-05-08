@@ -179,10 +179,12 @@ public struct LightroomCCSourceView : View
     func accountButton() -> some View
     {
 		var items:[BXMenuItemSpec] = []
+		let login = NSLocalizedString("Login", bundle:.BXMediaBrowser, comment:"Button Title")
+		let logout = NSLocalizedString("Logout", bundle:.BXMediaBrowser, comment:"Button Title")
 		
 		if lightroom.status == .loggedOut
 		{
-			items += BXMenuItemSpec.action(title:NSLocalizedString("Login", bundle:.BXMediaBrowser, comment:"Button Title"))
+			items += BXMenuItemSpec.action(title:login)
 			{
 				[weak source] in source?.grantAccess()
 			}
@@ -194,7 +196,7 @@ public struct LightroomCCSourceView : View
 				items += BXMenuItemSpec.regular(title:user, value:0, isEnabled:false)
 			}
 			
-			items += BXMenuItemSpec.action(title:NSLocalizedString("Logout", bundle:.BXMediaBrowser, comment:"Button Title"))
+			items += BXMenuItemSpec.action(title:logout)
 			{
 				[weak source] in source?.revokeAccess()
 			}
