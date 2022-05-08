@@ -55,7 +55,7 @@ public struct DefaultObjectFooterView : View
 			
 			BXImage(systemName:"square").scaleEffect(0.5)
 			
-			Slider(value:self.thumbnailSizeBinding, in:70.0...320)
+			Slider(value:thumbnailSizeBinding, in:thumbnailSizeRange)
 				.frame(width:100)
 				#if os(macOS)
 				.controlSize(.mini)
@@ -82,6 +82,11 @@ public struct DefaultObjectFooterView : View
 		return Binding<Double>(
 			get:{ self.uiState.thumbnailSize },
 			set:{ self.uiState.thumbnailSize = $0 })
+    }
+    
+    var thumbnailSizeRange:ClosedRange<Double>
+    {
+		ImageObjectCell.minThumbnailSize ... ImageObjectCell.maxThumbnailSize
     }
 }
 

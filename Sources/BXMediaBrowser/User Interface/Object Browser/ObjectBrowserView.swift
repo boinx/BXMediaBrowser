@@ -74,7 +74,7 @@ public struct ObjectBrowserView : View
 			viewFactory.objectsFooterView(for:container, uiState:uiState)
 				.id(footerID)
 		}
-		.frame(minWidth:340, maxWidth:.infinity) // WORKAROUND 3 (see ObjectCollectionView-macOS.swift)
+		.frame(minWidth:ObjectCollectionView.minWidth, maxWidth:.infinity) // WORKAROUND 3 (see ObjectCollectionView-macOS.swift)
    }
    
    var headerID:String

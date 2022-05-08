@@ -202,7 +202,7 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 
 // 2) Another workaround would be to stop using .absolute layout altogehter and simulate its behavior with the
 // safer .fractionalWidth layout. However, I never managed to get the exact same behavior. It always came with
-// some undesirable side effects.
+// some undesirable side effects, so it's not implemented here.
 
 // 3) A third workaround would be to disallow resizing the view to fatally small sizes at the UI level - e.g. by
 // applying frame(minWidth:...) in SwitftUI views. Unless we can discover a better solution this will be the
@@ -211,6 +211,8 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 	
 extension ObjectCollectionView
 {
+	public static var minWidth:CGFloat { ImageObjectCell.maxThumbnailSize + 2 * ImageObjectCell.spacing }
+	
 	/// Creates a NSCollectionViewCompositionalLayout that looks similar to regular flow layout
 	
     private func createLayout(for collectionView:NSCollectionView, newSize:NSSize? = nil) -> NSCollectionViewLayout
@@ -240,7 +242,7 @@ extension ObjectCollectionView
 			itemHeight = .absolute(h)
 			item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension:itemWidth, heightDimension:itemHeight))
 		}
-//		else if cellWidth >= maxWidth-10 || viewWidth < minWidth // Workaround 1 (see above)
+//		else if cellWidth >= maxWidth-10 || viewWidth < minWidth // WORKAROUND 1 (see above)
 //		{
 //			itemWidth = .fractionalWidth(1.0)
 //			itemHeight = .fractionalWidth(1.0/ratio)

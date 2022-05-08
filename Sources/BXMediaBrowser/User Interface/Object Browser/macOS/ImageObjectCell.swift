@@ -48,8 +48,13 @@ open class ImageObjectCell : ObjectCell
 	override class var height:CGFloat { 96 }
 	
 	override class var spacing:CGFloat { 10 }
+
+	// Returns the minimum & maximum supported thumbnail size
 	
-	
+	public static var minThumbnailSize:CGFloat { 70 } 	// ObjectRatingView requires this width without clipping
+	public static var maxThumbnailSize:CGFloat { 320 }
+
+
 //----------------------------------------------------------------------------------------------------------------------
 
 
