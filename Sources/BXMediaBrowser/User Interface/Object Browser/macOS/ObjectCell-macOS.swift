@@ -54,6 +54,7 @@ open class ObjectCell : NSCollectionViewItem
 	
 	/// This externally supplied handler is called when the cell is double-clicked
 	
+	var singleClickHandler:(()->Void)? = nil
 	var doubleClickHandler:(()->Void)? = nil
 	
 	// Outlets to subviews
@@ -240,6 +241,12 @@ open class ObjectCell : NSCollectionViewItem
 	func setupDoubleClick()
 	{
 		self.view.gestureRecognizers.forEach { self.view.removeGestureRecognizer($0) }
+		self.imageView?.gestureRecognizers.forEach { self.view.removeGestureRecognizer($0) }
+
+		let singleClick = NSClickGestureRecognizer(target:self, action:#selector(onSingleClick(_:)))
+		singleClick.numberOfClicksRequired = 1
+		singleClick.delaysPrimaryMouseButtonEvents = false
+		self.imageView?.addGestureRecognizer(singleClick)
 		
 		let doubleClick = NSClickGestureRecognizer(target:self, action:#selector(onDoubleClick(_:)))
 		doubleClick.numberOfClicksRequired = 2
@@ -399,24 +406,40 @@ open class ObjectCell : NSCollectionViewItem
 		self.quickLook()
 	}
 	
+	/// Called when this cell is single-clicked. If a singleClickHandler is set then it will be called
+	
+	@IBAction func onSingleClick(_ sender:Any?)
+	{
+		if let singleClickHandler = self.singleClickHandler
+		{
+			singleClickHandler()
+		}
+		else if !self.isEnabled
+		{
+			self.showWarningMessage()
+		}
+	}
+	
 	/// Called when this cell is double-clicked. If a doubleClickHandler is set then it will be called,
 	/// otherwise the preview() function is called.
 	
 	@IBAction func onDoubleClick(_ sender:Any?)
 	{
-		if !isEnabled
-		{
-			self.showWarningMessage()
-		}
-		else if let doubleClickHandler = self.doubleClickHandler
+		if let doubleClickHandler = self.doubleClickHandler
 		{
 			doubleClickHandler()
+		}
+		else if !isEnabled
+		{
+			self.showWarningMessage()
 		}
 		else
 		{
 			self.preview(with:NSApp.currentEvent)
 		}
 	}
+	
+	/// Shows a popover anchored at the icon view
 	
 	open func showPopover<V:View>(with view:V)
 	{
