@@ -69,6 +69,10 @@ open class AudioObjectCell : ObjectCell
 		didSet { redraw() }
 	}
 	
+	/// Returns true if this cell displays a warning icon
+	
+	private var showsWarningIcon = false
+	
 	
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -84,6 +88,7 @@ open class AudioObjectCell : ObjectCell
 		self.view.translatesAutoresizingMaskIntoConstraints = false
 		
 		let imageView = NSImageView(frame:CGRect(x:6, y:7, width:32, height:32))
+		imageView.imageScaling = .scaleProportionallyUpOrDown
 		self.imageView = imageView
 		self.view.addSubview(imageView)
 		
@@ -254,9 +259,18 @@ open class AudioObjectCell : ObjectCell
 		self.durationField?.stringValue = duration.shortTimecodeString()
 		self.sizeField?.stringValue = size?.fileSizeDescription ?? ""
 		
-		let alpha:CGFloat = object.isLocallyAvailable ? 1.0 : 0.5
-		self.nameField?.alphaValue = alpha
-		self.nameField?.alphaValue = alpha
+		if !object.isEnabled
+		{
+			self.nameField?.alphaValue = 0.5
+			self.durationField?.alphaValue = 0.5
+		}
+		else
+		{
+			let enabled = object.isLocallyAvailable
+			let alpha:CGFloat = enabled ? 1.0 : 0.5
+			self.nameField?.alphaValue = alpha
+			self.durationField?.alphaValue = alpha
+		}
 	}
 	
 	
@@ -294,7 +308,26 @@ open class AudioObjectCell : ObjectCell
 	
 	func setFileIcon()
 	{
-		if object.isLocallyAvailable
+		self.showsWarningIcon = false
+		
+		if !object.isEnabled
+		{
+//			if object.isDRMProtected
+//			{
+				self.imageView?.image = NSImage(systemName:"exclamationmark.triangle.fill")
+				self.imageView?.contentTintColor = .systemYellow
+				self.imageView?.imageScaling = .scaleProportionallyUpOrDown
+				self.showsWarningIcon = true
+//			}
+//			else if let url = self.object.previewItemURL, AudioFile.isIncompleteAppleLoop(at:url)
+//			{
+//				self.imageView?.image = NSImage(systemName:"exclamationmark.triangle.fill")
+//				self.imageView?.contentTintColor = .systemYellow
+//				self.imageView?.imageScaling = .scaleProportionallyUpOrDown
+//				self.showsWarningIcon = true
+//			}
+		}
+		else if object.isLocallyAvailable
 		{
 			if let thumbnail = object.thumbnailImage
 			{
@@ -302,6 +335,7 @@ open class AudioObjectCell : ObjectCell
 				let h = thumbnail.height
 				let size = CGSize(width:w, height:h)
 				self.imageView?.image = NSImage(cgImage:thumbnail, size:size)
+				self.imageView?.contentTintColor = nil
 			}
 		}
 		else if object.isDownloadable
@@ -310,6 +344,7 @@ open class AudioObjectCell : ObjectCell
 			{
 				self.imageView?.image = NSImage(systemSymbolName:"icloud.and.arrow.down", accessibilityDescription:nil)
 			}
+			self.imageView?.contentTintColor = nil
 		}
 		else
 		{
@@ -317,6 +352,7 @@ open class AudioObjectCell : ObjectCell
 			{
 				self.imageView?.image = NSImage(systemSymbolName:"exclamationmark.icloud", accessibilityDescription:nil)
 			}
+			self.imageView?.contentTintColor = nil
 		}
 	}
 	
@@ -371,8 +407,9 @@ open class AudioObjectCell : ObjectCell
 		let backgroundColor = isHilited ? NSColor.systemBlue : NSColor.clear
 		let textColor = isHilited ? NSColor.white : NSColor.textColor
 		var iconColor = self.view.effectiveAppearance.isDarkMode ? NSColor.white : NSColor.black
-		if isHilited { iconColor = NSColor.white }
-
+		if showsWarningIcon  { iconColor = .systemYellow }
+		else if isHilited { iconColor = .white }
+		
 		self.view.layer?.backgroundColor = backgroundColor.cgColor
 		self.imageView?.contentTintColor = iconColor
 		self.nameField?.textColor = textColor
