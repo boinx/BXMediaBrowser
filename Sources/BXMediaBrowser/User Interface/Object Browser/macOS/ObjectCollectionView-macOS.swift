@@ -518,16 +518,7 @@ extension ObjectCollectionView
 		
     	@MainActor public func collectionView(_ collectionView:NSCollectionView, shouldSelectItemsAt indexPaths:Set<IndexPath>) -> Set<IndexPath>
     	{
-			var allowedPaths = Set<IndexPath>()
-			
-			for indexPath in indexPaths
-			{
-				guard let object = self.object(for:indexPath) else { continue }
-				guard object.isEnabled else { continue }
-				allowedPaths.insert(indexPath)
-			}
-			
-			return allowedPaths
+			return indexPaths
     	}
     	
     	
@@ -591,10 +582,23 @@ extension ObjectCollectionView
 
 		// MARK: - Dragging Source
 
-		// Allow dragging of cells to other destinations
+		// Do not allow drag, if it contains disabled cells (e.g. DRM protected audio)
 		
 		@MainActor public func collectionView(_ collectionView:NSCollectionView, canDragItemsAt indexPaths:Set<IndexPath>, with event:NSEvent) -> Bool
 		{
+			for indexPath in indexPaths
+			{
+				if let object = self.object(for:indexPath), !object.isEnabled
+				{
+					if let cell = collectionView.item(at:indexPath) as? ObjectCell
+					{
+						cell.showWarningMessage()
+					}
+					
+					return false
+				}
+			}
+			
 			return true
 		}
 		
