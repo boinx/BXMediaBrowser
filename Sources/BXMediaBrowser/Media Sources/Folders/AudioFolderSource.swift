@@ -90,7 +90,7 @@ open class AudioFolderContainer : FolderContainer
 	override open class func filter(_ url:URL, with filter:FolderFilter) -> URL?
 	{
 		guard url.isAudioFile else { return nil }
-
+		
 		let searchString = filter.searchString.lowercased()
 		guard !searchString.isEmpty else { return url }
 		

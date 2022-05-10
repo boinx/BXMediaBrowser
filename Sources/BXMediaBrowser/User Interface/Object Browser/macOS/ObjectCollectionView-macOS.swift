@@ -193,7 +193,7 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 // WORKAROUNDS
 // -----------
 
-// 1) Using .fractionalWidth layout does not exhibit the crashing behavior. One know workaround to avoiding the
+// 1) Using .fractionalWidth layout does not exhibit the crashing behavior. One known workaround to avoiding the
 // crash is to switch to .fractionalWidth(1.0) layout BEFORE reaching the small view width. The only way I figured
 // out was to apply a "safety" margin e.g. 10pt, so when reaching the safety size, we switch to .fractionalWidth
 // layout. That way we are already at .fractionalWidth when reaching the fatal small view size and the crash is
@@ -514,7 +514,7 @@ extension ObjectCollectionView
 		}
 
 
-		// Only allow seleting enabled Objects
+		// Only allow selecting enabled Objects
 		
     	@MainActor public func collectionView(_ collectionView:NSCollectionView, shouldSelectItemsAt indexPaths:Set<IndexPath>) -> Set<IndexPath>
     	{
