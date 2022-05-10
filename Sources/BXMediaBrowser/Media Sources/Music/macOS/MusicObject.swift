@@ -55,12 +55,7 @@ public class MusicObject : Object
 		self.isLocallyAvailable = item.locationType == .file && item.location != nil
 		self.isDRMProtected = item.isDRMProtected
 		self.isDownloadable = false
-		self.isEnabled = true
-		
-		if !isLocallyAvailable && Config.RemoteFile.isEnabled == false
-		{
-			self.isEnabled = false
-		}
+		self.isEnabled = isLocallyAvailable
 		
 		if isDRMProtected && Config.DRMProtectedFile.isEnabled == false
 		{

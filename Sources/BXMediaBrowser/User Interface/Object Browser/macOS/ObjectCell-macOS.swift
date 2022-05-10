@@ -451,6 +451,11 @@ open class ObjectCell : NSCollectionViewItem
 		{
 			self.showPopover(with: ObjectWarningView(message:Config.DRMProtectedFile.warningMessage))
 		}
+		else if object is MusicObject && !object.isLocallyAvailable
+		{
+			let message = NSLocalizedString("AppleMusic.warning", bundle:.BXMediaBrowser, comment:"Warning Message")
+			self.showPopover(with: ObjectWarningView(message:message))
+		}
 		else if let url = self.object.previewItemURL, url.isCorruptedAppleLoopFile
 		{
 			self.showPopover(with: ObjectWarningView(message:Config.CorruptedAppleLoops.warningMessage))

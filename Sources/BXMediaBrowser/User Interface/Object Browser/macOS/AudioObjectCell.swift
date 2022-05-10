@@ -310,23 +310,36 @@ open class AudioObjectCell : ObjectCell
 	{
 		self.showsWarningIcon = false
 		
-		if !object.isEnabled
+		// DRM protected file
+		
+		if object.isDRMProtected && Config.DRMProtectedFile.isEnabled == false
 		{
-//			if object.isDRMProtected
-//			{
-				self.imageView?.image = NSImage(systemName:"exclamationmark.triangle.fill")
-				self.imageView?.contentTintColor = .systemYellow
-				self.imageView?.imageScaling = .scaleProportionallyUpOrDown
-				self.showsWarningIcon = true
-//			}
-//			else if let url = self.object.previewItemURL, AudioFile.isCorruptedAppleLoopFile(at:url)
-//			{
-//				self.imageView?.image = NSImage(systemName:"exclamationmark.triangle.fill")
-//				self.imageView?.contentTintColor = .systemYellow
-//				self.imageView?.imageScaling = .scaleProportionallyUpOrDown
-//				self.showsWarningIcon = true
-//			}
+			self.imageView?.image = NSImage(systemName:"exclamationmark.triangle.fill")
+			self.imageView?.contentTintColor = .systemYellow
+			self.imageView?.imageScaling = .scaleProportionallyUpOrDown
+			self.showsWarningIcon = true
 		}
+		
+		// Not downloaded yet in Apple Music
+		
+		else if object is MusicObject && !object.isLocallyAvailable
+		{
+			self.imageView?.image = NSImage(systemName:"icloud.and.arrow.down")
+			self.imageView?.contentTintColor = nil
+		}
+		
+		// Corrupted file
+		
+		else if !object.isEnabled
+		{
+			self.imageView?.image = NSImage(systemName:"exclamationmark.triangle.fill")
+			self.imageView?.contentTintColor = .systemYellow
+			self.imageView?.imageScaling = .scaleProportionallyUpOrDown
+			self.showsWarningIcon = true
+		}
+		
+		// Local audio file
+		
 		else if object.isLocallyAvailable
 		{
 			if let thumbnail = object.thumbnailImage
@@ -338,6 +351,9 @@ open class AudioObjectCell : ObjectCell
 				self.imageView?.contentTintColor = nil
 			}
 		}
+		
+		// Remote audio file
+		
 		else if object.isDownloadable
 		{
 			self.imageView?.image = NSImage(systemName:"icloud.and.arrow.down")
