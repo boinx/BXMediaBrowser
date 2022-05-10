@@ -143,7 +143,7 @@ open class AudioFolderContainer : FolderContainer
 			return nil
 		}
 		
-		if Config.IncompleteAppleLoops.isVisible == false && AudioFile.isIncompleteAppleLoop(at:url)
+		if Config.CorruptedAppleLoops.isVisible == false && url.isCorruptedAppleLoopFile
 		{
 			return nil
 		}
@@ -186,9 +186,9 @@ open class AudioFile : FolderObject
 		{
 			self.isEnabled = Config.DRMProtectedFile.isEnabled
 		}
-		else if Self.isIncompleteAppleLoop(at:url)
+		else if url.isCorruptedAppleLoopFile
 		{
-			self.isEnabled = Config.IncompleteAppleLoops.isEnabled
+			self.isEnabled = Config.CorruptedAppleLoops.isEnabled
 		}
 		else
 		{
@@ -203,12 +203,18 @@ open class AudioFile : FolderObject
 	}
 
     
-    open class func isIncompleteAppleLoop(at url:URL) -> Bool
-    {
-		guard url.path.contains("Apple Loops") else { return false }
-		let size = url.fileSize ?? 0
-		return size < 50000
-    }
+    /// Returns true if the file at the specified URL is an Apple Loop file that cannot be used because it is
+	/// incomplete, e.g. because it has not been fully downloaded yet.
+	
+//    open class func isCorruptedAppleLoopFile(at url:URL) -> Bool
+//    {
+//		guard url.path.contains("Apple Loops") else { return false }
+//
+//		// This check for file size < 50K is reasonable fast, but of course it is by no means reliable!
+//
+//		let size = url.fileSize ?? 0
+//		return size < 50000
+//    }
 
 
 	/// Returns a generic Finder icon for the audio file

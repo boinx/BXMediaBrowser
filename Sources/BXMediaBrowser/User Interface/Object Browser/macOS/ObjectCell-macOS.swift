@@ -451,9 +451,9 @@ open class ObjectCell : NSCollectionViewItem
 		{
 			self.showPopover(with: ObjectWarningView(message:Config.DRMProtectedFile.warningMessage))
 		}
-		else if let url = self.object.previewItemURL, AudioFile.isIncompleteAppleLoop(at:url)
+		else if let url = self.object.previewItemURL, url.isCorruptedAppleLoopFile
 		{
-			self.showPopover(with: ObjectWarningView(message:Config.IncompleteAppleLoops.warningMessage))
+			self.showPopover(with: ObjectWarningView(message:Config.CorruptedAppleLoops.warningMessage))
 		}
 	}
 }

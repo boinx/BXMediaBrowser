@@ -51,7 +51,7 @@ public struct Config
 		public static var warningMessage = NSLocalizedString("DRM.warning", bundle:.BXMediaBrowser, comment:"Warning Message")
 	}
 
-	public struct IncompleteAppleLoops
+	public struct CorruptedAppleLoops
 	{
 		/// Determines whether incomplete Apple Loops files should be displayed in the media browser
 		

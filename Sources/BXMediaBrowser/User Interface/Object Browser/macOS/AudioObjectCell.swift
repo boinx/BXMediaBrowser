@@ -319,7 +319,7 @@ open class AudioObjectCell : ObjectCell
 				self.imageView?.imageScaling = .scaleProportionallyUpOrDown
 				self.showsWarningIcon = true
 //			}
-//			else if let url = self.object.previewItemURL, AudioFile.isIncompleteAppleLoop(at:url)
+//			else if let url = self.object.previewItemURL, AudioFile.isCorruptedAppleLoopFile(at:url)
 //			{
 //				self.imageView?.image = NSImage(systemName:"exclamationmark.triangle.fill")
 //				self.imageView?.contentTintColor = .systemYellow
