@@ -135,20 +135,19 @@ public class AudioPreviewController : NSObject, ObservableObject, AVAudioPlayerD
 	
 	private func updatePlayer()
 	{
-		let url = self.object?.previewItemURL
-		
-		if url != self.player?.url
+		if let object = object,
+		   object.isEnabled,
+		   object.isLocallyAvailable,
+		   let url = object.previewItemURL,
+		   url != self.player?.url
 		{
-			if let url = url
-			{
-				let wasPlaying = self.isPlaying
-				self.createPlayer(for:url)
-				if wasPlaying { self.play() }
-			}
-			else
-			{
-				self.deletePlayer()
-			}
+			let wasPlaying = self.isPlaying
+			self.createPlayer(for:url)
+			if wasPlaying { self.play() }
+		}
+		else
+		{
+			self.deletePlayer()
 		}
 	}
 	
