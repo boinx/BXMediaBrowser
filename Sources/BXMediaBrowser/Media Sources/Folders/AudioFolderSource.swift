@@ -138,6 +138,16 @@ open class AudioFolderContainer : FolderContainer
 
 	override open class func createObject(for url:URL, filter:FolderFilter) throws -> Object?
 	{
+		if Config.DRMProtectedFile.isVisible == false && url.pathExtension == "m4p"
+		{
+			return nil
+		}
+		
+		if Config.IncompleteAppleLoops.isVisible == false && AudioFile.isIncompleteAppleLoop(at:url)
+		{
+			return nil
+		}
+		
 		return AudioFile(url:url)
 	}
 
@@ -162,10 +172,44 @@ open class AudioFolderContainer : FolderContainer
 
 open class AudioFile : FolderObject
 {
+	override public init(url:URL, name:String? = nil)
+	{
+		FolderSource.log.verbose {"\(Self.self).\(#function) url = \(url)"}
+
+		super.init(url:url, name:name)
+		
+		/// Check if this a DRM protected audio file, and whether it should be enabled or disabled
+		
+		self.isDRMProtected = url.pathExtension == "m4p"
+		
+		if self.isDRMProtected
+		{
+			self.isEnabled = Config.DRMProtectedFile.isEnabled
+		}
+		else if Self.isIncompleteAppleLoop(at:url)
+		{
+			self.isEnabled = Config.IncompleteAppleLoops.isEnabled
+		}
+		else
+		{
+			self.isEnabled = true
+		}
+	}
+
+
 	override nonisolated public var mediaType:MediaType
 	{
 		return .audio
 	}
+
+    
+    open class func isIncompleteAppleLoop(at url:URL) -> Bool
+    {
+		guard url.path.contains("Apple Loops") else { return false }
+		let size = url.fileSize ?? 0
+		return size < 50000
+    }
+
 
 	/// Returns a generic Finder icon for the audio file
 	
