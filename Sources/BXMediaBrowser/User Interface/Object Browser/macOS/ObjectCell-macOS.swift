@@ -61,9 +61,10 @@ open class ObjectCell : NSCollectionViewItem
 	@IBOutlet var ratingView:ObjectRatingView?
 	@IBOutlet var useCountView:NSTextField?
 
-	/// References to subscriptions
+	// Internal housekeeping
 	
 	var observers:[Any] = []
+	var isPopoverOpen = false
 	
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -238,17 +239,12 @@ open class ObjectCell : NSCollectionViewItem
 	
 	func setupDoubleClick()
 	{
-		if isEnabled
-		{
-			let doubleClick = NSClickGestureRecognizer(target:self, action:#selector(onDoubleClick(_:)))
-			doubleClick.numberOfClicksRequired = 2
-			doubleClick.delaysPrimaryMouseButtonEvents = false
-			self.view.addGestureRecognizer(doubleClick)
-		}
-		else
-		{
-			self.view.gestureRecognizers.forEach { self.view.removeGestureRecognizer($0) }
-		}
+		self.view.gestureRecognizers.forEach { self.view.removeGestureRecognizer($0) }
+		
+		let doubleClick = NSClickGestureRecognizer(target:self, action:#selector(onDoubleClick(_:)))
+		doubleClick.numberOfClicksRequired = 2
+		doubleClick.delaysPrimaryMouseButtonEvents = false
+		self.view.addGestureRecognizer(doubleClick)
 	}
 	
 	/// Configures behavior when mouse moves over this cell. Default implementation hides the textfield
@@ -322,10 +318,7 @@ open class ObjectCell : NSCollectionViewItem
 	
 	open func buildContextMenu(for view:NSView, object:Object) -> NSMenu?
 	{
-		guard self.isEnabled else { return nil }
-
 		let menu = NSMenu()
-		
 		
 		self.addMenuItem(menu:menu, title:NSLocalizedString("Get Info", bundle:.BXMediaBrowser, comment:"Menu Item"))
 		{
@@ -386,23 +379,7 @@ open class ObjectCell : NSCollectionViewItem
 	
 	open func getInfo()
 	{
-		guard self.isEnabled else { return }
-
-		// Choose the area of this cell where to display the popover
-		
-		let rootView = self.imageView?.subviews.first ?? self.view
-		let rect = rootView.bounds.insetBy(dx:20, dy:20)
-		let colorScheme = view.effectiveAppearance.colorScheme
-		
-		// Create the info view
-		
-		let infoView = ObjectInfoView(with:object)
-			.environment(\.colorScheme,colorScheme)
-			
-		// Wrap it a popover and display it
-		
-		let popover = BXPopover(with:infoView, style:.system, colorScheme:.light)
-		popover.show(relativeTo:rect, of:rootView, preferredEdge:.maxY)
+		self.showPopover(with: ObjectInfoView(with:object))
 	}
 	
 	
@@ -410,8 +387,6 @@ open class ObjectCell : NSCollectionViewItem
 	
 	open func quickLook()
 	{
-		guard self.isEnabled else { return }
-
 		guard let collectionView = self.collectionView as? QuicklookCollectionView else { return }
 		collectionView.quicklook()
 	}
@@ -429,9 +404,11 @@ open class ObjectCell : NSCollectionViewItem
 	
 	@IBAction func onDoubleClick(_ sender:Any?)
 	{
-		guard self.isEnabled else { return }
-
-		if let doubleClickHandler = self.doubleClickHandler
+		if !isEnabled
+		{
+			self.showWarningMessage()
+		}
+		else if let doubleClickHandler = self.doubleClickHandler
 		{
 			doubleClickHandler()
 		}
@@ -440,6 +417,65 @@ open class ObjectCell : NSCollectionViewItem
 			self.preview(with:NSApp.currentEvent)
 		}
 	}
+	
+	open func showPopover<V:View>(with view:V)
+	{
+		// Choose the area of this cell where to display the popover
+		
+		let rootView = self.imageView?.subviews.first ?? self.view
+		let rect = rootView.bounds.insetBy(dx:20, dy:20)
+		let colorScheme = self.view.effectiveAppearance.colorScheme
+		
+		// Create the view
+		
+		let popoverView = view
+			.environment(\.colorScheme,colorScheme)
+			
+		// Wrap it a popover and display it
+		
+		let popover = BXPopover(with:popoverView, style:.system, colorScheme:.light)
+		popover.delegate = self
+		popover.show(relativeTo:rect, of:rootView, preferredEdge:.maxY)
+		
+		self.isPopoverOpen = true
+	}
+	
+	
+	/// Shows a warning that explains why drag & drop is not allowed
+	
+	open func showWarningMessage()
+	{
+		guard !isPopoverOpen else { return }
+		
+		if object.isDRMProtected
+		{
+			self.showPopover(with: ObjectWarningView(message:Config.DRMProtectedFile.warningMessage))
+		}
+		else if let url = self.object.previewItemURL, AudioFile.isIncompleteAppleLoop(at:url)
+		{
+			self.showPopover(with: ObjectWarningView(message:Config.IncompleteAppleLoops.warningMessage))
+		}
+	}
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+// MARK: - NSPopoverDelegate
+
+
+extension ObjectCell : NSPopoverDelegate
+{
+    public func popoverWillShow(_ notification:Notification)
+	{
+		self.isPopoverOpen = true
+	}
+	
+	public func popoverDidClose(_ notification:Notification)
+    {
+		self.isPopoverOpen = false
+    }
 }
 
 
