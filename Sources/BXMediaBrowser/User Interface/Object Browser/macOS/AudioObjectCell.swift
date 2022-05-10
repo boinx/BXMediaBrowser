@@ -309,6 +309,8 @@ open class AudioObjectCell : ObjectCell
 	func setFileIcon()
 	{
 		self.showsWarningIcon = false
+		self.imageView?.contentTintColor = nil
+		self.imageView?.imageScaling = .scaleProportionallyDown
 		
 		// DRM protected file
 		
@@ -325,7 +327,6 @@ open class AudioObjectCell : ObjectCell
 		else if object is MusicObject && !object.isLocallyAvailable
 		{
 			self.imageView?.image = NSImage(systemName:"icloud.and.arrow.down")
-			self.imageView?.contentTintColor = nil
 		}
 		
 		// Corrupted file
@@ -348,7 +349,6 @@ open class AudioObjectCell : ObjectCell
 				let h = thumbnail.height
 				let size = CGSize(width:w, height:h)
 				self.imageView?.image = NSImage(cgImage:thumbnail, size:size)
-				self.imageView?.contentTintColor = nil
 			}
 		}
 		
@@ -357,12 +357,10 @@ open class AudioObjectCell : ObjectCell
 		else if object.isDownloadable
 		{
 			self.imageView?.image = NSImage(systemName:"icloud.and.arrow.down")
-			self.imageView?.contentTintColor = nil
 		}
 		else
 		{
 			self.imageView?.image = NSImage(systemName:"icloud.slash")
-			self.imageView?.contentTintColor = nil
 		}
 	}
 	
