@@ -239,7 +239,7 @@ public class AudioPreviewController : NSObject, ObservableObject, AVAudioPlayerD
 
 		if successfully
 		{
-			if autoPlay, let nextObject = self.object?.next
+			if autoPlay, let nextObject = self.nextEnabledObject(for:object)
 			{
 				self.object = nextObject
 				self.play()
@@ -249,6 +249,25 @@ public class AudioPreviewController : NSObject, ObservableObject, AVAudioPlayerD
 				self.deletePlayer()
 			}
 		}
+	}
+	
+	/// Returns the next enabled Object in the list
+	
+	private func nextEnabledObject(for object:Object?) -> Object?
+	{
+		var obj = object
+		
+		while obj != nil
+		{
+			obj = obj?.next
+			
+			if let obj = obj, obj.isEnabled
+			{
+				break
+			}
+		}
+		
+		return obj
 	}
 
 
