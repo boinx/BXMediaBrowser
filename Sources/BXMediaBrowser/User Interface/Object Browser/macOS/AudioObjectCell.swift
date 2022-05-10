@@ -340,18 +340,12 @@ open class AudioObjectCell : ObjectCell
 		}
 		else if object.isDownloadable
 		{
-			if #available(macOS 11, *)
-			{
-				self.imageView?.image = NSImage(systemSymbolName:"icloud.and.arrow.down", accessibilityDescription:nil)
-			}
+			self.imageView?.image = NSImage(systemName:"icloud.and.arrow.down")
 			self.imageView?.contentTintColor = nil
 		}
 		else
 		{
-			if #available(macOS 11, *)
-			{
-				self.imageView?.image = NSImage(systemSymbolName:"exclamationmark.icloud", accessibilityDescription:nil)
-			}
+			self.imageView?.image = NSImage(systemName:"icloud.slash")
 			self.imageView?.contentTintColor = nil
 		}
 	}
@@ -361,10 +355,7 @@ open class AudioObjectCell : ObjectCell
 	
 	func setPlaybackIcon()
 	{
-		if #available(macOS 11, *)
-		{
-			self.imageView?.image = NSImage(systemSymbolName:"speaker.wave.3.fill", accessibilityDescription:nil)
-		}
+		self.imageView?.image = NSImage(systemName:"speaker.wave.3.fill")
 	}
 	
 	
