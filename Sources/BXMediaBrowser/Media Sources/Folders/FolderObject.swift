@@ -50,6 +50,11 @@ open class FolderObject : Object
 			loadThumbnailHandler: Self.loadThumbnail,
 			loadMetadataHandler: Self.loadMetadata,
 			downloadFileHandler: Self.downloadFile)
+
+		// File in a Finder folder are always local, non-download
+		
+		self.isLocallyAvailable = true
+		self.isDownloadable = false
 	}
 
 
@@ -166,6 +171,7 @@ open class FolderObject : Object
 
 		guard let url = data as? URL else { throw Error.downloadFileFailed }
 		guard url.exists else { throw Error.downloadFileFailed }
+//		guard !item.isDRMProtected else { throw Object.Error.drmProtected }
 		return url
 	}
 
