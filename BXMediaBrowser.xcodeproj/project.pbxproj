@@ -315,6 +315,7 @@
 		D0C1CB29281D1A6800128DED /* BXSwiftUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BXSwiftUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0C1CBA8281D6FF100128DED /* QLThumbnailGenerator+asyncAwait.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QLThumbnailGenerator+asyncAwait.swift"; sourceTree = "<group>"; };
 		D0C1CBAC281D885900128DED /* NativeSearchField+iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NativeSearchField+iOS.swift"; sourceTree = "<group>"; };
+		D0CBC144282A2E9300C6BABB /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		D0D9EDAF27FC82E700D5D7FB /* UnsplashContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnsplashContainerView.swift; sourceTree = "<group>"; };
 		D0D9EDB127FC83E600D5D7FB /* PexelsContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PexelsContainerView.swift; sourceTree = "<group>"; };
 		D0D9EDB327FCADB100D5D7FB /* PHAssetCollection+dateInterval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PHAssetCollection+dateInterval.swift"; sourceTree = "<group>"; };
@@ -376,6 +377,7 @@
 		D01B48BC27CA1377008249C0 /* BXMediaBrowser */ = {
 			isa = PBXGroup;
 			children = (
+				D0CBC143282A2E9300C6BABB /* Config */,
 				D01B48BD27CA1377008249C0 /* Drag & Drop */,
 				D01B48C227CA1377008249C0 /* Resources */,
 				D01B48DB27CA1378008249C0 /* Utils & Helpers */,
@@ -721,6 +723,14 @@
 			path = Pexels;
 			sourceTree = "<group>";
 		};
+		D0CBC143282A2E9300C6BABB /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				D0CBC144282A2E9300C6BABB /* Config.swift */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -857,6 +867,7 @@
 				D01B498027CA1378008249C0 /* UnsplashJSON.swift in Sources */,
 				D0C1CBA9281D6FF100128DED /* QLThumbnailGenerator+asyncAwait.swift in Sources */,
 				D01B495327CA1378008249C0 /* TempFilePool.swift in Sources */,
+				D0CBC145282A2E9400C6BABB /* Config.swift in Sources */,
 				D052BE2C27F0B97D0084068A /* LightroomCCFilter.swift in Sources */,
 				D00DF1C027F613FE00DC1D27 /* UIState.swift in Sources */,
 				D0AA8FC5282038C20009A890 /* ImageObjectCell.swift in Sources */,
