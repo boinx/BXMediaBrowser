@@ -52,13 +52,19 @@ public class MusicObject : Object
 			loadMetadataHandler: Self.loadMetadata,
 			downloadFileHandler: Self.downloadFile)
 			
-		Task
+		self.isLocallyAvailable = item.locationType == .file && item.location != nil
+		self.isDRMProtected = item.isDRMProtected
+		self.isDownloadable = false
+		self.isEnabled = true
+		
+		if !isLocallyAvailable && Config.RemoteFile.isEnabled == false
 		{
-			await MainActor.run
-			{
-				self.isLocallyAvailable = item.locationType == .file && item.location != nil
-				self.isDownloadable = false
-			}
+			self.isEnabled = false
+		}
+		
+		if isDRMProtected && Config.DRMProtectedFile.isEnabled == false
+		{
+			self.isEnabled = false
 		}
 	}
 
@@ -214,7 +220,14 @@ public class MusicObject : Object
 	class func downloadFile(for identifier:String, data:Any) async throws -> URL
 	{
 		guard let item = data as? ITLibMediaItem else { throw Object.Error.notFound }
-		guard let url = item.location else { throw Object.Error.downloadFileFailed }
+		guard let url = item.location else { throw Object.Error.notFound }
+		guard item.locationType == .file else { throw Object.Error.notFound }
+		
+		if Config.DRMProtectedFile.isEnabled == false && item.isDRMProtected
+		{
+			throw Object.Error.drmProtected
+		}
+
 		return url
 	}
 	

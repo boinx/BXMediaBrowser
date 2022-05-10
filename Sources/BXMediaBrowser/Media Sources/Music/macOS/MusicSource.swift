@@ -222,10 +222,16 @@ public class MusicSource : Source, AccessControl
 	}
 
 
-	/// Tries to reuse an existing Object from the cache before creating a new one and storing it in the cache.
+	/// Returns an Object for the specified ITLibMediaItem. Tries to reuse an existing Object from the cache
+	/// before creating a new one and storing it in the cache.
 	
-	class func makeMusicObject(with item:ITLibMediaItem) -> MusicObject
+	class func makeMusicObject(with item:ITLibMediaItem) -> MusicObject?
 	{
+		if Config.DRMProtectedFile.isVisible == false && item.isDRMProtected
+		{
+			return nil
+		}
+		
 		let identifier = objectIdentifier(with:item)
 
 		if let object = Self.cachedObjects[identifier]
