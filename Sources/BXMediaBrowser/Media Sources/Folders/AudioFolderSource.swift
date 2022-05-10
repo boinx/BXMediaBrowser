@@ -203,20 +203,6 @@ open class AudioFile : FolderObject
 	}
 
     
-    /// Returns true if the file at the specified URL is an Apple Loop file that cannot be used because it is
-	/// incomplete, e.g. because it has not been fully downloaded yet.
-	
-//    open class func isCorruptedAppleLoopFile(at url:URL) -> Bool
-//    {
-//		guard url.path.contains("Apple Loops") else { return false }
-//
-//		// This check for file size < 50K is reasonable fast, but of course it is by no means reliable!
-//
-//		let size = url.fileSize ?? 0
-//		return size < 50000
-//    }
-
-
 	/// Returns a generic Finder icon for the audio file
 	
 	override open class func loadThumbnail(for identifier:String, data:Any) async throws -> CGImage
