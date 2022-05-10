@@ -144,6 +144,8 @@
 		D0C1CB2A281D1A6800128DED /* BXSwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0C1CB29281D1A6800128DED /* BXSwiftUI.framework */; };
 		D0C1CBA9281D6FF100128DED /* QLThumbnailGenerator+asyncAwait.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C1CBA8281D6FF100128DED /* QLThumbnailGenerator+asyncAwait.swift */; };
 		D0C1CBAD281D885A00128DED /* NativeSearchField+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C1CBAC281D885900128DED /* NativeSearchField+iOS.swift */; };
+		D0CBC145282A2E9400C6BABB /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CBC144282A2E9300C6BABB /* Config.swift */; };
+		D0CBC149282A3A2700C6BABB /* ObjectWarningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CBC148282A3A2700C6BABB /* ObjectWarningView.swift */; };
 		D0D9EDB027FC82E700D5D7FB /* UnsplashContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDAF27FC82E700D5D7FB /* UnsplashContainerView.swift */; };
 		D0D9EDB227FC83E600D5D7FB /* PexelsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDB127FC83E600D5D7FB /* PexelsContainerView.swift */; };
 		D0D9EDB427FCADB100D5D7FB /* PHAssetCollection+dateInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDB327FCADB100D5D7FB /* PHAssetCollection+dateInterval.swift */; };
@@ -316,6 +318,7 @@
 		D0C1CBA8281D6FF100128DED /* QLThumbnailGenerator+asyncAwait.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QLThumbnailGenerator+asyncAwait.swift"; sourceTree = "<group>"; };
 		D0C1CBAC281D885900128DED /* NativeSearchField+iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NativeSearchField+iOS.swift"; sourceTree = "<group>"; };
 		D0CBC144282A2E9300C6BABB /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		D0CBC148282A3A2700C6BABB /* ObjectWarningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectWarningView.swift; sourceTree = "<group>"; };
 		D0D9EDAF27FC82E700D5D7FB /* UnsplashContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnsplashContainerView.swift; sourceTree = "<group>"; };
 		D0D9EDB127FC83E600D5D7FB /* PexelsContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PexelsContainerView.swift; sourceTree = "<group>"; };
 		D0D9EDB327FCADB100D5D7FB /* PHAssetCollection+dateInterval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PHAssetCollection+dateInterval.swift"; sourceTree = "<group>"; };
@@ -630,6 +633,7 @@
 			children = (
 				D00DF1C127F6D41D00DC1D27 /* ObjectBrowserView.swift */,
 				D01B494227CA1378008249C0 /* ObjectInfoView.swift */,
+				D0CBC148282A3A2700C6BABB /* ObjectWarningView.swift */,
 				D0AA8FB7282038C20009A890 /* macOS */,
 				D0AA8FC8282038CE0009A890 /* iOS */,
 			);
@@ -832,6 +836,7 @@
 				D01B498627CA1378008249C0 /* PHAsset+Info.swift in Sources */,
 				D01B496527CA1378008249C0 /* Library+State.swift in Sources */,
 				D01B497A27CA1378008249C0 /* AudioFolderSource.swift in Sources */,
+				D0CBC149282A3A2700C6BABB /* ObjectWarningView.swift in Sources */,
 				D01C33CF27CA70F3003337A9 /* NSPasteboard+Objects.swift in Sources */,
 				D06503B728255442002E52BE /* BXCollectionView.swift in Sources */,
 				D0BAD10827D392D700B749FD /* PexelsPhotoContainer.swift in Sources */,
