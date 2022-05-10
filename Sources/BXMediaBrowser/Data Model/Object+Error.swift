@@ -28,6 +28,8 @@ extension Object
 	public enum Error : Swift.Error
 	{
 		case notFound
+		case drmProtected
+		case corruptedFile
 		case loadThumbnailFailed
 		case loadMetadataFailed
 		case downloadFileFailed
