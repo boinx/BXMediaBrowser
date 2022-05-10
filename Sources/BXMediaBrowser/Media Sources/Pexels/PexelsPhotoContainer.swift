@@ -154,12 +154,16 @@ open class PexelsPhotoContainer : PexelsContainer
 	
 	private class func add(_ photos:[Pexels.Photo], to pexelsData:PexelsData)
 	{
-		for photo in photos
+		synchronized(pexelsData)
 		{
-			let id = photo.id
-			guard pexelsData.knownIDs[id] == nil else { continue }
-			pexelsData.knownIDs[id] = true
-			pexelsData.objects += PexelsPhotoObject(with:photo)
+			for photo in photos
+			{
+				let id = photo.id
+				
+				guard pexelsData.knownIDs[id] == nil else { continue }
+				pexelsData.knownIDs[id] = true
+				pexelsData.objects += PexelsPhotoObject(with:photo)
+			}
 		}
 	}
 }
