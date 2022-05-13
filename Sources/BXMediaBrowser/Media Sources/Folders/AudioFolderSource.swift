@@ -63,16 +63,18 @@ open class AudioFolderSource : FolderSource
 		
 		if let url = FileManager.default.urls(for:.musicDirectory, in:.userDomainMask).first?.resolvingSymlinksInPath(), url.isReadable
 		{
-			containers += try? self.createContainer(for:url, filter:filter)
+			containers += try self.createContainer(for:url, filter:filter)
 		}
 		
 		// /Library/Audio/Apple Loops/Apple
 		
-		if let url = self.requestReadAccessRights(for:URL(fileURLWithPath:"/Library/Audio/Apple Loops/Apple"))
+		containers += try await MainActor.run
 		{
-			containers += try? self.createContainer(for:url, filter:filter)
+			()->Container? in
+			guard let url = self.requestReadAccessRights(for:URL(fileURLWithPath:"/Library/Audio/Apple Loops/Apple")) else { return nil }
+			return try self.createContainer(for:url, filter:filter)
 		}
-
+		
 		return containers
 	}
 }

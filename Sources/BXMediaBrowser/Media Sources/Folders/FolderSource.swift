@@ -189,7 +189,7 @@ open class FolderSource : Source, AccessControl
 		return didAdd
 	}
 	
-	open func requestReadAccessRights(for folder:URL) -> URL?
+	@MainActor open func requestReadAccessRights(for folder:URL) -> URL?
 	{
 		if folder.isReadable { return folder }
 		
