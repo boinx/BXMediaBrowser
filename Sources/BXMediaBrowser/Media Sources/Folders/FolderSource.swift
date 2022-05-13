@@ -89,7 +89,7 @@ open class FolderSource : Source, AccessControl
 		
 		// Add initial set of default containers
 		
-		var containers:[Container] = self.defaultContainers(with:filter)
+		var containers:[Container] = try await self.defaultContainers(with:filter)
 		
 		// Load stored bookmarks from state. Convert each bookmark to a folder url. If the folder
 		// still exists, then create a FolderContainer for it.
@@ -173,7 +173,7 @@ open class FolderSource : Source, AccessControl
 	
 	// To be overridden by subclasses
 	
-	open func defaultContainers(with filter:FolderFilter) -> [Container]
+	open func defaultContainers(with filter:FolderFilter) async throws -> [Container]
 	{
 		return []
 	}

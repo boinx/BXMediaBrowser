@@ -47,13 +47,13 @@ open class VideoFolderSource : FolderSource
 
 	/// Returns the user "Movies" folder, but only the first time around
 	
-	override open func defaultContainers(with filter:FolderFilter) -> [Container]
+	override open func defaultContainers(with filter:FolderFilter) async throws -> [Container]
 	{
 		guard !didAddDefaultContainers else { return [] }
 		
 		guard let url = FileManager.default.urls(for:.moviesDirectory, in:.userDomainMask).first?.resolvingSymlinksInPath() else { return [] }
 		guard url.isReadable else { return [] }
-		guard let container = try? self.createContainer(for:url, filter:filter) else { return [] }
+		guard let container = try self.createContainer(for:url, filter:filter) else { return [] }
 
 		return [container]
 	}

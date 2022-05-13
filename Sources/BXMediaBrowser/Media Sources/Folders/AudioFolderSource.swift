@@ -53,7 +53,7 @@ open class AudioFolderSource : FolderSource
 
 	/// Returns the user "Music" folder, but only the first time around
 	
-	override open func defaultContainers(with filter:FolderFilter) -> [Container]
+	override open func defaultContainers(with filter:FolderFilter) async throws -> [Container]
 	{
 		guard !didAddDefaultContainers else { return [] }
 		
