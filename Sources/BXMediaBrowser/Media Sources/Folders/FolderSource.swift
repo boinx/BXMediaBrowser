@@ -111,6 +111,10 @@ open class FolderSource : Source, AccessControl
 			}
 		}
 		
+		#else
+		
+		#warning("TODO: implement for iOS")
+		
 		#endif
 		
 		return containers
