@@ -41,8 +41,11 @@ import AppKit
 
 open class FolderContainer : Container
 {
-	let folderObserver:FolderObserver
+	/// This helper reports any external changes to the folder
 	
+	let folderObserver:FolderObserver
+
+
 	/// Creates a new Container for the folder at the specified URL
 	
 	public required init(url:URL, name:String? = nil, filter:FolderFilter, removeHandler:((Container)->Void)? = nil)
@@ -59,7 +62,7 @@ open class FolderContainer : Container
 			
 		self.folderObserver.folderDidChange =
 		{
-			[weak self] in self?.load()
+			[weak self] in self?.reload()
 		}
 		
 		self.folderObserver.resume()
@@ -70,22 +73,43 @@ open class FolderContainer : Container
 	}
 
 
-	// This container can be expanded if it has subfolders
-	
-	override open var canExpand: Bool
-	{
-		if self.isLoaded { return !self.containers.isEmpty }
-		guard let folderURL = data as? URL else { return false }
-		return folderURL.hasSubfolders
-	}
-	
-
 	/// Returns the list of allowed sort Kinds for this Container
 		
 	override open var allowedSortTypes:[Object.Filter.SortType]
 	{
 		[.alphabetical,.creationDate,.rating]
 	}
+
+
+	// This container can be expanded if it has subfolders. Since it is fairly expensive to scan a directory just to
+	// find out whether it has any subfolders, we will perform the scanning on a background task. In the meantime we
+	// will return a default value of false (meaning that no disclosure triangle is displayed in the user interface.
+	// Once the result is available, it will be assigned to the published helper property 'hasSubfolders' which will
+	// trigger the UI to be updated automatically.
+	
+	override open var canExpand: Bool
+	{
+		guard let folderURL = data as? URL else { return false }
+
+		if self.isLoaded { return !self.containers.isEmpty }
+		
+		if !didScanSubfolders
+		{
+			self.didScanSubfolders = true
+			
+			Task
+			{
+				let result = folderURL.hasSubfolders
+				await MainActor.run { self.hasSubfolders = result }
+			}
+		}
+
+		return self.hasSubfolders
+	}
+	
+	private var didScanSubfolders = false
+	
+	@MainActor @Published public private(set) var hasSubfolders = false
 
 	
 //----------------------------------------------------------------------------------------------------------------------
@@ -236,6 +260,16 @@ open class FolderContainer : Container
 		{
 			return FolderObject(url:url)
 		}
+	}
+	
+	
+	/// If the container caches any expensive data, calling this function will discard any cached data
+	
+	override func invalidateCache()
+	{
+		super.invalidateCache()
+		self.didScanSubfolders = false
+		self.hasSubfolders = false
 	}
 	
 	
