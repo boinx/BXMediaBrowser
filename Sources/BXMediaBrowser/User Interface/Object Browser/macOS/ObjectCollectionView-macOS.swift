@@ -40,11 +40,11 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 {
 	// This NSViewRepresentable doesn't return a single view, but a whole hierarchy:
 	//
-	// 	 NSScrollView
+	// 	 BXScrollView
 	//	    NSClipView
-	//	       NSCollectionView
+	//	       BXCollectionView
 	
-	public typealias NSViewType = NSScrollView
+	public typealias NSViewType = BXScrollView
 	
 	/// The Library has properties that may affect the display of this view
 	
@@ -77,7 +77,7 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 	
 	/// Builds a view hierarchy with a NSScrollView and a NSCollectionView inside
 	
-	public func makeNSView(context:Context) -> NSScrollView
+	public func makeNSView(context:Context) -> BXScrollView
 	{
 		let collectionView = BXCollectionView(frame:.zero)
  		
@@ -106,7 +106,7 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 		
 		// Wrap in a NSScrollView
 		
-		let scrollView = NSScrollView(frame:.zero)
+		let scrollView = BXScrollView(frame:.zero)
 		scrollView.documentView = collectionView
 		scrollView.borderType = .noBorder
 		scrollView.hasVerticalScroller = true
@@ -120,7 +120,7 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 	
 	// The selected Container has changed, pass it on to the Coordinator
 	
-	public func updateNSView(_ scrollView:NSScrollView, context:Context)
+	public func updateNSView(_ scrollView:BXScrollView, context:Context)
 	{
 		guard let collectionView = scrollView.documentView as? BXCollectionView else { return }
 		let coordinator = context.coordinator
@@ -146,17 +146,13 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 		
 		// Observe view size changes so that layout can be adjusted as needed
 		
-		collectionView.willSetFrameSizeHandler =
-		{
-			[weak collectionView] newSize in
-			guard let collectionView = collectionView else { return }
-
-			let pos = self.saveScrollPos(for:collectionView)
-			defer { self.restoreScrollPos(for:collectionView, with:pos) }
-
-			let layout = self.createLayout(for:collectionView, newSize:newSize)
-			collectionView.collectionViewLayout = layout
-		}
+//		scrollView.willSetFrameSizeHandler =
+//		{
+//			[weak coordinator] newSize in
+//			guard let coordinator = coordinator else { return }
+//			guard coordinator.needsUpdateLayout(for:newSize) else { return }
+//			coordinator.updateLayoutHandler?()
+//		}
 			
 		coordinator.updateLayoutHandler?()
 		coordinator.cellType = self.cellType
@@ -388,6 +384,8 @@ extension ObjectCollectionView
 		
 		@MainActor var updateLayoutHandler:(()->Void)? = nil
 
+		var currentViewSize:CGSize = .zero
+		
 		/// The dataSource accesses the Objects of the Container
 		
 		var dataSource: NSCollectionViewDiffableDataSource<Int,Object>! = nil
@@ -422,6 +420,13 @@ extension ObjectCollectionView
 			super.init()
         }
 
+		func needsUpdateLayout(for viewSize:CGSize) -> Bool
+		{
+			let needsUpdate = viewSize.width != currentViewSize.width
+			self.currentViewSize = viewSize
+			return needsUpdate
+		}
+		
 		@MainActor func updateLayout()
 		{
 //			self.layoutObserver = uiState.$thumbnailScale

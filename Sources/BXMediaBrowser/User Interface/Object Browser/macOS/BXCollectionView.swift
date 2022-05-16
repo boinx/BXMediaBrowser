@@ -46,4 +46,19 @@ class BXCollectionView : QuicklookCollectionView
 //----------------------------------------------------------------------------------------------------------------------
 
 
+public class BXScrollView : NSScrollView
+{
+	public var willSetFrameSizeHandler:((NSSize)->Void)? = nil
+	
+	override open func setFrameSize(_ newSize:NSSize)
+	{
+		self.willSetFrameSizeHandler?(newSize)
+		super.setFrameSize(newSize)
+	}
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
 #endif
