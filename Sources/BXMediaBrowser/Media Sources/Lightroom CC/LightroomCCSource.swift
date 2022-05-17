@@ -255,29 +255,6 @@ open class LightroomCCSource : Source, AccessControl
 		}
 	}
 
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	/// Returns the archived filterData of all saved Containers
-	
-	override public func state() async -> [String:Any]
-	{
-		var state = await super.state()
-		
-		let savedFilterDatas = await self.containers
-			.compactMap { $0 as? PexelsPhotoContainer }
-			.filter { $0.saveHandler == nil }
-			.compactMap { $0.filterData }
-
-		state[Self.savedFilterDatasKey] = savedFilterDatas
-
-		return state
-	}
-
-	internal static var savedFilterDatasKey:String { "savedFilterDatas" }
-
-
 }
 
 
