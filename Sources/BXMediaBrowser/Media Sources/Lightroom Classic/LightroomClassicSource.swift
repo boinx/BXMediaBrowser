@@ -1,0 +1,150 @@
+//----------------------------------------------------------------------------------------------------------------------
+//
+//  Copyright ©2022 Peter Baumgartner. All rights reserved.
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+//
+//----------------------------------------------------------------------------------------------------------------------
+
+
+#if canImport(iMedia)
+
+import iMedia
+import BXSwiftUtils
+import SwiftUI
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+open class LightroomClassicSource : Source, AccessControl
+{
+	/// The unique identifier of this source must always remain the same. Do not change this identifier, even if the
+	/// class name changes due to refactoring, because the identifier  might be stored in a preferences file or user
+	/// documents.
+	
+	static let identifier = "LightroomClassic:"
+	
+	/// The IMBLightroomParserMessenger is responsible for talking to the legacy Obj-C code in the iMedia framework
+	
+//	private var parserMessenger:IMBLightroomParserMessenger
+	
+	/// Returns the mediaTypes that are supported by this Source
+	
+	public let allowedMediaTypes:[Object.MediaType]
+	
+	
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	/// Creates a new Source for local file system directories
+	
+	public init(allowedMediaTypes:[Object.MediaType])
+	{
+		LightroomClassic.log.debug {"\(Self.self).\(#function)"}
+		
+		self.allowedMediaTypes = allowedMediaTypes
+		
+		super.init(
+			identifier: Self.identifier,
+			icon: LightroomClassic.shared.icon,
+			name: "Adobe Lightroom Classic",
+			filter: LightroomClassicFilter())
+		
+		self.loader = Loader(loadHandler:self.loadContainers)
+	}
+	
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - Login
+	
+
+	@MainActor public var hasAccess:Bool
+	{
+		false
+	}
+	
+	
+	@MainActor public func grantAccess(_ completionHandler:@escaping (Bool)->Void = { _ in })
+	{
+
+	}
+
+
+	@MainActor public func revokeAccess(_ completionHandler:@escaping (Bool)->Void = { _ in })
+	{
+
+	}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - Top Level Containers
+	
+	/// Loads the top-level containers of this source.
+	///
+	/// Subclasses can override this function, e.g. to load top level folder from the preferences file
+	
+	private func loadContainers(with sourceState:[String:Any]? = nil, filter:Object.Filter) async throws -> [Container]
+	{
+		LightroomClassic.log.debug {"\(Self.self).\(#function)"}
+
+		guard let parserMessenger = LightroomClassic.shared.parserMessenger else { return [] }
+		guard let filter = filter as? LightroomClassicFilter else { return [] }
+		
+		do
+		{
+			// Get the top-level node from iMedia
+			
+			let rootNodes = try parserMessenger.unpopulatedTopLevelNodes().compactMap { $0 as? IMBNode }
+			guard let rootNode = rootNodes.first else { return [] }
+			
+			// This top-level nodes in not of interest to us, so populate
+			// it to get at its subnodes "Folders" and "Collections".
+			
+			_ = try parserMessenger.populateNode(rootNode)
+			
+			// Convert these two subnodes to native BXMediaBrowser Containers
+			
+			let containers:[LightroomClassicContainer] = rootNode.subnodes.compactMap
+			{
+				guard let node = $0 as? IMBNode else { return nil }
+				return LightroomClassicContainer(node:node, allowedMediaTypes:allowedMediaTypes, filter:filter)
+			}
+			
+			return containers
+		}
+		catch
+		{
+			LightroomClassic.log.error {"\(Self.self).\(#function) ERROR \(error)"}
+		}
+		
+		return []
+	}
+
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+#endif
