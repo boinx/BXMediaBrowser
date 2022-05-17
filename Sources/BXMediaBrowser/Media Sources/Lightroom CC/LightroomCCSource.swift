@@ -55,8 +55,8 @@ open class LightroomCCSource : Source, AccessControl
 		
 		super.init(
 			identifier: Self.identifier,
-			icon: CGImage.image(named:"LightroomCC", in:.BXMediaBrowser),
-			name: "Adobe Lightroom CC",
+			icon: CGImage.image(named:"lr_appicon_noshadow_256", in:.BXMediaBrowser),
+			name: "Adobe Lightroom",
 			filter: LightroomCCFilter())
 		
 		self.loader = Loader(loadHandler:self.loadContainers)
