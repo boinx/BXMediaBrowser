@@ -150,6 +150,7 @@
 		D0CBC1532832B61400C6BABB /* LightroomClassic.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CBC1522832B61300C6BABB /* LightroomClassic.swift */; };
 		D0CBC1542833726E00C6BABB /* LightroomClassicSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CBC14D2832939200C6BABB /* LightroomClassicSource.swift */; };
 		D0CBC15528338FAE00C6BABB /* LightroomClassicContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CBC14E2832948500C6BABB /* LightroomClassicContainer.swift */; };
+		D0CBC15A2834D03300C6BABB /* iMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0CBC1592834D03300C6BABB /* iMedia.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		D0D9EDB027FC82E700D5D7FB /* UnsplashContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDAF27FC82E700D5D7FB /* UnsplashContainerView.swift */; };
 		D0D9EDB227FC83E600D5D7FB /* PexelsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDB127FC83E600D5D7FB /* PexelsContainerView.swift */; };
 		D0D9EDB427FCADB100D5D7FB /* PHAssetCollection+dateInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDB327FCADB100D5D7FB /* PHAssetCollection+dateInterval.swift */; };
@@ -328,6 +329,7 @@
 		D0CBC14F283299EF00C6BABB /* LightroomClassicObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightroomClassicObject.swift; sourceTree = "<group>"; };
 		D0CBC150283299F700C6BABB /* LightroomClassicFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightroomClassicFilter.swift; sourceTree = "<group>"; };
 		D0CBC1522832B61300C6BABB /* LightroomClassic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightroomClassic.swift; sourceTree = "<group>"; };
+		D0CBC1592834D03300C6BABB /* iMedia.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = iMedia.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0D9EDAF27FC82E700D5D7FB /* UnsplashContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnsplashContainerView.swift; sourceTree = "<group>"; };
 		D0D9EDB127FC83E600D5D7FB /* PexelsContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PexelsContainerView.swift; sourceTree = "<group>"; };
 		D0D9EDB327FCADB100D5D7FB /* PHAssetCollection+dateInterval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PHAssetCollection+dateInterval.swift"; sourceTree = "<group>"; };
@@ -353,6 +355,7 @@
 				D0C1CB2A281D1A6800128DED /* BXSwiftUI.framework in Frameworks */,
 				D01B49B927CA2189008249C0 /* Foundation.framework in Frameworks */,
 				D01B49BA27CA2189008249C0 /* AVFoundation.framework in Frameworks */,
+				D0CBC15A2834D03300C6BABB /* iMedia.framework in Frameworks */,
 				D0573FA627E9D0C900788155 /* OAuth2 in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -671,6 +674,7 @@
 		D01B49AF27CA2132008249C0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D0CBC1592834D03300C6BABB /* iMedia.framework */,
 				D0C1CB29281D1A6800128DED /* BXSwiftUI.framework */,
 				D01B49B827CA2189008249C0 /* AVFoundation.framework */,
 				D01B49B727CA2189008249C0 /* Foundation.framework */,
