@@ -169,7 +169,11 @@ public extension ViewFactory
 	{
 		if let source = source as? LightroomCCSource
 		{
-			LightroomCCSourceView(with:source,LightroomCC.shared)
+			LightroomCCSourceView(with:source, LightroomCC.shared)
+		}
+		else if let source = source as? LightroomClassicSource
+		{
+			LightroomClassicSourceView(with:source, LightroomClassic.shared)
 		}
 		else if source is FolderSource
 		{

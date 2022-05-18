@@ -33,7 +33,7 @@ import Foundation
 //----------------------------------------------------------------------------------------------------------------------
 
 
-public class LightroomClassic : ObservableObject
+public class LightroomClassic : ObservableObject, AppLifecycleMixin
 {
 	/// A shared singleton instance
 	
@@ -46,6 +46,14 @@ public class LightroomClassic : ObservableObject
 	/// The IMBLightroomParserMessenger is responsible for talking to the legacy Obj-C code in the iMedia framework
 	
 	public private(set) var parserMessenger:IMBLightroomParserMessenger? = nil
+	
+	/// Any errors that may have occured while loading this source
+	
+	@MainActor @Published public var error:Swift.Error? = nil
+
+	/// Internal housekeeping
+	
+	public var observers:[Any] = []
 	
 	
 //----------------------------------------------------------------------------------------------------------------------
@@ -63,36 +71,27 @@ public class LightroomClassic : ObservableObject
 		}
 	}
     
+    
+    /// Returns true if Lightroom Classic is installed
+	
     public var isInstalled:Bool
     {
 		self.parserMessenger != nil
     }
     
-//    public var icon:CGImage?
-//    {
-//		let identifier = IMBLightroomImageParserMessenger.identifier() ?? ""
-//		let image =
-//			NSImage.icon(for:identifier) ??
-//			Bundle.BXMediaBrowser.image(forResource:"lr_appicon_noshadow_256")
-//
-////		let image:NSImage? = nil
-////
-////		for identifier in bundleIdentifiers
-////		{
-////			if image == nil
-////			{
-////				image = NSImage.icon(for:identifier)
-////			}
-////		}
-////
-////		if image == nil
-////		{
-////			image = Bundle.BXMediaBrowser.image(forResource:"lr_appicon_noshadow_256")
-////		}
-//
-//		return image?.CGImage
-//    }
-   
+    
+    /// Returns true if the libraries parent folder is readable, i.e. we have access rights
+	
+    public var isReadable:Bool
+    {
+		guard let url = self.parserMessenger?.mediaSource else { return false }
+		let isReadable = url.isReadable
+		return isReadable
+    }
+    
+
+	/// Returns the list of known Lightroom Classic bundle identifiers
+	
 	public var bundleIdentifiers:[String]
 	{
 		[
@@ -105,28 +104,38 @@ public class LightroomClassic : ObservableObject
 			"com.adobe.Lightroom",
 		]
 	}
+
+
+    /// Launches the Lightroom Classic application in the background
+	
+	public func launch(completionHandler:((Swift.Error?)->Void)? = nil)
+    {
+		guard let path = IMBLightroomParserMessenger.lightroomPath() else { return }
+
+		let url = URL(fileURLWithPath:path)
+		let config = NSWorkspace.OpenConfiguration()
+//		config.hides = true
+		
+		self.registerDidActivateHandler()
+		{
+			[weak self] in
+			completionHandler?(nil)
+			self?.observers = []
+		}
+		
+		NSWorkspace.shared.openApplication(at:url, configuration:config)
+//		{
+//			_,error in
+//
+//			completionHandler?(error)
+//		}
+    }
    
    
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	/// The current status
-	
-	@MainActor @Published public var status:Status = .offline
-	{
-		didSet
-		{
-			LightroomCC.log.debug {"\(Self.self).\(#function) = \(status)"}
-		}
-	}
-
-	public enum Status : Equatable
-	{
-		case offline
-		case running
-	}
-		
-	/// Error that moight occur when talking to the Lightroom server
+	/// Error that might occur when talking to the Lightroom server
 	
 	public enum Error : Swift.Error
 	{
@@ -156,6 +165,67 @@ public class LightroomClassic : ObservableObject
 		return logger
 	}()
 		
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+public extension LightroomClassic
+{
+	enum Status : Equatable
+	{
+		/// Read access to the Lightroom catalog file hasn't been granted by the user
+		
+		case noAccess
+		
+		/// Lightroom Classic is not running
+		
+		case notRunning
+		
+		/// Everything is fine
+		
+		case ok
+	}
+		
+	/// The current status
+	
+	@MainActor var status:Status
+	{
+		if let error = self.error as? NSError
+		{
+			if error.domain == "com.karelia.imedia" && error.code == 14
+			{
+				return .notRunning
+			}
+			else
+			{
+				return .noAccess
+			}
+		}
+		
+		return .ok
+	}
+
+//	@MainActor var statusTitle:String
+//	{
+//		switch self.status
+//		{
+//			case .noAccess: return "Missing Access Rights"
+//			case .notRunning: return "Lightroom Classic Not Running"
+//			default: return ""
+//		}
+//	}
+//
+//	@MainActor var statusMessage:String
+//	{
+//		switch self.status
+//		{
+//			case .noAccess: return "The Lightroom library is not readable. Please grant read access rights for its parent folder."
+//			case .notRunning: return error?.localizedDescription ?? ""
+//			default: return ""
+//		}
+//	}
 }
 
 

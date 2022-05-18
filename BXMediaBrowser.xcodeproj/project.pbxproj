@@ -150,6 +150,7 @@
 		D0CBC1532832B61400C6BABB /* LightroomClassic.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CBC1522832B61300C6BABB /* LightroomClassic.swift */; };
 		D0CBC1542833726E00C6BABB /* LightroomClassicSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CBC14D2832939200C6BABB /* LightroomClassicSource.swift */; };
 		D0CBC15528338FAE00C6BABB /* LightroomClassicContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CBC14E2832948500C6BABB /* LightroomClassicContainer.swift */; };
+		D0CBC1582833D6BF00C6BABB /* LightroomClassicSourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CBC1572833D6BE00C6BABB /* LightroomClassicSourceView.swift */; };
 		D0CBC15A2834D03300C6BABB /* iMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0CBC1592834D03300C6BABB /* iMedia.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		D0D9EDB027FC82E700D5D7FB /* UnsplashContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDAF27FC82E700D5D7FB /* UnsplashContainerView.swift */; };
 		D0D9EDB227FC83E600D5D7FB /* PexelsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDB127FC83E600D5D7FB /* PexelsContainerView.swift */; };
@@ -329,6 +330,7 @@
 		D0CBC14F283299EF00C6BABB /* LightroomClassicObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightroomClassicObject.swift; sourceTree = "<group>"; };
 		D0CBC150283299F700C6BABB /* LightroomClassicFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightroomClassicFilter.swift; sourceTree = "<group>"; };
 		D0CBC1522832B61300C6BABB /* LightroomClassic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightroomClassic.swift; sourceTree = "<group>"; };
+		D0CBC1572833D6BE00C6BABB /* LightroomClassicSourceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightroomClassicSourceView.swift; sourceTree = "<group>"; };
 		D0CBC1592834D03300C6BABB /* iMedia.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = iMedia.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0D9EDAF27FC82E700D5D7FB /* UnsplashContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnsplashContainerView.swift; sourceTree = "<group>"; };
 		D0D9EDB127FC83E600D5D7FB /* PexelsContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PexelsContainerView.swift; sourceTree = "<group>"; };
@@ -632,6 +634,7 @@
 				D01B493127CA1378008249C0 /* SourceView.swift */,
 				D01B493427CA1378008249C0 /* FolderSourceView.swift */,
 				D0573FA227E9ADED00788155 /* LightroomCCSourceView.swift */,
+				D0CBC1572833D6BE00C6BABB /* LightroomClassicSourceView.swift */,
 				D01B493727CA1378008249C0 /* ContainerView.swift */,
 				D01B493227CA1378008249C0 /* FolderContainerView.swift */,
 				D0D9EDAF27FC82E700D5D7FB /* UnsplashContainerView.swift */,
@@ -896,6 +899,7 @@
 				D0D9EDB627FD991800D5D7FB /* PhotosData.swift in Sources */,
 				D0AA8FCC282038CE0009A890 /* ObjectCollectionView-iOS.swift in Sources */,
 				D01B498027CA1378008249C0 /* UnsplashJSON.swift in Sources */,
+				D0CBC1582833D6BF00C6BABB /* LightroomClassicSourceView.swift in Sources */,
 				D0C1CBA9281D6FF100128DED /* QLThumbnailGenerator+asyncAwait.swift in Sources */,
 				D01B495327CA1378008249C0 /* TempFilePool.swift in Sources */,
 				D0CBC145282A2E9400C6BABB /* Config.swift in Sources */,

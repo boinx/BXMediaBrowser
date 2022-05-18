@@ -79,19 +79,41 @@ open class LightroomClassicSource : Source, AccessControl
 
 	@MainActor public var hasAccess:Bool
 	{
-		false
+		LightroomClassic.shared.error == nil
 	}
 	
 	
 	@MainActor public func grantAccess(_ completionHandler:@escaping (Bool)->Void = { _ in })
 	{
-
+		guard let path = IMBLightroomParserMessenger.libraryPaths().first as? String else
+		{
+			completionHandler(false)
+			return
+		}
+		
+		let parentFolder = URL(fileURLWithPath:path).deletingLastPathComponent()
+		let message = "Grant Access to Lightroom Classic"
+		let button = "Grant Access"
+		
+		NSOpenPanel.presentModal(message:message, buttonLabel:button, directoryURL:parentFolder, canChooseFiles:false, canChooseDirectories:true, allowsMultipleSelection:false)
+		{
+			if let url = $0.first, url == parentFolder
+			{
+				// Store bookmark in self.state
+				self.load()
+				completionHandler(true)
+			}
+			else
+			{
+				completionHandler(false)
+			}
+		}
 	}
 
 
 	@MainActor public func revokeAccess(_ completionHandler:@escaping (Bool)->Void = { _ in })
 	{
-
+		#warning("TODO: implement")
 	}
 
 
@@ -131,11 +153,23 @@ open class LightroomClassicSource : Source, AccessControl
 				return LightroomClassicContainer(node:node, allowedMediaTypes:allowedMediaTypes, filter:filter)
 			}
 			
+			await MainActor.run
+			{
+				LightroomClassic.shared.error = nil
+			}
+			
 			return containers
 		}
 		catch
 		{
 			LightroomClassic.log.error {"\(Self.self).\(#function) ERROR \(error)"}
+		
+			// Store any errors that have occured, so that the error message can be displayed in the UI
+			
+			await MainActor.run
+			{
+				LightroomClassic.shared.error = error
+			}
 		}
 		
 		return []
