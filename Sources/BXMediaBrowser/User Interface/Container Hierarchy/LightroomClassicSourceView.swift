@@ -60,16 +60,9 @@ public struct LightroomClassicSourceView : View
 		
 			header:
 			{
-				HStack
-				{
-					CustomDisclosureButton(icon:source.icon, label:source.name, isExpanded:self.$source.isExpanded)
-						.leftAligned()
-						.padding(.vertical,2)
-						
-					Spacer()
-					
-					self.statusView
-				}
+				CustomDisclosureButton(icon:source.icon, label:source.name, isExpanded:self.$source.isExpanded)
+					.leftAligned()
+					.padding(.vertical,2)
 			},
 			
 			body:
@@ -87,17 +80,7 @@ public struct LightroomClassicSourceView : View
 				}
 				else
 				{
-					VStack(spacing:12)
-					{
-						Text(errorMessage)
-							.lineLimit(nil)
-							#if os(macOS)
-							.controlSize(.small)
-							#endif
-
-						errorRecovery()
-					}
-					.padding(12)
+					self.statusView.padding(12)
 				}
 			})
 			
@@ -124,94 +107,38 @@ extension LightroomClassicSourceView
 	
     @ViewBuilder var statusView: some View
     {
-		if lightroom.status != .ok
+		HStack(alignment:.top, spacing:12)
 		{
-			BXImage(systemName:errorIcon)
-				.foregroundColor(errorColor)
-				.onTapGesture { self.isShowingPopover = true }
-				.popover(isPresented: self.$isShowingPopover)
-				{
-					self.statusPopoverView
-						.padding()
-						.frame(width:260)
-				}
-		}
-		else
-		{
-			EmptyView()
-		}
-    }
-    
-    
-    var statusPopoverView: some View
-    {
-		VStack(spacing:12)
-		{
-			HStack
-			{
-				BXImage(systemName:errorIcon)
-					.foregroundColor(errorColor)
+			BXImage(systemName:"exclamationmark.triangle.fill")
+				.foregroundColor(.yellow)
 					
+			VStack(alignment:.leading, spacing:12)
+			{
 				Text(errorTitle)
 					.bold()
-					.lineLimit(1)
+					.lineLimit(nil)
+					
+				Text(errorMessage)
+					.lineLimit(nil)
+					#if os(macOS)
+					.controlSize(.small)
+					#endif
+
+				errorRecoveryButton()
+					#if os(macOS)
+					.controlSize(.small)
+					#endif
 			}
-
-			Text(errorMessage)
-				.lineLimit(nil)
-				#if os(macOS)
-				.controlSize(.small)
-				#endif
-
-			errorRecovery()
 		}
     }
     
-    var errorIcon:String
-    {
-		switch lightroom.status
-		{
-			case .noAccess: return "exclamationmark.octagon.fill"
-			case .notRunning: return "exclamationmark.triangle.fill"
-			default: return ""
-		}
-    }
-    
-    var errorColor:Color
-    {
-		switch lightroom.status
-		{
-			case .noAccess: return .red
-			case .notRunning: return .yellow
-			default: return .primary
-		}
-    }
-    
-	var errorTitle:String
-    {
-		switch lightroom.status
-		{
-			case .noAccess: return "Missing Access Rights"
-			case .notRunning: return "Lightroom Classic Not Running"
-			default: return ""
-		}
-    }
-    
-    var errorMessage:String
-    {
-		switch lightroom.status
-		{
-			case .noAccess: return "The Lightroom library is not readable. Please grant read access rights for its parent folder."
-			case .notRunning: return "To access the library Lightroom Classic must be running in the background."
-			default: return ""
-		}
-    }
-    
-    @ViewBuilder func errorRecovery() -> some View
+	/// Creates a recovery button for the current error status
+	
+    @ViewBuilder func errorRecoveryButton() -> some View
     {
 		if lightroom.status == .noAccess
 		{
-			Button("Grant Access")
+			Button(NSLocalizedString("GrantAccess.button", tableName:"LightroomClassic", bundle:.BXMediaBrowser, comment:"Button Title"))
 			{
 				self.isShowingPopover = false
 				source.grantAccess()
@@ -219,7 +146,7 @@ extension LightroomClassicSourceView
 		}
 		else if lightroom.status == .notRunning
 		{
-			Button("Launch Lightroom")
+			Button(NSLocalizedString("LaunchLightroom.button", tableName:"LightroomClassic", bundle:.BXMediaBrowser, comment:"Button Title"))
 			{
 				self.isShowingPopover = false
 				
@@ -228,6 +155,30 @@ extension LightroomClassicSourceView
 					_ in source.load()
 				}
 			}
+		}
+    }
+    
+	/// Returns the title for the current error status
+	
+	var errorTitle:String
+    {
+		switch lightroom.status
+		{
+			case .noAccess: return NSLocalizedString("Status.noAccess.title", tableName:"LightroomClassic", bundle:.BXMediaBrowser, comment:"Alert Title")
+			case .notRunning: return NSLocalizedString("Status.notRunning.title", tableName:"LightroomClassic", bundle:.BXMediaBrowser, comment:"Alert Title")
+			default: return ""
+		}
+    }
+    
+    /// Returns the description for the current error status
+	
+    var errorMessage:String
+    {
+		switch lightroom.status
+		{
+			case .noAccess: return NSLocalizedString("Status.noAccess.message", tableName:"LightroomClassic", bundle:.BXMediaBrowser, comment:"Alert Message")
+			case .notRunning: return NSLocalizedString("Status.notRunning.message", tableName:"LightroomClassic", bundle:.BXMediaBrowser, comment:"Alert Message")
+			default: return ""
 		}
     }
 }

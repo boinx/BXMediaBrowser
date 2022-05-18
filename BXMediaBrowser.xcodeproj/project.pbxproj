@@ -152,6 +152,7 @@
 		D0CBC15528338FAE00C6BABB /* LightroomClassicContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CBC14E2832948500C6BABB /* LightroomClassicContainer.swift */; };
 		D0CBC1582833D6BF00C6BABB /* LightroomClassicSourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CBC1572833D6BE00C6BABB /* LightroomClassicSourceView.swift */; };
 		D0CBC15A2834D03300C6BABB /* iMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0CBC1592834D03300C6BABB /* iMedia.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		D0CBC15D283518EA00C6BABB /* LightroomClassic.strings in Resources */ = {isa = PBXBuildFile; fileRef = D0CBC15B283518EA00C6BABB /* LightroomClassic.strings */; };
 		D0D9EDB027FC82E700D5D7FB /* UnsplashContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDAF27FC82E700D5D7FB /* UnsplashContainerView.swift */; };
 		D0D9EDB227FC83E600D5D7FB /* PexelsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDB127FC83E600D5D7FB /* PexelsContainerView.swift */; };
 		D0D9EDB427FCADB100D5D7FB /* PHAssetCollection+dateInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDB327FCADB100D5D7FB /* PHAssetCollection+dateInterval.swift */; };
@@ -332,6 +333,9 @@
 		D0CBC1522832B61300C6BABB /* LightroomClassic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightroomClassic.swift; sourceTree = "<group>"; };
 		D0CBC1572833D6BE00C6BABB /* LightroomClassicSourceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightroomClassicSourceView.swift; sourceTree = "<group>"; };
 		D0CBC1592834D03300C6BABB /* iMedia.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = iMedia.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0CBC15C283518EA00C6BABB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LightroomClassic.strings; sourceTree = "<group>"; };
+		D0CBC15F283518F900C6BABB /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/LightroomClassic.strings; sourceTree = "<group>"; };
+		D0CBC1602835190400C6BABB /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LightroomClassic.strings; sourceTree = "<group>"; };
 		D0D9EDAF27FC82E700D5D7FB /* UnsplashContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnsplashContainerView.swift; sourceTree = "<group>"; };
 		D0D9EDB127FC83E600D5D7FB /* PexelsContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PexelsContainerView.swift; sourceTree = "<group>"; };
 		D0D9EDB327FCADB100D5D7FB /* PHAssetCollection+dateInterval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PHAssetCollection+dateInterval.swift"; sourceTree = "<group>"; };
@@ -431,6 +435,7 @@
 				D01B48CD27CA1378008249C0 /* Unsplash.strings */,
 				D0BAD10F27D3BF5600B749FD /* Pexels.strings */,
 				D052BE1E27ECB72C0084068A /* LightroomCC.strings */,
+				D0CBC15B283518EA00C6BABB /* LightroomClassic.strings */,
 				D0BAD11427D3C42400B749FD /* Icons.xcassets */,
 			);
 			path = Resources;
@@ -851,6 +856,7 @@
 				D01B494927CA1378008249C0 /* Library.strings in Resources */,
 				D0BAD11127D3BF5600B749FD /* Pexels.strings in Resources */,
 				D0BAD11527D3C42400B749FD /* Icons.xcassets in Resources */,
+				D0CBC15D283518EA00C6BABB /* LightroomClassic.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1085,6 +1091,16 @@
 				D0BAD11327D3C10600B749FD /* fr */,
 			);
 			name = Pexels.strings;
+			sourceTree = "<group>";
+		};
+		D0CBC15B283518EA00C6BABB /* LightroomClassic.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D0CBC15C283518EA00C6BABB /* en */,
+				D0CBC15F283518F900C6BABB /* de */,
+				D0CBC1602835190400C6BABB /* fr */,
+			);
+			name = LightroomClassic.strings;
 			sourceTree = "<group>";
 		};
 		D0D9EDB727FEE05800D5D7FB /* Photos.strings */ = {

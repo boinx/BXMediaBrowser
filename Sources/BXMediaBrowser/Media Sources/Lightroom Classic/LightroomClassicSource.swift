@@ -92,9 +92,9 @@ open class LightroomClassicSource : Source, AccessControl
 		}
 		
 		let parentFolder = URL(fileURLWithPath:path).deletingLastPathComponent()
-		let message = "Grant Access to Lightroom Classic"
-		let button = "Grant Access"
-		
+		let message = NSLocalizedString("GrantAccess.title", tableName:"LightroomClassic", bundle:.BXMediaBrowser, comment:"Alert Title")
+		let button = NSLocalizedString("GrantAccess.button", tableName:"LightroomClassic", bundle:.BXMediaBrowser, comment:"Button Title")
+
 		NSOpenPanel.presentModal(message:message, buttonLabel:button, directoryURL:parentFolder, canChooseFiles:false, canChooseDirectories:true, allowsMultipleSelection:false)
 		{
 			if let url = $0.first, url == parentFolder
