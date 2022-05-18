@@ -63,7 +63,6 @@ public struct LightroomCCSourceView : View
 				HStack
 				{
 					CustomDisclosureButton(icon:source.icon, label:source.name, isExpanded:self.$source.isExpanded)
-						.leftAligned()
 						.padding(.vertical,2)
 						
 					Spacer()

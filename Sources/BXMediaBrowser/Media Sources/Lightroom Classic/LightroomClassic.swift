@@ -206,26 +206,6 @@ public extension LightroomClassic
 		
 		return .ok
 	}
-
-//	@MainActor var statusTitle:String
-//	{
-//		switch self.status
-//		{
-//			case .noAccess: return "Missing Access Rights"
-//			case .notRunning: return "Lightroom Classic Not Running"
-//			default: return ""
-//		}
-//	}
-//
-//	@MainActor var statusMessage:String
-//	{
-//		switch self.status
-//		{
-//			case .noAccess: return "The Lightroom library is not readable. Please grant read access rights for its parent folder."
-//			case .notRunning: return error?.localizedDescription ?? ""
-//			default: return ""
-//		}
-//	}
 }
 
 
