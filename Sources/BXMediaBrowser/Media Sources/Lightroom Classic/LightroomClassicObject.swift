@@ -60,22 +60,6 @@ open class LightroomClassicObject : Object, AppLifecycleMixin
 			loadThumbnailHandler: Self.loadThumbnail,
 			loadMetadataHandler: Self.loadMetadata,
 			downloadFileHandler: Self.downloadFile)
-		
-		// If we received a rating from Lightroom, then store it in our database
-		
-//		if let rating = asset.rating, rating > 0 //, rating > StatisticsController.shared.rating(for:self)
-//		{
-//			StatisticsController.shared.setRating(rating, for:self, sendNotifications:false)
-//		}
-
-		// Since Lightroom CC does not have and change notification mechanism yet, we need to poll for changes.
-		// Whenever the app is brought to the foreground (activated), we just assume that a change was made in
-		// Lightroom in the meantime. Perform necessary checks and reload this container if necessary.
-		
-//		self.registerDidActivateHandler
-//		{
-//			[weak self] in self?.reloadIfNeeded()
-//		}
 	}
 
 	static func identifier(for imbObject:IMBLightroomObject) -> String
@@ -185,15 +169,12 @@ open class LightroomClassicObject : Object, AppLifecycleMixin
 
 	override public var localFileName:String
 	{
-		Self.localFileName(for:identifier, data:data)
+		let filename = "\(identifier).jpg"
+		guard let imbObject = data as? IMBLightroomObject else { return filename }
+		return imbObject.location.lastPathComponent
 	}
 
-	class func localFileName(for identifier:String, data:Any) -> String
-	{
-		"\(identifier).jpg"
-	}
-
-	// LightroomCC always returns JPEG files
+	// LightroomClassic always returns JPEG files
 
 	override public var localFileUTI:String
 	{
@@ -204,31 +185,17 @@ open class LightroomClassicObject : Object, AppLifecycleMixin
 
 	open class func downloadFile(for identifier:String, data:Any) async throws -> URL
 	{
-		throw Error.downloadFileFailed
-	}
+		LightroomClassic.log.debug {"\(Self.self).\(#function)"}
 
-	// Shows an indeterminate progress bar
-		
-	open class func showProgress()
-	{
-		DispatchQueue.main.async
+		do
 		{
-			#if os(macOS)
-			
-			if !BXProgressWindowController.shared.isVisible
-			{
-				BXProgressWindowController.shared.title = NSLocalizedString("Importing Media Files", bundle:.BXMediaBrowser, comment:"Progress Title")
-				BXProgressWindowController.shared.message = NSLocalizedString("Downloading", bundle:.BXMediaBrowser, comment:"Progress Title")
-				BXProgressWindowController.shared.value = 0.0
-				BXProgressWindowController.shared.isIndeterminate = true
-				BXProgressWindowController.shared.show()
-			}
-			
-			#else
-			
-			#warning("TODO: implement for iOS")
-			
-			#endif
+			guard let url = Self.previewItemURL(for:data) else { throw Error.downloadFileFailed }
+			return url
+		}
+		catch
+		{
+			LightroomClassic.log.error {"\(Self.self).\(#function) ERROR \(error)"}
+			throw error
 		}
 	}
 	
@@ -239,13 +206,11 @@ open class LightroomClassicObject : Object, AppLifecycleMixin
 	// MARK: - QuickLook
 	
 
-	/// Returns the filename of the local preview file
+	/// Returns the filename for the QuickLook panel
 	
 	public var previewFilename:String
     {
-		let filename = Self.localFileName(for:identifier, data:data)
-		let ext = filename.pathExtension
-		return filename.replacingOccurrences(of:".\(ext)", with:".preview.\(ext.lowercased())")
+		self.localFileName
 	}
 	
 	/// Returns the title for the QuickLook panel
@@ -255,51 +220,35 @@ open class LightroomClassicObject : Object, AppLifecycleMixin
 		self.localFileName
     }
 	
-	/// Returns the local file URL to the preview file. If not available yet, it will be downloaded from
-	/// the Lightroom server.
+	/// Returns the URL for the QuickLook panel
 	
 	override public var previewItemURL:URL!
     {
-//		if self._previewItemURL == nil && !isDownloadingPreview
-//		{
-//			self.isDownloadingPreview = true
-//
-//			Task
-//			{
-//				// Download the preview file
-//
-//				let downloadAPI = self.previewAccessPoint
-//				let request = try LightroomCC.shared.request(for:downloadAPI, httpMethod:"GET")
-//				let tmpURL = try await URLSession.shared.downloadFile(with:request)
-//
-//				// Rename the file
-//
-//				let folderURL = tmpURL.deletingLastPathComponent()
-//				let filename = self.previewFilename
-//				let localURL = folderURL.appendingPathComponent(filename)
-//				try? FileManager.default.removeItem(at:localURL)
-//				try? FileManager.default.moveItem(at:tmpURL, to:localURL)
-//
-//				// Store it in the TempFilePool and update the QLPreviewPanel
-//
-//				await MainActor.run
-//				{
-//					TempFilePool.shared.register(localURL)
-//					self._previewItemURL = localURL
-//
-//					#if os(macOS)
-//					QLPreviewPanel.shared().refreshCurrentPreviewItem()
-//					QLPreviewPanel.shared().reloadData()
-//					#endif
-//				}
-//			}
-// 		}
- 		
- 		return self._previewItemURL
+		if let url = self._previewItemURL
+		{
+			return url
+		}
+		
+		self._previewItemURL = Self.previewItemURL(for:data)
+		return _previewItemURL
 	}
-
+	
 	private var _previewItemURL:URL? = nil
-	private var isDownloadingPreview = false
+	
+	/// Returns the local file URL to the preview file. This creates a temp JPEG file from the pyramid data.
+	/// The resolution of the JPEG file depends on the catalog settings inside Lightroom Classic
+	
+	class func previewItemURL(for data:Any) -> URL?
+    {
+		var isStale = false
+
+		guard let imbObject = data as? IMBLightroomObject else { return nil }
+		guard let parserMessenger = LightroomClassic.shared.parserMessenger else { return nil }
+		guard let bookmark = try? parserMessenger.bookmark(for:imbObject) else { return nil }
+		guard let url = try? URL(resolvingBookmarkData:bookmark, options:[], relativeTo:nil, bookmarkDataIsStale:&isStale) else { return nil }
+
+		return url
+	}
 }
 
 
