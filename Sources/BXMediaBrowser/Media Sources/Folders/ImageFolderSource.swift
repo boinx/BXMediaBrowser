@@ -173,6 +173,8 @@ open class ImageFile : FolderObject
 
 		var array:[ObjectMetadataEntry] = []
 		
+		#warning("TODO: localize strings")
+		
 		array += ObjectMetadataEntry(label:"File", value:"\(self.name)", action:url.reveal)
 
 		if let w = w, let h = h
