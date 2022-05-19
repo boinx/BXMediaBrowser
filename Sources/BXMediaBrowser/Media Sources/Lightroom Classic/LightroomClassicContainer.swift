@@ -85,11 +85,15 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 		return data.allowedMediaTypes
 	}
 
-	// Folders can be expanded, but albums cannot
+	// A container can be expanded if it has sub-containers
 	
 	override open var canExpand: Bool
 	{
-		guard let data = self.data as? LRCData else { return false }
+		if self.isLoaded
+		{
+			return !self.containers.isEmpty
+		}
+
 		return true
 	}
 
