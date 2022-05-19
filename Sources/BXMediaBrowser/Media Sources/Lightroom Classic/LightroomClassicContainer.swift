@@ -172,6 +172,14 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 				containers += container
 			}
 			
+			for item in node.objects
+			{
+				guard let imbObject = item as? IMBLightroomObject else { continue }
+				// Filter out items that are not wanted
+				let object = LightroomClassicObject(with:imbObject)
+				objects += object
+			}
+			
 //			containers = node.subnodes.compactMap
 //			{
 //				guard let node = $0 as? IMBNode else { return nil }

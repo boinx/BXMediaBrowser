@@ -51,22 +51,22 @@ open class LightroomClassicObject : Object, AppLifecycleMixin
 
 	/// Creates a new Object for the file at the specified URL
 
-	public required init(with asset:LightroomCC.Asset)
+	public required init(with imbObject:IMBLightroomObject)
 	{
 		super.init(
-			identifier: Self.identifier(for:asset),
-			name: asset.name,
-			data: asset,
+			identifier: Self.identifier(for:imbObject),
+			name: imbObject.name,
+			data: imbObject,
 			loadThumbnailHandler: Self.loadThumbnail,
 			loadMetadataHandler: Self.loadMetadata,
 			downloadFileHandler: Self.downloadFile)
 		
 		// If we received a rating from Lightroom, then store it in our database
 		
-		if let rating = asset.rating, rating > 0 //, rating > StatisticsController.shared.rating(for:self)
-		{
-			StatisticsController.shared.setRating(rating, for:self, sendNotifications:false)
-		}
+//		if let rating = asset.rating, rating > 0 //, rating > StatisticsController.shared.rating(for:self)
+//		{
+//			StatisticsController.shared.setRating(rating, for:self, sendNotifications:false)
+//		}
 
 		// Since Lightroom CC does not have and change notification mechanism yet, we need to poll for changes.
 		// Whenever the app is brought to the foreground (activated), we just assume that a change was made in
@@ -78,9 +78,9 @@ open class LightroomClassicObject : Object, AppLifecycleMixin
 //		}
 	}
 
-	static func identifier(for asset:LightroomCC.Asset) -> String
+	static func identifier(for imbObject:IMBLightroomObject) -> String
 	{
-		"LightroomClassic:Asset:\(asset.id)"
+		imbObject.persistentResourceIdentifier
 	}
 
 
@@ -91,68 +91,90 @@ open class LightroomClassicObject : Object, AppLifecycleMixin
 
 	open class func loadThumbnail(for identifier:String, data:Any) async throws -> CGImage
 	{
-		guard let asset = data as? LightroomCC.Asset else { throw Error.loadThumbnailFailed }
+		guard let imbObject = data as? IMBLightroomObject else { throw Error.loadThumbnailFailed }
+		guard let parserMessenger = LightroomClassic.shared.parserMessenger else { throw Error.loadThumbnailFailed }
+		
+		let object = try parserMessenger.loadThumbnail(for:imbObject)
+		guard let image = object.imageRepresentation() as? AnyObject else { throw Error.loadThumbnailFailed }
+		
+		if CFGetTypeID(image) == CGImage.typeID
+		{
+			return image as! CGImage
+		}
 
-		let catalogID = LightroomCC.shared.catalogID
-		let assetID = asset.id
-		let image = try await LightroomCC.shared.image(from:"https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)/renditions/thumbnail2x")
-		return image
+		throw Error.loadThumbnailFailed
 	}
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-
-	// To be overridden in subclasses
 
 	open class func loadMetadata(for identifier:String, data:Any) async throws -> [String:Any]
 	{
-		return [:]
+		// Load metadata from IMBObject via iMedia framework
+		
+		guard let imbObject = data as? IMBLightroomObject else { throw Error.loadMetadataFailed }
+		guard let parserMessenger = LightroomClassic.shared.parserMessenger else { throw Error.loadMetadataFailed }
+		let object = try parserMessenger.loadMetadata(for:imbObject)
+		guard var metadata = object.metadata as? [String:Any] else { throw Error.loadMetadataFailed }
+
+		// Copy some existing key/value pairs to standard keys that are expected by BXMediaBrowser
+		
+		if let w = metadata["width"] as? NSNumber
+		{
+			metadata[.widthKey] = w.intValue
+		}
+
+		if let h = metadata["height"] as? NSNumber
+		{
+			metadata[.heightKey] = h.intValue
+		}
+
+		if let name = metadata["name"] as? String
+		{
+			metadata[.titleKey] = name
+		}
+
+		if let str1 = metadata["dateTime"] as? String
+		{
+			metadata[.creationDateKey] = str1.date
+		}
+
+		return metadata
 	}
 
+	// Convert metadata to ordered human-readable form
+	
 	@MainActor override open var localizedMetadata:[ObjectMetadataEntry]
     {
-		return []
+		let dict = self.metadata ?? [:]
+		var action:(()->Void)? = nil
+		var array:[ObjectMetadataEntry] = []
+		
+		if let path = dict["MasterPath"] as? String
+		{
+			let url = URL(fileURLWithPath:path)
+			action = { url.reveal() }
+		}
+		
+		let label = NSLocalizedString("Metadata.label.file", bundle:.BXMediaBrowser, comment:"Metadata Label")
+		array += ObjectMetadataEntry(label:label, value:self.name, action:action)
+		
+		if let w = dict[.widthKey] as? Int, let h = dict[.heightKey] as? Int
+		{
+			array += ObjectMetadataEntry(label:"Image Size", value:"\(w) × \(h) Pixels")
+		}
+
+		if let value = dict[.creationDateKey] as? Date
+		{
+			let label = NSLocalizedString("Metadata.label.creationDate", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:String(with:value))
+		}
+
+		return array
     }
     
     
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	// Since Lightroom CC does not have and change notification mechanism yet, we need to poll for changes.
-	// Whenever the app is brought to the foreground (activated), we just assume that a change was made in
-	// Lightroom in the meantime. Perform necessary checks and reload this container if necessary.
-
-	private func reloadIfNeeded()
-	{
-		guard let oldAsset = data as? LightroomCC.Asset else { return }
-		
-		Task
-		{
-			guard await self.thumbnailImage != nil else { return }
-			
-			let catalogID = LightroomCC.shared.catalogID
-			let assetID = oldAsset.id
-			let accessPoint = "https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)"
-			let newAsset:LightroomCC.Asset = try await LightroomCC.shared.getData(from:accessPoint, debugLogging:false)
-			let needsReloading = newAsset.updated > oldAsset.updated
-
-			LightroomCC.log.debug {"\(Self.self).\(#function)   oldUpdated = \(oldAsset.updated)    newUpdated = \(newAsset.updated)    needsReloading = \(needsReloading)"}
-
-			if needsReloading
-			{
-				await MainActor.run
-				{
-					LightroomCC.log.debug {"\(Self.self).\(#function)"}
-					self.data = newAsset
-					self.purge()
-					self.load()
-				}
-			}
-		}
-	}
-
-
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -233,55 +255,45 @@ open class LightroomClassicObject : Object, AppLifecycleMixin
 		self.localFileName
     }
 	
-	/// Returns the API accessPoint for downloading the preview file
-	
-	public var previewAccessPoint:String
-	{
-		guard let asset = data as? LightroomCC.Asset else { return "" }
-		let catalogID = LightroomCC.shared.catalogID
-		let assetID = asset.id
-		return "https://lr.adobe.io/v2/catalogs/\(catalogID)/assets/\(assetID)/renditions/360p"
-	}
-
 	/// Returns the local file URL to the preview file. If not available yet, it will be downloaded from
 	/// the Lightroom server.
 	
 	override public var previewItemURL:URL!
     {
-		if self._previewItemURL == nil && !isDownloadingPreview
-		{
-			self.isDownloadingPreview = true
-			
-			Task
-			{
-				// Download the preview file
-				
-				let downloadAPI = self.previewAccessPoint
-				let request = try LightroomCC.shared.request(for:downloadAPI, httpMethod:"GET")
-				let tmpURL = try await URLSession.shared.downloadFile(with:request)
-				
-				// Rename the file
-				
-				let folderURL = tmpURL.deletingLastPathComponent()
-				let filename = self.previewFilename
-				let localURL = folderURL.appendingPathComponent(filename)
-				try? FileManager.default.removeItem(at:localURL)
-				try? FileManager.default.moveItem(at:tmpURL, to:localURL)
-				
-				// Store it in the TempFilePool and update the QLPreviewPanel
-				
-				await MainActor.run
-				{
-					TempFilePool.shared.register(localURL)
-					self._previewItemURL = localURL
-					
-					#if os(macOS)
-					QLPreviewPanel.shared().refreshCurrentPreviewItem()
-					QLPreviewPanel.shared().reloadData()
-					#endif
-				}
-			}
- 		}
+//		if self._previewItemURL == nil && !isDownloadingPreview
+//		{
+//			self.isDownloadingPreview = true
+//
+//			Task
+//			{
+//				// Download the preview file
+//
+//				let downloadAPI = self.previewAccessPoint
+//				let request = try LightroomCC.shared.request(for:downloadAPI, httpMethod:"GET")
+//				let tmpURL = try await URLSession.shared.downloadFile(with:request)
+//
+//				// Rename the file
+//
+//				let folderURL = tmpURL.deletingLastPathComponent()
+//				let filename = self.previewFilename
+//				let localURL = folderURL.appendingPathComponent(filename)
+//				try? FileManager.default.removeItem(at:localURL)
+//				try? FileManager.default.moveItem(at:tmpURL, to:localURL)
+//
+//				// Store it in the TempFilePool and update the QLPreviewPanel
+//
+//				await MainActor.run
+//				{
+//					TempFilePool.shared.register(localURL)
+//					self._previewItemURL = localURL
+//
+//					#if os(macOS)
+//					QLPreviewPanel.shared().refreshCurrentPreviewItem()
+//					QLPreviewPanel.shared().reloadData()
+//					#endif
+//				}
+//			}
+// 		}
  		
  		return self._previewItemURL
 	}

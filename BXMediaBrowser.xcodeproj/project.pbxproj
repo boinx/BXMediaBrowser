@@ -153,6 +153,7 @@
 		D0CBC1582833D6BF00C6BABB /* LightroomClassicSourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CBC1572833D6BE00C6BABB /* LightroomClassicSourceView.swift */; };
 		D0CBC15A2834D03300C6BABB /* iMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0CBC1592834D03300C6BABB /* iMedia.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		D0CBC15D283518EA00C6BABB /* LightroomClassic.strings in Resources */ = {isa = PBXBuildFile; fileRef = D0CBC15B283518EA00C6BABB /* LightroomClassic.strings */; };
+		D0CBC161283528E100C6BABB /* LightroomClassicObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CBC14F283299EF00C6BABB /* LightroomClassicObject.swift */; };
 		D0D9EDB027FC82E700D5D7FB /* UnsplashContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDAF27FC82E700D5D7FB /* UnsplashContainerView.swift */; };
 		D0D9EDB227FC83E600D5D7FB /* PexelsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDB127FC83E600D5D7FB /* PexelsContainerView.swift */; };
 		D0D9EDB427FCADB100D5D7FB /* PHAssetCollection+dateInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDB327FCADB100D5D7FB /* PHAssetCollection+dateInterval.swift */; };
@@ -908,6 +909,7 @@
 				D0CBC1582833D6BF00C6BABB /* LightroomClassicSourceView.swift in Sources */,
 				D0C1CBA9281D6FF100128DED /* QLThumbnailGenerator+asyncAwait.swift in Sources */,
 				D01B495327CA1378008249C0 /* TempFilePool.swift in Sources */,
+				D0CBC161283528E100C6BABB /* LightroomClassicObject.swift in Sources */,
 				D0CBC145282A2E9400C6BABB /* Config.swift in Sources */,
 				D052BE2C27F0B97D0084068A /* LightroomCCFilter.swift in Sources */,
 				D00DF1C027F613FE00DC1D27 /* UIState.swift in Sources */,
