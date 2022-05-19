@@ -123,20 +123,6 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 	// MARK: - Loading
 	
 	
-	/// Clears the caches so that we can reload a Container
-	
-	@MainActor override func invalidateCache()
-	{
-		super.invalidateCache()
-		
-		guard let data = self.data as? LRCData else { return }
-//		data.cachedContainers = nil
-//		data.cachedObjects = nil
-//		data.objectMap = [:]
-//		data.nextAccessPoint = nil
-	}
-	
-	
 	/// Loads the (shallow) contents of this folder
 	
 	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
@@ -176,22 +162,16 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 				containers += container
 			}
 			
+			// Convert IMBLightroomObject to LightroomClassicObject
+			
 			for item in node.objects
 			{
 				guard let imbObject = item as? IMBLightroomObject else { continue }
-				// Filter out items that are not wanted
+				// TODO: Filter out items that are not wanted
 				let object = LightroomClassicObject(with:imbObject)
 				objects += object
 			}
-			
-//			containers = node.subnodes.compactMap
-//			{
-//				guard let node = $0 as? IMBNode else { return nil }
-//				return LightroomClassicContainer(node:node, allowedMediaTypes:allowedMediaTypes, filter:filter)
-//			}
 
-			// Load objects
-			
 			// Sort according to specified sort order
 			
 			filter.sort(&objects)
