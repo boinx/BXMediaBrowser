@@ -168,13 +168,26 @@ public extension ViewFactory
 	@ViewBuilder class func defaultSourceView(for source:Source) -> some View
 	{
 		#if canImport(iMedia) && os(macOS)
+		
 		if let source = source as? LightroomClassicSource
 		{
 			LightroomClassicSourceView(with:source, LightroomClassic.shared)
-			return 
 		}
-		#endif
+		else if let source = source as? LightroomCCSource
+		{
+			LightroomCCSourceView(with:source, LightroomCC.shared)
+		}
+		else if source is FolderSource
+		{
+			FolderSourceView(with:source)
+		}
+		else
+		{
+			SourceView(with:source)
+		}
 		
+		#else
+	
 		if let source = source as? LightroomCCSource
 		{
 			LightroomCCSourceView(with:source, LightroomCC.shared)
@@ -187,6 +200,8 @@ public extension ViewFactory
 		{
 			SourceView(with:source)
 		}
+
+		#endif
 	}
 
 
