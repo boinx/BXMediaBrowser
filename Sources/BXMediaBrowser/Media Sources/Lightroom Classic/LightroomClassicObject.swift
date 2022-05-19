@@ -186,10 +186,17 @@ open class LightroomClassicObject : Object, AppLifecycleMixin
 	open class func downloadFile(for identifier:String, data:Any) async throws -> URL
 	{
 		LightroomClassic.log.debug {"\(Self.self).\(#function)"}
+		guard let imbObject = data as? IMBLightroomObject else { throw Error.downloadFileFailed }
 
 		do
 		{
 			guard let url = Self.previewItemURL(for:data) else { throw Error.downloadFileFailed }
+			
+			if LightroomClassic.shared.showPreviewSizeWarning
+			{
+				LightroomClassic.shared.showPreviewSizeWarningAlert(for:imbObject, with:url)
+			}
+			
 			return url
 		}
 		catch

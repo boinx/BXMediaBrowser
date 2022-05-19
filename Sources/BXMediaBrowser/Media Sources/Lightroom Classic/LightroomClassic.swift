@@ -55,6 +55,16 @@ public class LightroomClassic : ObservableObject, AppLifecycleMixin
 	
 	@MainActor @Published public var error:Swift.Error? = nil
 
+	/// This flag determines whether a warning is shown when "downloading" a Lightroom preview file that has
+	/// a reduced preview image size (due to catalog settings in Lightroom Classic)
+	
+	@Published public var showPreviewSizeWarning:Bool = true
+	{
+		didSet { UserDefaults.standard.set(showPreviewSizeWarning, forKey:showPreviewSizeWarningKey) }
+	}
+	
+	private let showPreviewSizeWarningKey = "showPreviewSizeWarning"
+	
 	/// Internal housekeeping
 	
 	public var observers:[Any] = []
@@ -73,6 +83,11 @@ public class LightroomClassic : ObservableObject, AppLifecycleMixin
 			self.icon = image?.CGImage
 			self.parserMessenger = IMBLightroomImageParserMessenger()
 		}
+		
+		// Register default prefs
+		
+		UserDefaults.standard.register(defaults:[showPreviewSizeWarningKey:true])
+		self.showPreviewSizeWarning = UserDefaults.standard.bool(forKey:showPreviewSizeWarningKey)
 	}
     
     
@@ -139,11 +154,41 @@ public class LightroomClassic : ObservableObject, AppLifecycleMixin
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	/// Error that might occur when talking to the Lightroom server
+ 	// MARK: - Alerts
 	
-	public enum Error : Swift.Error
+
+	public func showPreviewSizeWarningAlert(for imbObject:IMBLightroomObject, with url:URL)
 	{
-		case notRunning
+		guard LightroomClassic.shared.showPreviewSizeWarning else { return }
+
+		guard let metadata1 = imbObject.preliminaryMetadata else { return }
+		let W = (metadata1["width"] as? NSNumber)?.intValue ?? 0
+		let H = (metadata1["height"] as? NSNumber)?.intValue ?? 0
+
+		let metadata2 = url.imageMetadata
+		let w = (metadata2["PixelWidth" as CFString] as? Int) ?? 0
+		let h = (metadata2["PixelHeight" as CFString] as? Int) ?? 0
+		
+		if w < W && h < H
+		{
+			DispatchQueue.main.debounce("showPreviewSizeWarningAlert", interval:2.0)
+			{
+				let alert = NSAlert()
+				
+				alert.alertStyle = .critical
+				alert.messageText = NSLocalizedString("PreviewSizeAlert.title",tableName:"LightroomClassic", bundle:.BXMediaBrowser, comment:"Alert Title")
+				alert.informativeText = NSLocalizedString("PreviewSizeAlert.message",tableName:"LightroomClassic", bundle:.BXMediaBrowser, comment:"Alert Message")
+				alert.addButton(withTitle:"OK")
+				alert.showsSuppressionButton = true
+				
+				alert.runModal()
+
+				if let checkbox = alert.suppressionButton, checkbox.state == .on
+				{
+					LightroomClassic.shared.showPreviewSizeWarning = false
+				}
+			}
+		}
 	}
 	
 	
