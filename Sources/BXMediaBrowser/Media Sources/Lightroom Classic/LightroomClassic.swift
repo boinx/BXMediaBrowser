@@ -133,14 +133,6 @@ public class LightroomClassic : ObservableObject, AppLifecycleMixin
 
 		let url = URL(fileURLWithPath:path)
 		let config = NSWorkspace.OpenConfiguration()
-//		config.hides = true
-		
-		self.registerDidActivateHandler()
-		{
-			[weak self] in
-			completionHandler?(nil)
-			self?.observers = []
-		}
 		
 		NSWorkspace.shared.openApplication(at:url, configuration:config)
 //		{
@@ -148,6 +140,13 @@ public class LightroomClassic : ObservableObject, AppLifecycleMixin
 //
 //			completionHandler?(error)
 //		}
+		
+		self.registerDidActivateHandler()
+		{
+			[weak self] in
+			completionHandler?(nil)
+			self?.observers = []
+		}
     }
    
    
@@ -190,11 +189,11 @@ public class LightroomClassic : ObservableObject, AppLifecycleMixin
 			}
 		}
 	}
-	
-	
+
+
 //----------------------------------------------------------------------------------------------------------------------
-
-
+	
+	
  	// MARK: - Debugging
 	
 	/// A logger for Lightroom related code
