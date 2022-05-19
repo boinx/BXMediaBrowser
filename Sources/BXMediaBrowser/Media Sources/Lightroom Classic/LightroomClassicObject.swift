@@ -23,7 +23,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 
-#if canImport(iMedia)
+#if canImport(iMedia) && os(macOS)
 
 import iMedia
 import BXSwiftUtils
