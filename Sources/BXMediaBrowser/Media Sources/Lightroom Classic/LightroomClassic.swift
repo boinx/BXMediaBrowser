@@ -46,7 +46,11 @@ public class LightroomClassic : ObservableObject, AppLifecycleMixin
 	/// The IMBLightroomParserMessenger is responsible for talking to the legacy Obj-C code in the iMedia framework
 	
 	public private(set) var parserMessenger:IMBLightroomParserMessenger? = nil
+
+	/// This bookmark hold the read access rights to the parent folder of the Lightroom catalog file
 	
+	public var libraryBookmark:Data? = nil
+		
 	/// Any errors that may have occured while loading this source
 	
 	@MainActor @Published public var error:Swift.Error? = nil

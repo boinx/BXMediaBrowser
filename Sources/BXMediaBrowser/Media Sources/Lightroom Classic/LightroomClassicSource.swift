@@ -99,7 +99,10 @@ open class LightroomClassicSource : Source, AccessControl
 		{
 			if let url = $0.first, url == parentFolder
 			{
-				// Store bookmark in self.state
+				if let bookmark = try? url.bookmarkData()
+				{
+					LightroomClassic.shared.libraryBookmark = bookmark
+				}
 				self.load()
 				completionHandler(true)
 			}
@@ -135,6 +138,10 @@ open class LightroomClassicSource : Source, AccessControl
 		
 		do
 		{
+			// If access to the library was stored in a prefs bookmark, then restore the access rights
+			
+			self.restoreAccess(with:sourceState)
+
 			// Get the top-level node from iMedia
 			
 			let rootNodes = try parserMessenger.unpopulatedTopLevelNodes().compactMap { $0 as? IMBNode }
@@ -175,6 +182,42 @@ open class LightroomClassicSource : Source, AccessControl
 		return []
 	}
 
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	override public func state() async -> [String:Any]
+	{
+		var state = await super.state()
+		
+		if let bookmark = LightroomClassic.shared.libraryBookmark
+		{
+			state[libraryBookmarkKey] = bookmark
+		}
+		
+		return state
+	}
+	
+	internal var libraryBookmarkKey:String
+	{
+		"libraryBookmark"
+	}
+	
+	// If access to the library was stored in a prefs bookmark, then restore the access rights
+	
+	func restoreAccess(with sourceState:[String:Any]? = nil)
+	{
+		guard let bookmark = (sourceState?[libraryBookmarkKey] as? Data) ?? LightroomClassic.shared.libraryBookmark else { return }
+		guard let url = URL(with:bookmark) else { return }
+		
+		// Punch a hole into the sandbox
+		
+		_ = url.startAccessingSecurityScopedResource()
+		
+		// Store bookmark for the next app launch cycle
+		
+		LightroomClassic.shared.libraryBookmark = bookmark
+	}
 }
 
 
