@@ -261,47 +261,56 @@ open class AudioFile : FolderObject
 		
 		if let name = metadata[.titleKey] as? String, !name.isEmpty
 		{
-			array += ObjectMetadataEntry(label:"Song", value:name, action:url.reveal)
+			let label = NSLocalizedString("Metadata.label.song", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:name, action:url.reveal)
 		}
 		
 		if let album = metadata[.albumKey] as? String, !album.isEmpty
 		{
-			array += ObjectMetadataEntry(label:"Album", value:album)
+			let label = NSLocalizedString("Metadata.label.album", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:album)
 		}
 		
 		if let artists = metadata[.authorsKey] as? [String], !artists.isEmpty
 		{
-			array += ObjectMetadataEntry(label:"Artist", value:artists.joined(separator:"\n"))
+			let label = NSLocalizedString("Metadata.label.artist", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:artists.joined(separator:"\n"))
 		}
 		
 		if let composer = metadata[.composerKey] as? String, !composer.isEmpty
 		{
-			array += ObjectMetadataEntry(label:"Composer", value:composer)
+			let label = NSLocalizedString("Metadata.label.composer", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:composer)
 		}
 		
 		if let genre = metadata[.genreKey] as? String, !genre.isEmpty
 		{
-			array += ObjectMetadataEntry(label:"Genre", value:genre)
+			let label = NSLocalizedString("Metadata.label.genre", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:genre)
 		}
 		
 		if let duration = metadata[.durationKey] as? Double
 		{
-			array += ObjectMetadataEntry(label:"Duration", value:duration.shortTimecodeString())
+			let label = NSLocalizedString("Metadata.label.duration", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:duration.shortTimecodeString())
 		}
 		
 		if let value = metadata[.fileSizeKey] as? Int, let str = Formatter.fileSizeFormatter.string(for:value)
 		{
-			array += ObjectMetadataEntry(label:"File Size", value:str)
+			let label = NSLocalizedString("Metadata.label.fileSize", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:str)
 		}
 
 		if let value = metadata[.tempoKey] as? Double, let str = Formatter.singleDigitFormatter.string(for:value)
 		{
-			array += ObjectMetadataEntry(label:"Tempo", value:"\(str) BPM")
+			let label = NSLocalizedString("Metadata.label.tempo", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:"\(str) BPM")
 		}
 
 		if let value = metadata[.whereFromsKey] as? [String], let str = value.first, let url = URL(string:str)
 		{
-			array += ObjectMetadataEntry(label:"URL", value:str, action:url.open)
+			let label = NSLocalizedString("Metadata.label.url", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:str, action:url.open)
 		}
 		
 		return array

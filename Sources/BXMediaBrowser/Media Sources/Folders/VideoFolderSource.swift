@@ -179,36 +179,43 @@ open class VideoFile : FolderObject
 		let metadata = self.metadata ?? [:]
 		var array:[ObjectMetadataEntry] = []
 		
-		array += ObjectMetadataEntry(label:"File", value:self.name, action:url.reveal)
+		let label = NSLocalizedString("Metadata.label.file", bundle:.BXMediaBrowser, comment:"Metadata Label")
+		array += ObjectMetadataEntry(label:label, value:self.name, action:url.reveal)
 		
 		if let kind = metadata[.kindKey] as? String, !kind.isEmpty
 		{
-			array += ObjectMetadataEntry(label:"Kind", value:kind)
+			let label = NSLocalizedString("Metadata.label.kind", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:kind)
 		}
 
 		if let w = metadata[.widthKey] as? Int, let h = metadata[.heightKey] as? Int
 		{
-			array += ObjectMetadataEntry(label:"Video Size", value:"\(w) × \(h) Pixels")
+			let label = NSLocalizedString("Metadata.label.videoSize", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:"\(w) × \(h) Pixels")
 		}
 		
 		if let duration = metadata[.durationKey] as? Double
 		{
-			array += ObjectMetadataEntry(label:"Duration", value:duration.shortTimecodeString())
+			let label = NSLocalizedString("Metadata.label.duration", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:duration.shortTimecodeString())
 		}
 		
 		if let value = metadata[.fileSizeKey] as? Int, let str = Formatter.fileSizeFormatter.string(for:value)
 		{
-			array += ObjectMetadataEntry(label:"File Size", value:str)
+			let label = NSLocalizedString("Metadata.label.fileSize", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:str)
 		}
 		
 		if let codecs = metadata[.codecsKey] as? [String], !codecs.isEmpty
 		{
-			array += ObjectMetadataEntry(label:"Codecs", value:codecs.joined(separator:", "))
+			let label = NSLocalizedString("Metadata.label.codec", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:codecs.joined(separator:", "))
 		}
 		
 		if let value = metadata[.creationDate] as? Date
 		{
-			array += ObjectMetadataEntry(label:"Creation Date", value:String(with:value))
+			let label = NSLocalizedString("Metadata.label.creationDate", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:String(with:value))
 		}
 		
 		return array

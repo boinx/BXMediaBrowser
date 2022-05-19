@@ -173,47 +173,54 @@ open class ImageFile : FolderObject
 
 		var array:[ObjectMetadataEntry] = []
 		
-		#warning("TODO: localize strings")
-		
-		array += ObjectMetadataEntry(label:"File", value:"\(self.name)", action:url.reveal)
+		let label = NSLocalizedString("Metadata.label.file", bundle:.BXMediaBrowser, comment:"Metadata Label")
+		array += ObjectMetadataEntry(label:label, value:"\(self.name)", action:url.reveal)
 
 		if let w = w, let h = h
 		{
-			array += ObjectMetadataEntry(label:"Image Size", value:"\(w) × \(h) Pixels")
+			let label = NSLocalizedString("Metadata.label.imageSize", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:"\(w) × \(h) Pixels")
 		}
 		
 		if let value = metadata[.fileSizeKey] as? Int, let str = Formatter.fileSizeFormatter.string(for:value)
 		{
-			array += ObjectMetadataEntry(label:"File Size", value:str) // value.fileSizeDescription)
+			let label = NSLocalizedString("Metadata.label.fileSize", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:str) // value.fileSizeDescription)
 		}
 	
 		if let value = exif[.exifApertureKey] as? Double, let str = Formatter.singleDigitFormatter.string(for:value)
 		{
-			array += ObjectMetadataEntry(label:"Aperture", value:"f\(str)")
+			let label = NSLocalizedString("Metadata.label.aperture", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:"f\(str)")
 		}
 	
 		if let value = exif[.exifExposureTimeKey] as? Double, let str = Formatter.exposureTimeFormatter.string(for:value)
 		{
-			array += ObjectMetadataEntry(label:"Exposure Time", value:str)
+			let label = NSLocalizedString("Metadata.label.exposureTime", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:str)
 		}
 	
 		if let value = exif[.exifFocalLengthKey] as? Int
 		{
-			array += ObjectMetadataEntry(label:"Focal Length", value:"\(value)mm")
+			let label = NSLocalizedString("Metadata.label.focalLength", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:"\(value)mm")
 		}
 		
 		if let value = profile
 		{
-			array += ObjectMetadataEntry(label:"Color Space", value:value)
+			let label = NSLocalizedString("Metadata.label.colorSpace", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:value)
 		}
 
 		if let value = exif[.exifCaptureDateKey] as? String, let date = value.date
 		{
-			array += ObjectMetadataEntry(label:"Capture Date", value:String(with:date))
+			let label = NSLocalizedString("Metadata.label.captureDate", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:String(with:date))
 		}
 		else if let value = metadata[.creationDateKey] as? Date
 		{
-			array += ObjectMetadataEntry(label:"Creation Date", value:String(with:value))
+			let label = NSLocalizedString("Metadata.label.creationDate", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:String(with:value))
 		}
 		
 		return array
