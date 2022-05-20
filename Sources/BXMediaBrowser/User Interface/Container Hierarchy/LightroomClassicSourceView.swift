@@ -154,7 +154,9 @@ extension LightroomClassicSourceView
 				
 				lightroom.launch()
 				{
-					_ in source.load()
+					_ in
+					source.isExpanded = true
+					source.load()
 				}
 			}
 		}
