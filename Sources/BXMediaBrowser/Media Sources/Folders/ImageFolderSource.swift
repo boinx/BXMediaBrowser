@@ -147,6 +147,11 @@ open class ImageFile : FolderObject
 			}
 		}
 		
+		if let exif = metadata["{Exif}"] as? [String:Any], let str = exif[.exifCaptureDateKey] as? String
+		{
+			metadata[.captureDateKey] = str.date
+		}
+
 		return metadata
 	}
 

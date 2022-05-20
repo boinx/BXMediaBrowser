@@ -48,6 +48,10 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 	
 	public var name:String
 	
+	/// The capture date may be available after laoding metadata can can then be used for sorting
+	
+	var captureDate:Date? = nil
+
 	/// This can be any kind of information that subclasses need to their job.
 	
 	public var data:Any
@@ -148,6 +152,7 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 			{
 				self.thumbnailImage = image
 				self.metadata = metadata
+				self.captureDate = metadata?[.captureDateKey] as? Date
 				
 				completionHandler?()
 			}

@@ -167,6 +167,11 @@ open class VideoFile : FolderObject
 			metadata[key as String] = value
 		}
 		
+		if let exif = metadata["{Exif}"] as? [String:Any], let str = exif[.exifCaptureDateKey] as? String
+		{
+			metadata[.captureDateKey] = str.date
+		}
+
 		return metadata
 	}
 

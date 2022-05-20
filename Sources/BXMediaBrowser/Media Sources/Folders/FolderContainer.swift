@@ -177,6 +177,16 @@ open class FolderContainer : Container
 					if filter.rating == 0 || StatisticsController.shared.rating(for:object) >= filter.rating
 					{
 						objects.append(object)
+
+						// For sorting by capture date we need to make sure a date is available
+						
+						if filter.sortType == .captureDate
+						{
+							let metadata = try? await object.loader.metadata
+							object.captureDate =
+								(metadata?[.captureDateKey] as? Date) ??
+								url.creationDate
+						}
 					}
 				}
 			}
