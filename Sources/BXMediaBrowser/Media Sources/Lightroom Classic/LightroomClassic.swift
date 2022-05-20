@@ -90,7 +90,9 @@ public class LightroomClassic : ObservableObject, AppLifecycleMixin
 	
     public var isInstalled:Bool
     {
-		self.parserMessenger != nil
+		guard let identifier = IMBLightroomImageParserMessenger.lightroomAppBundleIdentifier() else { return false }
+		guard let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier:identifier) else { return false }
+		return url.exists
     }
     
     
