@@ -126,7 +126,7 @@ open class Source : ObservableObject, Identifiable, StateSaving
 				let names = containers.map { $0.name }.joined(separator:", ")
 				BXMediaBrowser.logDataModel.verbose {"    containers = \(names)"}
 
-				let isExpanded = sourceState?[isExpandedKey] as? Bool ?? false
+				let isExpanded = sourceState?[isExpandedKey] as? Bool ?? self.isExpanded
 
 				// Assign result in main thread
 				
