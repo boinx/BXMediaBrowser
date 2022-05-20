@@ -112,6 +112,7 @@ open class LightroomClassicSource : Source, AccessControl
 				{
 					LightroomClassic.shared.libraryBookmark = bookmark
 				}
+				
 				self.load()
 				completionHandler(true)
 			}
@@ -125,7 +126,7 @@ open class LightroomClassicSource : Source, AccessControl
 
 	@MainActor public func revokeAccess(_ completionHandler:@escaping (Bool)->Void = { _ in })
 	{
-		#warning("TODO: implement")
+		LightroomClassic.shared.libraryBookmark = nil
 	}
 
 

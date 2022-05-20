@@ -96,16 +96,6 @@ public class LightroomClassic : ObservableObject, AppLifecycleMixin
     }
     
     
-    /// Returns true if the libraries parent folder is readable, i.e. we have access rights
-	
-    public var isReadable:Bool
-    {
-		guard let url = self.parserMessenger?.mediaSource else { return false }
-		let isReadable = url.isReadable
-		return isReadable
-    }
-    
-
 	/// Returns the list of known Lightroom Classic bundle identifiers
 	
 	public var bundleIdentifiers:[String]
