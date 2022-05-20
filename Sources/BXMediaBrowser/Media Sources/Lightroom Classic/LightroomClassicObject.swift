@@ -141,6 +141,8 @@ open class LightroomClassicObject : Object, AppLifecycleMixin
 	
 	@MainActor override open var localizedMetadata:[ObjectMetadataEntry]
     {
+		guard let data = data as? LRCData else { return [] }
+		let mediaType = data.mediaType
 		let dict = self.metadata ?? [:]
 		var action:(()->Void)? = nil
 		var array:[ObjectMetadataEntry] = []

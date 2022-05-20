@@ -38,7 +38,7 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 	struct LRCData
 	{
 		let node:IMBNode
-		let allowedMediaTypes:[Object.MediaType]
+		let mediaType:Object.MediaType
 		let parserMessenger:IMBLightroomParserMessenger
 	}
 	
@@ -83,7 +83,7 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 	override nonisolated open var mediaTypes:[Object.MediaType]
 	{
 		guard let data = self.data as? LRCData else { return [] }
-		return data.allowedMediaTypes
+		return [data.mediaType]
 	}
 
 	// A container can be expanded if it has sub-containers
@@ -112,8 +112,8 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
     {
 		let n = self.objects.count
 		guard let data = self.data as? LRCData else { return n.localizedItemsString }
-		if data.allowedMediaTypes == [.image] { return n.localizedImagesString }
-		if data.allowedMediaTypes == [.video] { return n.localizedVideosString }
+		if data.mediaType == .image { return n.localizedImagesString }
+		if data.mediaType == .video { return n.localizedVideosString }
 		return n.localizedItemsString
     }
 
@@ -131,6 +131,7 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 		guard let data = data as? LRCData else { throw Error.loadContentsFailed }
 		guard let filter = filter as? LightroomClassicFilter else { throw Error.loadContentsFailed }
 		let parserMessenger = data.parserMessenger
+		let mediaType = data.mediaType
 
 		LightroomClassic.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
@@ -145,7 +146,6 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 			// Load subnodes
 			
 			let node = data.node
-			let allowedMediaTypes = data.allowedMediaTypes
 			_ = try parserMessenger.populateNode(node)
 			
 			// Convert the IMBNodes to LightroomClassicContainer. For some reason we end sometimes end up with

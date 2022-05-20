@@ -55,11 +55,11 @@ open class LightroomClassicSource : Source, AccessControl
 
 	/// Creates a new Source for local file system directories
 	
-	public init(allowedMediaTypes:[Object.MediaType])
+	public init(mediaType:Object.MediaType)
 	{
 		LightroomClassic.log.debug {"\(Self.self).\(#function)"}
 		
-		self.allowedMediaTypes = allowedMediaTypes
+		self.mediaType = mediaType
 		
 		if mediaType == .image
 		{
