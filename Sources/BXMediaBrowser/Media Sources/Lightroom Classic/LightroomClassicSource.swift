@@ -74,7 +74,7 @@ open class LightroomClassicSource : Source, AccessControl
 			identifier: Self.identifier,
 			icon: LightroomClassic.shared.icon,
 			name: "Adobe Lightroom Classic",
-			filter: LightroomClassicFilter())
+			filter: FolderFilter())
 		
 		self.loader = Loader(loadHandler:self.loadContainers)
 	}
@@ -142,8 +142,8 @@ open class LightroomClassicSource : Source, AccessControl
 	{
 		LightroomClassic.log.debug {"\(Self.self).\(#function)"}
 
-		guard let filter = filter as? LightroomClassicFilter else { return [] }
 		let parserMessenger = self.parserMessenger
+		guard let filter = filter as? FolderFilter else { return [] }
 		
 		do
 		{
