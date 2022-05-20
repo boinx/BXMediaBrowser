@@ -129,9 +129,11 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
 	{
 		guard let data = data as? LRCData else { throw Error.loadContentsFailed }
-		guard let filter = filter as? LightroomClassicFilter else { throw Error.loadContentsFailed }
+		guard let filter = filter as? FolderFilter else { throw Error.loadContentsFailed }
 		let parserMessenger = data.parserMessenger
 		let mediaType = data.mediaType
+		let searchString = filter.searchString
+		let minRating = filter.rating
 
 		LightroomClassic.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
@@ -163,13 +165,23 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 				containers += container
 			}
 			
-			// Convert IMBLightroomObject to LightroomClassicObject
+			// Convert IMBLightroomObjects to LightroomClassicObjects
 			
 			for item in node.objects
 			{
+				// Get next IMBLightroomObject
+				
 				guard let imbObject = item as? IMBLightroomObject else { continue }
-				// TODO: Filter out items that are not wanted
-				let object = LightroomClassicObject(with:imbObject)
+				let identifier = LightroomClassicObject.identifier(for:imbObject)
+				let name = imbObject.name ?? ""
+				
+				// Filter out items that are not wanted
+				
+				guard searchString.isEmpty || name.contains(searchString) else { continue }
+				guard minRating == 0 || StatisticsController.shared.rating(for:identifier) >= minRating else { continue }
+				
+				// Convert to LightroomClassicObject
+				
 				let object = LightroomClassicObject(with:imbObject, mediaType:mediaType, parserMessenger:parserMessenger)
 				objects += object
 			}
