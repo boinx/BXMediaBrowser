@@ -30,10 +30,7 @@ import BXSwiftUtils
 import BXSwiftUI
 import CoreGraphics
 import Foundation
-
-#if canImport(QuickLookUI)
 import QuickLookUI
-#endif
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -131,13 +128,18 @@ open class LightroomClassicObject : Object, AppLifecycleMixin
 
 		if let str1 = metadata["dateTime"] as? String
 		{
-			metadata[.creationDateKey] = str1.date
+			metadata[.captureDateKey] = str1.date
+		}
+
+		if let duration = metadata["duration"] as? Double
+		{
+			metadata[.durationKey] = duration
 		}
 
 		return metadata
 	}
 
-	// Convert metadata to ordered human-readable form
+	// Convert metadata to ordered human-readable form that is ssuitable for display in the UI
 	
 	@MainActor override open var localizedMetadata:[ObjectMetadataEntry]
     {
@@ -165,7 +167,18 @@ open class LightroomClassicObject : Object, AppLifecycleMixin
 			array += ObjectMetadataEntry(label:label, value:"\(w) × \(h) Pixels")
 		}
 
-		if let value = dict[.creationDateKey] as? Date
+		if let value = dict[.durationKey] as? Double
+		{
+			let label = NSLocalizedString("Metadata.label.duration", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:value.shortTimecodeString())
+		}
+		
+		if let value = dict[.captureDateKey] as? Date
+		{
+			let label = NSLocalizedString("Metadata.label.captureDate", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:String(with:value))
+		}
+		else if let value = dict[.creationDateKey] as? Date
 		{
 			let label = NSLocalizedString("Metadata.label.creationDate", bundle:.BXMediaBrowser, comment:"Metadata Label")
 			array += ObjectMetadataEntry(label:label, value:String(with:value))
