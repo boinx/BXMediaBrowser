@@ -43,10 +43,6 @@ public class LightroomClassic : ObservableObject, AppLifecycleMixin
 	
 	public private(set) var icon:CGImage? = nil
     
-	/// The IMBLightroomParserMessenger is responsible for talking to the legacy Obj-C code in the iMedia framework
-	
-	public private(set) var parserMessenger:IMBLightroomParserMessenger? = nil
-
 	/// This bookmark hold the read access rights to the parent folder of the Lightroom catalog file
 	
 	public var libraryBookmark:Data? = nil
@@ -81,7 +77,6 @@ public class LightroomClassic : ObservableObject, AppLifecycleMixin
 		{
 			let image = NSImage.icon(for:identifier) ?? Bundle.BXMediaBrowser.image(forResource:"lr_appicon_noshadow_256")
 			self.icon = image?.CGImage
-			self.parserMessenger = IMBLightroomImageParserMessenger()
 		}
 		
 		// Register default prefs

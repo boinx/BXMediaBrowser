@@ -41,13 +41,13 @@ open class LightroomClassicSource : Source, AccessControl
 	
 	static let identifier = "LightroomClassic:"
 	
-	/// The IMBLightroomParserMessenger is responsible for talking to the legacy Obj-C code in the iMedia framework
-	
-//	private var parserMessenger:IMBLightroomParserMessenger
-	
 	/// Returns the mediaTypes that are supported by this Source
 	
-	public let allowedMediaTypes:[Object.MediaType]
+	public let mediaType:Object.MediaType
+	
+	/// The IMBLightroomParserMessenger is our gateway to the legacy ObjC iMedia code
+	
+	public let parserMessenger:IMBLightroomParserMessenger
 	
 	
 //----------------------------------------------------------------------------------------------------------------------
@@ -60,6 +60,15 @@ open class LightroomClassicSource : Source, AccessControl
 		LightroomClassic.log.debug {"\(Self.self).\(#function)"}
 		
 		self.allowedMediaTypes = allowedMediaTypes
+		
+		if mediaType == .image
+		{
+			self.parserMessenger = IMBLightroomImageParserMessenger()
+		}
+		else
+		{
+			self.parserMessenger = IMBLightroomMovieParserMessenger()
+		}
 		
 		super.init(
 			identifier: Self.identifier,
@@ -133,8 +142,8 @@ open class LightroomClassicSource : Source, AccessControl
 	{
 		LightroomClassic.log.debug {"\(Self.self).\(#function)"}
 
-		guard let parserMessenger = LightroomClassic.shared.parserMessenger else { return [] }
 		guard let filter = filter as? LightroomClassicFilter else { return [] }
+		let parserMessenger = self.parserMessenger
 		
 		do
 		{
@@ -157,7 +166,7 @@ open class LightroomClassicSource : Source, AccessControl
 			let containers:[LightroomClassicContainer] = rootNode.subnodes.compactMap
 			{
 				guard let node = $0 as? IMBNode else { return nil }
-				return LightroomClassicContainer(node:node, allowedMediaTypes:allowedMediaTypes, filter:filter)
+				return LightroomClassicContainer(node:node, mediaType:mediaType, parserMessenger:parserMessenger, filter:filter)
 			}
 			
 			await MainActor.run

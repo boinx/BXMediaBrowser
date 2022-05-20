@@ -41,6 +41,13 @@ import QuickLookUI
 
 open class LightroomClassicObject : Object, AppLifecycleMixin
 {
+	struct LRCData
+	{
+		let imbObject:IMBLightroomObject
+		let mediaType:Object.MediaType
+		let parserMessenger:IMBLightroomParserMessenger
+	}
+
 	/// Notification subscribers
 	
 	public var observers:[Any] = []
@@ -51,12 +58,12 @@ open class LightroomClassicObject : Object, AppLifecycleMixin
 
 	/// Creates a new Object for the file at the specified URL
 
-	public required init(with imbObject:IMBLightroomObject)
+	public required init(with imbObject:IMBLightroomObject, mediaType:Object.MediaType, parserMessenger:IMBLightroomParserMessenger)
 	{
 		super.init(
 			identifier: Self.identifier(for:imbObject),
 			name: imbObject.name,
-			data: imbObject,
+			data: LRCData(imbObject:imbObject, mediaType:mediaType, parserMessenger:parserMessenger),
 			loadThumbnailHandler: Self.loadThumbnail,
 			loadMetadataHandler: Self.loadMetadata,
 			downloadFileHandler: Self.downloadFile)
@@ -75,8 +82,9 @@ open class LightroomClassicObject : Object, AppLifecycleMixin
 
 	open class func loadThumbnail(for identifier:String, data:Any) async throws -> CGImage
 	{
-		guard let imbObject = data as? IMBLightroomObject else { throw Error.loadThumbnailFailed }
-		guard let parserMessenger = LightroomClassic.shared.parserMessenger else { throw Error.loadThumbnailFailed }
+		guard let data = data as? LRCData else { throw Error.loadThumbnailFailed }
+		let parserMessenger = data.parserMessenger
+		let imbObject = data.imbObject
 		
 		let object = try parserMessenger.loadThumbnail(for:imbObject)
 		guard let image = object.imageRepresentation() as? AnyObject else { throw Error.loadThumbnailFailed }
@@ -97,8 +105,10 @@ open class LightroomClassicObject : Object, AppLifecycleMixin
 	{
 		// Load metadata from IMBObject via iMedia framework
 		
-		guard let imbObject = data as? IMBLightroomObject else { throw Error.loadMetadataFailed }
-		guard let parserMessenger = LightroomClassic.shared.parserMessenger else { throw Error.loadMetadataFailed }
+		guard let data = data as? LRCData else { throw Error.loadThumbnailFailed }
+		let parserMessenger = data.parserMessenger
+		let imbObject = data.imbObject
+
 		let object = try parserMessenger.loadMetadata(for:imbObject)
 		guard var metadata = object.metadata as? [String:Any] else { throw Error.loadMetadataFailed }
 
@@ -174,8 +184,8 @@ open class LightroomClassicObject : Object, AppLifecycleMixin
 	override public var localFileName:String
 	{
 		let filename = "\(identifier).jpg"
-		guard let imbObject = data as? IMBLightroomObject else { return filename }
-		return imbObject.location.lastPathComponent
+		guard let data = data as? LRCData else { return filename }
+		return data.imbObject.location.lastPathComponent
 	}
 
 	// LightroomClassic always returns JPEG files
@@ -190,7 +200,8 @@ open class LightroomClassicObject : Object, AppLifecycleMixin
 	open class func downloadFile(for identifier:String, data:Any) async throws -> URL
 	{
 		LightroomClassic.log.debug {"\(Self.self).\(#function)"}
-		guard let imbObject = data as? IMBLightroomObject else { throw Error.downloadFileFailed }
+		guard let data = data as? LRCData else { throw Error.downloadFileFailed }
+		let imbObject = data.imbObject
 
 		do
 		{
@@ -251,10 +262,11 @@ open class LightroomClassicObject : Object, AppLifecycleMixin
 	
 	class func previewItemURL(for data:Any) -> URL?
     {
+		guard let data = data as? LRCData else { return nil }
+		let parserMessenger = data.parserMessenger
+		let imbObject = data.imbObject
+		
 		var isStale = false
-
-		guard let imbObject = data as? IMBLightroomObject else { return nil }
-		guard let parserMessenger = LightroomClassic.shared.parserMessenger else { return nil }
 		guard let bookmark = try? parserMessenger.bookmark(for:imbObject) else { return nil }
 		guard let url = try? URL(resolvingBookmarkData:bookmark, options:[], relativeTo:nil, bookmarkDataIsStale:&isStale) else { return nil }
 

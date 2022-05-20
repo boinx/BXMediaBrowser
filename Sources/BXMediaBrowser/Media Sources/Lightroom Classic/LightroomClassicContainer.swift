@@ -39,6 +39,7 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 	{
 		let node:IMBNode
 		let allowedMediaTypes:[Object.MediaType]
+		let parserMessenger:IMBLightroomParserMessenger
 	}
 	
 	
@@ -49,9 +50,9 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 	
 	/// Creates a new Container for the folder at the specified URL
 	
-	public required init(node:IMBNode, allowedMediaTypes:[Object.MediaType], filter:LightroomClassicFilter)
+	public required init(node:IMBNode, mediaType:Object.MediaType, parserMessenger:IMBLightroomParserMessenger, filter:FolderFilter)
 	{
-		let data = LRCData(node:node, allowedMediaTypes:allowedMediaTypes)
+		let data = LRCData(node:node, mediaType:mediaType, parserMessenger:parserMessenger)
 		let identifier = node.identifier ?? "LightroomClassic:Node:xxx"
 		let icon = "folder"
 		let name = node.name ?? "••••••"
@@ -128,8 +129,8 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
 	{
 		guard let data = data as? LRCData else { throw Error.loadContentsFailed }
-		guard let parserMessenger = LightroomClassic.shared.parserMessenger else { throw Error.loadContentsFailed }
 		guard let filter = filter as? LightroomClassicFilter else { throw Error.loadContentsFailed }
+		let parserMessenger = data.parserMessenger
 
 		LightroomClassic.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
@@ -157,7 +158,7 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 				guard let node = node as? IMBNode else { continue }
 				guard knownNodes[node.identifier] == nil else { continue }
 				
-				let container = LightroomClassicContainer(node:node, allowedMediaTypes:allowedMediaTypes, filter:filter)
+				let container = LightroomClassicContainer(node:node, mediaType:mediaType, parserMessenger:parserMessenger, filter:filter)
 				knownNodes[node.identifier] = true
 				containers += container
 			}
@@ -169,6 +170,7 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 				guard let imbObject = item as? IMBLightroomObject else { continue }
 				// TODO: Filter out items that are not wanted
 				let object = LightroomClassicObject(with:imbObject)
+				let object = LightroomClassicObject(with:imbObject, mediaType:mediaType, parserMessenger:parserMessenger)
 				objects += object
 			}
 
