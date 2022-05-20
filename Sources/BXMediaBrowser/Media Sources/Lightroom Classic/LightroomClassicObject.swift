@@ -146,7 +146,11 @@ open class LightroomClassicObject : Object, AppLifecycleMixin
 		
 		if let w = dict[.widthKey] as? Int, let h = dict[.heightKey] as? Int
 		{
-			array += ObjectMetadataEntry(label:"Image Size", value:"\(w) × \(h) Pixels")
+			let label = mediaType == .image ?
+				NSLocalizedString("Metadata.label.imageSize", bundle:.BXMediaBrowser, comment:"Metadata Label") :
+				NSLocalizedString("Metadata.label.videoSize", bundle:.BXMediaBrowser, comment:"Metadata Label")
+				
+			array += ObjectMetadataEntry(label:label, value:"\(w) × \(h) Pixels")
 		}
 
 		if let value = dict[.creationDateKey] as? Date
