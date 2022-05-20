@@ -142,13 +142,17 @@ open class FolderObject : Object
 			array += ObjectMetadataEntry(label:label, value:value.fileSizeDescription)
 		}
 		
-		if let value = dict[.creationDateKey] as? Date
+		if let value = dict[.captureDateKey] as? Date
+		{
+			let label = NSLocalizedString("Metadata.label.captureDate", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:String(with:value))
+		}
+		else if let value = dict[.creationDateKey] as? Date
 		{
 			let label = NSLocalizedString("Metadata.label.creationDate", bundle:.BXMediaBrowser, comment:"Metadata Label")
 			array += ObjectMetadataEntry(label:label, value:String(with:value))
 		}
-		
-		if let value = dict[.modificationDateKey] as? Date
+		else if let value = dict[.modificationDateKey] as? Date
 		{
 			let label = NSLocalizedString("Metadata.label.modificationDate", bundle:.BXMediaBrowser, comment:"Metadata Label")
 			array += ObjectMetadataEntry(label:label, value:String(with:value))

@@ -109,7 +109,13 @@ open class PhotosFilter : Object.Filter, Equatable
 	
 	override open var objectComparator : ObjectComparator?
 	{
-		if sortType == .creationDate
+		if sortType == .captureDate
+		{
+			let comparator = Self.compareCreationDate
+			if sortDirection == .ascending { return comparator }
+			return { !comparator($0,$1) }
+		}
+		else if sortType == .creationDate
 		{
 			let comparator = Self.compareCreationDate
 			if sortDirection == .ascending { return comparator }

@@ -40,6 +40,12 @@ open class FolderFilter : Object.Filter
 			if sortDirection == .ascending { return comparator }
 			return { !comparator($0,$1) }
 		}
+		else if sortType == .captureDate
+		{
+			let comparator = Self.compareCaptureDate
+			if sortDirection == .ascending { return comparator }
+			return { !comparator($0,$1) }
+		}
 		else if sortType == .creationDate
 		{
 			let comparator = Self.compareCreationDate
@@ -62,13 +68,13 @@ open class FolderFilter : Object.Filter
 		return nil
 	}
 
-	/// Sorts Objects alphabetically by filename like the Finder
+	/// Sorts Objects by captureDate
 	
-	public static func compareAlphabetical(_ object1:Object,_ object2:Object) -> Bool
+	public static func compareCaptureDate(_ object1:Object,_ object2:Object) -> Bool
 	{
-		let name1 = object1.name as NSString
-		let name2 = object2.name
-		return name1.localizedStandardCompare(name2) == .orderedAscending
+		guard let date1 = object1.captureDate else { return false }
+		guard let date2 = object2.captureDate else { return false }
+		return date1 < date2
 	}
 
 	/// Sorts Objects by creationDate
@@ -80,6 +86,15 @@ open class FolderFilter : Object.Filter
 		guard let date1 = url1.creationDate else { return false }
 		guard let date2 = url2.creationDate else { return false }
 		return date1 < date2
+	}
+
+	/// Sorts Objects alphabetically by filename like the Finder
+	
+	public static func compareAlphabetical(_ object1:Object,_ object2:Object) -> Bool
+	{
+		let name1 = object1.name as NSString
+		let name2 = object2.name
+		return name1.localizedStandardCompare(name2) == .orderedAscending
 	}
 
 	/// Sorts Objects by duration
@@ -98,8 +113,9 @@ open class FolderFilter : Object.Filter
 
 extension Object.Filter.SortType
 {
-	public static let alphabetical = "alphabetical"
+	public static let captureDate = "captureDate"
 	public static let creationDate = "creationDate"
+	public static let alphabetical = "alphabetical"
 	public static let duration = "duration"
 }
 

@@ -217,9 +217,24 @@ open class VideoFile : FolderObject
 			array += ObjectMetadataEntry(label:label, value:codecs.joined(separator:", "))
 		}
 		
-		if let value = metadata[.creationDate] as? Date
+		if let value = metadata[.exifCaptureDateKey] as? String, let date = value.date
+		{
+			let label = NSLocalizedString("Metadata.label.captureDate", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:String(with:date))
+		}
+		else if let value = metadata[.captureDateKey] as? Date
+		{
+			let label = NSLocalizedString("Metadata.label.captureDate", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:String(with:value))
+		}
+		else if let value = metadata[.creationDateKey] as? Date
 		{
 			let label = NSLocalizedString("Metadata.label.creationDate", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:String(with:value))
+		}
+		else if let value = metadata[.modificationDateKey] as? Date
+		{
+			let label = NSLocalizedString("Metadata.label.modificationDate", bundle:.BXMediaBrowser, comment:"Metadata Label")
 			array += ObjectMetadataEntry(label:label, value:String(with:value))
 		}
 		

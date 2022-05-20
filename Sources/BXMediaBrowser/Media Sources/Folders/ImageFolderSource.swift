@@ -222,9 +222,19 @@ open class ImageFile : FolderObject
 			let label = NSLocalizedString("Metadata.label.captureDate", bundle:.BXMediaBrowser, comment:"Metadata Label")
 			array += ObjectMetadataEntry(label:label, value:String(with:date))
 		}
+		else if let value = metadata[.captureDateKey] as? Date
+		{
+			let label = NSLocalizedString("Metadata.label.captureDate", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:String(with:value))
+		}
 		else if let value = metadata[.creationDateKey] as? Date
 		{
 			let label = NSLocalizedString("Metadata.label.creationDate", bundle:.BXMediaBrowser, comment:"Metadata Label")
+			array += ObjectMetadataEntry(label:label, value:String(with:value))
+		}
+		else if let value = metadata[.modificationDateKey] as? Date
+		{
+			let label = NSLocalizedString("Metadata.label.modificationDate", bundle:.BXMediaBrowser, comment:"Metadata Label")
 			array += ObjectMetadataEntry(label:label, value:String(with:value))
 		}
 		
