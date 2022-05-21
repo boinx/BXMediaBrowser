@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D00D6DE22838CF1200013C39 /* LightroomCCContainerAllPhotos.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00D6DE12838CF1200013C39 /* LightroomCCContainerAllPhotos.swift */; };
+		D00D6DE4283923AE00013C39 /* ScrollToBottomMixin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00D6DE3283923AE00013C39 /* ScrollToBottomMixin.swift */; };
 		D00DF1BE27F45BA300DC1D27 /* SortOrderPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00DF1BD27F45BA300DC1D27 /* SortOrderPopup.swift */; };
 		D00DF1C027F613FE00DC1D27 /* UIState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00DF1BF27F613FD00DC1D27 /* UIState.swift */; };
 		D00DF1C227F6D41D00DC1D27 /* ObjectBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00DF1C127F6D41D00DC1D27 /* ObjectBrowserView.swift */; };
@@ -170,6 +171,7 @@
 
 /* Begin PBXFileReference section */
 		D00D6DE12838CF1200013C39 /* LightroomCCContainerAllPhotos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightroomCCContainerAllPhotos.swift; sourceTree = "<group>"; };
+		D00D6DE3283923AE00013C39 /* ScrollToBottomMixin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollToBottomMixin.swift; sourceTree = "<group>"; };
 		D00DF1BD27F45BA300DC1D27 /* SortOrderPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortOrderPopup.swift; sourceTree = "<group>"; };
 		D00DF1BF27F613FD00DC1D27 /* UIState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIState.swift; sourceTree = "<group>"; };
 		D00DF1C127F6D41D00DC1D27 /* ObjectBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectBrowserView.swift; sourceTree = "<group>"; };
@@ -457,6 +459,7 @@
 				D01B48E427CA1378008249C0 /* Progress+globalParent.swift */,
 				D01B48E527CA1378008249C0 /* AccessControl.swift */,
 				D027F92A2802D81B004D4264 /* AppLifecycleMixin.swift */,
+				D00D6DE3283923AE00013C39 /* ScrollToBottomMixin.swift */,
 			);
 			path = "Utils & Helpers";
 			sourceTree = "<group>";
@@ -888,6 +891,7 @@
 				D0AA8FC4282038C20009A890 /* ObjectView.swift in Sources */,
 				D052BE2827F075630084068A /* LightroomCCImageObject.swift in Sources */,
 				D01B496627CA1378008249C0 /* Container+Loader.swift in Sources */,
+				D00D6DE4283923AE00013C39 /* ScrollToBottomMixin.swift in Sources */,
 				D01B495727CA1378008249C0 /* Progress+globalParent.swift in Sources */,
 				D01B495B27CA1378008249C0 /* Object+Loader.swift in Sources */,
 				D0AA8FC1282038C20009A890 /* ObjectRatingView.swift in Sources */,

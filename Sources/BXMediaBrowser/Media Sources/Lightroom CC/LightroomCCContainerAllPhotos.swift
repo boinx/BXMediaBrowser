@@ -27,19 +27,11 @@ import BXSwiftUtils
 import Foundation
 import SwiftPhoenixClient
 
-#if canImport(AppKit)
-import AppKit
-#endif
-
-#if canImport(UIKit)
-import UIKit
-#endif
-
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-open class LightroomCCContainerAllPhotos : Container, AppLifecycleMixin
+open class LightroomCCContainerAllPhotos : Container, AppLifecycleMixin, ScrollToBottomMixin
 {
 	class LightroomCCData
 	{
@@ -87,37 +79,10 @@ open class LightroomCCContainerAllPhotos : Container, AppLifecycleMixin
 
 		// When scrolling to bottom, load the next page of assets
 		
-//		self.observers += NotificationCenter.default.publisher(for:Self.loadNextPageOfAssets, object:nil).sink
-//		{
-//			[weak self] notification in
-//
-//			if let id = notification.object as? String, id == identifier
-//			{
-//				self?.load(with:nil)
-//			}
-//		}
-		
-		#if os(macOS)
-		
-		self.observers += NotificationCenter.default.publisher(for:NSCollectionView.didScrollToEnd, object:self).sink
+		self.registerScrollToBottomHandler()
 		{
-			[weak self] _ in self?.load(with:nil)
+			[weak self] in self?.load(with:nil)
 		}
-		
-		#elseif os(iOS)
-		
-		#warning("TODO: implement")
-		
-		#endif
-		
-		// Since Lightroom CC does not have and change notification mechanism yet, we need to poll for changes.
-		// Whenever the app is brought to the foreground (activated), we just assume that a change was made in
-		// Lightroom in the meantime. Perform necessary checks and reload this container if necessary.
-		
-//		self.registerDidActivateHandler
-//		{
-//			[weak self] in self?.reloadIfNeeded()
-//		}
 	}
 
 
