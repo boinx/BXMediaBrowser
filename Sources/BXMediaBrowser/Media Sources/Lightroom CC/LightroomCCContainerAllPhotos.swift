@@ -63,7 +63,9 @@ open class LightroomCCContainerAllPhotos : Container, AppLifecycleMixin, ScrollT
 		let data = LightroomCCData(allowedMediaTypes:allowedMediaTypes)
 		let identifier = "LightroomCC:AllPhotos"
 		let icon = "photo.on.rectangle"
-		let name = "All Photos"
+		let name = allowedMediaTypes == [.video] ?
+			NSLocalizedString("All Videos", tableName:"LightroomCC", bundle:.BXMediaBrowser, comment:"Container Name") :
+			NSLocalizedString("All Photos", tableName:"LightroomCC", bundle:.BXMediaBrowser, comment:"Container Name")
 		
 		super.init(
 			identifier: identifier,
