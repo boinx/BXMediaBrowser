@@ -246,6 +246,10 @@ public extension ViewFactory
 		{
 			LightroomCCFilterBar(with:container, filter:filter)
 		}
+		else if let container = container as? LightroomCCContainerAllPhotos, let filter = container.filter as? LightroomCCFilter
+		{
+			LightroomCCFilterBar(with:container, filter:filter)
+		}
 		else if let container = container as? LightroomClassicContainer, let filter = container.filter as? FolderFilter
 		{
 			FolderFilterBar(with:container, filter:filter)

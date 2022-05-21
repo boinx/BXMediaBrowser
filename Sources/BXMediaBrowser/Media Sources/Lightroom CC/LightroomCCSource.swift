@@ -222,8 +222,9 @@ open class LightroomCCSource : Source, AccessControl
 	{
 		LightroomCC.log.debug {"\(Self.self).\(#function)"}
 
-		guard LightroomCC.shared.isLoggedIn else { return [] }
-		guard let filter = filter as? LightroomCCFilter else { return [] }
+		var containers:[Container] = []
+		guard LightroomCC.shared.isLoggedIn else { return containers }
+		guard let filter = filter as? LightroomCCFilter else { return containers }
 		
 		// Get account & catalog  info
 		
@@ -240,19 +241,28 @@ open class LightroomCCSource : Source, AccessControl
 			LightroomCC.shared.userEmail = account.email
 		}
 		
-		// Find top-level albums (parent is nil)
+		// Create a container for "All Photos"
+		
+		containers += LightroomCCContainerAllPhotos(allowedMediaTypes:allowedMediaTypes, filter:filter)
+		
+		// Find top-level albums (parent is nil) and create a Container for each album
 		
 		let topLevelAlbums = albums.resources.filter
 		{
 			$0.payload.parent == nil
 		}
 		
-		// Create a Container for each album
-		
-		return topLevelAlbums.map
+		for album in topLevelAlbums
 		{
-			LightroomCCContainer(album:$0, allowedMediaTypes:allowedMediaTypes, filter:filter)
+			containers += LightroomCCContainer(album:album, allowedMediaTypes:allowedMediaTypes, filter:filter)
 		}
+
+//		return topLevelAlbums.map
+//		{
+//			LightroomCCContainer(album:$0, allowedMediaTypes:allowedMediaTypes, filter:filter)
+//		}
+		
+		return containers
 	}
 
 }

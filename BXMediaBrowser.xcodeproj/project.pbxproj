@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D00D6DE22838CF1200013C39 /* LightroomCCContainerAllPhotos.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00D6DE12838CF1200013C39 /* LightroomCCContainerAllPhotos.swift */; };
 		D00DF1BE27F45BA300DC1D27 /* SortOrderPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00DF1BD27F45BA300DC1D27 /* SortOrderPopup.swift */; };
 		D00DF1C027F613FE00DC1D27 /* UIState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00DF1BF27F613FD00DC1D27 /* UIState.swift */; };
 		D00DF1C227F6D41D00DC1D27 /* ObjectBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00DF1C127F6D41D00DC1D27 /* ObjectBrowserView.swift */; };
@@ -168,6 +169,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D00D6DE12838CF1200013C39 /* LightroomCCContainerAllPhotos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightroomCCContainerAllPhotos.swift; sourceTree = "<group>"; };
 		D00DF1BD27F45BA300DC1D27 /* SortOrderPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortOrderPopup.swift; sourceTree = "<group>"; };
 		D00DF1BF27F613FD00DC1D27 /* UIState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIState.swift; sourceTree = "<group>"; };
 		D00DF1C127F6D41D00DC1D27 /* ObjectBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectBrowserView.swift; sourceTree = "<group>"; };
@@ -697,6 +699,7 @@
 				D05F5F6927E8E840003735C6 /* LightroomCC.swift */,
 				D05F5F6C27E8E840003735C6 /* LightroomCCSource.swift */,
 				D05F5F6A27E8E840003735C6 /* LightroomCCContainer.swift */,
+				D00D6DE12838CF1200013C39 /* LightroomCCContainerAllPhotos.swift */,
 				D05F5F6827E8E840003735C6 /* LightroomCCObject.swift */,
 				D052BE2727F075610084068A /* LightroomCCImageObject.swift */,
 				D052BE2927F075700084068A /* LightroomCCVideoObject.swift */,
@@ -893,6 +896,7 @@
 				D0BAD10727D392D700B749FD /* PexelsPhotoSource.swift in Sources */,
 				D01B498527CA1378008249C0 /* PhotosContainer.swift in Sources */,
 				D01B496A27CA1378008249C0 /* Object+Quicklook.swift in Sources */,
+				D00D6DE22838CF1200013C39 /* LightroomCCContainerAllPhotos.swift in Sources */,
 				D0D9EDB227FC83E600D5D7FB /* PexelsContainerView.swift in Sources */,
 				D0573FA327E9ADED00788155 /* LightroomCCSourceView.swift in Sources */,
 				D01B497927CA1378008249C0 /* FolderFilter.swift in Sources */,

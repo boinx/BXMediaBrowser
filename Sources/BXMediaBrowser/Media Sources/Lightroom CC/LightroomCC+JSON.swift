@@ -233,6 +233,26 @@ extension LightroomCC
 		public var captureDate:String? { self.payload?.captureDate }
 		public var rating:Int? { self.payload?.ratings?.values.first?.rating }
 	}
+
+
+	/// The JSON returned by https://lr.adobe.io/v2/https://lr.adobe.io/v2/catalogs/catalog_id/assets
+
+	public struct CatalogAssets : Codable
+	{
+		public let base:String?
+		public let resources:[CatalogResource]
+		public let links:Links?
+		
+		public struct CatalogResource : Codable
+		{
+			public let id:String
+			public let type:String
+			public let subtype:String
+			public let updated:String
+			public let payload:Asset.Payload
+			public let links:Links?
+		}
+	}
 }
 
 
