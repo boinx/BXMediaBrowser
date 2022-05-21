@@ -35,18 +35,14 @@ open class LightroomCCContainerAllPhotos : Container, AppLifecycleMixin, ScrollT
 {
 	class LightroomCCData
 	{
-//		var album:LightroomCC.Albums.Resource
 		let allowedMediaTypes:[Object.MediaType]
-//		var cachedContainers:[Container]? = nil
 		var cachedObjects:[Object]? = nil
 		var objectMap:[String:Object] = [:]
 		var nextAccessPoint:String? = nil
 		
-		init(/*with album:LightroomCC.Albums.Resource,*/ allowedMediaTypes:[Object.MediaType])
+		init(allowedMediaTypes:[Object.MediaType])
 		{
-//			self.album = album
 			self.allowedMediaTypes = allowedMediaTypes
-//			self.cachedContainers = nil
 			self.cachedObjects = nil
 			self.nextAccessPoint = nil
 		}
@@ -62,9 +58,9 @@ open class LightroomCCContainerAllPhotos : Container, AppLifecycleMixin, ScrollT
 	
 	/// Creates a new Container for the folder at the specified URL
 	
-	public required init(/*album:LightroomCC.Albums.Resource,*/ allowedMediaTypes:[Object.MediaType], filter:LightroomCCFilter)
+	public required init(allowedMediaTypes:[Object.MediaType], filter:LightroomCCFilter)
 	{
-		let data = LightroomCCData(/*with:album,*/ allowedMediaTypes:allowedMediaTypes)
+		let data = LightroomCCData(allowedMediaTypes:allowedMediaTypes)
 		let identifier = "LightroomCC:AllPhotos"
 		let icon = "photo.on.rectangle"
 		let name = "All Photos"
@@ -136,7 +132,6 @@ open class LightroomCCContainerAllPhotos : Container, AppLifecycleMixin, ScrollT
 		super.invalidateCache()
 		
 		guard let data = data as? LightroomCCData else { return }
-//		data.cachedContainers = nil
 		data.cachedObjects = nil
 		data.objectMap = [:]
 		data.nextAccessPoint = nil
@@ -148,7 +143,6 @@ open class LightroomCCContainerAllPhotos : Container, AppLifecycleMixin, ScrollT
 	class func intialAccessPoint(with data:LightroomCCData,_ filter:LightroomCCFilter) -> String
 	{
 		let catalogID = LightroomCC.shared.catalogID
-//		let albumID = data.album.id
 		let allowedMediaTypes = data.allowedMediaTypes
 		let mediaTypes = allowedMediaTypes.map { $0.rawValue } .joined(separator:";")
 
@@ -178,32 +172,6 @@ open class LightroomCCContainerAllPhotos : Container, AppLifecycleMixin, ScrollT
 		let id = self.beginSignpost(in:"LightroomCCContainer", #function)
 		defer { self.endSignpost(with:id, in:"LightroomCCContainer", #function) }
 
-//		// Find our child albums (parent is self) and create a Container for each child
-//
-//		if data.cachedContainers == nil
-//		{
-//			data.cachedContainers = []
-//
-//			let albumID = data.album.id
-//			let allAlbums = LightroomCC.shared.allAlbums
-//			let childAlbums = allAlbums.filter
-//			{
-//				guard let id = $0.payload.parent?.id else { return false }
-//				return id == albumID
-//			}
-//
-//			for album in childAlbums
-//			{
-//				data.cachedContainers?.append(
-//					LightroomCCContainer(
-//						album:album,
-//						allowedMediaTypes:data.allowedMediaTypes,
-//						filter:filter))
-//			}
-//		}
-//
-//		let containers = data.cachedContainers ?? []
-		
 		// When starting out, load first page of assets in this album
 		
 		if data.cachedObjects == nil
@@ -333,39 +301,6 @@ open class LightroomCCContainerAllPhotos : Container, AppLifecycleMixin, ScrollT
 				}
 			}
 		}
-		
-//		dump(assets)
-	}
-	
-	
-	// Since Lightroom CC does not have any change notification mechanism yet, we need to poll for changes.
-	// Whenever the app is brought to the foreground (activated), we just assume that a change was made in
-	// Lightroom in the meantime. Perform necessary checks and reload this container if necessary.
-
-	private func reloadIfNeeded()
-	{
-//		guard let data = data as? LightroomCCData else { return }
-//
-//		Task
-//		{
-//			guard await self.isLoaded else { return }
-//
-//			let catalogID = LightroomCC.shared.catalogID
-//			let accessPoint = "https://lr.adobe.io/v2/catalogs/\(catalogID)/albums/\(albumID)"
-//			let album:LightroomCC.Album = try await LightroomCC.shared.getData(from:accessPoint, debugLogging:false)
-//			let needsReloading = album.payload.userUpdated > data.album.updated || album.updated > data.album.updated
-//
-//			LightroomCC.log.debug {"\(Self.self).\(#function)   name = \(self.name)   oldUpdated = \(data.album.updated)    newUpdated = \(album.updated)    needsReloading = \(needsReloading)"}
-//
-//			if needsReloading
-//			{
-//				await MainActor.run
-//				{
-//					LightroomCC.log.debug {"\(Self.self).\(#function)"}
-//					self.reload()
-//				}
-//			}
-//		}
 	}
 }
 
