@@ -88,7 +88,7 @@ open class LightroomCCContainer : Container, AppLifecycleMixin
 			}
 		}
 		
-		// Since Lightroom CC does not have and change notification mechanism yet, we need to poll for changes.
+		// Since Lightroom CC does not have any change notification mechanism yet, we need to poll for changes.
 		// Whenever the app is brought to the foreground (activated), we just assume that a change was made in
 		// Lightroom in the meantime. Perform necessary checks and reload this container if necessary.
 		

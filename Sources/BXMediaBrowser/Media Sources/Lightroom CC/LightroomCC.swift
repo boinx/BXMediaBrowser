@@ -181,6 +181,20 @@ public class LightroomCC : ObservableObject
 //----------------------------------------------------------------------------------------------------------------------
 
 
+ 	// MARK: - Actions
+	
+	@MainActor public func logout()
+	{
+		self.oauth2.forgetTokens()
+		self.catalogID = ""
+		self.allAlbums = []
+		self.status = .loggedOut
+	}
+	
+	
+//----------------------------------------------------------------------------------------------------------------------
+
+
  	// MARK: - Data Transfer
 	
 	/// This re-usable function gets data of generic type T from the specified API accessPoint

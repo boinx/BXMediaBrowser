@@ -200,11 +200,7 @@ open class LightroomCCSource : Source, AccessControl
 	@MainActor public func revokeAccess(_ completionHandler:@escaping (Bool)->Void = { _ in })
 	{
 //		LightroomCC.shared.oauth2.forgetClient()
-		LightroomCC.shared.oauth2.forgetTokens()
-		LightroomCC.shared.catalogID = ""
-		LightroomCC.shared.allAlbums = []
-		
-		LightroomCC.shared.status = .loggedOut
+		LightroomCC.shared.logout()
 		completionHandler(hasAccess)
 	}
 
