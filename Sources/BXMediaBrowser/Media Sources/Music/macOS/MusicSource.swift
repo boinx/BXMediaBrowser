@@ -64,11 +64,11 @@ public class MusicSource : Source, AccessControl
 
 	/// The known Container are stored by identifier, so that they can be reused
 	
-	static var cachedContainers:[String:MusicContainer] = [:]
+	static var cachedContainers = ThreadsafeDictionary<String,MusicContainer>()
 
 	/// The known Objects are stored by identifier, so that they can be reused
 	
-	static var cachedObjects:[String:MusicObject] = [:]
+	static var cachedObjects = ThreadsafeDictionary<String,MusicObject>()
 
 	/// Internal observers and subscriptions
 	
