@@ -197,11 +197,29 @@ public struct LightroomCCSourceView : View
 			
 			items += BXMenuItemSpec.action(title:logout)
 			{
-				[weak source] in source?.revokeAccess()
+				[weak source] in
+				
+				source?.revokeAccess()
+				{
+					_ in self.didLogOut()
+				}
 			}
 		}
 		
 		return BXImage(systemName:"person.crop.circle").popupMenu(items)
+    }
+    
+    /// Called after logging out from Lightroom CC
+	
+    func didLogOut()
+    {
+		// If a Lightroom CC album was selected, proir to logging out, then clear the selection,
+		// so that there are no Objects left over in the CollectionView
+		
+		if library.selectedContainer is LightroomCCContainer
+		{
+			library.selectedContainer = nil
+		}
     }
 }
 
