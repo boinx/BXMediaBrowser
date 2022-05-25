@@ -233,14 +233,6 @@ open class LightroomCCSource : Source, AccessControl
 					completionHandler(false)
 				}
 			}
-			
-//			await MainActor.run
-//			{
-//				LightroomCC.shared.status = .loggedIn
-//				self.isExpanded = true
-//				self.load()
-//				completionHandler(self.hasAccess)
-//			}
 		}
 	}
 	
@@ -283,17 +275,6 @@ open class LightroomCCSource : Source, AccessControl
 		
 		do
 		{
-			// Get account info
-			
-//			let account:LightroomCC.Account = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/account")
-//
-//			await MainActor.run
-//			{
-//				LightroomCC.shared.userID = account.id
-//				LightroomCC.shared.userName = account.full_name
-//				LightroomCC.shared.userEmail = account.email
-//			}
-
 			// Get catalog info
 			
 			let catalog:LightroomCC.Catalog = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/catalog")
@@ -332,12 +313,7 @@ open class LightroomCCSource : Source, AccessControl
 		{
 			await MainActor.run
 			{
-				LightroomCC.shared.status = .loggedOut
-				LightroomCC.shared.userID = ""
-				LightroomCC.shared.userName = nil
-				LightroomCC.shared.userEmail = nil
-				LightroomCC.shared.catalogID = ""
-				LightroomCC.shared.allAlbums = []
+				LightroomCC.shared.reset()
 			}
 
 			return []
