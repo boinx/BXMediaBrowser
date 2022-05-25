@@ -88,7 +88,7 @@ public struct LightroomCCSourceView : View
 				{
 					Button(NSLocalizedString("Login", bundle:.BXMediaBrowser, comment:"Button Title"))
 					{
-						self.source.grantAccess()
+						self.login()
 					}
 					.centerAligned()
 					.padding()
@@ -185,7 +185,7 @@ public struct LightroomCCSourceView : View
 		{
 			items += BXMenuItemSpec.action(title:login)
 			{
-				[weak source] in source?.grantAccess()
+				self.login()
 			}
 		}
 		else
@@ -197,21 +197,39 @@ public struct LightroomCCSourceView : View
 			
 			items += BXMenuItemSpec.action(title:logout)
 			{
-				[weak source] in
-				
-				source?.revokeAccess()
-				{
-					_ in self.didLogOut()
-				}
+				self.logout()
 			}
 		}
 		
 		return BXImage(systemName:"person.crop.circle").popupMenu(items)
     }
     
+    /// Login to Lightroom CC (with embedded sheet if possible)
+	
+    func login()
+    {
+		self.source.grantAccess()
+		{
+			if $0 == false
+			{
+				self.clearSelectedContainer()
+			}
+		}
+    }
+    
+    /// Logout from Lightroom CC
+	
+    func logout()
+    {
+		self.source.revokeAccess()
+		{
+			_ in self.clearSelectedContainer()
+		}
+    }
+    
     /// Called after logging out from Lightroom CC
 	
-    func didLogOut()
+    func clearSelectedContainer()
     {
 		// If a Lightroom CC album was selected, proir to logging out, then clear the selection,
 		// so that there are no Objects left over in the CollectionView
