@@ -57,16 +57,12 @@ public class LightroomCC : ObservableObject
 			"authorize_uri": "https://ims-na1.adobelogin.com/ims/authorize/v2",
 			"token_uri": "https://ims-na1.adobelogin.com/ims/token/v3",
 			"redirect_uris": [Self.redirectURI],
-//			"use_pkce": true, // only for native app flow
 			"scope": "openid, AdobeID, lr_partner_apis, lr_partner_rendition_apis, offline_access",
 		]
 		
 		self.oauth2 = OAuth2CodeGrant(settings:settings)
-//		self.oauth2.authConfig.authorizeEmbedded = true
-//		self.oauth2.authConfig.authorizeEmbeddedAutoDismiss = false
-//		self.oauth2.authConfig.ui.useAuthenticationSession = true
-//		self.oauth2.authConfig.ui.prefersEphemeralWebBrowserSession = true
-//		self.oauth2.useProofKeyForCodeExchange = true // only for native app flow
+		self.oauth2.authConfig.authorizeEmbedded = true
+		self.oauth2.authConfig.authorizeEmbeddedAutoDismiss = true
 		self.oauth2.logger = OAuth2DebugLogger(.debug)
     }
     
