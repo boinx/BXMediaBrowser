@@ -278,49 +278,71 @@ open class LightroomCCSource : Source, AccessControl
 	{
 		LightroomCC.log.debug {"\(Self.self).\(#function)"}
 
-		var containers:[Container] = []
-		guard LightroomCC.shared.isLoggedIn else { return containers }
-		guard let filter = filter as? LightroomCCFilter else { return containers }
+		guard LightroomCC.shared.isLoggedIn else { return [] }
+		guard let filter = filter as? LightroomCCFilter else { return [] }
 		
-		// Get account & catalog  info
-		
-		let account:LightroomCC.Account = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/account")
-		let catalog:LightroomCC.Catalog = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/catalog")
-		let albums:LightroomCC.Albums = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/catalogs/\(catalog.id)/albums")
-		
-		await MainActor.run
+		do
 		{
-			LightroomCC.shared.catalogID = catalog.id
-			LightroomCC.shared.allAlbums = albums.resources
-			LightroomCC.shared.userID = account.id
-			LightroomCC.shared.userName = account.full_name
-			LightroomCC.shared.userEmail = account.email
-		}
-		
-		// Create a container for "All Photos"
-		
-		containers += LightroomCCContainerAllPhotos(allowedMediaTypes:allowedMediaTypes, filter:filter)
-		
-		// Find top-level albums (parent is nil) and create a Container for each album
-		
-		let topLevelAlbums = albums.resources.filter
-		{
-			$0.payload.parent == nil
-		}
-		
-		for album in topLevelAlbums
-		{
-			containers += LightroomCCContainer(album:album, allowedMediaTypes:allowedMediaTypes, filter:filter)
-		}
+			// Get account info
+			
+//			let account:LightroomCC.Account = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/account")
+//
+//			await MainActor.run
+//			{
+//				LightroomCC.shared.userID = account.id
+//				LightroomCC.shared.userName = account.full_name
+//				LightroomCC.shared.userEmail = account.email
+//			}
 
-//		return topLevelAlbums.map
-//		{
-//			LightroomCCContainer(album:$0, allowedMediaTypes:allowedMediaTypes, filter:filter)
-//		}
+			// Get catalog info
+			
+			let catalog:LightroomCC.Catalog = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/catalog")
+			let albums:LightroomCC.Albums = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/catalogs/\(catalog.id)/albums")
+
+			await MainActor.run
+			{
+				LightroomCC.shared.catalogID = catalog.id
+				LightroomCC.shared.allAlbums = albums.resources
+			}
+			
+			// Create a container for "All Photos"
+			
+			var containers:[Container] = []
+
+			containers += LightroomCCContainerAllPhotos(allowedMediaTypes:allowedMediaTypes, filter:filter)
+			
+			// Find top-level albums (parent is nil) and create a Container for each album
+			
+			let topLevelAlbums = albums.resources.filter
+			{
+				$0.payload.parent == nil
+			}
+			
+			for album in topLevelAlbums
+			{
+				containers += LightroomCCContainer(album:album, allowedMediaTypes:allowedMediaTypes, filter:filter)
+			}
+
+			return containers
+		}
 		
-		return containers
+		// In case of error clear everything
+		
+		catch
+		{
+			await MainActor.run
+			{
+				LightroomCC.shared.status = .loggedOut
+				LightroomCC.shared.userID = ""
+				LightroomCC.shared.userName = nil
+				LightroomCC.shared.userEmail = nil
+				LightroomCC.shared.catalogID = ""
+				LightroomCC.shared.allAlbums = []
+			}
+
+			return []
+		}
 	}
-
 }
 
 
