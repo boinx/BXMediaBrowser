@@ -183,12 +183,17 @@ public class LightroomCC : ObservableObject
 
  	// MARK: - Actions
 	
-	@MainActor public func logout()
+	@MainActor public func reset()
 	{
-		self.oauth2.forgetTokens()
+		self.userID = ""
+		self.userName = nil
+		self.userEmail = nil
+		self.status = .loggedOut
+
 		self.catalogID = ""
 		self.allAlbums = []
-		self.status = .loggedOut
+
+		self.oauth2.forgetTokens()
 	}
 	
 	
