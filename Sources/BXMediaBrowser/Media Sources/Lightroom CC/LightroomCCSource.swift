@@ -147,11 +147,15 @@ open class LightroomCCSource : Source, AccessControl
 	// MARK: - Login
 	
 
+	/// Returns true if the user is logged in to a valid Adobe account
+	
 	@MainActor public var hasAccess:Bool
 	{
 		LightroomCC.shared.isLoggedIn
 	}
 	
+	
+	/// Starts the Adobe login process via OAuth
 	
 	@MainActor public func grantAccess(_ completionHandler:@escaping (Bool)->Void = { _ in })
 	{
@@ -162,49 +166,105 @@ open class LightroomCCSource : Source, AccessControl
 			oauth2.abortAuthorization()
 		}
 		
+		oauth2.forgetTokens()
+		
 		oauth2.authorize()
 		{
 			params,error in
 			
-			if oauth2.accessToken != nil
+			if error != nil || oauth2.accessToken == nil
 			{
-				LightroomCC.log.debug {"\(Self.self).\(#function) accessToken = \(oauth2.accessToken ?? "nil")"}
-				LightroomCC.log.debug {"\(Self.self).\(#function) refreshToken = \(oauth2.refreshToken ?? "nil")"}
-				
-				Task
-				{
-					await MainActor.run
-					{
-						LightroomCC.shared.status = .loggedIn
-						self.load()
-						completionHandler(self.hasAccess)
-					}
-				}
+				self.loginDidFail(with:error, completionHandler:completionHandler)
 			}
-			else if let error = error
+			else
 			{
-				LightroomCC.log.error {"\(Self.self).\(#function) OAuth login failed: \(error)"}
-
-				Task
-				{
-					await MainActor.run
-					{
-						LightroomCC.shared.status = .loggedOut
-						completionHandler(self.hasAccess)
-					}
-				}
+				self.loginDidSucceed(completionHandler:completionHandler)
 			}
 		}
 	}
 
+
+	/// Logs out from the current account
+	
 	@MainActor public func revokeAccess(_ completionHandler:@escaping (Bool)->Void = { _ in })
 	{
-//		LightroomCC.shared.oauth2.forgetClient()
-		LightroomCC.shared.logout()
+		LightroomCC.shared.reset()
+		self.isExpanded = false
 		completionHandler(hasAccess)
 	}
 
 
+	/// Called when the OAuth login has succeeded
+	
+	private func loginDidSucceed(completionHandler:@escaping (Bool)->Void)
+	{
+		let oauth2 = LightroomCC.shared.oauth2
+		LightroomCC.log.debug {"\(Self.self).\(#function) accessToken = \(oauth2.accessToken ?? "nil")"}
+		LightroomCC.log.debug {"\(Self.self).\(#function) refreshToken = \(oauth2.refreshToken ?? "nil")"}
+
+		Task
+		{
+			do
+			{
+				// Get account info
+				
+				let account:LightroomCC.Account = try await LightroomCC.shared.getData(from:"https://lr.adobe.io/v2/account")
+
+				await MainActor.run
+				{
+					LightroomCC.shared.userID = account.id
+					LightroomCC.shared.userName = account.full_name
+					LightroomCC.shared.userEmail = account.email
+					LightroomCC.shared.status = .loggedIn
+					
+					self.isExpanded = true
+					self.load()
+					
+					completionHandler(self.hasAccess)
+				}
+			}
+			catch let error
+			{
+				LightroomCC.log.error {"\(Self.self).\(#function) ERROR \(error)"}
+
+				await MainActor.run
+				{
+					LightroomCC.shared.reset()
+					completionHandler(false)
+				}
+			}
+			
+//			await MainActor.run
+//			{
+//				LightroomCC.shared.status = .loggedIn
+//				self.isExpanded = true
+//				self.load()
+//				completionHandler(self.hasAccess)
+//			}
+		}
+	}
+	
+	
+	/// Called when the OAuth login has failed
+	
+	private func loginDidFail(with error:Swift.Error?, completionHandler:@escaping (Bool)->Void)
+	{
+		if let error = error
+		{
+			LightroomCC.log.error {"\(Self.self).\(#function) OAuth login failed: \(error)"}
+		}
+		
+		Task
+		{
+			await MainActor.run
+			{
+				LightroomCC.shared.reset()
+				completionHandler(false)
+			}
+		}
+	}
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 
