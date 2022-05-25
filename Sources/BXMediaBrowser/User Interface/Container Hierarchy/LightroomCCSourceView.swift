@@ -43,6 +43,7 @@ public struct LightroomCCSourceView : View
 	
 	@EnvironmentObject var library:Library
 	@Environment(\.viewFactory) private var viewFactory
+	@Environment(\.parentWindow) private var parentWindow
 
 	// Init
 	
@@ -208,6 +209,8 @@ public struct LightroomCCSourceView : View
 	
     func login()
     {
+		LightroomCC.shared.oauth2.authConfig.authorizeContext = self.parentWindow
+
 		self.source.grantAccess()
 		{
 			if $0 == false
