@@ -26,6 +26,7 @@
 import BXSwiftUtils
 import Foundation
 import ImageIO
+import WebKit
 import OAuth2
 
 
@@ -50,6 +51,8 @@ public class LightroomCC : ObservableObject
 	
     private init()
     {
+		// OAuth login configuration. This info must match the project settings in the Adobe developer console.
+		
 		let settings:OAuth2JSON =
 		[
 			"client_id": Self.clientID,
@@ -60,10 +63,30 @@ public class LightroomCC : ObservableObject
 			"scope": "openid, AdobeID, lr_partner_apis, lr_partner_rendition_apis, offline_access",
 		]
 		
+		// Instead of using the (external) Safari browser, we use an embedded WKWebView for the OAuth
+		// login process. This might me slightly less secure, but provides a much nicer login UX.
+		// Also consider, that the Adobe review team didn't like the previous implementation going
+		// through an external browser.
+		
 		self.oauth2 = OAuth2CodeGrant(settings:settings)
 		self.oauth2.authConfig.authorizeEmbedded = true
 		self.oauth2.authConfig.authorizeEmbeddedAutoDismiss = true
 		self.oauth2.logger = OAuth2DebugLogger(.debug)
+		
+		// Make sure that the default size for the embedded login window is large enough for both
+		// Adobe login web page, as well as alternatives from Google, Facebook, and Apple.
+	
+		OAuth2WebViewController.webViewWindowWidth = 680.0
+		OAuth2WebViewController.webViewWindowHeight = 800.0
+
+		// To solve several UX issues for the Adobe login process we use a private browsing mode (i.e. non
+		// persistent cookies). Without a private browsing mode we would not be able to logout and login
+		// again with a different account. For implementation details, see the answer by Zack Shapiro
+		// at this thread: https://stackoverflow.com/questions/31289838/how-to-delete-wkwebview-cookies
+
+		let config = WKWebViewConfiguration()
+		config.websiteDataStore = WKWebsiteDataStore.nonPersistent()
+		OAuth2WebViewController.webViewConfiguration = config
     }
     
 
