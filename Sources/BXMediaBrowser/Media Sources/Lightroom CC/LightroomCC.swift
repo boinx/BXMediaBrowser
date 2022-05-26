@@ -236,7 +236,7 @@ public class LightroomCC : ObservableObject
 		guard let urlComponents = URLComponents(string:accessPoint) else { throw Error.invalidURL }
 		guard let url = urlComponents.url else { throw Error.invalidURL }
 
-		var request = URLRequest(url:url)
+		var request = URLRequest(url:url, cachePolicy:.reloadIgnoringLocalAndRemoteCacheData)
 		request.httpMethod = "GET"
 		request.setValue(Self.clientID, forHTTPHeaderField:"X-API-Key")
 		
