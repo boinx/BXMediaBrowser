@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		D00D6DE22838CF1200013C39 /* LightroomCCContainerAllPhotos.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00D6DE12838CF1200013C39 /* LightroomCCContainerAllPhotos.swift */; };
 		D00D6DE4283923AE00013C39 /* ScrollToBottomMixin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00D6DE3283923AE00013C39 /* ScrollToBottomMixin.swift */; };
+		D00D6DF6283F67CE00013C39 /* OAuth2 in Frameworks */ = {isa = PBXBuildFile; productRef = D00D6DF5283F67CE00013C39 /* OAuth2 */; };
 		D00DF1BE27F45BA300DC1D27 /* SortOrderPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00DF1BD27F45BA300DC1D27 /* SortOrderPopup.swift */; };
 		D00DF1C027F613FE00DC1D27 /* UIState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00DF1BF27F613FD00DC1D27 /* UIState.swift */; };
 		D00DF1C227F6D41D00DC1D27 /* ObjectBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00DF1C127F6D41D00DC1D27 /* ObjectBrowserView.swift */; };
@@ -114,7 +115,6 @@
 		D052BE2C27F0B97D0084068A /* LightroomCCFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D052BE2B27F0B97D0084068A /* LightroomCCFilter.swift */; };
 		D052BE2E27F0BDA80084068A /* LightroomCCFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D052BE2D27F0BDA80084068A /* LightroomCCFilterBar.swift */; };
 		D0573FA327E9ADED00788155 /* LightroomCCSourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0573FA227E9ADED00788155 /* LightroomCCSourceView.swift */; };
-		D0573FA627E9D0C900788155 /* OAuth2 in Frameworks */ = {isa = PBXBuildFile; productRef = D0573FA527E9D0C900788155 /* OAuth2 */; };
 		D05F5F6D27E8E840003735C6 /* LightroomCCObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05F5F6827E8E840003735C6 /* LightroomCCObject.swift */; };
 		D05F5F6E27E8E840003735C6 /* LightroomCC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05F5F6927E8E840003735C6 /* LightroomCC.swift */; };
 		D05F5F6F27E8E840003735C6 /* LightroomCCContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05F5F6A27E8E840003735C6 /* LightroomCCContainer.swift */; };
@@ -363,9 +363,9 @@
 				D01B49B127CA2132008249C0 /* BXSwiftUtils.framework in Frameworks */,
 				D0C1CB2A281D1A6800128DED /* BXSwiftUI.framework in Frameworks */,
 				D01B49B927CA2189008249C0 /* Foundation.framework in Frameworks */,
+				D00D6DF6283F67CE00013C39 /* OAuth2 in Frameworks */,
 				D01B49BA27CA2189008249C0 /* AVFoundation.framework in Frameworks */,
 				D0CBC15A2834D03300C6BABB /* iMedia.framework in Frameworks */,
-				D0573FA627E9D0C900788155 /* OAuth2 in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -802,7 +802,7 @@
 			);
 			name = BXMediaBrowser;
 			packageProductDependencies = (
-				D0573FA527E9D0C900788155 /* OAuth2 */,
+				D00D6DF5283F67CE00013C39 /* OAuth2 */,
 			);
 			productName = BXMediaBrowser;
 			productReference = D01B48B127CA1313008249C0 /* BXMediaBrowser.framework */;
@@ -834,7 +834,7 @@
 			);
 			mainGroup = D01B48A727CA1313008249C0;
 			packageReferences = (
-				D0573FA427E9D0C900788155 /* XCRemoteSwiftPackageReference "OAuth2" */,
+				D00D6DF4283F67CE00013C39 /* XCRemoteSwiftPackageReference "OAuth2" */,
 			);
 			productRefGroup = D01B48B227CA1313008249C0 /* Products */;
 			projectDirPath = "";
@@ -1323,20 +1323,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		D0573FA427E9D0C900788155 /* XCRemoteSwiftPackageReference "OAuth2" */ = {
+		D00D6DF4283F67CE00013C39 /* XCRemoteSwiftPackageReference "OAuth2" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/p2/OAuth2.git";
+			repositoryURL = "https://github.com/peterb180369/OAuth2.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.0.0;
+				branch = master;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		D0573FA527E9D0C900788155 /* OAuth2 */ = {
+		D00D6DF5283F67CE00013C39 /* OAuth2 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = D0573FA427E9D0C900788155 /* XCRemoteSwiftPackageReference "OAuth2" */;
+			package = D00D6DF4283F67CE00013C39 /* XCRemoteSwiftPackageReference "OAuth2" */;
 			productName = OAuth2;
 		};
 /* End XCSwiftPackageProductDependency section */
