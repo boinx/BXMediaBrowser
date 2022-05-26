@@ -84,9 +84,12 @@ public class LightroomCC : ObservableObject
 		// again with a different account. For implementation details, see the answer by Zack Shapiro
 		// at this thread: https://stackoverflow.com/questions/31289838/how-to-delete-wkwebview-cookies
 
-		let config = WKWebViewConfiguration()
-		config.websiteDataStore = WKWebsiteDataStore.nonPersistent()
-		OAuth2WebViewController.webViewConfiguration = config
+		OAuth2WebViewController.webViewConfiguration =
+		{
+			let configuration = WKWebViewConfiguration()
+			configuration.websiteDataStore = WKWebsiteDataStore.nonPersistent()
+			return configuration
+		}
     }
     
 
