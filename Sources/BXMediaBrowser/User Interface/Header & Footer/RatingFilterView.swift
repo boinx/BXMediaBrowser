@@ -56,7 +56,7 @@ public struct RatingFilterView : View
 		{
 			case .small: return 12.0
 			case .mini: return 9.0
-			default: return 14.0
+			default: return 16.0
 		}
 	}
 	
