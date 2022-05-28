@@ -69,9 +69,12 @@ public class LightroomCC : ObservableObject
 		// through an external browser.
 		
 		self.oauth2 = OAuth2CodeGrant(settings:settings)
+		self.oauth2.logger = OAuth2DebugLogger(.debug)
+
 		self.oauth2.authConfig.authorizeEmbedded = true
 		self.oauth2.authConfig.authorizeEmbeddedAutoDismiss = true
-		self.oauth2.logger = OAuth2DebugLogger(.debug)
+//		self.oauth2.authConfig.ui.useAuthenticationSession = true
+//		self.oauth2.authConfig.ui.prefersEphemeralWebBrowserSession = true
 		
 		// Make sure that the default size for the embedded login window is large enough for both
 		// Adobe login web page, as well as alternatives from Google, Facebook, and Apple.
