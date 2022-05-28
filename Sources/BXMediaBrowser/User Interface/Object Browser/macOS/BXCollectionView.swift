@@ -33,13 +33,33 @@ import AppKit
 
 class BXCollectionView : QuicklookCollectionView
 {
-	public var willSetFrameSizeHandler:((NSSize)->Void)? = nil
+//	public var willSetFrameSizeHandler:((NSSize)->Void)? = nil
+//
+//	override open func setFrameSize(_ newSize:NSSize)
+//	{
+//		self.willSetFrameSizeHandler?(newSize)
+//		super.setFrameSize(newSize)
+//	}
+
+	// Pressing Cmd-I shows the Get Info popover
 	
-	override open func setFrameSize(_ newSize:NSSize)
+	override public func keyDown(with event:NSEvent)
 	{
-		self.willSetFrameSizeHandler?(newSize)
-		super.setFrameSize(newSize)
+		if event.charactersIgnoringModifiers == "i" && event.modifierFlags.contains(.command)
+		{
+			let indexPaths = self.selectionIndexPaths
+
+			if indexPaths.count == 1, let indexPath = indexPaths.first, let item = self.item(at:indexPath) as? ObjectCell
+			{
+				item.getInfo()
+			}
+		}
+		else
+		{
+			super.keyDown(with:event)
+		}
 	}
+	
 }
 
 
@@ -48,13 +68,13 @@ class BXCollectionView : QuicklookCollectionView
 
 public class BXScrollView : NSScrollView
 {
-	public var willSetFrameSizeHandler:((NSSize)->Void)? = nil
-	
-	override open func setFrameSize(_ newSize:NSSize)
-	{
-		self.willSetFrameSizeHandler?(newSize)
-		super.setFrameSize(newSize)
-	}
+//	public var willSetFrameSizeHandler:((NSSize)->Void)? = nil
+//
+//	override open func setFrameSize(_ newSize:NSSize)
+//	{
+//		self.willSetFrameSizeHandler?(newSize)
+//		super.setFrameSize(newSize)
+//	}
 }
 
 
