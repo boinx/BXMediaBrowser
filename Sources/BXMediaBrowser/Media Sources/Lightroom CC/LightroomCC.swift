@@ -63,34 +63,16 @@ public class LightroomCC : ObservableObject
 			"scope": "openid, AdobeID, lr_partner_apis, lr_partner_rendition_apis, offline_access",
 		]
 		
-//		// Instead of using the (external) Safari browser, we use an embedded WKWebView for the OAuth
-//		// login process. This might me slightly less secure, but provides a much nicer login UX.
-//		// Also consider, that the Adobe review team didn't like the previous implementation going
-//		// through an external browser.
-//		
-//		self.oauth2 = OAuth2CodeGrant(settings:settings)
-//		self.oauth2.logger = OAuth2DebugLogger(.debug)
-//
-//		self.oauth2.authConfig.authorizeEmbedded = true
-//		self.oauth2.authConfig.authorizeEmbeddedAutoDismiss = true
-//		
-//		self.oauth2.authConfig.ui.useAuthenticationSession = true	// ASWebAuthenticationSession is broken on macOS - see https://developer.apple.com/forums/thread/694465
-//		self.oauth2.authConfig.ui.prefersEphemeralWebBrowserSession = true
-//
-//		// For useAuthenticationSession = true we need to fix the redirect URL to match what is expected by Adobe
-//
-//		OAuth2Authorizer.adjustRedirectURL =
-//		{
-//			(url:URL?) -> URL? in
-//
-//			guard var str = url?.absoluteString else { return nil }
-//
-//			str = str.replacingOccurrences(
-//				of:"fotomagico6://bxaccounts/lightroom/oauth",
-//				with:"https://boinx.com/bxaccounts/fotomagico/lightroom/oauth")
-//
-//			return URL(string:str)
-//		}
+		// Instead of using the (external) Safari browser, we use an embedded WKWebView for the OAuth
+		// login process. This might me slightly less secure, but provides a much nicer login UX.
+		// Also consider, that the Adobe review team didn't like the previous implementation going
+		// through an external browser.
+		
+		self.oauth2 = OAuth2CodeGrant(settings:settings)
+		self.oauth2.logger = OAuth2DebugLogger(.debug)
+
+		self.oauth2.authConfig.authorizeEmbedded = true
+		self.oauth2.authConfig.authorizeEmbeddedAutoDismiss = true
 		
 		// Make sure that the default size for the embedded login window is large enough for both
 		// Adobe login web page, as well as alternatives from Google, Facebook, and Apple.
@@ -109,6 +91,24 @@ public class LightroomCC : ObservableObject
 			configuration.websiteDataStore = WKWebsiteDataStore.nonPersistent()
 			return configuration
 		}
+
+		// ASWebAuthenticationSession is broken on macOS - see https://developer.apple.com/forums/thread/694465
+
+//		self.oauth2.authConfig.ui.useAuthenticationSession = true
+//		self.oauth2.authConfig.ui.prefersEphemeralWebBrowserSession = true
+//
+//		OAuth2Authorizer.adjustRedirectURL = // For useAuthenticationSession = true we need to fix the redirect URL to match what is expected by Adobe
+//		{
+//			(url:URL?) -> URL? in
+//
+//			guard var str = url?.absoluteString else { return nil }
+//
+//			str = str.replacingOccurrences(
+//				of:"fotomagico6://bxaccounts/lightroom/oauth",
+//				with:"https://boinx.com/bxaccounts/fotomagico/lightroom/oauth")
+//
+//			return URL(string:str)
+//		}
     }
     
 
