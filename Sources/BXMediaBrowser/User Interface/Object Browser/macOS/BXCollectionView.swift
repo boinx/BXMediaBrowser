@@ -60,6 +60,20 @@ class BXCollectionView : QuicklookCollectionView
 		}
 	}
 	
+	override var acceptsFirstResponder:Bool
+	{
+		true
+	}
+	
+	override func becomeFirstResponder() -> Bool
+	{
+		true
+	}
+	
+	override func resignFirstResponder() -> Bool
+	{
+		true
+	}
 }
 
 
