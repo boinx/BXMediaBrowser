@@ -107,6 +107,7 @@
 		D01B49BA27CA2189008249C0 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D01B49B827CA2189008249C0 /* AVFoundation.framework */; };
 		D01C33CF27CA70F3003337A9 /* NSPasteboard+Objects.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01C33CE27CA70F3003337A9 /* NSPasteboard+Objects.swift */; };
 		D01C33D727CD187D003337A9 /* DraggingProgressMixin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01C33D627CD187D003337A9 /* DraggingProgressMixin.swift */; };
+		D0208D83286703EE00736B1C /* Tasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0208D82286703EE00736B1C /* Tasks.swift */; };
 		D027F92B2802D81B004D4264 /* AppLifecycleMixin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D027F92A2802D81B004D4264 /* AppLifecycleMixin.swift */; };
 		D052BE2027ECB72C0084068A /* LightroomCC.strings in Resources */ = {isa = PBXBuildFile; fileRef = D052BE1E27ECB72C0084068A /* LightroomCC.strings */; };
 		D052BE2427EDCEF50084068A /* Object+MediaType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D052BE2327EDCEF40084068A /* Object+MediaType.swift */; };
@@ -285,6 +286,7 @@
 		D01B49BB27CA463E008249C0 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D01C33CE27CA70F3003337A9 /* NSPasteboard+Objects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPasteboard+Objects.swift"; sourceTree = "<group>"; };
 		D01C33D627CD187D003337A9 /* DraggingProgressMixin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggingProgressMixin.swift; sourceTree = "<group>"; };
+		D0208D82286703EE00736B1C /* Tasks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tasks.swift; sourceTree = "<group>"; };
 		D027F92A2802D81B004D4264 /* AppLifecycleMixin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLifecycleMixin.swift; sourceTree = "<group>"; };
 		D052BE1F27ECB72C0084068A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LightroomCC.strings; sourceTree = "<group>"; };
 		D052BE2127ECB7300084068A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/LightroomCC.strings; sourceTree = "<group>"; };
@@ -758,6 +760,7 @@
 			isa = PBXGroup;
 			children = (
 				D0CBC144282A2E9300C6BABB /* Config.swift */,
+				D0208D82286703EE00736B1C /* Tasks.swift */,
 			);
 			path = Config;
 			sourceTree = "<group>";
@@ -958,6 +961,7 @@
 				D0AA8FC3282038C20009A890 /* ObjectCell-macOS.swift in Sources */,
 				D01B498F27CA1378008249C0 /* DefaultObjectFooterView.swift in Sources */,
 				D01B498827CA1378008249C0 /* PhotosChangeObserver.swift in Sources */,
+				D0208D83286703EE00736B1C /* Tasks.swift in Sources */,
 				D0AA8FC7282038C20009A890 /* AudioObjectCell.swift in Sources */,
 				D01B495127CA1378008249C0 /* Bundle+BXMediaBrowser.swift in Sources */,
 				D01B498B27CA1378008249C0 /* AudioObjectFooterView.swift in Sources */,
