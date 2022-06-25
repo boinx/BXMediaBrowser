@@ -92,6 +92,8 @@ open class LightroomCCObject : Object, AppLifecycleMixin
 
 	open class func loadThumbnail(for identifier:String, data:Any) async throws -> CGImage
 	{
+		try await Tasks.canContinue()
+		
 		guard let asset = data as? LightroomCC.Asset else { throw Error.loadThumbnailFailed }
 
 		let catalogID = LightroomCC.shared.catalogID

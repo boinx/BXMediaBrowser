@@ -79,6 +79,8 @@ open class LightroomClassicObject : Object, AppLifecycleMixin
 
 	open class func loadThumbnail(for identifier:String, data:Any) async throws -> CGImage
 	{
+		try await Tasks.canContinue()
+		
 		guard let data = data as? LRCData else { throw Error.loadThumbnailFailed }
 		let parserMessenger = data.parserMessenger
 		let imbObject = data.imbObject
@@ -100,6 +102,8 @@ open class LightroomClassicObject : Object, AppLifecycleMixin
 
 	open class func loadMetadata(for identifier:String, data:Any) async throws -> [String:Any]
 	{
+		try await Tasks.canContinue()
+		
 		// Load metadata from IMBObject via iMedia framework
 		
 		guard let data = data as? LRCData else { throw Error.loadThumbnailFailed }

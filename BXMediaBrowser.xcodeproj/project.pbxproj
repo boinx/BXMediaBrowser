@@ -462,6 +462,7 @@
 				D01B48E527CA1378008249C0 /* AccessControl.swift */,
 				D027F92A2802D81B004D4264 /* AppLifecycleMixin.swift */,
 				D00D6DE3283923AE00013C39 /* ScrollToBottomMixin.swift */,
+				D0208D82286703EE00736B1C /* Tasks.swift */,
 			);
 			path = "Utils & Helpers";
 			sourceTree = "<group>";
@@ -760,7 +761,6 @@
 			isa = PBXGroup;
 			children = (
 				D0CBC144282A2E9300C6BABB /* Config.swift */,
-				D0208D82286703EE00736B1C /* Tasks.swift */,
 			);
 			path = Config;
 			sourceTree = "<group>";

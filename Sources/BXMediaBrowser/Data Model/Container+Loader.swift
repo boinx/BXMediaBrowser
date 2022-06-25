@@ -61,7 +61,9 @@ extension Container
 		
 		public func contents(with data:Any, filter:Object.Filter) async throws -> Contents
 		{
-			try await self.loadHandler(identifier,data,filter)
+			try await Tasks.canContinue()
+			
+			return try await self.loadHandler(identifier,data,filter)
 		}
 	}
 }

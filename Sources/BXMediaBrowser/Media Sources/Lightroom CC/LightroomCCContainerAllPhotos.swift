@@ -234,6 +234,8 @@ open class LightroomCCContainerAllPhotos : Container, AppLifecycleMixin, ScrollT
 	
 	private class func nextPageAssets(for accessPoint:String) async throws -> ([LightroomCC.Asset],String?)
 	{
+		try await Tasks.canContinue()
+		
 		LightroomCC.log.debug {"\(Self.self).\(#function) accessPoint = \(accessPoint)"}
 		let page:LightroomCC.CatalogAssets = try await LightroomCC.shared.getData(from:accessPoint, debugLogging:false)
 		

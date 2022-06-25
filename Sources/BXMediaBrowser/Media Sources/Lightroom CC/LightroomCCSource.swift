@@ -290,6 +290,8 @@ open class LightroomCCSource : Source, AccessControl
 			
 			var containers:[Container] = []
 
+			try await Tasks.canContinue()
+		
 			containers += LightroomCCContainerAllPhotos(allowedMediaTypes:allowedMediaTypes, filter:filter)
 			
 			// Find top-level albums (parent is nil) and create a Container for each album
@@ -301,6 +303,8 @@ open class LightroomCCSource : Source, AccessControl
 			
 			for album in topLevelAlbums
 			{
+				try await Tasks.canContinue()
+		
 				containers += LightroomCCContainer(album:album, allowedMediaTypes:allowedMediaTypes, filter:filter)
 			}
 

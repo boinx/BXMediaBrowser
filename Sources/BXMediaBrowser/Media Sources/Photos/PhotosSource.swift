@@ -121,6 +121,8 @@ public class PhotosSource : Source, AccessControl
 		
 		// Library
 		
+		try await Tasks.canContinue()
+		
 		let libraryFetchResult = PHAsset.fetchAssets(with:filter.assetFetchOptions)
 		let libraryData = PhotosData.library(assets:libraryFetchResult)
 		let title = filter.allowedMediaTypes == [.video] ?
@@ -135,6 +137,8 @@ public class PhotosSource : Source, AccessControl
 			filter: filter)
 
 		// Recently Added
+		
+		try await Tasks.canContinue()
 		
 		let recentsFetchResult = PHAssetCollection.fetchAssetCollections(with:.smartAlbum, subtype:.smartAlbumRecentlyAdded, options:nil)
 		
@@ -152,6 +156,8 @@ public class PhotosSource : Source, AccessControl
 
 		// Albums
 		
+		try await Tasks.canContinue()
+		
 		let albumsFetchResult = PHCollectionList.fetchTopLevelUserCollections(with:nil)
 		let albumsCollections = PhotosData.items(for:albumsFetchResult)
 		let albumsData = PhotosData.folder(collections:albumsCollections, fetchResult:albumsFetchResult)
@@ -165,6 +171,8 @@ public class PhotosSource : Source, AccessControl
 		
 		// Years
 
+		try await Tasks.canContinue()
+		
 		let yearsCollections = PHAssetCollection.yearsCollections(mediaType:filter.assetMediaType)
 		let yearsData = PhotosData.dateInterval(unit:.era, assetCollection:nil, subCollections:yearsCollections)
 		
@@ -177,6 +185,8 @@ public class PhotosSource : Source, AccessControl
 
 		// Smart Albums
 
+		try await Tasks.canContinue()
+		
 		if !Photos.allowedSmartAlbums.isEmpty
 		{
 			let smartAlbumsFetchResult = PHAssetCollection.fetchAssetCollections(with:.smartAlbum, subtype:.any, options:nil)

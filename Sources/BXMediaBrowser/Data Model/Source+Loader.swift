@@ -48,7 +48,9 @@ extension Source
 		
 		public func containers(with sourceState:[String:Any]? = nil, filter:Object.Filter) async throws -> [Container]
 		{
-			try await self.loadHandler(sourceState,filter)
+			try await Tasks.canContinue()
+			
+			return try await self.loadHandler(sourceState,filter)
 		}
 	}
 }

@@ -122,6 +122,8 @@ public class PhotosContainer : Container
 		guard let data = data as? PhotosData else { return ([],[]) }
  		guard let filter = filter as? PhotosFilter else { return ([],[]) }
 
+		try await Tasks.canContinue()
+
 		Photos.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
 		let startTime = CFAbsoluteTimeGetCurrent()

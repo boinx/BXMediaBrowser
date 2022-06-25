@@ -142,6 +142,8 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 		
 		Task
 		{
+			try await Tasks.canContinue()
+			
 			let token = self.beginSignpost(in:"Object","load")
 			defer { self.endSignpost(with:token, in:"Object","load") }
 

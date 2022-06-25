@@ -160,6 +160,8 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 				guard let node = node as? IMBNode else { continue }
 				guard knownNodes[node.identifier] == nil else { continue }
 				
+				try await Tasks.canContinue()
+		
 				let container = LightroomClassicContainer(node:node, mediaType:mediaType, parserMessenger:parserMessenger, filter:filter)
 				knownNodes[node.identifier] = true
 				containers += container

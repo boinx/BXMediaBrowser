@@ -206,8 +206,6 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 	
 	public func load(with containerState:[String:Any]? = nil)
 	{
-		BXMediaBrowser.logDataModel.debug {"\(Self.self).\(#function) \(identifier)"}
-
 		self.loadTask?.cancel()
 		self.loadTask = nil
 		
@@ -229,6 +227,10 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 		{
 			do
 			{
+				try await Tasks.canContinue()
+				
+				BXMediaBrowser.logDataModel.debug {"\(Self.self).\(#function) \(identifier)"}
+
 				let token = self.beginSignpost(in:"Container","load")
 				defer { self.endSignpost(with:token, in:"Container","load") }
 		

@@ -126,6 +126,8 @@ public class MusicContainer : Container
 			
 				for artist in Self.artists(with:allMediaItems)
 				{
+					try await Tasks.canContinue()
+		
 					containers += MusicSource.makeMusicContainer(
 						identifier:"MusicSource:Artist:\(artist.persistentID)",
 						icon:"person",
@@ -141,6 +143,8 @@ public class MusicContainer : Container
 			
 				for album in Self.albums(with:allMediaItems)
 				{
+					try await Tasks.canContinue()
+		
 					containers += MusicSource.makeMusicContainer(
 						identifier:"MusicSource:Album:\(album.persistentID)",
 						icon:"square",
@@ -156,6 +160,8 @@ public class MusicContainer : Container
 			
 				for genre in Self.genres(with:allMediaItems)
 				{
+					try await Tasks.canContinue()
+		
 					containers += MusicSource.makeMusicContainer(
 						identifier:"MusicSource:Genre:\(genre)",
 						icon:"music.note",
@@ -171,6 +177,8 @@ public class MusicContainer : Container
 			
 				for playlist in playlists
 				{
+					try await Tasks.canContinue()
+		
 					if #available(macOS 12,*)
 					{
 						guard !playlist.isPrimary else { continue }

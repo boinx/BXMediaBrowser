@@ -278,6 +278,8 @@ open class LightroomCCContainer : Container, AppLifecycleMixin
 	
 	private class func nextPageAssets(for accessPoint:String) async throws -> ([LightroomCC.Asset],String?)
 	{
+		try await Tasks.canContinue()
+		
 		// Get next page of assets
 			
 		LightroomCC.log.debug {"\(Self.self).\(#function) accessPoint = \(accessPoint)"}

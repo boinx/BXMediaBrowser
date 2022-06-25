@@ -56,6 +56,8 @@ open class LightroomCCImageObject : LightroomCCObject
 
 	override open class func loadMetadata(for identifier:String, data:Any) async throws -> [String:Any]
 	{
+		try await Tasks.canContinue()
+		
 		LightroomCC.log.verbose {"\(Self.self).\(#function) \(identifier)"}
 
 		guard let asset = data as? LightroomCC.Asset else { throw Error.loadThumbnailFailed }

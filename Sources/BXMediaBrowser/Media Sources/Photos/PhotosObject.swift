@@ -114,6 +114,8 @@ public class PhotosObject : Object
 	
 	class func loadThumbnail(for identifier:String, data:Any) async throws -> CGImage
 	{
+		try await Tasks.canContinue()
+		
 		Photos.log.verbose {"\(Self.self).\(#function) \(identifier)"}
 
         return try await withCheckedThrowingContinuation
@@ -171,6 +173,8 @@ public class PhotosObject : Object
 	
 	class func loadMetadata(for identifier:String, data:Any) async throws -> [String:Any]
 	{
+		try await Tasks.canContinue()
+		
 		guard let asset = data as? PHAsset else { throw Object.Error.loadMetadataFailed }
 		
 		Photos.log.verbose {"\(Self.self).\(#function) \(identifier)"}

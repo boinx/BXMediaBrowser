@@ -76,6 +76,8 @@ public class MusicObject : Object
 	
 	class func loadThumbnail(for identifier:String, data:Any) async throws -> CGImage
 	{
+		try await Tasks.canContinue()
+		
 		guard let item = data as? ITLibMediaItem else { throw Error.notFound }
 		let url = item.location
 		let uti = url?.uti ?? "public.mp3"
@@ -104,6 +106,8 @@ public class MusicObject : Object
 	
 	class func loadMetadata(for identifier:String, data:Any) async throws -> [String:Any]
 	{
+		try await Tasks.canContinue()
+		
 		guard let item = data as? ITLibMediaItem else { throw Object.Error.loadMetadataFailed }
 		let artist = (item.artist?.name ?? "") as String
 		var metadata:[String:Any] = [:]

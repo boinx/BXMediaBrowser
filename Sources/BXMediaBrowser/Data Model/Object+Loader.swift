@@ -99,6 +99,8 @@ extension Object
 
 				let task = Task<CGImage,Swift.Error>
 				{
+					try await Tasks.canContinue()
+					
 					logDataModel.verbose {"Loading thumbnail for \(identifier)"}
 					
 					let image = try await self.loadThumbnailHandler(identifier,data)
@@ -155,7 +157,9 @@ extension Object
 				
 				let task = Task<[String:Any],Swift.Error>
 				{
-					logDataModel.verbose {"Loading metadate for \(identifier)"}
+					try await Tasks.canContinue()
+
+					logDataModel.verbose {"Loading metadata for \(identifier)"}
 					
 					let metadata:[String:Any] = try await self.loadMetadataHandler(identifier,data)
 					self._metadata = metadata

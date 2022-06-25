@@ -124,6 +124,8 @@ public class MusicSource : Source, AccessControl
 	{
 		Task
 		{
+			try await Tasks.canContinue()
+
 			// Only reload if it was already loaded before
 			
 			guard await self.isLoaded else { return }
@@ -155,6 +157,8 @@ public class MusicSource : Source, AccessControl
 	
 	private class func loadContainers(with sourceState:[String:Any]? = nil, filter:Object.Filter) async throws -> [Container]
 	{
+		try await Tasks.canContinue()
+		
 		MusicSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
 		guard let library = Self.library else { throw Container.Error.loadContentsFailed }
@@ -165,18 +169,28 @@ public class MusicSource : Source, AccessControl
 		let topLevelPlaylists = allPlaylists.filter { $0.parentID == nil }
 		var containers:[Container] = []
 		
+		try await Tasks.canContinue()
+		
 		let songs = NSLocalizedString("Songs", tableName:"Music", bundle:.BXMediaBrowser, comment:"Container Name")
 		containers += Self.makeMusicContainer(identifier:"MusicSource:Songs", icon:"music.note", name:songs, data:MusicContainer.MusicData.library(allMediaItems:allMediaItems), filter:filter, allowedSortTypes:[.never,.artist,.album,.genre,.duration])
 
+		try await Tasks.canContinue()
+		
 		let artists = NSLocalizedString("Artists", tableName:"Music", bundle:.BXMediaBrowser, comment:"Container Name")
 		containers += Self.makeMusicContainer(identifier:"MusicSource:Artists", icon:"music.mic", name:artists, data:MusicContainer.MusicData.artistFolder(allMediaItems:allMediaItems), filter:filter, allowedSortTypes:[.never,.album,.genre,.duration])
 
+		try await Tasks.canContinue()
+		
 		let albums = NSLocalizedString("Albums", tableName:"Music", bundle:.BXMediaBrowser, comment:"Container Name")
 		containers += Self.makeMusicContainer(identifier:"MusicSource:Albums", icon:"square.stack", name:albums, data:MusicContainer.MusicData.albumFolder(allMediaItems:allMediaItems), filter:filter, allowedSortTypes:[.never,.artist,.genre,.duration])
 
+		try await Tasks.canContinue()
+		
 		let genres = NSLocalizedString("Genres", tableName:"Music", bundle:.BXMediaBrowser, comment:"Container Name")
 		containers += Self.makeMusicContainer(identifier:"MusicSource:Genres", icon:"guitars", name:genres, data:MusicContainer.MusicData.genreFolder(allMediaItems:allMediaItems), filter:filter, allowedSortTypes:[.never,.artist,.album,.duration])
 
+		try await Tasks.canContinue()
+		
 		let playlists = NSLocalizedString("Playlists", tableName:"Music", bundle:.BXMediaBrowser, comment:"Container Name")
 		containers += Self.makeMusicContainer(identifier:"MusicSource:Playlists", icon:"music.note.list", name:playlists, data:MusicContainer.MusicData.playlistFolder(playlists:topLevelPlaylists, allPlaylists:allPlaylists), filter:filter, allowedSortTypes:[])
 

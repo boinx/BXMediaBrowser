@@ -104,8 +104,6 @@ open class Source : ObservableObject, Identifiable, StateSaving
 	
 	public func load(with sourceState:[String:Any]? = nil)
 	{
-		BXMediaBrowser.logDataModel.debug {"\(Self.self).\(#function) \(identifier)"}
-
 		self.loadTask?.cancel()
 		self.loadTask = nil
 		
@@ -113,6 +111,10 @@ open class Source : ObservableObject, Identifiable, StateSaving
 		{
 			do
 			{
+				try await Tasks.canContinue()
+				
+				BXMediaBrowser.logDataModel.debug {"\(Self.self).\(#function) \(identifier)"}
+
 				// Show spinning wheel
 				
 				await MainActor.run
