@@ -74,6 +74,14 @@ class BXCollectionView : QuicklookCollectionView
 	{
 		true
 	}
+	
+	open var selectedCells:[ObjectCell]
+	{
+		self.selectionIndexPaths.compactMap
+		{
+			self.item(at:$0) as? ObjectCell
+		}
+	}
 }
 
 

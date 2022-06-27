@@ -380,6 +380,7 @@ open class AudioObjectCell : ObjectCell
 		let showRating = isInside || self.object.rating > 0
 		self.textField?.isHidden = false
 		self.ratingView?.isHidden = !showRating
+		self.ratingView?.needsDisplay = showRating
 	}
 	
 	

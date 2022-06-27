@@ -182,7 +182,18 @@ open class ObjectCell : NSCollectionViewItem
 				DispatchQueue.main.asyncIfNeeded { self.redraw() }
 			}
 		}
+
+		self.observers += NotificationCenter.default.publisher(for:StatisticsController.ratingNotification, object:self.object).sink
+		{
+			[weak self] notification in
+			guard let self = self else { return }
 			
+			DispatchQueue.main.asyncIfNeeded
+			{
+				self.showRatingControl(false)
+			}
+		}
+
 		// Configure context menu
 		
 		if let objectView = self.view as? ObjectView
@@ -280,6 +291,7 @@ open class ObjectCell : NSCollectionViewItem
 		let showRating = isInside || rating > 0
 		self.textField?.isHidden = showRating
 		self.ratingView?.isHidden = !showRating
+		self.ratingView?.needsDisplay = showRating
 	}
 	
 	/// Loads the Object thumbnail and metadata into memory
@@ -327,6 +339,8 @@ open class ObjectCell : NSCollectionViewItem
 	{
 		let menu = NSMenu()
 		
+		// Standard items
+		
 		self.addMenuItem(menu:menu, title:NSLocalizedString("Get Info", bundle:.BXMediaBrowser, comment:"Menu Item"))
 		{
 			[weak self] in self?.getInfo()
@@ -351,6 +365,9 @@ open class ObjectCell : NSCollectionViewItem
 				musicObject.revealInFinder()
 			}
 		}
+		
+		// Special for Photos App
+		
 		else if object is PhotosObject
 		{
 			menu.addItem(NSMenuItem.separator())
@@ -359,6 +376,22 @@ open class ObjectCell : NSCollectionViewItem
 			{
 				Photos.displayFilenames.toggle()
 			}
+		}
+		
+		// Set rating on selected objects
+		
+		menu.addItem(NSMenuItem.separator())
+
+		let rating = NSLocalizedString("rating", tableName:"Object.Filter", bundle:.BXMediaBrowser, comment:"Sorting Kind Name").uppercased()
+		let title = NSAttributedString(string:rating, attributes:[.font:NSFont.systemFont(ofSize:NSFont.smallSystemFontSize)])
+		let item = NSMenuItem(title:"", action:nil, keyEquivalent:"")
+		item.attributedTitle = title
+		item.isEnabled = false
+		menu.addItem(item)
+
+		for i in 0 ... 5
+		{
+			self.addMenuItem(menu:menu, rating:i)
 		}
 		
 		return menu
@@ -380,6 +413,54 @@ open class ObjectCell : NSCollectionViewItem
 		item.state = state
 		menu.addItem(item)
 	}
+	
+	
+	func addMenuItem(menu:NSMenu?, rating:Int)
+	{
+		let collectionView = self.collectionView as? BXCollectionView
+
+		let wrapper = ActionWrapper()
+		{
+			[weak collectionView] in
+			guard let collectionView = collectionView else { return }
+			collectionView.selectedCells.forEach { $0.setRating(rating) }
+		}
+		
+		let item = NSMenuItem(title:"", action:nil, keyEquivalent:"")
+		item.attributedTitle = self.title(for:rating)
+		item.representedObject = wrapper
+		item.target = wrapper
+		item.action = #selector(ActionWrapper.execute(_:))
+		
+		menu?.addItem(item)
+	}
+	
+	
+	func title(for rating:Int) -> NSAttributedString
+	{
+		let title = NSMutableAttributedString()
+		
+		for i in 1 ... 5
+		{
+			if i <= rating
+			{
+				title.append(NSAttributedString(string:"★", attributes:[.foregroundColor:NSColor.yellow]))
+			}
+			else
+			{
+				title.append(NSAttributedString(string:"☆", attributes:[.foregroundColor:NSColor.gray]))
+			}
+		}
+		
+		return title
+	}
+
+
+	open func setRating(_ rating:Int)
+	{
+		self.object?.rating = rating
+	}
+	
 	
 	
 	/// Shows the "Get Info" popover anchored on the view of this cell
