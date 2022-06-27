@@ -242,6 +242,13 @@ class ImageObjectView : ObjectView
 	{
 		let view = super.hitTest(point)
 		
+		// The ratingView was clicked
+		
+		if view is ObjectRatingView
+		{
+			return view
+		}
+		
 		// The NSImageView spans the entire area of the cell, but the thumbnail itself does not (due to different
 		// aspect ratio it is fitted inside) so check the first subview of NSImageView (which displays the image
 		// itself). Hopefully this won't break in future OS releases.
