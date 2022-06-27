@@ -62,7 +62,7 @@ open class ImageObjectCell : ObjectCell
 	
 	override open func loadView()
 	{
-		self.view = ObjectView(frame:CGRect(x:0, y:0, width:120, height:96))
+		self.view = ImageObjectView(frame:CGRect(x:0, y:0, width:120, height:96))
 		self.view.translatesAutoresizingMaskIntoConstraints = false
 		
 		let imageView = NSImageView(frame:CGRect(x:0, y:16, width:120, height:80))
@@ -227,6 +227,8 @@ open class ImageObjectCell : ObjectCell
 //----------------------------------------------------------------------------------------------------------------------
 
 
+// MARK: -
+	
 // We do not want cell selection or drag & drop to work when clicking on the transparent cell background.
 // Only the visible part of the thumbnail, should be the active area. For this reason we need to override
 // hit-testing for the root view of the cell.
@@ -234,7 +236,7 @@ open class ImageObjectCell : ObjectCell
 // Inspired by https://developer.apple.com/forums/thread/30023 and
 // https://stackoverflow.com/questions/48765128/drag-selecting-in-nscollectionview-from-inside-of-items
 
-class ImageThumbnailView : ObjectView
+class ImageObjectView : ObjectView
 {
 	override func hitTest(_ point:NSPoint) -> NSView?
 	{
@@ -242,22 +244,16 @@ class ImageThumbnailView : ObjectView
 		
 		// The NSImageView spans the entire area of the cell, but the thumbnail itself does not (due to different
 		// aspect ratio it is fitted inside) so check the first subview of NSImageView (which displays the image
-		// itself). Hopefully this woon't break in future OS releases.
+		// itself). Hopefully this won't break in future OS releases.
 		
-		if let imageView = view as? NSImageView, let thumbnail = imageView.subviews.first
+		if let imageView = view as? NSImageView, let thumbnailView = imageView.subviews.first
 		{
-			let p = thumbnail.convert(point, from:self.superview)
-			if !NSPointInRect(p,thumbnail.bounds) { return nil }
+			let bounds = thumbnailView.bounds
+			let p = thumbnailView.convert(point, from:self.superview)
+			if NSPointInRect(p,bounds) { return thumbnailView }
 		}
 		
-		// Exclude the textfield from hit testing
-		
-		if view is NSTextField
-		{
-			return nil
-		}
-		
-		return view
+		return nil
 	}
 }
 
