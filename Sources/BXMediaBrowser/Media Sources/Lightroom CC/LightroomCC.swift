@@ -97,24 +97,24 @@ public class LightroomCC : ObservableObject
 		// that these issues were fixed in macOS 12.4, so we are only using ASWebAuthenticationSession on 12.4
 		// and newer. All older system will fallback to the embedded WKWebView (see above).
 
-		if #available(macOS 12.4, iOS 13, *)
-		{
-			self.oauth2.authConfig.ui.useAuthenticationSession = true
-			self.oauth2.authConfig.ui.prefersEphemeralWebBrowserSession = true
-
-			OAuth2Authorizer.adjustRedirectURL = // For useAuthenticationSession = true we need to fix the redirect URL to match what is expected by Adobe
-			{
-				(url:URL?) -> URL? in
-
-				guard var str = url?.absoluteString else { return nil }
-
-				str = str.replacingOccurrences(
-					of:"fotomagico6://bxaccounts/lightroom/oauth",
-					with:"https://boinx.com/bxaccounts/fotomagico/lightroom/oauth")
-
-				return URL(string:str)
-			}
-		}
+//		if #available(macOS 12.4, iOS 13, *)
+//		{
+//			self.oauth2.authConfig.ui.useAuthenticationSession = true
+//			self.oauth2.authConfig.ui.prefersEphemeralWebBrowserSession = true
+//
+//			OAuth2Authorizer.adjustRedirectURL = // For useAuthenticationSession = true we need to fix the redirect URL to match what is expected by Adobe
+//			{
+//				(url:URL?) -> URL? in
+//
+//				guard var str = url?.absoluteString else { return nil }
+//
+//				str = str.replacingOccurrences(
+//					of:"fotomagico6://bxaccounts/lightroom/oauth",
+//					with:"https://boinx.com/bxaccounts/fotomagico/lightroom/oauth")
+//
+//				return URL(string:str)
+//			}
+//		}
     }
     
 
