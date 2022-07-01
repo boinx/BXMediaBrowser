@@ -40,11 +40,11 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 {
 	// This NSViewRepresentable doesn't return a single view, but a whole hierarchy:
 	//
-	// 	 BXScrollView
+	// 	 NSScrollView
 	//	    NSClipView
-	//	       BXCollectionView
+	//	       BXObjectCollectionView
 	
-	public typealias NSViewType = BXScrollView
+	public typealias NSViewType = NSScrollView
 	
 	/// The Library has properties that may affect the display of this view
 	
@@ -77,9 +77,9 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 	
 	/// Builds a view hierarchy with a NSScrollView and a NSCollectionView inside
 	
-	public func makeNSView(context:Context) -> BXScrollView
+	public func makeNSView(context:Context) -> NSScrollView
 	{
-		let collectionView = BXCollectionView(frame:.zero)
+		let collectionView = BXObjectCollectionView(frame:.zero)
  		
 		// Configure layout
 		
@@ -106,7 +106,7 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 		
 		// Wrap in a NSScrollView
 		
-		let scrollView = BXScrollView(frame:.zero)
+		let scrollView = NSScrollView(frame:.zero)
 		scrollView.documentView = collectionView
 		scrollView.borderType = .noBorder
 		scrollView.hasVerticalScroller = true
@@ -120,9 +120,9 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 	
 	// The selected Container has changed, pass it on to the Coordinator
 	
-	public func updateNSView(_ scrollView:BXScrollView, context:Context)
+	public func updateNSView(_ scrollView:NSScrollView, context:Context)
 	{
-		guard let collectionView = scrollView.documentView as? BXCollectionView else { return }
+		guard let collectionView = scrollView.documentView as? BXObjectCollectionView else { return }
 		let coordinator = context.coordinator
 
 		coordinator.uiState = self.uiState

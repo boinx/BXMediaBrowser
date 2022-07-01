@@ -417,7 +417,7 @@ open class ObjectCell : NSCollectionViewItem
 	
 	func addMenuItem(menu:NSMenu?, rating:Int)
 	{
-		let collectionView = self.collectionView as? BXCollectionView
+		let collectionView = self.collectionView as? BXObjectCollectionView
 
 		let wrapper = ActionWrapper()
 		{

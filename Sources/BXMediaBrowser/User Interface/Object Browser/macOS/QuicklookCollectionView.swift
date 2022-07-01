@@ -32,7 +32,7 @@ import QuickLookUI
 //----------------------------------------------------------------------------------------------------------------------
 
 
-class QuicklookCollectionView : NSCollectionView, QLPreviewPanelDataSource , QLPreviewPanelDelegate
+public class QuicklookCollectionView : NSCollectionView, QLPreviewPanelDataSource , QLPreviewPanelDelegate
 {
 	/// If the specified item isn't selected, it will be selected on the fly. This is helpful for context menu clicks.
 	

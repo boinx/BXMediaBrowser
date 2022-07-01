@@ -31,16 +31,8 @@ import AppKit
 //----------------------------------------------------------------------------------------------------------------------
 
 
-class BXCollectionView : QuicklookCollectionView
+public class BXObjectCollectionView : QuicklookCollectionView
 {
-//	public var willSetFrameSizeHandler:((NSSize)->Void)? = nil
-//
-//	override open func setFrameSize(_ newSize:NSSize)
-//	{
-//		self.willSetFrameSizeHandler?(newSize)
-//		super.setFrameSize(newSize)
-//	}
-
 	// Pressing Cmd-I shows the Get Info popover
 	
 	override public func keyDown(with event:NSEvent)
@@ -60,17 +52,17 @@ class BXCollectionView : QuicklookCollectionView
 		}
 	}
 	
-	override var acceptsFirstResponder:Bool
+	override public var acceptsFirstResponder:Bool
 	{
 		true
 	}
 	
-	override func becomeFirstResponder() -> Bool
+	override public func becomeFirstResponder() -> Bool
 	{
 		true
 	}
 	
-	override func resignFirstResponder() -> Bool
+	override public func resignFirstResponder() -> Bool
 	{
 		true
 	}
@@ -82,21 +74,6 @@ class BXCollectionView : QuicklookCollectionView
 			self.item(at:$0) as? ObjectCell
 		}
 	}
-}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-public class BXScrollView : NSScrollView
-{
-//	public var willSetFrameSizeHandler:((NSSize)->Void)? = nil
-//
-//	override open func setFrameSize(_ newSize:NSSize)
-//	{
-//		self.willSetFrameSizeHandler?(newSize)
-//		super.setFrameSize(newSize)
-//	}
 }
 
 
