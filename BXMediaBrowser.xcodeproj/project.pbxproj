@@ -123,6 +123,7 @@
 		D05F5F7127E8E840003735C6 /* LightroomCCSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05F5F6C27E8E840003735C6 /* LightroomCCSource.swift */; };
 		D061B1F32805A35700B365E6 /* NativeSearchField+macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = D061B1F22805A35700B365E6 /* NativeSearchField+macOS.swift */; };
 		D06503B728255442002E52BE /* BXObjectCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D06503B628255442002E52BE /* BXObjectCollectionView.swift */; };
+		D08906DE2875C7B700FD6C0B /* LegacyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08906DD2875C7B700FD6C0B /* LegacyController.swift */; };
 		D0AA8FC0282038C20009A890 /* ObjectCollectionView-macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0AA8FB8282038C20009A890 /* ObjectCollectionView-macOS.swift */; };
 		D0AA8FC1282038C20009A890 /* ObjectRatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0AA8FB9282038C20009A890 /* ObjectRatingView.swift */; };
 		D0AA8FC2282038C20009A890 /* QuicklookCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0AA8FBA282038C20009A890 /* QuicklookCollectionView.swift */; };
@@ -304,6 +305,7 @@
 		D05F5F6C27E8E840003735C6 /* LightroomCCSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LightroomCCSource.swift; sourceTree = "<group>"; };
 		D061B1F22805A35700B365E6 /* NativeSearchField+macOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NativeSearchField+macOS.swift"; sourceTree = "<group>"; };
 		D06503B628255442002E52BE /* BXObjectCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BXObjectCollectionView.swift; sourceTree = "<group>"; };
+		D08906DD2875C7B700FD6C0B /* LegacyController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LegacyController.swift; sourceTree = "<group>"; };
 		D0AA8FB8282038C20009A890 /* ObjectCollectionView-macOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ObjectCollectionView-macOS.swift"; sourceTree = "<group>"; };
 		D0AA8FB9282038C20009A890 /* ObjectRatingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectRatingView.swift; sourceTree = "<group>"; };
 		D0AA8FBA282038C20009A890 /* QuicklookCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuicklookCollectionView.swift; sourceTree = "<group>"; };
@@ -472,6 +474,7 @@
 			children = (
 				D01B48E727CA1378008249C0 /* AudioPreviewController.swift */,
 				D01B48E827CA1378008249C0 /* StatisticsController.swift */,
+				D08906DD2875C7B700FD6C0B /* LegacyController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -996,6 +999,7 @@
 				D01B495927CA1378008249C0 /* AudioPreviewController.swift in Sources */,
 				D01B497727CA1378008249C0 /* FolderContainer.swift in Sources */,
 				D01B496E27CA1378008249C0 /* Object+Filter.swift in Sources */,
+				D08906DE2875C7B700FD6C0B /* LegacyController.swift in Sources */,
 				D01B498E27CA1378008249C0 /* UnsplashFilterBar.swift in Sources */,
 				D01B499627CA1378008249C0 /* CustomDisclosureButton.swift in Sources */,
 				D01B499527CA1378008249C0 /* EfficientVStack.swift in Sources */,
