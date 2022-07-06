@@ -32,7 +32,7 @@ import Foundation
 
 // MARK: -
 
-public class LegacyController
+public class LegacyDataController
 {
 	/// Updates legacy identifiers to more modern versions. This includes changes during the development of
 	/// BXMediaBrowser, as well as conversion of old iMedia persistentResourceIdentifiers into something
