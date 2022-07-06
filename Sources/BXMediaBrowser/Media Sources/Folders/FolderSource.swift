@@ -63,7 +63,7 @@ open class FolderSource : Source, AccessControl
 	
 	public class func identifier(for url:URL) -> String
 	{
-		return "\(Self.identifier)\(url.absoluteString)"
+		url.absoluteString
 	}
 	
 	
@@ -71,8 +71,7 @@ open class FolderSource : Source, AccessControl
 	
 	public class func url(for identifier:String) throws -> URL
 	{
-		let string = identifier.replacingOccurrences(of:Self.identifier, with:"")
-		guard let url = URL(string:string) else { throw Container.Error.notFound }
+		guard let url = URL(string:identifier) else { throw Container.Error.notFound }
 		return url
 	}
 
