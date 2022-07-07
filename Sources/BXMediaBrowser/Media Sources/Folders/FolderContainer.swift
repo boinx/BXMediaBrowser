@@ -218,6 +218,7 @@ open class FolderContainer : Container
 		{
 			return try FileManager.default
 				.contentsOfDirectory(atPath:folderURL.path)
+				.sorted()
 		}
 	}
 	
