@@ -73,7 +73,7 @@ open class LightroomClassicSource : Source, AccessControl
 		super.init(
 			identifier: Self.identifier,
 			icon: LightroomClassic.shared.icon,
-			name: "Adobe Lightroom Classic",
+			name: LightroomClassic.shared.name,
 			filter: FolderFilter())
 		
 		self.loader = Loader(loadHandler:self.loadContainers)

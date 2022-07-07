@@ -43,7 +43,7 @@ public class LightroomClassic : ObservableObject, AppLifecycleMixin
 	
 	public private(set) var icon:CGImage? = nil
     
-	/// This bookmark hold the read access rights to the parent folder of the Lightroom catalog file
+	/// This bookmark holds the read access rights to the parent folder of the Lightroom catalog file
 	
 	public var libraryBookmark:Data? = nil
 		
@@ -73,7 +73,7 @@ public class LightroomClassic : ObservableObject, AppLifecycleMixin
     {
 		// Instantiate a IMBLightroomParserMessenger if Lightroom Classic is installed
 		
-		if let identifier = IMBLightroomImageParserMessenger.lightroomAppBundleIdentifier()
+		if let identifier = self.bundleIdentifier
 		{
 			let image = NSImage.icon(for:identifier) ?? Bundle.BXMediaBrowser.image(forResource:"lr_appicon_noshadow_256")
 			self.icon = image?.CGImage
@@ -86,16 +86,9 @@ public class LightroomClassic : ObservableObject, AppLifecycleMixin
 	}
     
     
-    /// Returns true if Lightroom Classic is installed
-	
-    public var isInstalled:Bool
-    {
-		guard let identifier = IMBLightroomImageParserMessenger.lightroomAppBundleIdentifier() else { return false }
-		guard let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier:identifier) else { return false }
-		return url.exists
-    }
-    
-    
+//----------------------------------------------------------------------------------------------------------------------
+
+
 	/// Returns the list of known Lightroom Classic bundle identifiers
 	
 	public var bundleIdentifiers:[String]
@@ -112,15 +105,70 @@ public class LightroomClassic : ObservableObject, AppLifecycleMixin
 	}
 
 
+      /// Returns the bundleIdentifier of the installed Lightroom Classic application
+	
+    public var bundleIdentifier:String?
+    {
+		for identifier in self.bundleIdentifiers
+		{
+			guard let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier:identifier) else { continue }
+			if url.exists
+			{
+				return identifier
+			}
+		}
+		
+		return nil
+    }
+
+
+    /// Returns the URL of the installed Lightroom Classic application
+	
+    public var url:URL?
+    {
+		for identifier in self.bundleIdentifiers
+		{
+			guard let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier:identifier) else { continue }
+
+			if url.exists
+			{
+				return url
+			}
+		}
+		
+		return nil
+    }
+
+
+    /// Returns the name of the installed Lightroom Classic application
+	
+    public var name:String
+    {
+		self.url?.deletingPathExtension().lastPathComponent ?? "Adobe Lightroom Classic"
+    }
+
+
+   /// Returns true if Lightroom Classic is installed
+	
+    public var isInstalled:Bool
+    {
+		self.url != nil
+		
+//		guard let identifier = IMBLightroomImageParserMessenger.lightroomAppBundleIdentifier() else { return false }
+//		guard let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier:identifier) else { return false }
+//		return url.exists
+    }
+    
+    
+//----------------------------------------------------------------------------------------------------------------------
+
+
     /// Launches the Lightroom Classic application in the background
 	
 	public func launch(completionHandler:((Swift.Error?)->Void)? = nil)
     {
-		guard let path = IMBLightroomParserMessenger.lightroomPath() else { return }
-
-		let url = URL(fileURLWithPath:path)
+		guard let url = self.url else { return }
 		let config = NSWorkspace.OpenConfiguration()
-		
 		NSWorkspace.shared.openApplication(at:url, configuration:config)
 //		{
 //			_,error in
