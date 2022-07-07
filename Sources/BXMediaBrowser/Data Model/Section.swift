@@ -45,6 +45,10 @@ open class Section : ObservableObject, Identifiable, StateSaving
 	
 	@Published public private(set) var sources:[Source]
 	
+	/// Returns true if this source is expanded in the view
+	
+	@Published public var isExpanded = true
+	
 	/// If this handler is set, a small "+" button will be displayed after the section name.
 	/// The button call this handler. That way the user can add a new Source to this Section.
 	
@@ -75,6 +79,11 @@ open class Section : ObservableObject, Identifiable, StateSaving
 	
 	public func load(with sectionState:[String:Any]? = nil)
 	{
+		if let isExpanded = sectionState?[isExpandedKey] as? Bool
+		{
+			self.isExpanded = isExpanded
+		}
+
 		for source in self.sources
 		{
 			let key = source.stateKey
@@ -95,15 +104,10 @@ open class Section : ObservableObject, Identifiable, StateSaving
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	internal var stateKey:String
-	{
-		"\(identifier)".replacingOccurrences(of:".", with:"-")
-	}
-
-
 	public func state() async -> [String:Any]
 	{
 		var state:[String:Any] = [:]
+		state[isExpandedKey] = self.isExpanded
 
 		for source in self.sources
 		{
@@ -113,6 +117,18 @@ open class Section : ObservableObject, Identifiable, StateSaving
 		}
 		
 		return state
+	}
+	
+	internal var stateKey:String
+	{
+		"\(identifier)".replacingOccurrences(of:".", with:"-")
+	}
+
+	/// The key of the isExpanded state inside the state dictionary
+
+	internal var isExpandedKey:String
+	{
+		"isExpanded"
 	}
 }
 

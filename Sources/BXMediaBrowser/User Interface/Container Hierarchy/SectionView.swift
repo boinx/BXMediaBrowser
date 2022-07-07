@@ -43,6 +43,11 @@ public struct SectionView : View
 	@EnvironmentObject var library:Library
 	@Environment(\.viewFactory) private var viewFactory
 
+	// State
+	
+//	@State var isExpanded = true
+	@State var isHovering = false
+	
 	// Init
 	
 	public init(with section:Section)
@@ -54,39 +59,45 @@ public struct SectionView : View
 	
 	public var body: some View
     {
-		EfficientVStack(alignment:.leading, spacing:4)
-		{
-			// Section name is optional
-			
-			if let name = section.name
+		BXDisclosureView(isExpanded:self.$section.isExpanded, spacing:4,
+		
+			header:
 			{
-				HStack
-				{
-					Text(name.uppercased())
-						.font(.caption)
-						.opacity(0.6)
-						
-					Spacer()
+				// Section name is optional
 				
-					// The optional + button will be displayed if a handler was provided
-					
-					if let addSourceHandler = section.addSourceHandler
+				if let name = section.name
+				{
+					HStack
 					{
-						BXImage(systemName:"plus.circle").onTapGesture
+						self.sectionName(name)
+
+						Spacer()
+					
+						// The optional + button will be displayed if a handler was provided
+						
+						if let addSourceHandler = section.addSourceHandler, self.section.isExpanded
 						{
-							addSourceHandler(section)
+							BXImage(systemName:"plus.circle").onTapGesture
+							{
+								addSourceHandler(section)
+							}
 						}
 					}
 				}
-			}
+			},
 			
-			// Display list of Sources
-			
-			ForEach(section.sources)
+			body:
 			{
-				viewFactory.sourceView(for:$0)
-			}
-		}
+				// Display list of Sources
+					
+				EfficientVStack(alignment:.leading, spacing:4)
+				{
+					ForEach(section.sources)
+					{
+						viewFactory.sourceView(for:$0)
+					}
+				}
+			})
 		
 		// Layout
 		
@@ -96,6 +107,10 @@ public struct SectionView : View
 		// Whenever the current state changes, save it to persistent storage
 		
 		.onReceive(section.$sources)
+		{
+			_ in library.saveState()
+		}
+		.onReceive(section.$isExpanded)
 		{
 			_ in library.saveState()
 		}
@@ -111,6 +126,39 @@ extension SectionView
     public static func shouldDisplay(_ section:Section) -> Bool
     {
 		!section.sources.isEmpty || section.addSourceHandler != nil
+    }
+    
+    func sectionName(_ name:String) ->  some View
+    {
+		HStack(spacing:4)
+		{
+			Text(name.uppercased())
+				.font(.caption)
+				.opacity(0.6)
+			
+			if isHovering
+			{
+				self.disclosureButton
+			}
+		}
+		.onHover
+		{
+			self.isHovering = $0
+		}
+		.onTapGesture
+		{
+			withAnimation { self.section.isExpanded.toggle() }
+		}
+    }
+    
+    var disclosureButton: some View
+    {
+		BXImage(systemName:"chevron.forward")
+			.opacity(0.65)
+			.padding(-1)
+			.scaleEffect(0.7)
+			.rotationEffect(.degrees(self.section.isExpanded ? 90 : 0))
+			.offset(x:0, y:-1)
     }
 }
 
