@@ -167,8 +167,12 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 				containers += container
 			}
 			
-			// Convert IMBLightroomObjects to LightroomClassicObjects
+			// Convert IMBLightroomObjects to LightroomClassicObjects. Again, there are edge cases where we get
+			// duplicate objects - which can cause crashes with the NSDiffableDataSource of our NSCollectionView.
+			// FOr this reason we need to remove any duplicates.
 			
+			var knownObjects:[String:Bool] = [:]
+
 			for item in node.objects
 			{
 				// Get next IMBLightroomObject
@@ -181,10 +185,12 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 				
 				guard searchString.isEmpty || name.contains(searchString) else { continue }
 				guard minRating == 0 || StatisticsController.shared.rating(for:identifier) >= minRating else { continue }
+				guard knownObjects[identifier] == nil else { continue }
 				
 				// Convert to LightroomClassicObject
 				
 				let object = LightroomClassicObject(with:imbObject, mediaType:mediaType, parserMessenger:parserMessenger)
+				knownObjects[identifier] = true
 				objects += object
 			}
 
