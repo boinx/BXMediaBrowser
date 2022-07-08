@@ -50,7 +50,7 @@ public struct FolderSourceView : View
 	
 	public var body: some View
     {
-		return EfficientVStack(alignment:.leading, spacing:4)
+		EfficientVStack(alignment:.leading, spacing:4)
 		{
 			ForEach(source.containers)
 			{
