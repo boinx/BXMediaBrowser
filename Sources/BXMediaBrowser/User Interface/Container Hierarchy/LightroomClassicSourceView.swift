@@ -65,6 +65,14 @@ public struct LightroomClassicSourceView : View
 				CustomDisclosureButton(icon:source.icon, label:source.name, isExpanded:self.$source.isExpanded)
 					.leftAligned()
 					.padding(.vertical,2)
+					
+					.contextMenu
+					{
+						Button(NSLocalizedString("RevokeAccess.button", tableName:"LightroomClassic", bundle:.BXMediaBrowser, comment:"Button Title"))
+						{
+							source.revokeAccess()
+						}
+					}
 			},
 			
 			body:
