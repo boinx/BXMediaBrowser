@@ -26,6 +26,7 @@
 #if os(macOS)
 
 import AppKit
+import BXSwiftUtils
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -33,39 +34,68 @@ import AppKit
 
 public class BXObjectCollectionView : QuicklookCollectionView
 {
+	public static let getInfoNotification = Notification.Name("BXObjectCollectionView-getInfo")
+	
+	private var observers:[Any] = []
+	
+	
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	override public init(frame:NSRect)
+	{
+		super.init(frame:frame)
+		
+		self.observers += NotificationCenter.default.publisher(for:Self.getInfoNotification, object:nil).sink
+		{
+			[weak self] _ in self?.getInfo()
+		}
+	}
+	
+	required init?(coder:NSCoder)
+	{
+		fatalError("init(coder:) has not been implemented")
+	}
+	
+	
+//----------------------------------------------------------------------------------------------------------------------
+
+
 	// Pressing Cmd-I shows the Get Info popover
 	
 	override public func keyDown(with event:NSEvent)
 	{
 		if event.charactersIgnoringModifiers == "i" && event.modifierFlags.contains(.command)
 		{
-			let indexPaths = self.selectionIndexPaths
-
-			if indexPaths.count == 1, let indexPath = indexPaths.first, let item = self.item(at:indexPath) as? ObjectCell
-			{
-				item.getInfo()
-			}
+			self.getInfo()
 		}
 		else
 		{
 			super.keyDown(with:event)
 		}
 	}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	/// Display the metadata Info popover for the selected Object
 	
-	override public var acceptsFirstResponder:Bool
+	public func getInfo()
 	{
-		true
+		guard let window = self.window else { return }
+		guard window.isKeyWindow else { return }
+		
+		let indexPaths = self.selectionIndexPaths
+
+		if indexPaths.count == 1, let indexPath = indexPaths.first, let item = self.item(at:indexPath) as? ObjectCell
+		{
+			item.getInfo()
+		}
 	}
 	
-	override public func becomeFirstResponder() -> Bool
-	{
-		true
-	}
 	
-	override public func resignFirstResponder() -> Bool
-	{
-		true
-	}
+	/// Returns the list of selected ObjectCells
 	
 	open var selectedCells:[ObjectCell]
 	{
