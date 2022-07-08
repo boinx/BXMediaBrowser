@@ -103,17 +103,44 @@ public class QuicklookCollectionView : NSCollectionView, QLPreviewPanelDataSourc
 
 	// MARK: -
 
+	// This view can be firstResponder and accepts key strokes
+	
+	override public var acceptsFirstResponder:Bool
+	{
+		true
+	}
+	
+	override public func becomeFirstResponder() -> Bool
+	{
+		QLPreviewPanel.shared()?.updateController()
+		return true
+	}
+	
+	override public func resignFirstResponder() -> Bool
+	{
+		QLPreviewPanel.shared()?.updateController()
+		return true
+	}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: -
+
 	// This subclass will always accept responsibility for QLPreviewPanel
 	
 	override public func acceptsPreviewPanelControl(_ panel:QLPreviewPanel!) -> Bool
 	{
-        return true
+ 		BXMediaBrowser.log.verbose {"\(Self.self).\(#function)"}
+		return true
 	}
 
 	// Start servicing the QLPreviewPanel
 	
     override public func beginPreviewPanelControl(_ panel:QLPreviewPanel!)
     {
+		BXMediaBrowser.log.verbose {"\(Self.self).\(#function)"}
         panel.dataSource = self
         panel.delegate = self
     }
@@ -122,6 +149,7 @@ public class QuicklookCollectionView : NSCollectionView, QLPreviewPanelDataSourc
 	
     override public func endPreviewPanelControl(_ panel:QLPreviewPanel!)
     {
+		BXMediaBrowser.log.verbose {"\(Self.self).\(#function)"}
         panel.dataSource = nil
         panel.delegate = nil
     }
