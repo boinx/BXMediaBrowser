@@ -64,7 +64,7 @@ open class Library : ObservableObject, StateSaving
 	
 	/// This externally supplied handler will be called when file URLs are dropped onto a LibraryView
 	
-	public var didDropFileURL:((URL)->Void)? = nil
+	public var didDropFileURLHandler:((URL)->Void)? = nil
 	
 	/// Internal helper object that coordinates library state saving
 	
