@@ -94,19 +94,18 @@ open class LightroomClassicSource : Source, AccessControl
 	
 	@MainActor public func grantAccess(_ completionHandler:@escaping (Bool)->Void = { _ in })
 	{
-		guard let path = IMBLightroomParserMessenger.libraryPaths().first as? String else
+		guard let rootFolderURL = self.rootFolderURL else
 		{
 			completionHandler(false)
 			return
 		}
 		
-		let parentFolder = URL(fileURLWithPath:path).deletingLastPathComponent()
 		let message = NSLocalizedString("GrantAccess.title", tableName:"LightroomClassic", bundle:.BXMediaBrowser, comment:"Alert Title")
 		let button = NSLocalizedString("GrantAccess.button", tableName:"LightroomClassic", bundle:.BXMediaBrowser, comment:"Button Title")
 
-		NSOpenPanel.presentModal(message:message, buttonLabel:button, directoryURL:parentFolder, canChooseFiles:false, canChooseDirectories:true, allowsMultipleSelection:false)
+		NSOpenPanel.presentModal(message:message, buttonLabel:button, directoryURL:rootFolderURL, canChooseFiles:false, canChooseDirectories:true, allowsMultipleSelection:false)
 		{
-			if let url = $0.first, url == parentFolder
+			if let url = $0.first
 			{
 				if let bookmark = try? url.bookmarkData()
 				{
@@ -127,9 +126,49 @@ open class LightroomClassicSource : Source, AccessControl
 	@MainActor public func revokeAccess(_ completionHandler:@escaping (Bool)->Void = { _ in })
 	{
 		LightroomClassic.shared.libraryBookmark = nil
+		self.load()
 	}
 
 
+	/// Return the root folder URL that contains all Lightroom Classic catlog files
+	
+	private var rootFolderURL:URL?
+	{
+		// Get list of paths to catalog files
+		
+		let paths = IMBLightroomParserMessenger.libraryPaths()
+			.compactMap { $0 as? String }
+
+		guard !paths.isEmpty else { return nil }
+		
+		// Find common ancestor folder for all paths
+		
+		var rootFolder = self.parent(for:paths.first)
+		
+		for path in paths
+		{
+			let parent = (path as NSString).deletingLastPathComponent
+			rootFolder = rootFolder.commonPrefix(with:parent)
+		}
+		
+		// If nothing common is found, then fallback to first catalog only
+		
+		if rootFolder == "/" || rootFolder == "/Volumes/"
+		{
+			rootFolder = self.parent(for:paths.first)
+		}
+		
+		return URL(fileURLWithPath:rootFolder)
+	}
+	
+	/// Returns the parent folder for the specified path
+	
+	private func parent(for path:String?) -> String
+	{
+		(path as? NSString)?.deletingLastPathComponent ?? "/"
+	}
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 
