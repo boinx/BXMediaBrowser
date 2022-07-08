@@ -141,14 +141,27 @@ extension SectionView
 				self.disclosureButton
 			}
 		}
+		
+		// Make hit target larger
+		
+		.padding(8)
+		.contentShape(Rectangle())
+		
 		.onHover
 		{
 			self.isHovering = $0
 		}
+		
+		// Add click gesture to expand/collapse
+		
 		.onTapGesture
 		{
 			withAnimation { self.section.isExpanded.toggle() }
 		}
+		
+		// Compensate for earlier enlargment
+		
+		.padding(-8)
     }
     
     var disclosureButton: some View
