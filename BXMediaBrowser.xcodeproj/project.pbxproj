@@ -169,6 +169,7 @@
 		D0D9EDC527FF3CF300D5D7FB /* PhotosFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDC427FF3CF300D5D7FB /* PhotosFilterBar.swift */; };
 		D0DEF7D527D5E0BD00601E3F /* PexelsVideoSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DEF7D427D5E0BD00601E3F /* PexelsVideoSource.swift */; };
 		D0DEF7DD27D6615D00601E3F /* PexelsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DEF7D627D5FF4400601E3F /* PexelsContainer.swift */; };
+		D0E868532877FD6300207E56 /* FileURLDropTargetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E868522877FD6300207E56 /* FileURLDropTargetView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -357,6 +358,7 @@
 		D0D9EDC427FF3CF300D5D7FB /* PhotosFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosFilterBar.swift; sourceTree = "<group>"; };
 		D0DEF7D427D5E0BD00601E3F /* PexelsVideoSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PexelsVideoSource.swift; sourceTree = "<group>"; };
 		D0DEF7D627D5FF4400601E3F /* PexelsContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PexelsContainer.swift; sourceTree = "<group>"; };
+		D0E868522877FD6300207E56 /* FileURLDropTargetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileURLDropTargetView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -655,6 +657,7 @@
 				D0D9EDAF27FC82E700D5D7FB /* UnsplashContainerView.swift */,
 				D0D9EDB127FC83E600D5D7FB /* PexelsContainerView.swift */,
 				D01B493627CA1378008249C0 /* FileDropDestinationView.swift */,
+				D0E868522877FD6300207E56 /* FileURLDropTargetView.swift */,
 			);
 			path = "Container Hierarchy";
 			sourceTree = "<group>";
@@ -963,6 +966,7 @@
 				D01B495427CA1378008249C0 /* BXMediaBrowser+log.swift in Sources */,
 				D0AA8FC3282038C20009A890 /* ObjectCell-macOS.swift in Sources */,
 				D01B498F27CA1378008249C0 /* DefaultObjectFooterView.swift in Sources */,
+				D0E868532877FD6300207E56 /* FileURLDropTargetView.swift in Sources */,
 				D01B498827CA1378008249C0 /* PhotosChangeObserver.swift in Sources */,
 				D0208D83286703EE00736B1C /* Tasks.swift in Sources */,
 				D0AA8FC7282038C20009A890 /* AudioObjectCell.swift in Sources */,
