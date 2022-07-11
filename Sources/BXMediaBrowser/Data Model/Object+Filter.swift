@@ -173,6 +173,15 @@ extension Object.Filter
 		let rating2 = StatisticsController.shared.rating(for:object2)
 		return rating1 < rating2
 	}
+
+	/// Sorts Objects by useCount
+	
+	public static func compareUseCount(_ object1:Object,_ object2:Object) -> Bool
+	{
+		let useCount1 = StatisticsController.shared.useCount(for:object1)
+		let useCount2 = StatisticsController.shared.useCount(for:object2)
+		return useCount1 < useCount2
+	}
 }
 
 
@@ -185,9 +194,13 @@ extension Object.Filter.SortType
 	
 	public static let never = "never"
 
-	/// Sort Object by rating
+	/// Sort Objects by rating
 	
 	public static let rating = "rating"
+
+	/// Sort Objects by useCount
+	
+	public static let useCount = "useCount"
 
 	/// Returns a localized string for displaying the sorting Kind in the user interface
 	

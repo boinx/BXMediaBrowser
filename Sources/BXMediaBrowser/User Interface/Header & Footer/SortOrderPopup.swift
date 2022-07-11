@@ -69,6 +69,7 @@ public struct SortOrderPopup : View
 			case .duration: return "clock"
 			case .alphabetical: return "character"
 			case .rating: return "star"
+			case .useCount: return "1.circle.fill"
 			case .artist: return "person"
 			case .album: return "square.stack"
 			case .genre: return "guitars"

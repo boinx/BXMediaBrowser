@@ -70,7 +70,7 @@ public class PhotosContainer : Container
 		
 	override open var allowedSortTypes:[Object.Filter.SortType]
 	{
-		[.creationDate,.rating]
+		[.creationDate,.rating,.useCount]
 	}
 
 

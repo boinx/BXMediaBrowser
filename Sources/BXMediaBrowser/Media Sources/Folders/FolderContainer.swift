@@ -77,7 +77,7 @@ open class FolderContainer : Container
 		
 	override open var allowedSortTypes:[Object.Filter.SortType]
 	{
-		[.captureDate,.alphabetical,.rating]
+		[.captureDate,.alphabetical,.rating,.useCount]
 	}
 
 

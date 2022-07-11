@@ -105,7 +105,7 @@ open class LightroomCCContainerAllPhotos : Container, AppLifecycleMixin, ScrollT
 		
 	override open var allowedSortTypes:[Object.Filter.SortType]
 	{
-		[]
+		[.rating,.useCount]
 	}
 
 

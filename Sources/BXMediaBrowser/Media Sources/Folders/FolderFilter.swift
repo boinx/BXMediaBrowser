@@ -64,6 +64,12 @@ open class FolderFilter : Object.Filter
 			if sortDirection == .ascending { return comparator }
 			return { !comparator($0,$1) }
 		}
+		else if sortType == .useCount
+		{
+			let comparator = Self.compareUseCount
+			if sortDirection == .ascending { return comparator }
+			return { !comparator($0,$1) }
+		}
 		
 		return nil
 	}

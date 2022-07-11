@@ -295,7 +295,7 @@ public class MusicContainer : Container
 		
 	override open var allowedSortTypes:[Object.Filter.SortType] { _allowedSortTypes }
 	
-	internal var _allowedSortTypes:[Object.Filter.SortType] = [.never,.artist,.album,.genre,.duration,.rating]
+	internal var _allowedSortTypes:[Object.Filter.SortType] = [.never,.artist,.album,.genre,.duration,.rating,.useCount]
 }
 
 
