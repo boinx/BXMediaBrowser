@@ -55,12 +55,42 @@ extension Object
 
 		/// The SortDirection determines whether Objects are sorted ascending or descending
 	
-		@Published public var sortDirection:SortDirection = .ascending
-	
+		public var sortDirection:SortDirection
+		{
+			set
+			{
+				self.objectWillChange.send()
+				_sortDirection[sortType] = newValue
+			}
+			
+			get
+			{
+				_sortDirection[sortType] ?? .ascending
+			}
+		}
+		
 		public enum SortDirection : Equatable, Hashable, Codable
 		{
 			case ascending
 			case descending
+		}
+
+		private var _sortDirection:[SortType:SortDirection] = Object.Filter.defaultSortDirections()
+		
+		private static func defaultSortDirections() -> [SortType:SortDirection]
+		{
+			[
+				.never : .ascending,
+				.rating : .descending,
+				.useCount : .descending,
+				.captureDate : .ascending,
+				.creationDate : .ascending,
+				.alphabetical : .ascending,
+				.duration : .ascending,
+				.artist : .ascending,
+				.album : .ascending,
+				.genre : .ascending,
+			]
 		}
 
 
@@ -124,6 +154,7 @@ extension Object
 			case rating
 			case sortType
 			case sortDirection
+			case sortDirectionByType
 		}
 
 		public func encode(to encoder:Encoder) throws
@@ -133,7 +164,7 @@ extension Object
 			try container.encode(self.searchString, forKey:.searchString)
 			try container.encode(self.rating, forKey:.rating)
 			try container.encode(self.sortType, forKey:.sortType)
-			try container.encode(self.sortDirection, forKey:.sortDirection)
+			try container.encode(self._sortDirection, forKey:.sortDirectionByType)
 		}
 
 		public required init(from decoder:Decoder) throws
@@ -143,7 +174,8 @@ extension Object
 			self.searchString  = try container.decodeIfPresent(String.self, forKey:.searchString) ?? ""
 			self.rating  = try container.decodeIfPresent(Int.self, forKey:.rating) ?? 0
 			self.sortType  = try container.decodeIfPresent(SortType.self, forKey:.sortType) ?? .never
-			self.sortDirection  = try container.decodeIfPresent(SortDirection.self, forKey:.sortDirection) ?? .ascending
+//			self.sortDirection  = try container.decodeIfPresent(SortDirection.self, forKey:.sortDirection) ?? .ascending
+			self._sortDirection  = try container.decodeIfPresent([SortType:SortDirection].self, forKey:.sortDirectionByType) ?? Object.Filter.defaultSortDirections()
 		}
 	}
 }
