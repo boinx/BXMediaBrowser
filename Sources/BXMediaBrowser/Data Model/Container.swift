@@ -177,6 +177,17 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 				guard self.filter.sortType == .rating else { return }
 				self.load()
 			}
+			
+		self.observers += NotificationCenter.default.publisher(for:StatisticsController.didChangeNotification, object:nil)
+			.debounce(for:1.0, scheduler:RunLoop.main)
+			.sink
+			{
+				[weak self] _ in
+				guard let self = self else { return }
+				guard self.isSelected else { return }
+				guard self.filter.sortType == .useCount else { return }
+				self.load()
+			}
 	}
 	
 	
