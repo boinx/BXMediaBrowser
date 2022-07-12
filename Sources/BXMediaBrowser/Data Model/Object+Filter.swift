@@ -203,6 +203,12 @@ extension Object.Filter
 	{
 		let rating1 = StatisticsController.shared.rating(for:object1)
 		let rating2 = StatisticsController.shared.rating(for:object2)
+		
+		if rating1 == rating2
+		{
+			return FolderFilter.compareAlphabetical(object1,object2)
+		}
+		
 		return rating1 < rating2
 	}
 
@@ -212,6 +218,12 @@ extension Object.Filter
 	{
 		let useCount1 = StatisticsController.shared.useCount(for:object1)
 		let useCount2 = StatisticsController.shared.useCount(for:object2)
+		
+		if useCount1 == useCount2
+		{
+			return FolderFilter.compareAlphabetical(object1,object2)
+		}
+		
 		return useCount1 < useCount2
 	}
 }
