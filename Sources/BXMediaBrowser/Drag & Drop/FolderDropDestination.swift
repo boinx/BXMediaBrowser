@@ -76,6 +76,10 @@ public class FolderDropDestination : NSObject, NSDraggingDestination, DraggingDe
 	
 	public var progressMessage:String? { nil }
 	
+	/// Retain count for the progress bar window
+	
+	public var progressRetainCount = 0
+	
 	
 //----------------------------------------------------------------------------------------------------------------------
 

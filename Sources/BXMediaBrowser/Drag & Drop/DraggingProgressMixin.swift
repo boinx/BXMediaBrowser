@@ -56,6 +56,10 @@ public protocol DraggingProgressMixin : AnyObject
     /// KVO observers
 	
 	var progressObserver:Any? { set get }
+    
+    /// How often has progress been started
+	
+	var progressRetainCount:Int { set get }
 }
 
 	
@@ -70,43 +74,51 @@ extension DraggingProgressMixin
 	
 	@discardableResult public func prepareProgress(with count:Int, showImmediately:Bool = false) -> Progress
 	{
-		if let progress = Progress.current()
+		var progress:Progress
+		
+		// Check if there is still a previous async operation in progress - in this case we can
+		// reuse the Progress instance and just update the totalUnitCount. The window of the
+		// BXProgressWindowController is already open.
+		
+		if let existing = Progress.current() ?? Progress.globalParent
 		{
-			print("WARNING: Progress.current() = \(progress)")
+			progress = existing
+			progress.totalUnitCount += Int64(count)
 		}
-		
-		if let progress = Progress.globalParent
+		else
 		{
-			print("WARNING: Progress.globalParent = \(progress)")
-		}
+			// Nope, so create a new root Progress
 		
-		// Create root Progress
-		
-		Progress.globalParent = nil
-		
-		let progress = Progress(parent:nil, userInfo:nil)		// Using this init doesn't link parent to possibly still existing Progress.current()
-        progress.totalUnitCount = Int64(count)
-		self.progress = progress
-		
-		Progress.globalParent = progress
+			Progress.globalParent = nil
+			
+			progress = Progress(parent:nil, userInfo:nil)		// Using this init doesn't link parent to possibly still existing Progress.current()
+			progress.totalUnitCount = Int64(count)
+			self.progress = progress
+			
+			Progress.globalParent = progress
 
-		// Register KVO observers
-		
-		self.progressObserver = progress.publisher(for:\.fractionCompleted, options:.new).sink
-		{
-			[weak self] in self?.updateProgress($0)
-		}
-		
-		BXProgressWindowController.shared.cancelHandler =
-		{
-			[weak self] in self?.cancelProgress()
+			// Register KVO observers
+			
+			self.progressObserver = progress.publisher(for:\.fractionCompleted, options:.new).sink
+			{
+				[weak self] in self?.updateProgress($0)
+			}
+			
+			BXProgressWindowController.shared.cancelHandler =
+			{
+				[weak self] in self?.cancelProgress()
+			}
+
+			// Initial values
+			
+			self.progressStartTime = CFAbsoluteTimeGetCurrent()
+
+			self.setProgress(0.0)
 		}
 
-		// Initial values
+		// Increment useCount of the singleton
 		
-		self.progressStartTime = CFAbsoluteTimeGetCurrent()
-
-		self.setProgress(0.0)
+		self.progressRetainCount += 1
 
 		// If requested, show the progress bar immediately
 		
@@ -114,6 +126,10 @@ extension DraggingProgressMixin
 		{
 			BXProgressWindowController.shared.show()
 		}
+		
+		// Make progress key (just it case it wasn't before), so that progress bar is blue
+		
+		BXProgressWindowController.shared.window?.makeKey() //AndOrderFront(nil)
 		
 		return progress
 	}
@@ -141,6 +157,7 @@ extension DraggingProgressMixin
 		}
 	}
 	
+	
 	/// Update the progress UI with the specified fraction
 	
 	private func setProgress(_ fraction:Double)
@@ -151,14 +168,20 @@ extension DraggingProgressMixin
 		BXProgressWindowController.shared.isIndeterminate = false
 	}
 	
+	
 	/// Hides the progress UI
 	
 	public func hideProgress()
 	{
 		logDragAndDrop.debug {"\(Self.self).\(#function)"}
 		
-		BXProgressWindowController.shared.hide()
-		self.cleanupProgress()
+		self.progressRetainCount -= 1
+		
+		if progressRetainCount <= 0
+		{
+			BXProgressWindowController.shared.hide()
+			self.cleanupProgress()
+		}
 	}
 
 
@@ -168,18 +191,24 @@ extension DraggingProgressMixin
 	{
 		logDragAndDrop.debug {"\(Self.self).\(#function)"}
 		
-		self.progress?.cancel()
+		BXProgressWindowController.shared.hide()
 		self.cleanupProgress()
 	}
+	
+
+	/// Cleanup after using progress
 	
 	public func cleanupProgress()
 	{
 		logDragAndDrop.debug {"\(Self.self).\(#function)"}
 		
-		self.progress = nil
-		Progress.globalParent = nil
-		self.progressObserver = nil
 		BXProgressWindowController.shared.cancelHandler = nil
+
+		Progress.globalParent = nil
+
+		self.progress = nil
+		self.progressObserver = nil
+		self.progressRetainCount = 0
 	}
 }
 
