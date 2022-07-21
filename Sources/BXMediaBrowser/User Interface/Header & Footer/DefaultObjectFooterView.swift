@@ -73,6 +73,7 @@ public struct DefaultObjectFooterView : View
 				.controlSize(.small)
 				#endif
 		}
+        .frame(height:30)
 		.padding(.horizontal,20)
 		.padding(.vertical,2)
     }
