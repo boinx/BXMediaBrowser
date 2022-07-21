@@ -216,7 +216,7 @@ extension ObjectCollectionView
 		let w:CGFloat = cellType.width
 		let h:CGFloat = cellType.height
 		let d:CGFloat = cellType.spacing
-		let ratio = w / h
+        let ratio = (w/h).validated(fallbackValue:0.75)
 		
 		let viewWidth = newSize?.width ?? collectionView.bounds.width
 		let minWidth:CGFloat = 70 // This is the minimum width to display ObjectRatingView without clipping
@@ -225,12 +225,9 @@ extension ObjectCollectionView
 		
 		// Item (cell)
 		
-		let cellWidth = size.clipped(to:minWidth...maxWidth)
-		let cellHeight = cellWidth / ratio
-
-		var itemWidth:NSCollectionLayoutDimension = .absolute(cellWidth)
-		var itemHeight:NSCollectionLayoutDimension = .absolute(cellHeight)
-        var item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension:itemWidth, heightDimension:itemHeight))
+		var itemWidth:NSCollectionLayoutDimension
+		var itemHeight:NSCollectionLayoutDimension
+        var item:NSCollectionLayoutItem
 		
 		if w == 0	// Use full view width and hard-coded height as specified (used for AudioObjectCells)
 		{
@@ -238,12 +235,21 @@ extension ObjectCollectionView
 			itemHeight = .absolute(h)
 			item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension:itemWidth, heightDimension:itemHeight))
 		}
-//		else if cellWidth >= maxWidth-10 || viewWidth < minWidth // WORKAROUND 1 (see above)
-//		{
-//			itemWidth = .fractionalWidth(1.0)
-//			itemHeight = .fractionalWidth(1.0/ratio)
-//			item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension:itemWidth, heightDimension:itemHeight))
-//		}
+//        else if cellWidth >= maxWidth-10 || viewWidth < minWidth // WORKAROUND 1 (see above)
+//        {
+//            itemWidth = .fractionalWidth(1.0)
+//            itemHeight = .fractionalWidth(1.0/ratio)
+//            item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension:itemWidth, heightDimension:itemHeight))
+//        }
+        else
+        {
+            let cellWidth = size.clipped(to:minWidth...maxWidth)
+            let cellHeight = (cellWidth / ratio).validated(fallbackValue: h)
+
+            itemWidth = .absolute(cellWidth)
+            itemHeight = .absolute(cellHeight)
+            item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension:itemWidth, heightDimension:itemHeight))
+        }
 		
 		// Group (row)
 		
