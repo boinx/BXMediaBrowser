@@ -37,36 +37,50 @@ struct NativeSearchField: NSViewRepresentable
     @Binding var value: String
 	public var placeholderString:String?
 	public var continuousUpdates = true
+	public var onBegan:(()->Void)? = nil
+	public var onEnded:(()->Void)? = nil
 
-	public func makeNSView(context:Context) -> NSSearchField
+	public func makeNSView(context:Context) -> _NSSearchField
     {
-        let searchField = NSSearchField(frame:.zero)
+        let searchField = _NSSearchField(frame:.zero)
         searchField.delegate = context.coordinator
         searchField.stringValue = self.value
         searchField.placeholderString = self.placeholderString
+        searchField.onBegan = onBegan
+        searchField.onEnded = onEnded
 		return searchField
     }
 
-	public func updateNSView(_ searchField:NSSearchField, context:Context)
+	public func updateNSView(_ searchField:_NSSearchField, context:Context)
     {
         searchField.stringValue = self.value
 	}
 
     func makeCoordinator() -> Coordinator
     {
-        return Coordinator(value:$value, continuousUpdates:continuousUpdates)
+        return Coordinator(value:$value, continuousUpdates:continuousUpdates, onBegan:onBegan, onEnded:onEnded)
     }
 
-    class Coordinator: NSObject, NSSearchFieldDelegate
+    class Coordinator: NSObject, NSSearchFieldDelegate,NSWindowDelegate
     {
 		var value:Binding<String>
 		var continuousUpdates = true
-		init(value:Binding<String>, continuousUpdates:Bool)
+		var onBegan:(()->Void)? = nil
+		var onEnded:(()->Void)? = nil
+
+		init(value:Binding<String>, continuousUpdates:Bool, onBegan:(()->Void)?, onEnded:(()->Void)?)
 		{
 			self.value = value
 			self.continuousUpdates = continuousUpdates
+			self.onBegan = onBegan
+			self.onEnded = onEnded
 		}
 		
+//		func controlTextDidBeginEditing(_ notification:Notification)
+//		{
+//			self.onBegan?()
+//		}
+
 		func controlTextDidChange(_ notification:Notification)
 		{
 			guard let searchField = notification.object as? NSSearchField else { return }
@@ -78,6 +92,7 @@ struct NativeSearchField: NSViewRepresentable
 		{
 			guard let searchField = notification.object as? NSSearchField else { return }
 			self.value.wrappedValue = searchField.stringValue
+			self.onEnded?()
 		}
 
 		func searchFieldDidEndSearching(_ searchField:NSSearchField)
@@ -101,6 +116,22 @@ extension NativeSearchField
 				.strokeBorder(Color.primary.opacity(0.3), lineWidth:0.5)
 				.padding(0.5)
 		)
+	}
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+public class _NSSearchField : NSSearchField
+{
+	public var onBegan:(()->Void)? = nil
+	public var onEnded:(()->Void)? = nil
+	
+	override open func becomeFirstResponder() -> Bool
+	{
+		self.onBegan?()
+		return super.becomeFirstResponder()
 	}
 }
 
