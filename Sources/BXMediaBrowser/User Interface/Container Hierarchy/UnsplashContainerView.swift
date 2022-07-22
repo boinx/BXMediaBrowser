@@ -62,7 +62,7 @@ public struct UnsplashContainerView : View
             {
                 NativeSearchField(value:searchStringBinding, placeholderString:searchPlaceholder, continuousUpdates:false, onBegan:selectContainer)
                     .strokeBorder()
-					.background(searchFieldBackground)
+ 					.background(searchFieldBackground)
                     .frame(minWidth:100, maxWidth:240)
                
                 UnsplashOrientationButton(filter:unsplashFilter)
@@ -88,6 +88,8 @@ public struct UnsplashContainerView : View
             
             // Display highlight when this container is selected
             
+            .reducedOpacityWhenDisabled(0.6)
+			.enabled(isSelected)
             .background(selectionBackgroundView)
 			.foregroundColor(textColor)
 			
@@ -144,12 +146,17 @@ extension UnsplashContainerView
     
     var selectionBackgroundColor:Color
     {
-        library.selectedContainer === self.container ? .accentColor : .clear
+        isSelected ? .accentColor : .clear
     }
     
     var textColor:Color
     {
-		library.selectedContainer === self.container ? .white : .primary
+		isSelected ? .white : .primary
+    }
+    
+    var isSelected:Bool
+    {
+		library.selectedContainer === self.container
     }
 }
 

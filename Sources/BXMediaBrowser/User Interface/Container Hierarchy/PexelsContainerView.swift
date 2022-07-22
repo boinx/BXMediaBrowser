@@ -88,6 +88,8 @@ public struct PexelsContainerView : View
             
             // Display highlight when this container is selected
             
+            .reducedOpacityWhenDisabled(0.6)
+			.enabled(isSelected)
             .background(selectionBackgroundView)
 			.foregroundColor(textColor)
 			
@@ -144,12 +146,17 @@ extension PexelsContainerView
     
     var selectionBackgroundColor:Color
     {
-        library.selectedContainer === self.container ? .accentColor : .clear
+        isSelected ? .accentColor : .clear
     }
     
     var textColor:Color
     {
-		library.selectedContainer === self.container ? .white : .primary
+		isSelected ? .white : .primary
+    }
+    
+    var isSelected:Bool
+    {
+		library.selectedContainer === self.container
     }
 }
 

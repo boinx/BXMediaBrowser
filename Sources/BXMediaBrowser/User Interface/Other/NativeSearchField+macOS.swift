@@ -113,7 +113,7 @@ extension NativeSearchField
 		self.overlay(
 		
 			RoundedRectangle(cornerRadius:6)
-				.strokeBorder(Color.primary.opacity(0.3), lineWidth:0.5)
+				.strokeBorder(Color.primary.opacity(0.5), lineWidth:0.5)
 				.padding(0.5)
 		)
 	}
