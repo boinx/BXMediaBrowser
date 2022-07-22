@@ -229,6 +229,8 @@ open class UnsplashContainer : Container
 
 	private class func photos(for filter:UnsplashFilter, page:Int) async throws -> [UnsplashPhoto]
 	{
+		guard !filter.searchString.isEmpty else { return [] }
+
 		// Build a search request with the provided search string (filter)
 		
 		let accessKey = Unsplash.shared.accessKey

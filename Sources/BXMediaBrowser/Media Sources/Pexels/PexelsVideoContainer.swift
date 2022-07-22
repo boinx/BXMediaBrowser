@@ -111,6 +111,8 @@ open class PexelsVideoContainer : PexelsContainer
 
 	private class func videos(for filter:PexelsFilter, page:Int) async throws -> [Pexels.Video]
 	{
+		guard !filter.searchString.isEmpty else { return [] }
+
 		// Build a search request with the provided search string (filter)
 		
 		let accessPoint = Pexels.shared.videosAPI

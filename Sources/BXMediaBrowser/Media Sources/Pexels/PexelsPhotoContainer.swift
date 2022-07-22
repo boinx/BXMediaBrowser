@@ -109,6 +109,8 @@ open class PexelsPhotoContainer : PexelsContainer
 
 	private class func photos(for filter:PexelsFilter, page:Int) async throws -> [Pexels.Photo]
 	{
+		guard !filter.searchString.isEmpty else { return [] }
+		
 		// Build a search request with the provided search string (filter)
 		
 		let accessPoint = Pexels.shared.imagesAPI
