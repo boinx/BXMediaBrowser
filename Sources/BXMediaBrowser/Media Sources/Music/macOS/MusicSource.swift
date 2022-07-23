@@ -209,11 +209,14 @@ public class MusicSource : Source, AccessControl
 
 		if let container = Self.cachedContainers[identifier]
 		{
-			container.data = data
-
-			Task
+			synchronized(container)
 			{
-				await container.reload()
+				container.data = data
+
+				Task
+				{
+					await container.reload()
+				}
 			}
 			
 			return container
