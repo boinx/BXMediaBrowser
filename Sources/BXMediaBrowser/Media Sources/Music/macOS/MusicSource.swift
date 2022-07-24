@@ -84,6 +84,10 @@ public class MusicSource : Source, AccessControl
 	{
 		MusicSource.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
 
+		// Instantiate the shared MusicApp
+		
+		_ = MusicApp.shared
+		
 		// Configure the Source
 
 		let name = NSLocalizedString("Music", tableName:"Music", bundle:.BXMediaBrowser, comment:"Source Name")
@@ -266,6 +270,39 @@ public class MusicSource : Source, AccessControl
 	class func objectIdentifier(with item:ITLibMediaItem) -> String
 	{
 		"MusicSource:ITLibMediaItem:\(item.persistentID)"
+	}
+	
+	
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	@MainActor public func grantAccess(_ completionHandler:@escaping (Bool)->Void = { _ in })
+	{
+		if let url = MusicApp.shared.rootFolderURL
+		{
+			MusicSource.log.warning {"\(Self.self).\(#function) rootFolder = \(url.path)"}
+			
+			MusicApp.shared.requestReadAccessRights(for:url)
+			
+			if url.isReadable
+			{
+				MusicApp.shared.isReadable = true
+			}
+		}
+		
+		completionHandler(hasAccess)
+	}
+
+
+	@MainActor public func revokeAccess(_ completionHandler:@escaping (Bool)->Void = { _ in })
+	{
+		completionHandler(hasAccess)
+	}
+	
+	
+	@MainActor public var hasAccess:Bool
+	{
+		MusicApp.shared.isReadable
 	}
 	
 	

@@ -37,8 +37,10 @@ import AppKit
 
 public class MusicObject : Object
 {
+	private var observers:[Any] = []
+	
 	/// Creates a new MusicObject with the specified ITLibMediaItem
-	///
+	
 	public init(with item:ITLibMediaItem)
 	{
 		let identifier = "MusicSource:ITLibMediaItem:\(item.persistentID)"
@@ -51,15 +53,40 @@ public class MusicObject : Object
 			loadThumbnailHandler: Self.loadThumbnail,
 			loadMetadataHandler: Self.loadMetadata,
 			downloadFileHandler: Self.downloadFile)
-			
+		
+		// Get status for this audio file
+		
 		self.isLocallyAvailable = item.locationType == .file && item.location != nil
 		self.isDRMProtected = item.isDRMProtected
 		self.isDownloadable = false
 		self.isEnabled = isLocallyAvailable
 		
+		// DRM protected items are disabled (because not usable outside Music.app or QuickTime Player.app)
+		
 		if isDRMProtected && Config.DRMProtectedFile.isEnabled == false
 		{
 			self.isEnabled = false
+		}
+		
+		// If we do not have read access for the file, also disable this item and send a notification
+		
+		if isLocallyAvailable, let url = item.location, !url.isReadable
+		{
+			self.isEnabled = false
+			NotificationCenter.default.post(name:MusicApp.musicObjectNotReadable, object:url)
+		}
+		
+		// Once access has been granted by the user, enable the file again
+		
+		self.observers += NotificationCenter.default.publisher(for:MusicApp.didChangeAccessRights, object:nil).sink
+		{
+			_ in
+			
+			if let url = item.location, url.isFileURL
+			{													// ATTENTION: Do not reuse the existing url, because
+				let newURL = URL(fileURLWithPath:url.path)		// it has cached its isReadable value. Create newURL
+				self.isEnabled = newURL.isReadable				// instead to evaluate isReadable anew!
+			}
 		}
 	}
 
