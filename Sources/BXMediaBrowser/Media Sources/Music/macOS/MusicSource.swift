@@ -120,6 +120,8 @@ public class MusicSource : Source, AccessControl
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: -
+	
 	/// This function is called the the app is brought to the foreground again in this case the whole
 	/// Source will be reloaded with updated data from the iTunesLibrary framework, while preserving
 	/// the expanded state of each Container.
@@ -276,6 +278,8 @@ public class MusicSource : Source, AccessControl
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// MARK: - Access Rights
+	
 	@MainActor public func grantAccess(_ completionHandler:@escaping (Bool)->Void = { _ in })
 	{
 		if let url = MusicApp.shared.rootFolderURL
@@ -309,6 +313,11 @@ public class MusicSource : Source, AccessControl
 //----------------------------------------------------------------------------------------------------------------------
 
 
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - Debugging
+	
 	public static var log:BXLogger =
 	{
 		()->BXLogger in

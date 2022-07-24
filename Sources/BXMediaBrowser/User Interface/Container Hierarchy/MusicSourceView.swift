@@ -38,13 +38,15 @@ public struct MusicSourceView : View
 	@ObservedObject var source:MusicSource
 	@ObservedObject var app:MusicApp
 	
-	@State private var isShowingPopover = false
-	
 	// Environment
 	
 	@EnvironmentObject var library:Library
 	@Environment(\.viewFactory) private var viewFactory
 	@Environment(\.parentWindow) private var parentWindow
+
+	// State
+	
+	@State private var isShowingPopover = false
 
 	// Init
 	
@@ -120,8 +122,16 @@ public struct MusicSourceView : View
 
 public struct MusicAccessAlertView : View
 {
+	// Params
+	
 	var source:MusicSource
 	@Binding var isPresented:Bool
+
+	// Environment
+	
+	@EnvironmentObject var library:Library
+	
+	// Build View
 	
 	public var body: some View
     {
