@@ -124,12 +124,28 @@ public struct MusicSourceView : View
 						MusicAccessAlertView(source:source, isPresented:self.$isShowingPopover)
 					}
 			}
-			else
+			else if showRevokePopup
 			{
 				BXImage(systemName:"gearshape")
+					.opacity(0.5)
 					.popupMenu(menuItems)
 			}
 		}
+    }
+    
+    var showRevokePopup:Bool
+    {
+		let homePath = NSHomeDirectory()
+//		let homeURL = URL(fileURLWithPath:homePath)
+		let musicPath = homePath + "/Music"
+		let musicURL = URL(fileURLWithPath:musicPath)
+		
+		guard let rootFolderURL = musicApp.rootFolderURL else { return false }
+//		let u1 = rootFolderURL.commonAncestor(with:musicURL)
+//		let u2 = musicURL.commonAncestor(with:musicURL)
+//		let u3 = homeURL.commonAncestor(with:musicURL)
+		guard let commonURL = rootFolderURL.commonAncestor(with:musicURL) else { return true }
+		return commonURL.path != musicPath
     }
  }
 
