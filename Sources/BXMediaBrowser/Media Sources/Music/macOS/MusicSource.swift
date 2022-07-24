@@ -175,6 +175,18 @@ public class MusicSource : Source, AccessControl
 		let topLevelPlaylists = allPlaylists.filter { $0.parentID == nil }
 		var containers:[Container] = []
 		
+		// Restore read access rights to rootFolder (if it has been previously granted by the user)
+		
+		if let bookmark = sourceState?[Self.rootFolderBookmarkKey] as? Data,
+		   let rootFolderURL = URL(with:bookmark),
+		   rootFolderURL.exists && rootFolderURL.isDirectory,
+		   rootFolderURL.startAccessingSecurityScopedResource()
+		{
+			MusicApp.shared.rootFolderURL = rootFolderURL
+		}
+		
+		// Create top-level Containers
+		
 		try await Tasks.canContinue()
 		
 		let songs = NSLocalizedString("Songs", tableName:"Music", bundle:.BXMediaBrowser, comment:"Container Name")
@@ -311,6 +323,23 @@ public class MusicSource : Source, AccessControl
 	
 	
 //----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - Persistence
+	
+	override public func state() async -> [String:Any]
+	{
+		var state = await super.state()
+		
+		if let url = MusicApp.shared.rootFolderURL, let bookmark = try? url.bookmarkData()
+		{
+			state[Self.rootFolderBookmarkKey] = bookmark
+		}
+
+		return state
+	}
+
+	internal static var rootFolderBookmarkKey:String { "rootFolderBookmark" }
 
 
 //----------------------------------------------------------------------------------------------------------------------

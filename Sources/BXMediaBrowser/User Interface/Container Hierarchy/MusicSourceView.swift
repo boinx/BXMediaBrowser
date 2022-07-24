@@ -156,7 +156,11 @@ public struct MusicAccessAlertView : View
 				
 				source.grantAccess()
 				{
-					if $0 { source.load() }
+					if $0
+					{
+						source.load()
+						library.saveState()
+					}
 				}
 			}
 			.centerAligned()
