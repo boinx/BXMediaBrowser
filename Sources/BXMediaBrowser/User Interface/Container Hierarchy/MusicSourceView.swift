@@ -135,22 +135,26 @@ public struct MusicAccessAlertView : View
 	
 	public var body: some View
     {
+		let title = NSLocalizedString("Alert.missingAccessRights.title", tableName:"Music", bundle:.BXMediaBrowser, comment:"Alert Title")
+		let format = NSLocalizedString("Alert.missingAccessRights.message", tableName:"Music", bundle:.BXMediaBrowser, comment:"Alert Message")
+		let button = NSLocalizedString("Grant Access", tableName:"Music", bundle:.BXMediaBrowser, comment:"Button Title")
 		let name = MusicApp.shared.rootFolderURL?.lastPathComponent ?? ""
+		let message = String(format:format, name)
 		
 		return VStack(alignment:.leading, spacing:12)
 		{
-			Text("⚠️ Missing Access Rights")
+			Text(title)
 				.bold()
 				.lineLimit(1)
 				.centerAligned()
 
-			Text("Please grant read access to the folder \"\(name)\" to make the audio files usable.")
+			Text(message)
 				.lineLimit(nil)
 				#if os(macOS)
 				.controlSize(.small)
 				#endif
 			
-			Button("Grant Access")
+			Button(button)
 			{
 				self.isPresented = false
 				
