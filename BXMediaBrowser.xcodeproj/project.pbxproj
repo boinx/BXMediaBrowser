@@ -109,6 +109,7 @@
 		D01C33D727CD187D003337A9 /* DraggingProgressMixin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01C33D627CD187D003337A9 /* DraggingProgressMixin.swift */; };
 		D0208D83286703EE00736B1C /* Tasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0208D82286703EE00736B1C /* Tasks.swift */; };
 		D027F92B2802D81B004D4264 /* AppLifecycleMixin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D027F92A2802D81B004D4264 /* AppLifecycleMixin.swift */; };
+		D036506C288BF0AC003FC4F8 /* MusicSourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D036506B288BF0AC003FC4F8 /* MusicSourceView.swift */; };
 		D036506E288BFA7E003FC4F8 /* MusicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D036506D288BFA7E003FC4F8 /* MusicApp.swift */; };
 		D052BE2027ECB72C0084068A /* LightroomCC.strings in Resources */ = {isa = PBXBuildFile; fileRef = D052BE1E27ECB72C0084068A /* LightroomCC.strings */; };
 		D052BE2427EDCEF50084068A /* Object+MediaType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D052BE2327EDCEF40084068A /* Object+MediaType.swift */; };
@@ -291,6 +292,7 @@
 		D01C33D627CD187D003337A9 /* DraggingProgressMixin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggingProgressMixin.swift; sourceTree = "<group>"; };
 		D0208D82286703EE00736B1C /* Tasks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tasks.swift; sourceTree = "<group>"; };
 		D027F92A2802D81B004D4264 /* AppLifecycleMixin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLifecycleMixin.swift; sourceTree = "<group>"; };
+		D036506B288BF0AC003FC4F8 /* MusicSourceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicSourceView.swift; sourceTree = "<group>"; };
 		D036506D288BFA7E003FC4F8 /* MusicApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicApp.swift; sourceTree = "<group>"; };
 		D052BE1F27ECB72C0084068A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LightroomCC.strings; sourceTree = "<group>"; };
 		D052BE2127ECB7300084068A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/LightroomCC.strings; sourceTree = "<group>"; };
@@ -655,6 +657,7 @@
 				D01B493427CA1378008249C0 /* FolderSourceView.swift */,
 				D0573FA227E9ADED00788155 /* LightroomCCSourceView.swift */,
 				D0CBC1572833D6BE00C6BABB /* LightroomClassicSourceView.swift */,
+				D036506B288BF0AC003FC4F8 /* MusicSourceView.swift */,
 				D01B493727CA1378008249C0 /* ContainerView.swift */,
 				D01B493227CA1378008249C0 /* FolderContainerView.swift */,
 				D0D9EDAF27FC82E700D5D7FB /* UnsplashContainerView.swift */,
@@ -897,6 +900,7 @@
 				D01B498927CA1378008249C0 /* PhotosObject.swift in Sources */,
 				D01B495D27CA1378008249C0 /* Source.swift in Sources */,
 				D01B497C27CA1378008249C0 /* ImageFolderSource.swift in Sources */,
+				D036506C288BF0AC003FC4F8 /* MusicSourceView.swift in Sources */,
 				D027F92B2802D81B004D4264 /* AppLifecycleMixin.swift in Sources */,
 				D01B499927CA1378008249C0 /* SectionView.swift in Sources */,
 				D0D9EDB427FCADB100D5D7FB /* PHAssetCollection+dateInterval.swift in Sources */,
