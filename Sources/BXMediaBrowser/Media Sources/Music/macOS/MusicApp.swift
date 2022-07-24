@@ -158,6 +158,20 @@ public class MusicApp : ObservableObject
 
 		return url
 	}
+	
+	/// Revokes previously granted read access rights.
+	
+	@MainActor open func revokeReadAccessRights()
+	{
+		guard let grantedFolderURL = self.grantedFolderURL else { return }
+		
+		grantedFolderURL.stopAccessingSecurityScopedResource()
+		self.grantedFolderURL = nil
+		self.isReadable = false
+		
+		NotificationCenter.default.post(name:Self.didChangeAccessRights, object:nil)
+	}
+	
 }
 	
 	

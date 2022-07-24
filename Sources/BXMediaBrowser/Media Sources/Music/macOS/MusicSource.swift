@@ -183,6 +183,7 @@ public class MusicSource : Source, AccessControl
 		   rootFolderURL.startAccessingSecurityScopedResource()
 		{
 			MusicApp.shared.rootFolderURL = rootFolderURL
+			MusicApp.shared.grantedFolderURL = rootFolderURL
 		}
 		
 		// Create top-level Containers
@@ -331,7 +332,7 @@ public class MusicSource : Source, AccessControl
 	{
 		var state = await super.state()
 		
-		if let url = MusicApp.shared.rootFolderURL, let bookmark = try? url.bookmarkData()
+		if let url = MusicApp.shared.grantedFolderURL, let bookmark = try? url.bookmarkData()
 		{
 			state[Self.rootFolderBookmarkKey] = bookmark
 		}
