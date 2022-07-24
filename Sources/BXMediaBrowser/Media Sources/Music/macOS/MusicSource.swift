@@ -106,6 +106,10 @@ public class MusicSource : Source, AccessControl
 		Self.library = try? ITLibrary(apiVersion:"1.1", options:.lazyLoadData)
 		Self.allowedMediaKinds = allowedMediaKinds
 		
+		// Store reference to this source
+		
+		MusicApp.shared.source = self
+
 		// Setup observers to detect changes - well not really, since the API doesn't support it. Instead we "fake" it
 		// by simply reloading EVERYTHING when the application is brought to the foreground again. In this scenario we
 		// simply assume that the user went to the Music.app and made some changes.

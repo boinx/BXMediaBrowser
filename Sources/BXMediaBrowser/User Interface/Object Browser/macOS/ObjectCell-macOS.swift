@@ -564,6 +564,16 @@ open class ObjectCell : NSCollectionViewItem
 		{
 			self.showPopover(with: ObjectWarningView(message:Config.CorruptedAppleLoops.warningMessage))
 		}
+		else if object is MusicObject && !object.isEnabled
+		{
+			if let source = MusicApp.shared.source, let library = MusicApp.shared.library
+			{
+				let visible = Binding<Bool>.constant(true)
+				let view = MusicAccessAlertView(source:source, isPresented:visible)
+					.environmentObject(library)
+				self.showPopover(with:view)
+			}
+		}
 	}
 }
 

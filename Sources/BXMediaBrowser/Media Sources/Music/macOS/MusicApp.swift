@@ -39,6 +39,11 @@ public class MusicApp : ObservableObject
 	
 	public static let shared = MusicApp()
 	
+	/// A reference to the Library and MusicSource. Hopefully there is only one instance of this in your application or this property won't be of much use.
+	
+	public weak var library:Library? = nil
+	public weak var source:MusicSource? = nil
+	
 	/// If any encountered audio file is not readable, then this property will be set to false, so that the UI can display the necessary authorization interface.
 
 	@Published var isReadable = true
