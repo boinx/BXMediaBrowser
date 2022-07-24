@@ -101,17 +101,34 @@ public struct MusicSourceView : View
     
     /// This view displays login status or any error conditions
 	
-    @ViewBuilder var accessAlertIcon: some View
+    var accessAlertIcon: some View
     {
-		if !app.isReadable
+		let menuItems:[BXMenuItemSpec] =
+		[
+			BXMenuItemSpec.action(title: NSLocalizedString("Revoke Access", tableName:"Music", bundle:.BXMediaBrowser, comment:"Menu Item"))
+			{
+				musicApp.revokeReadAccessRights()
+				library.saveState()
+			}
+		]
+		
+		return Group
 		{
-			BXImage(systemName:"exclamationmark.triangle.fill")
-				.foregroundColor(.yellow)
-				.onTapGesture { self.isShowingPopover = true }
-				.popover(isPresented: self.$isShowingPopover)
-				{
-					MusicAccessAlertView(source:source, isPresented:self.$isShowingPopover)
-				}
+			if !musicApp.isReadable
+			{
+				BXImage(systemName:"exclamationmark.triangle.fill")
+					.foregroundColor(.yellow)
+					.onTapGesture { self.isShowingPopover = true }
+					.popover(isPresented: self.$isShowingPopover)
+					{
+						MusicAccessAlertView(source:source, isPresented:self.$isShowingPopover)
+					}
+			}
+			else
+			{
+				BXImage(systemName:"gearshape")
+					.popupMenu(menuItems)
+			}
 		}
     }
  }
