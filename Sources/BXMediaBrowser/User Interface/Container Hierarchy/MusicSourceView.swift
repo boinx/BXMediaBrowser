@@ -36,7 +36,7 @@ public struct MusicSourceView : View
 	// Model
 	
 	@ObservedObject var source:MusicSource
-	@ObservedObject var app:MusicApp
+	@ObservedObject var musicApp:MusicApp
 	
 	// Environment
 	
@@ -50,10 +50,10 @@ public struct MusicSourceView : View
 
 	// Init
 	
-	public init(with source:MusicSource, _ app:MusicApp)
+	public init(with source:MusicSource, _ musicApp:MusicApp)
 	{
 		self.source = source
-		self.app = app
+		self.musicApp = musicApp
 	}
 	
 	// View
