@@ -82,10 +82,9 @@ public class MusicObject : Object
 		{
 			_ in
 			
-			if let url = item.location, url.isFileURL
-			{													// ATTENTION: Do not reuse the existing url, because
-				let newURL = URL(fileURLWithPath:url.path)		// it has cached its isReadable value. Create newURL
-				self.isEnabled = newURL.isReadable				// instead to evaluate isReadable anew!
+			if let url = item.location, url.isFileURL			// ATTENTION: Do not reuse the existing url, because
+			{													// it has cached its isReadable value. Create a copy
+				self.isEnabled = url.copy.isReadable			// instead to evaluate isReadable anew!
 			}
 		}
 	}
