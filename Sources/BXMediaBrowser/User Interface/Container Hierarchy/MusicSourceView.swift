@@ -42,7 +42,6 @@ public struct MusicSourceView : View
 	
 	@EnvironmentObject var library:Library
 	@Environment(\.viewFactory) private var viewFactory
-	@Environment(\.parentWindow) private var parentWindow
 
 	// State
 	
