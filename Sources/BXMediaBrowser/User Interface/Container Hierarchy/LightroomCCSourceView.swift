@@ -43,7 +43,7 @@ public struct LightroomCCSourceView : View
 	
 	@EnvironmentObject var library:Library
 	@Environment(\.viewFactory) private var viewFactory
-	@Environment(\.hostingView) private var hostingView
+	@Environment(\.bxHostingView) private var hostingView
 
 	// Init
 	
@@ -212,8 +212,7 @@ public struct LightroomCCSourceView : View
 		// Get access to the parent window, so we can attach a sheet for the embedded WKWebView
 		// that is used for the OAuth login flow.
 		
-		let hostingView = self.hostingView?.value
-		let parentWindow = hostingView?.window
+		let parentWindow = self.hostingView?.window
 		LightroomCC.shared.oauth2.authConfig.authorizeContext = parentWindow
 
 		// Start OAuth login
