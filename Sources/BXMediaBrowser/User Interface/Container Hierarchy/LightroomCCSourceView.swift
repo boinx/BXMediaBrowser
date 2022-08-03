@@ -212,7 +212,7 @@ public struct LightroomCCSourceView : View
 		// Get access to the parent window, so we can attach a sheet for the embedded WKWebView
 		// that is used for the OAuth login flow.
 		
-		let parentWindow = self.hostingView?.window
+        let parentWindow = self.hostingView?.view?.window
 		LightroomCC.shared.oauth2.authConfig.authorizeContext = parentWindow
 
 		// Start OAuth login
