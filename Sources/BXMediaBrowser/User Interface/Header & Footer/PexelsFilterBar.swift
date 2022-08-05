@@ -89,7 +89,10 @@ public struct PexelsOrientationButton : View
     {
 		BXImage(systemName:filter.orientation.icon)
 			.font(.system(size:17, weight:.regular))
-			.popupMenu(self.orientationMenuItems(value:self.$filter.orientation))
+			.popupMenu()
+			{
+				self.orientationMenuItems(value:self.$filter.orientation)
+			}
     }
     
     func orientationMenuItems(value:Binding<PexelsFilter.Orientation>) -> [BXMenuItemSpec]
@@ -120,7 +123,10 @@ public struct PexelsColorButton : View
     public var body: some View
     {
 		ColorIconView(color:filter.color.color, allowBW:false)
-			.popupMenu(self.colorMenuItems(value:self.$filter.color))
+			.popupMenu()
+			{
+				self.colorMenuItems(value:self.$filter.color)
+			}
     }
     
     func colorMenuItems(value:Binding<PexelsFilter.Color>) -> [BXMenuItemSpec]

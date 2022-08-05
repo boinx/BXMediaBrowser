@@ -193,7 +193,7 @@ public struct LightroomCCSourceView : View
 		{
 			if let user = lightroom.userEmail ?? lightroom.userName
 			{
-				items += BXMenuItemSpec.regular(title:user, value:0, isEnabled:false)
+				items += BXMenuItemSpec.regular(title:user, value:0, isEnabled:{false})
 			}
 			
 			items += BXMenuItemSpec.action(title:logout)
@@ -202,7 +202,10 @@ public struct LightroomCCSourceView : View
 			}
 		}
 		
-		return BXImage(systemName:"person.crop.circle").popupMenu(items)
+		return BXImage(systemName:"person.crop.circle").popupMenu()
+		{
+			items
+		}
     }
     
     /// Login to Lightroom CC (with embedded sheet if possible)

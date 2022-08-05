@@ -56,7 +56,10 @@ public struct SortOrderPopup : View
 				BXImage(systemName:arrowIcon).scaleEffect(0.75)
 			}
 			.id(selectedContainer.identifier)
-			.popupMenu(sortOrderItems)
+			.popupMenu()
+			{
+				sortOrderItems
+			}
 		}
     }
     

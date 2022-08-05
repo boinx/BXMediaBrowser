@@ -107,7 +107,10 @@ public struct UnsplashOrientationButton : View
     {
         BXImage(systemName:filter.orientation.icon)
             .font(.system(size:17, weight:.regular))
-            .popupMenu(self.orientationMenuItems(value:self.$filter.orientation))
+            .popupMenu()
+            {
+				self.orientationMenuItems(value:self.$filter.orientation)
+			}
     }
     
     func orientationMenuItems(value:Binding<UnsplashFilter.Orientation>) -> [BXMenuItemSpec]
@@ -138,7 +141,10 @@ public struct UnsplashColorButton : View
     public var body: some View
     {
         ColorIconView(color:filter.color.color, strokeColor:strokeColor, allowBW:true)
-            .popupMenu(self.colorMenuItems(value:self.$filter.color))
+            .popupMenu()
+            {
+				self.colorMenuItems(value:self.$filter.color)
+			}
     }
     
     func colorMenuItems(value:Binding<UnsplashFilter.Color>) -> [BXMenuItemSpec]

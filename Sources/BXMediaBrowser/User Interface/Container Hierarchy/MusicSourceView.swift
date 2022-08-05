@@ -127,7 +127,10 @@ public struct MusicSourceView : View
 			{
 				BXImage(systemName:"gearshape")
 					.opacity(0.5)
-					.popupMenu(menuItems)
+					.popupMenu()
+					{
+						menuItems
+					}
 			}
 		}
     }
