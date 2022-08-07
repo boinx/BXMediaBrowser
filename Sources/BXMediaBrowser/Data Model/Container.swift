@@ -260,11 +260,19 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 				BXMediaBrowser.logDataModel.verbose {"    containers = \(containerNames)"}
 				BXMediaBrowser.logDataModel.verbose {"    objects = \(objectNames)"}
 				
+				// Remove duplicate objects - NSDiffableDataSource that is being used with the NSCollectionView
+				// throws a hissy fit (and exceptions) when encountering duplicate identifiers.
+				
+				let uniqueObjects = objects.removingDuplicates()
+				{
+					$0.identifier
+				}
+				
 				// Link the objects
 				
 				var prev:Object? = nil
 				
-				for object in objects
+				for object in uniqueObjects
 				{
 					prev?.next = object
 					object.next = nil
@@ -284,7 +292,7 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 				await MainActor.run
 				{
 					self.containers = containers
-					self.objects = objects
+					self.objects = uniqueObjects
 					self.isExpanded = isExpanded
 
 					// Restore isExpanded state of containers
