@@ -91,7 +91,7 @@ public struct ContainerView : View
 				
 				// Clicking selects the container
 				
-				.contentShape(Rectangle().size(width:1000,height:20).offset(x:-100,y:0))  // Make hit target wider so that whole row is clickable!
+//				.contentShape(Rectangle().size(width:1000,height:20).offset(x:-100,y:0))  // Make hit target wider so that whole row is clickable!
 				
 				.simultaneousGesture( TapGesture().onEnded
 				{
@@ -207,7 +207,7 @@ extension ContainerView
     
     var backgroundColor:Color
     {
-		library.selectedContainer === self.container ? .accentColor : .clear
+		library.selectedContainer === self.container ? .accentColor : .accentColor.opacity(0.005)
     }
     
     var textColor:Color

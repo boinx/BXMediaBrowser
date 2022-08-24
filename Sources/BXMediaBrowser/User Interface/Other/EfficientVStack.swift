@@ -50,7 +50,7 @@ public struct EfficientVStack<Content:View> : View
 	
 	public var body: some View
     {
-		if #available(macOS 11, iOS 14, *)
+		if #available(macOS 11.0, iOS 14.0, *)
 		{
 			LazyVStack(alignment:alignment, spacing:spacing)
 			{
