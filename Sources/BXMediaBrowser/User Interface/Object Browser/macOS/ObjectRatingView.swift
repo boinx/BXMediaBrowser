@@ -122,24 +122,29 @@ class ObjectRatingView : NSView
 	
 	class func image(systemName:String, color:NSColor) -> NSImage?
 	{
+		var copy:NSImage? = nil
+		
 		if #available(macOS 11, *)
 		{
 			guard let icon = NSImage(systemSymbolName:systemName, accessibilityDescription:nil) else { return nil }
-			guard let image = icon.copy() as? NSImage else { return nil }
-			
-			image.lockFocus()
-			defer { image.unlockFocus() }
-			
-			color.set()
-			let bounds = NSRect(origin:.zero, size:image.size)
-			bounds.fill(using:.sourceAtop)
-				
-			return image
+			copy = icon.copy() as? NSImage
 		}
 		else
 		{
-			return nil
+			let icon = Bundle.BXSwiftUI.image(forResource:systemName)
+			copy = icon?.copy() as? NSImage
 		}
+		
+		guard let image = copy else { return nil }
+		
+		image.lockFocus()
+		defer { image.unlockFocus() }
+			
+		color.set()
+		let bounds = NSRect(origin:.zero, size:image.size)
+		bounds.fill(using:.sourceAtop)
+				
+		return image
 	}
 	
 	
