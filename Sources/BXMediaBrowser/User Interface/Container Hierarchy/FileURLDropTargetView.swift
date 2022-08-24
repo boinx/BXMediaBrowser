@@ -76,7 +76,8 @@ public struct FileURLDropTargetView : View
 		
 		else
 		{
-			EmptyView()
+			Color.clear
+				.frame(width:0, height:0)
 		}
 	}
 }
