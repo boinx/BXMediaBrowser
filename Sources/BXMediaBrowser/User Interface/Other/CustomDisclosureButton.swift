@@ -55,6 +55,19 @@ struct CustomDisclosureButton : View
 	
 	public var body: some View
 	{
+		if #available(macOS 11.0, *)
+		{
+			fullAreaButton
+		}
+		else
+		{
+			fallbackButton
+		}
+	}
+	
+	
+	var fullAreaButton: some View
+	{
 		HStack(spacing:2.0)
 		{
 			// Disclosure triangle
@@ -109,6 +122,53 @@ struct CustomDisclosureButton : View
 				self.isExpanded.wrappedValue.toggle()
 			}
 		}
+	}
+	
+	var fallbackButton: some View
+	{
+		HStack(spacing:2.0)
+		{
+			// Disclosure triangle
+			
+			BXImage(systemName:"chevron.forward")
+				.scaleEffect(0.7)
+				.rotationEffect(.degrees(isExpanded.wrappedValue ? 90 : 0))
+						
+			// On tap toggle the disclosure state
+			
+			.contentShape(Rectangle())
+			.onTapGesture
+			{
+				withAnimation(.easeInOut(duration:0.15))
+				{
+					self.isExpanded.wrappedValue.toggle()
+				}
+			}
+			
+			// Optional icon
+			
+			if let icon = self.icon
+			{
+				Image(decorative:icon, scale:1)
+					.resizable()
+					.scaledToFit()
+					.frame(width:20, height:20)
+			}
+				
+			// Label
+			
+			if label.count > 0
+			{
+				Text(label)
+					.font(font)
+					.lineLimit(1)
+					.truncationMode(.tail)
+			}
+		}
+		
+		// Dim when disabled
+		
+		.reducedOpacityWhenDisabled()
 	}
 }
 
