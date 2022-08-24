@@ -838,7 +838,7 @@
 				};
 			};
 			buildConfigurationList = D01B48AB27CA1313008249C0 /* Build configuration list for PBXProject "BXMediaBrowser" */;
-			compatibilityVersion = "Xcode 13.0";
+			compatibilityVersion = "Xcode 12.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
