@@ -1,0 +1,6 @@
+framework module iMedia {
+  umbrella header "iMedia.h"
+
+  export *
+  module * { export * }
+}

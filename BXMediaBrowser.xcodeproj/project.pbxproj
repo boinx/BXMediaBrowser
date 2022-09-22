@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -156,9 +156,9 @@
 		D0CBC1542833726E00C6BABB /* LightroomClassicSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CBC14D2832939200C6BABB /* LightroomClassicSource.swift */; };
 		D0CBC15528338FAE00C6BABB /* LightroomClassicContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CBC14E2832948500C6BABB /* LightroomClassicContainer.swift */; };
 		D0CBC1582833D6BF00C6BABB /* LightroomClassicSourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CBC1572833D6BE00C6BABB /* LightroomClassicSourceView.swift */; };
-		D0CBC15A2834D03300C6BABB /* iMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0CBC1592834D03300C6BABB /* iMedia.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		D0CBC15D283518EA00C6BABB /* LightroomClassic.strings in Resources */ = {isa = PBXBuildFile; fileRef = D0CBC15B283518EA00C6BABB /* LightroomClassic.strings */; };
 		D0CBC161283528E100C6BABB /* LightroomClassicObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CBC14F283299EF00C6BABB /* LightroomClassicObject.swift */; };
+		D0D7145E28DC6B2000C0B2F9 /* iMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D7145D28DC6B2000C0B2F9 /* iMedia.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		D0D9EDB027FC82E700D5D7FB /* UnsplashContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDAF27FC82E700D5D7FB /* UnsplashContainerView.swift */; };
 		D0D9EDB227FC83E600D5D7FB /* PexelsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDB127FC83E600D5D7FB /* PexelsContainerView.swift */; };
 		D0D9EDB427FCADB100D5D7FB /* PHAssetCollection+dateInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDB327FCADB100D5D7FB /* PHAssetCollection+dateInterval.swift */; };
@@ -344,10 +344,10 @@
 		D0CBC14F283299EF00C6BABB /* LightroomClassicObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightroomClassicObject.swift; sourceTree = "<group>"; };
 		D0CBC1522832B61300C6BABB /* LightroomClassic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightroomClassic.swift; sourceTree = "<group>"; };
 		D0CBC1572833D6BE00C6BABB /* LightroomClassicSourceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightroomClassicSourceView.swift; sourceTree = "<group>"; };
-		D0CBC1592834D03300C6BABB /* iMedia.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = iMedia.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0CBC15C283518EA00C6BABB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LightroomClassic.strings; sourceTree = "<group>"; };
 		D0CBC15F283518F900C6BABB /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/LightroomClassic.strings; sourceTree = "<group>"; };
 		D0CBC1602835190400C6BABB /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LightroomClassic.strings; sourceTree = "<group>"; };
+		D0D7145D28DC6B2000C0B2F9 /* iMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iMedia.framework; path = Frameworks/iMedia.framework; sourceTree = "<group>"; };
 		D0D9EDAF27FC82E700D5D7FB /* UnsplashContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnsplashContainerView.swift; sourceTree = "<group>"; };
 		D0D9EDB127FC83E600D5D7FB /* PexelsContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PexelsContainerView.swift; sourceTree = "<group>"; };
 		D0D9EDB327FCADB100D5D7FB /* PHAssetCollection+dateInterval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PHAssetCollection+dateInterval.swift"; sourceTree = "<group>"; };
@@ -373,9 +373,9 @@
 				D01B49B127CA2132008249C0 /* BXSwiftUtils.framework in Frameworks */,
 				D0C1CB2A281D1A6800128DED /* BXSwiftUI.framework in Frameworks */,
 				D01B49B927CA2189008249C0 /* Foundation.framework in Frameworks */,
+				D0D7145E28DC6B2000C0B2F9 /* iMedia.framework in Frameworks */,
 				D00D6DF6283F67CE00013C39 /* OAuth2 in Frameworks */,
 				D01B49BA27CA2189008249C0 /* AVFoundation.framework in Frameworks */,
-				D0CBC15A2834D03300C6BABB /* iMedia.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -701,7 +701,7 @@
 		D01B49AF27CA2132008249C0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D0CBC1592834D03300C6BABB /* iMedia.framework */,
+				D0D7145D28DC6B2000C0B2F9 /* iMedia.framework */,
 				D0C1CB29281D1A6800128DED /* BXSwiftUI.framework */,
 				D01B49B827CA2189008249C0 /* AVFoundation.framework */,
 				D01B49B727CA2189008249C0 /* Foundation.framework */,
@@ -1271,6 +1271,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_DYLIB_INSTALL_NAME = "$(DYLIB_INSTALL_NAME_BASE:standardizepath)/$(EXECUTABLE_PATH)";
@@ -1301,6 +1305,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_DYLIB_INSTALL_NAME = "$(DYLIB_INSTALL_NAME_BASE:standardizepath)/$(EXECUTABLE_PATH)";
