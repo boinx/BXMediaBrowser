@@ -96,7 +96,7 @@ open class ImageObjectCell : ObjectCell
 		textField.bottomAnchor.constraint(equalTo:view.bottomAnchor, constant:0).isActive = true
 		textField.leadingAnchor.constraint(equalTo:view.leadingAnchor, constant:0).isActive = true
 		textField.trailingAnchor.constraint(equalTo:view.trailingAnchor, constant:0).isActive = true
-		self.setupTextField(textField, size:NSFont.smallSystemFontSize, alignment:.center, alpha:0.5)
+		self.setupTextField(textField, size:NSFont.smallSystemFontSize, alignment:.center, alpha:0.3)
 
 		ratingView.translatesAutoresizingMaskIntoConstraints = false
 		ratingView.heightAnchor.constraint(equalToConstant:14).isActive = true
@@ -162,7 +162,7 @@ open class ImageObjectCell : ObjectCell
 		self.textField?.isEnabled = isEnabled
 		self.ratingView?.isEnabled = isEnabled
 		self.imageView?.layer?.opacity = alpha
-		self.textField?.layer?.opacity = 0.66 * alpha
+		self.textField?.layer?.opacity = 0.3 * alpha
 		self.useCountView?.layer?.opacity = alpha
 	}
 	

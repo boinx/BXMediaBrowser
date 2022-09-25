@@ -69,6 +69,7 @@ public struct DefaultObjectFooterView : View
 			
 			Text(container.localizedObjectCount)
 				.lineLimit(1)
+				.opacity(0.3)
 				#if os(macOS)
 				.controlSize(.small)
 				#endif
