@@ -162,7 +162,7 @@ open class ImageObjectCell : ObjectCell
 		self.textField?.isEnabled = isEnabled
 		self.ratingView?.isEnabled = isEnabled
 		self.imageView?.layer?.opacity = alpha
-		self.textField?.layer?.opacity = 0.3 * alpha
+		self.textField?.layer?.opacity = 0.25 * alpha
 		self.useCountView?.layer?.opacity = alpha
 	}
 	

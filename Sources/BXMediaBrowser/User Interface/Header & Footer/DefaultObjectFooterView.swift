@@ -54,7 +54,8 @@ public struct DefaultObjectFooterView : View
 			// Thumbnail size
 			
 			BXImage(systemName:"square").scaleEffect(0.5)
-			
+				.opacity(0.33)
+				
 			Slider(value:thumbnailSizeBinding, in:thumbnailSizeRange)
 				.frame(width:100)
 				#if os(macOS)
@@ -62,6 +63,7 @@ public struct DefaultObjectFooterView : View
 				#endif
 
 			BXImage(systemName:"square")
+				.opacity(0.33)
 
 			Spacer()
 			

@@ -158,7 +158,8 @@ extension ContainerView
 		
 		BXImage(systemName:icon)
 			.frame(minWidth:16, alignment:.center)
-		
+			.opacity(0.5)
+			
 		// Container name
 		
 		Text(container.name)
