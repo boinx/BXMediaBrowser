@@ -236,7 +236,7 @@ public extension ViewFactory
 
 	@ViewBuilder class func defaultHeaderView(for container:Container?, uiState:UIState) -> some View
 	{
-		#if os(macOS)
+		#if canImport(iMedia) && os(macOS)
 
 		if let container = container as? UnsplashContainer, let filter = container.filter as? UnsplashFilter
 		{
@@ -283,8 +283,50 @@ public extension ViewFactory
 			EmptyView()
 		}
 
-		#else
+		#elseif os(macOS)
 		
+		if let container = container as? UnsplashContainer, let filter = container.filter as? UnsplashFilter
+		{
+			UnsplashFilterBar(with:container, filter:filter)
+		}
+		else if let container = container as? PexelsPhotoContainer, let filter = container.filter as? PexelsFilter
+		{
+			PexelsFilterBar(with:container, filter:filter)
+		}
+		else if let container = container as? PexelsVideoContainer, let filter = container.filter as? PexelsFilter
+		{
+			PexelsFilterBar(with:container, filter:filter)
+		}
+		else if let container = container as? LightroomCCContainer, let filter = container.filter as? LightroomCCFilter
+		{
+			LightroomCCFilterBar(with:container, filter:filter)
+		}
+		else if let container = container as? LightroomCCContainerAllPhotos, let filter = container.filter as? LightroomCCFilter
+		{
+			LightroomCCFilterBar(with:container, filter:filter)
+		}
+		else if let container = container as? PhotosContainer, let filter = container.filter as? PhotosFilter
+		{
+			PhotosFilterBar(with:container, filter:filter)
+		}
+		else if let container = container as? MusicContainer, let filter = container.filter as? MusicFilter
+		{
+			MusicFilterBar(with:container, filter:filter)
+		}
+		else if let container = container as? FolderContainer, let filter = container.filter as? FolderFilter
+		{
+			FolderFilterBar(with:container, filter:filter)
+		}
+		else if let container = container
+		{
+			SearchBar(with:container)
+		}
+		else
+		{
+			EmptyView()
+		}
+		#else
+
 		if let container = container as? UnsplashContainer, let filter = container.filter as? UnsplashFilter
 		{
 			UnsplashFilterBar(with:container, filter:filter)
