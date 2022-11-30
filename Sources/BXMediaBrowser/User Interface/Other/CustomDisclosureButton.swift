@@ -55,7 +55,7 @@ struct CustomDisclosureButton : View
 	
 	public var body: some View
 	{
-		if #available(macOS 11.0, *)
+		if #available(macOS 11.0, iOS 14, *)
 		{
 			fullAreaButton
 		}

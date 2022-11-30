@@ -53,6 +53,8 @@ public struct FileURLDropTargetView : View
 	
 	public var body: some View
 	{
+		#if os(macOS)
+		
 		// Unfortunately the .onDrop modifiers are only available for macOS 11 and newer. Create a clear view
 		// with a drop handler for file URLs that call through to the externally supplied didDropFolder closure.
 		
@@ -79,12 +81,23 @@ public struct FileURLDropTargetView : View
 			Color.clear
 				.frame(width:0, height:0)
 		}
+		
+		#else
+		
+		// Not implemented for iOS
+		
+		Color.clear
+			.frame(width:0, height:0)
+
+		#endif
 	}
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
+
+#if os(macOS)
 
 public extension FileURLDropTargetView
 {
@@ -123,6 +136,8 @@ public extension FileURLDropTargetView
 		isDropTarget ? color : .clear
     }
 }
+
+#endif
 
 
 //----------------------------------------------------------------------------------------------------------------------

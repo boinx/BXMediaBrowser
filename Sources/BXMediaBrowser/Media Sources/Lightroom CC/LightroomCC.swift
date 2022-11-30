@@ -74,6 +74,8 @@ public class LightroomCC : ObservableObject
 		self.oauth2.authConfig.authorizeEmbedded = true
 		self.oauth2.authConfig.authorizeEmbeddedAutoDismiss = true
 		
+		#if os(macOS)
+		
 		// Make sure that the default size for the embedded login window is large enough for both
 		// Adobe login web page, as well as alternatives from Google, Facebook, and Apple.
 	
@@ -115,6 +117,12 @@ public class LightroomCC : ObservableObject
 //				return URL(string:str)
 //			}
 //		}
+
+		#else
+		
+		#warning("TODO: implement for iOS")
+		
+		#endif
     }
     
 

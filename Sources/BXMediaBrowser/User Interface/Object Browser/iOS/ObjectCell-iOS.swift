@@ -40,7 +40,10 @@ open class ObjectCell : UICollectionViewCell
 
 open class ImageObjectCell : ObjectCell
 {
-
+	// Returns the minimum & maximum supported thumbnail size
+	
+	public static var minThumbnailSize:CGFloat { 70 } 	// ObjectRatingView requires this width without clipping
+	public static var maxThumbnailSize:CGFloat { 320 }
 }
 
 open class AudioObjectCell : ObjectCell
