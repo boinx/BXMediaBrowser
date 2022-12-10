@@ -120,8 +120,10 @@ public class MusicApp : ObservableObject
 		}
 
 		self.rootFolderURL = url
-
-		MusicSource.log.warning {"\(Self.self).\(#function) File not readable at \(audioFileURL.path) => rootFolder = \(url)"}
+		
+//		let audioFilePath = audioFileURL.path	// For some reason NSLog crashed on customer machines when logging a string with
+//		let rootFolderPath = url.path			// URLs so we are now trying to log the path instead. Not sure if this helps...
+//		MusicSource.log.warning {"\(Self.self).\(#function) File not readable at \(audioFilePath) => rootFolder = \(rootFolderPath)"}
 
 		DispatchQueue.main.asyncIfNeeded
 		{
