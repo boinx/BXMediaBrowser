@@ -513,14 +513,15 @@ extension ObjectCollectionView
 		
 		@MainActor public func collectionView(_ collectionView:NSCollectionView, willDisplay item:NSCollectionViewItem, forRepresentedObjectAt indexPath:IndexPath)
 		{
-			let n = self.container?.objects.count ?? 0
+			guard let container = self.container else { return }
+			
+			let n = container.objects.count
 			let i = indexPath.item
-//			let j = (n - 20).clipped(to:0 ... n-1)
 			let j = (n - 1).clipped(to:0 ... n-1)
 			
 			if i == j
 			{
-				NotificationCenter.default.post(name:NSCollectionView.didScrollToEnd, object:self.container)
+				NotificationCenter.default.post(name:NSCollectionView.didScrollToEnd, object:container)
 			}
 		}
 
