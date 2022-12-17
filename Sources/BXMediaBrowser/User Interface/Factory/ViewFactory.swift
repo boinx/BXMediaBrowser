@@ -196,10 +196,10 @@ public extension ViewFactory
 		{
 			LightroomCCSourceView(with:source, LightroomCC.shared)
 		}
-		else if let source = source as? MusicSource
-		{
-			MusicSourceView(with:source, MusicApp.shared)
-		}
+//		else if let source = source as? MusicSource
+//		{
+//			MusicSourceView(with:source, MusicApp.shared)
+//		}
 		else if source is FolderSource
 		{
 			FolderSourceView(with:source)

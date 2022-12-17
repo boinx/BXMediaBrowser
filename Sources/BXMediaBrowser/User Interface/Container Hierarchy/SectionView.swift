@@ -147,10 +147,12 @@ extension SectionView
 		.padding(8)
 		.contentShape(Rectangle())
 		
+		#if os(macOS)
 		.onHover
 		{
 			self.isHovering = $0
 		}
+		#endif
 		
 		// Add click gesture to expand/collapse
 		

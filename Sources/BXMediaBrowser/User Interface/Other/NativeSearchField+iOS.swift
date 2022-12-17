@@ -37,6 +37,8 @@ struct NativeSearchField: UIViewRepresentable
     @Binding var value: String
 	public var placeholderString:String?
 	public var continuousUpdates = true
+	public var onBegan:(()->Void)? = nil
+	public var onEnded:(()->Void)? = nil
 
 	public func makeUIView(context:Context) -> UISearchTextField
     {
@@ -54,23 +56,33 @@ struct NativeSearchField: UIViewRepresentable
 
     func makeCoordinator() -> Coordinator
     {
-        return Coordinator(value:$value, continuousUpdates:continuousUpdates)
+        return Coordinator(value:$value, continuousUpdates:continuousUpdates, onBegan:onBegan, onEnded:onEnded)
     }
 
     class Coordinator: NSObject, UISearchTextFieldDelegate
     {
 		var value:Binding<String>
 		var continuousUpdates = true
+		var onBegan:(()->Void)? = nil
+		var onEnded:(()->Void)? = nil
 		
-		init(value:Binding<String>, continuousUpdates:Bool)
+		init(value:Binding<String>, continuousUpdates:Bool, onBegan:(()->Void)?, onEnded:(()->Void)?)
 		{
 			self.value = value
 			self.continuousUpdates = continuousUpdates
+			self.onBegan = onBegan
+			self.onEnded = onEnded
+		}
+		
+    	func textFieldDidBeginEditing(_ textField:UITextField) // became first responder
+		{
+			self.onBegan?()
 		}
 		
 		func textFieldDidEndEditing(_ textField:UITextField)
 		{
 			self.value.wrappedValue = textField.text ?? ""
+			self.onEnded?()
 		}
     }
 }
