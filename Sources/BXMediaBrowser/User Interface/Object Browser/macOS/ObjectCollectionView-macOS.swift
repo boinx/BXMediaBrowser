@@ -526,13 +526,52 @@ extension ObjectCollectionView
 		}
 
 
-		// Only allow selecting enabled Objects
+		// Apple didn't implement Shift-selection of range in NSCollectionView, so we have to provide this feature by ourself here
 		
-    	@MainActor public func collectionView(_ collectionView:NSCollectionView, shouldSelectItemsAt indexPaths:Set<IndexPath>) -> Set<IndexPath>
+     	@MainActor public func collectionView(_ collectionView:NSCollectionView, shouldSelectItemsAt indexPaths:Set<IndexPath>) -> Set<IndexPath>
     	{
+			// Bail out if this is a drag-rectangle selection with multiple cells being selected
+			
+			guard indexPaths.count == 1 else
+			{
+				self.lastClickedIndexPath = nil
+				return indexPaths
+			}
+			
+			// Remember last clicked cell
+			
+			let clickedIndexPath = indexPaths.first
+			let prevIndexPath = self.lastClickedIndexPath
+			self.lastClickedIndexPath = clickedIndexPath
+			
+			// If this is a Shift-click and we have a previous and new indexPath, then create the whole range of indexPaths to be selected
+			
+			guard NSEvent.modifierFlags.contains(.shift) else { return indexPaths }
+			guard let clickedIndexPath = clickedIndexPath else { return indexPaths }
+			guard let prevIndexPath = prevIndexPath else { return indexPaths }
+			
+			let j1 = clickedIndexPath[1]
+			let j2 = prevIndexPath[1]
+			let i1 = min(j1,j2)
+			let i2 = max(j1,j2)
+			
+			var rangeIndexPaths = Set<IndexPath>()
+			
+			for i in i1 ... i2
+			{
+				rangeIndexPaths.insert(IndexPath(item:i, section:0))
+			}
+			
+			return rangeIndexPaths
+    	}
+    	
+		@MainActor public func collectionView(_ collectionView:NSCollectionView, shouldDeselectItemsAt indexPaths:Set<IndexPath>) -> Set<IndexPath>
+    	{
+			self.lastClickedIndexPath = nil
 			return indexPaths
     	}
     	
+    	private var lastClickedIndexPath:IndexPath? = nil
     	
 		// When the selection was changed, update the Quicklook preview panel and notify others
 		
