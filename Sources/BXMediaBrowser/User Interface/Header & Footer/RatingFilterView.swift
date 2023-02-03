@@ -43,6 +43,7 @@ public struct RatingFilterView : View
 	/// The initial rating at mouse down time
 	
 	@State private var initialRating:Int? = nil
+	@State private var currentRating = 0
 	
 	/// The controlsize determines the size of the stars
 	
@@ -145,6 +146,14 @@ public struct RatingFilterView : View
 		// Store rating in data model
 		
 		self.rating.wrappedValue = rating
+		
+		// This will make sure that the view get redrawn in edge case scenarios where the parent doesn't trigger
+		// redrawing, e.g. like being embedded inside a NSMenuItem.
+		
+		DispatchQueue.main.async
+		{
+			self.currentRating = rating
+		}
 	}
 }
 
