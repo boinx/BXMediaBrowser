@@ -36,7 +36,7 @@ public class BXObjectCollectionView : QuicklookCollectionView
 {
 	public static let getInfoNotification = Notification.Name("BXObjectCollectionView-getInfo")
 	
-	private var observers:[Any] = []
+	internal var observers:[Any] = []
 	
 	
 //----------------------------------------------------------------------------------------------------------------------
@@ -102,6 +102,27 @@ public class BXObjectCollectionView : QuicklookCollectionView
 		self.selectionIndexPaths.compactMap
 		{
 			self.item(at:$0) as? ObjectCell
+		}
+	}
+
+
+	/// Checks if any thumbnails of currently visible objects are missing, and reloads them if necessary.
+	///
+	/// This provides a self-healing effect for a situation that sometimes occurs, but the cause isn't understood yet.
+	
+	@objc public func reloadMissingThumbnails()
+	{
+		let visibleItems = self.visibleItems()
+		
+		for item in visibleItems
+		{
+			guard let cell = item as? ObjectCell else { continue }
+			guard let object = cell.object else { continue }
+			
+			if object.thumbnailImage == nil
+			{
+				object.load()
+			}
 		}
 	}
 }

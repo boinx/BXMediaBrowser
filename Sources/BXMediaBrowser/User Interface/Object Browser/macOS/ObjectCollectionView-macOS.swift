@@ -114,6 +114,25 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 		scrollView.drawsBackground = false
 		scrollView.backgroundColor = .clear
 
+		// Check for missing thumbnail during scrolling and reload then when necessary
+		
+		scrollView.postsFrameChangedNotifications = true
+		scrollView.contentView.postsBoundsChangedNotifications = true
+		
+		collectionView.observers += NotificationCenter.default.publisher(for:NSView.frameDidChangeNotification, object:scrollView)
+			.debounce(for: 1.0, scheduler:DispatchQueue.main)
+			.sink
+			{
+				_ in collectionView.reloadMissingThumbnails()
+			}
+
+		collectionView.observers += NotificationCenter.default.publisher(for:NSView.boundsDidChangeNotification, object:scrollView.contentView)
+			.debounce(for: 1.0, scheduler:DispatchQueue.main)
+			.sink
+			{
+				_ in collectionView.reloadMissingThumbnails()
+			}
+
 		return scrollView
 	}
 	
