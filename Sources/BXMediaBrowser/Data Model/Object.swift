@@ -164,7 +164,7 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 
 	/// Purges the thumbnailImage and metadata. This can help to reduce memory footprint.
 	
-	public func purge()
+	public func purge(_ completionHandler:(()->Void)? = nil)
 	{
 		Task
 		{
@@ -178,6 +178,8 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 			{
 				self.thumbnailImage = nil
 				self.metadata = nil
+				
+				completionHandler?()
 			}
 		}
 	}
