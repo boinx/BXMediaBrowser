@@ -27,7 +27,6 @@
 
 import BXSwiftUtils
 import BXSwiftUI
-import BXUIKit
 import SwiftUI
 import AppKit
 import QuickLookUI
@@ -378,43 +377,17 @@ open class ObjectCell : NSCollectionViewItem
 				Photos.displayFilenames.toggle()
 			}
 		}
-
+		
 		// Set rating on selected objects
 		
-		menu.addItem(NSMenuItem.separator())
-
-		let rating = NSLocalizedString("rating", tableName:"Object.Filter", bundle:.BXMediaBrowser, comment:"Sorting Kind Name").uppercased()
-		let title = NSAttributedString(string:rating, attributes:[.font:NSFont.systemFont(ofSize:NSFont.smallSystemFontSize)])
-		let item = NSMenuItem(title:"", action:nil, keyEquivalent:"")
-		item.attributedTitle = title
-		item.isEnabled = false
-		menu.addItem(item)
-
-//		menu.addItem(NSMenuItem(sectionName:rating))
+		menu += NSMenuItem.separator()
 		
-		for i in 0 ... 5
+		menu += NSMenuItem(sectionName:NSLocalizedString("rating", tableName:"Object.Filter", bundle:.BXMediaBrowser, comment:"Sorting Kind Name"))
+		
+		menu += NSMenuItem(size:CGSize(106,20))
 		{
-			self.addMenuItem(menu:menu, rating:i)
+			RatingFilterView(rating:self.ratingBinding)
 		}
-		
-		// Debugging commands (not visible in release builds)
-		
-		#if DEBUG
-		
-		menu.addItem(NSMenuItem.separator())
-		menu.addItem(NSMenuItem(sectionName:"DEBUG"))
-
-		self.addMenuItem(menu:menu, title:"Purge")
-		{
-			object.purge()
-		}
-
-		self.addMenuItem(menu:menu, title:NSLocalizedString("Reload", bundle:.BXMediaBrowser, comment:"Menu Item"))
-		{
-			object.load()
-		}
-
-		#endif
 		
 		return menu
 	}
@@ -437,53 +410,22 @@ open class ObjectCell : NSCollectionViewItem
 	}
 	
 	
-	func addMenuItem(menu:NSMenu?, rating:Int)
+	@MainActor var ratingBinding:Binding<Int>
 	{
-		let collectionView = self.collectionView as? BXObjectCollectionView
-
-		let wrapper = ActionWrapper()
-		{
-			[weak collectionView] in
-			guard let collectionView = collectionView else { return }
-			collectionView.selectedCells.forEach { $0.setRating(rating) }
-		}
-		
-		let item = NSMenuItem(title:"", action:nil, keyEquivalent:"")
-		item.attributedTitle = self.title(for:rating)
-		item.representedObject = wrapper
-		item.target = wrapper
-		item.action = #selector(ActionWrapper.execute(_:))
-		
-		menu?.addItem(item)
-	}
-	
-	
-	func title(for rating:Int) -> NSAttributedString
-	{
-		let title = NSMutableAttributedString()
-		
-		for i in 1 ... 5
-		{
-			if i <= rating
+		Binding<Int>(
+			get:
 			{
-				title.append(NSAttributedString(string:"★", attributes:[.foregroundColor:NSColor.yellow]))
-			}
-			else
+				self.object.rating
+			},
+			set:
 			{
-				title.append(NSAttributedString(string:"☆", attributes:[.foregroundColor:NSColor.gray]))
-			}
-		}
-		
-		return title
+				rating in
+				guard let collectionView = self.collectionView as? BXObjectCollectionView else { return }
+				let selectedObjects = collectionView.selectedCells.compactMap { $0.object }
+				selectedObjects.forEach { $0.rating = rating }
+			})
 	}
 
-
-	open func setRating(_ rating:Int)
-	{
-		self.object?.rating = rating
-	}
-	
-	
 	
 	/// Shows the "Get Info" popover anchored on the view of this cell
 	

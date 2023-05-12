@@ -150,6 +150,7 @@
 		D0C1CB2A281D1A6800128DED /* BXSwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0C1CB29281D1A6800128DED /* BXSwiftUI.framework */; };
 		D0C1CBA9281D6FF100128DED /* QLThumbnailGenerator+asyncAwait.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C1CBA8281D6FF100128DED /* QLThumbnailGenerator+asyncAwait.swift */; };
 		D0C1CBAD281D885A00128DED /* NativeSearchField+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C1CBAC281D885900128DED /* NativeSearchField+iOS.swift */; };
+		D0C541A7298D363200183382 /* NSMenuItem+ConvenienceInit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C541A6298D363200183382 /* NSMenuItem+ConvenienceInit.swift */; };
 		D0CBC145282A2E9400C6BABB /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CBC144282A2E9300C6BABB /* Config.swift */; };
 		D0CBC149282A3A2700C6BABB /* ObjectWarningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CBC148282A3A2700C6BABB /* ObjectWarningView.swift */; };
 		D0CBC1532832B61400C6BABB /* LightroomClassic.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CBC1522832B61300C6BABB /* LightroomClassic.swift */; };
@@ -336,6 +337,7 @@
 		D0C1CB29281D1A6800128DED /* BXSwiftUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BXSwiftUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0C1CBA8281D6FF100128DED /* QLThumbnailGenerator+asyncAwait.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QLThumbnailGenerator+asyncAwait.swift"; sourceTree = "<group>"; };
 		D0C1CBAC281D885900128DED /* NativeSearchField+iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NativeSearchField+iOS.swift"; sourceTree = "<group>"; };
+		D0C541A6298D363200183382 /* NSMenuItem+ConvenienceInit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSMenuItem+ConvenienceInit.swift"; sourceTree = "<group>"; };
 		D0CBC144282A2E9300C6BABB /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		D0CBC148282A3A2700C6BABB /* ObjectWarningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectWarningView.swift; sourceTree = "<group>"; };
 		D0CBC14D2832939200C6BABB /* LightroomClassicSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightroomClassicSource.swift; sourceTree = "<group>"; };
@@ -643,6 +645,7 @@
 				D061B1F22805A35700B365E6 /* NativeSearchField+macOS.swift */,
 				D0C1CBAC281D885900128DED /* NativeSearchField+iOS.swift */,
 				D01B492B27CA1378008249C0 /* MenuAction.swift */,
+				D0C541A6298D363200183382 /* NSMenuItem+ConvenienceInit.swift */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -928,6 +931,7 @@
 				D01B498027CA1378008249C0 /* UnsplashJSON.swift in Sources */,
 				D0CBC1582833D6BF00C6BABB /* LightroomClassicSourceView.swift in Sources */,
 				D0C1CBA9281D6FF100128DED /* QLThumbnailGenerator+asyncAwait.swift in Sources */,
+				D0C541A7298D363200183382 /* NSMenuItem+ConvenienceInit.swift in Sources */,
 				D01B495327CA1378008249C0 /* TempFilePool.swift in Sources */,
 				D0CBC161283528E100C6BABB /* LightroomClassicObject.swift in Sources */,
 				D0CBC145282A2E9400C6BABB /* Config.swift in Sources */,
