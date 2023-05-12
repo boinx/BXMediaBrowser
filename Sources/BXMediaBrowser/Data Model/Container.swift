@@ -45,7 +45,7 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 	
 	/// The name of the Container can be displayed in the UI
 	
-	public let name:String
+	@Published public var name:String = ""
 	
 	/// This can be any kind of data that subclasses need to their job
 	
