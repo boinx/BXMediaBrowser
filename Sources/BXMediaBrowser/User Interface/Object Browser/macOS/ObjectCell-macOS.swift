@@ -389,6 +389,25 @@ open class ObjectCell : NSCollectionViewItem
 			RatingFilterView(rating:self.ratingBinding)
 		}
 		
+		// Debugging commands (not visible in release builds)
+		
+		#if DEBUG
+		
+		menu.addItem(NSMenuItem.separator())
+		menu.addItem(NSMenuItem(sectionName:"DEBUG"))
+
+		self.addMenuItem(menu:menu, title:"Purge")
+		{
+			object.purge()
+		}
+
+		self.addMenuItem(menu:menu, title:NSLocalizedString("Reload", bundle:.BXMediaBrowser, comment:"Menu Item"))
+		{
+			object.load()
+		}
+
+		#endif
+		
 		return menu
 	}
 
