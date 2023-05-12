@@ -41,31 +41,48 @@ import AppKit
 
 open class FolderContainer : Container
 {
-	/// This helper reports any external changes to the folder
+	/// These helpers report any external changes to the folder
 	
-	let folderObserver:FolderObserver
-
+	private var nameObserver:FolderObserver
+	private var contentsObserver:FolderObserver
 
 	/// Creates a new Container for the folder at the specified URL
 	
 	public required init(url:URL, name:String? = nil, filter:FolderFilter, removeHandler:((Container)->Void)? = nil)
 	{
-		self.folderObserver = FolderObserver(url:url)
+		let refURL = (url as NSURL).fileReferenceURL
+		
+		self.nameObserver = FolderObserver(url:url.deletingLastPathComponent())
+		self.contentsObserver = FolderObserver(url:url)
 		
 		super.init(
 			identifier: FolderSource.identifier(for:url),
 			name: name ?? FileManager.default.displayName(atPath:url.path),
-			data: url,
+			data: refURL,
 			filter: filter,
 			loadHandler: Self.loadContents,
 			removeHandler: removeHandler)
-			
-		self.folderObserver.folderDidChange =
+		
+		// Observe changes of folder name - in this case the container name needs to be updated, and the container needs to be reloaded
+		
+		self.nameObserver.folderDidChange =
+		{
+			[weak self] in
+			guard let self = self else { return }
+			self.name = name ?? FileManager.default.displayName(atPath:refURL.swiftURL.path)
+			self.reload()
+		}
+
+		self.nameObserver.resume()
+		
+		// Observe changes of folder contents
+		
+		self.contentsObserver.folderDidChange =
 		{
 			[weak self] in self?.reload()
 		}
-		
-		self.folderObserver.resume()
+
+		self.contentsObserver.resume()
 		
 		#if os(macOS)
 		self.fileDropDestination = FolderDropDestination(folderURL:url)
