@@ -27,6 +27,7 @@
 
 import BXSwiftUtils
 import BXSwiftUI
+import BXUIKit
 import SwiftUI
 import AppKit
 import QuickLookUI
@@ -377,7 +378,7 @@ open class ObjectCell : NSCollectionViewItem
 				Photos.displayFilenames.toggle()
 			}
 		}
-		
+
 		// Set rating on selected objects
 		
 		menu.addItem(NSMenuItem.separator())
@@ -389,10 +390,31 @@ open class ObjectCell : NSCollectionViewItem
 		item.isEnabled = false
 		menu.addItem(item)
 
+//		menu.addItem(NSMenuItem(sectionName:rating))
+		
 		for i in 0 ... 5
 		{
 			self.addMenuItem(menu:menu, rating:i)
 		}
+		
+		// Debugging commands (not visible in release builds)
+		
+		#if DEBUG
+		
+		menu.addItem(NSMenuItem.separator())
+		menu.addItem(NSMenuItem(sectionName:"DEBUG"))
+
+		self.addMenuItem(menu:menu, title:"Purge")
+		{
+			object.purge()
+		}
+
+		self.addMenuItem(menu:menu, title:NSLocalizedString("Reload", bundle:.BXMediaBrowser, comment:"Menu Item"))
+		{
+			object.load()
+		}
+
+		#endif
 		
 		return menu
 	}
