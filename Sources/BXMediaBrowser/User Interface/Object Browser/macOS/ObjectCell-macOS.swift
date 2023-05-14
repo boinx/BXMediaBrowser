@@ -414,7 +414,7 @@ open class ObjectCell : NSCollectionViewItem
 
 	/// Adds a new menu item with the specified title and action
 	
-	func addMenuItem(menu:NSMenu?, title:String, state:NSControl.StateValue = .off, action:@escaping ()->Void)
+	public func addMenuItem(menu:NSMenu?, index:Int? = nil, title:String, state:NSControl.StateValue = .off, action:@escaping ()->Void)
 	{
 		guard let menu = menu else { return }
 		
@@ -425,7 +425,15 @@ open class ObjectCell : NSCollectionViewItem
 		item.target = wrapper
 		item.action = #selector(ActionWrapper.execute(_:))
 		item.state = state
-		menu.addItem(item)
+		
+		if let index = index
+		{
+			menu.insertItem(item, at:index)
+		}
+		else
+		{
+			menu.addItem(item)
+		}
 	}
 	
 	
