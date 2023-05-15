@@ -100,6 +100,10 @@ open class AudioObjectCell : ObjectCell
 		self.ratingView = ratingView
 		self.view.addSubview(ratingView)
 		
+		let useCountView = NSTextField(frame:CGRect(x:46, y:24, width:18, height:18))
+		self.useCountView = useCountView
+		self.view.addSubview(useCountView)
+
 		let durationField = NSTextField(frame:CGRect(x:924, y:24, width:4, height:16))
 		self.durationField = durationField
 		self.view.addSubview(durationField)
@@ -133,6 +137,19 @@ open class AudioObjectCell : ObjectCell
 		let width1 = ratingView.widthAnchor.constraint(equalToConstant:90)
 		width1.priority = .defaultHigh
 		width1.isActive = true
+
+		useCountView.cell = PillTextFieldCell()
+		useCountView.textColor = .white
+		useCountView.backgroundColor = NSColor(calibratedRed:0.0, green:0.5, blue:0.0, alpha:1.0)
+		useCountView.font = NSFont.systemFont(ofSize:11, weight:.bold)
+		useCountView.alignment = .center
+//		self.setupUseCountLayout()
+		useCountView.constraints.forEach { $0.isActive = false }
+		useCountView.translatesAutoresizingMaskIntoConstraints = false
+		useCountView.trailingAnchor.constraint(equalTo:imageView.trailingAnchor, constant:2).isActive = true
+		useCountView.topAnchor.constraint(equalTo:imageView.topAnchor, constant:-2).isActive = true
+		useCountView.heightAnchor.constraint(equalToConstant:18).isActive = true
+		useCountView.widthAnchor.constraint(greaterThanOrEqualTo:useCountView.heightAnchor, constant:0).isActive = true
 
 		durationField.translatesAutoresizingMaskIntoConstraints = false
 		durationField.topAnchor.constraint(equalTo:view.topAnchor, constant:6).isActive = true
@@ -271,6 +288,12 @@ open class AudioObjectCell : ObjectCell
 			self.nameField?.alphaValue = alpha
 			self.durationField?.alphaValue = alpha
 		}
+		
+		// Use count badge
+		
+		let n = StatisticsController.shared.useCount(for:object)
+		self.useCountView?.stringValue = "\(n)"
+		self.useCountView?.isHidden = n == 0
 	}
 	
 	
