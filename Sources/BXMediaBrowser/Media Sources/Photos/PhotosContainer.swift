@@ -318,7 +318,7 @@ public class PhotosContainer : Container
 			
 			case .library(let allAssets):
 
-				if change.changeDetails(for:allAssets) != nil
+				if let details = change.changeDetails(for:allAssets), details.insertedIndexes != nil || details.removedIndexes != nil || details.hasMoves
 				{
 					requestReload = true
 				}
