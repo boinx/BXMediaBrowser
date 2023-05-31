@@ -254,8 +254,11 @@ public class PhotosObject : Object
 					self.isDownloadingPreview = false
 					
 					#if os(macOS)
-					QLPreviewPanel.shared().refreshCurrentPreviewItem()
-					QLPreviewPanel.shared().reloadData()
+					if QLPreviewPanel.shared().isVisible
+					{
+						QLPreviewPanel.shared().refreshCurrentPreviewItem()
+						QLPreviewPanel.shared().reloadData()
+					}
 					#endif
 				}
 			}

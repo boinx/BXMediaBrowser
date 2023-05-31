@@ -279,8 +279,11 @@ open class LightroomCCObject : Object, AppLifecycleMixin
 					self._previewItemURL = localURL
 					
 					#if os(macOS)
-					QLPreviewPanel.shared().refreshCurrentPreviewItem()
-					QLPreviewPanel.shared().reloadData()
+					if QLPreviewPanel.shared().isVisible
+					{
+						QLPreviewPanel.shared().refreshCurrentPreviewItem()
+						QLPreviewPanel.shared().reloadData()
+					}
 					#endif
 				}
 			}
