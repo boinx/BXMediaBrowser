@@ -533,8 +533,9 @@ extension ObjectCollectionView
 		@MainActor public func collectionView(_ collectionView:NSCollectionView, willDisplay item:NSCollectionViewItem, forRepresentedObjectAt indexPath:IndexPath)
 		{
 			guard let container = self.container else { return }
-			
 			let n = container.objects.count
+			guard n > 0 else { return }
+			
 			let i = indexPath.item
 			let j = (n - 1).clipped(to:0 ... n-1)
 			
