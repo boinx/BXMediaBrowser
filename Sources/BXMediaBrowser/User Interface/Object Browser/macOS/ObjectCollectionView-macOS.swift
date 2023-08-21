@@ -508,7 +508,12 @@ extension ObjectCollectionView
 		
 		@MainActor func cell(for collectionView:NSCollectionView, indexPath:IndexPath, identifier:Object) -> NSCollectionViewItem?
 		{
-			// Get the object - Please note that the dataSource use Object directly, because it is Hashable and Equatable
+			// Check if indexPath is valid
+			
+			let n = self.container?.objects.count ?? 0
+			let i = indexPath.item
+			guard i>=0 && i<n else { return nil }
+			
 			
 			let object = identifier
 			
@@ -708,7 +713,7 @@ extension ObjectCollectionView
 		{
 			let i = indexPath.item
 			guard let objects = self.container?.objects else { return nil }
-			guard i < objects.count else { return nil }
+			guard i>=0 && i<objects.count else { return nil }
 			return objects[i]
 		}
 
