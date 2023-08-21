@@ -158,6 +158,25 @@ public class QuicklookCollectionView : NSCollectionView, QLPreviewPanelDataSourc
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	// Override methods to catch exceptions and prevent crashes
+
+
+    override open func item(at indexPath: IndexPath) -> NSCollectionViewItem?
+    {
+		var item:NSCollectionViewItem? = nil
+
+		try? NSException.toSwiftError
+		{
+			item = super.item(at:indexPath)
+		}
+
+		return item
+    }
+   
+   
+//----------------------------------------------------------------------------------------------------------------------
+
+
 	// MARK: - QLPreviewPanelDataSource
 
 
