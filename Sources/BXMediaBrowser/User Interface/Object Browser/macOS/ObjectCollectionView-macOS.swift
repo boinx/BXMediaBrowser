@@ -517,6 +517,7 @@ extension ObjectCollectionView
 			let i = indexPath.item
 			guard i>=0 && i<n else { return nil }
 			
+			// Get the object - Please note that the dataSource uses Object directly, because it is Hashable and Equatable
 			
 			let object = identifier
 			
