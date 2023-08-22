@@ -83,7 +83,7 @@ extension DraggingProgressMixin
 		if let existing = Progress.current() ?? Progress.globalParent
 		{
 			progress = existing
-			progress.totalUnitCount += Int64(count)
+			progress.totalUnitCount += Int64(clamping:count)
 		}
 		else
 		{
@@ -92,7 +92,7 @@ extension DraggingProgressMixin
 			Progress.globalParent = nil
 			
 			progress = Progress(parent:nil, userInfo:nil)		// Using this init doesn't link parent to possibly still existing Progress.current()
-			progress.totalUnitCount = Int64(count)
+			progress.totalUnitCount = Int64(clamping:count)
 			self.progress = progress
 			
 			Progress.globalParent = progress
