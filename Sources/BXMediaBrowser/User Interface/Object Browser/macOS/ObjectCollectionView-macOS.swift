@@ -200,9 +200,9 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 // ---------
 
 // The layout created by this function contains a nasty edge case bug that causes an exception inside Apple's
-// layout solving code, and thus leads to a crash: When using and .absolute(cellWidth) the layout is fine as
+// layout solving code, and thus leads to a crash: When using an .absolute(cellWidth) the layout is fine as
 // long as the view is wide enough to accommodate at least one cell. But when resizing the view (by resizing
-// the window or the sidebar), so that it get narrower that one cell, creating and assigning a new layout
+// the window or the sidebar), so that it gets narrower that one cell, creating and assigning a new layout
 // causes the exception and thus a crash.
 
 // WORKAROUNDS
@@ -212,7 +212,7 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 // crash is to switch to .fractionalWidth(1.0) layout BEFORE reaching the small view width. The only way I figured
 // out was to apply a "safety" margin e.g. 10pt, so when reaching the safety size, we switch to .fractionalWidth
 // layout. That way we are already at .fractionalWidth when reaching the fatal small view size and the crash is
-// avoided. However, if the user moves the moouse really fast when resizing the view, we go from a large view size
+// avoided. However, if the user moves the mouse really fast when resizing the view, we go from a large view size
 // to a fatally small one in one step, any we never make the required switch to .fractionalWidth beforehand!
 
 // 2) Another workaround would be to stop using .absolute layout altogehter and simulate its behavior with the
