@@ -273,7 +273,7 @@ extension ObjectCollectionView
 		// Group (row)
 		
         let groupSize = NSCollectionLayoutSize(widthDimension:.fractionalWidth(1.0), heightDimension:itemHeight)
- 		let group = NSCollectionLayoutGroup.horizontal(layoutSize:groupSize, subitems:[item])
+		let group = NSCollectionLayoutGroup.horizontal(layoutSize:groupSize, subitem:item, count:1) // To avoid edge case crashes do not call with subitems:[item], but instead call with fixed count=1. Fore more refer to https://stackoverflow.com/questions/63748268/uicollectionviewdiffabledatasource-crash-invalid-parameter-not-satisfying-item
 		group.interItemSpacing = .fixed(d)
 		
 		// Section
