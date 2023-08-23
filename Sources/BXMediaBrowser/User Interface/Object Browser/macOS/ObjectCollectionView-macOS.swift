@@ -240,7 +240,10 @@ extension ObjectCollectionView
 		let viewWidth = newSize?.width ?? collectionView.bounds.width
 		let minWidth:CGFloat = 70 // This is the minimum width to display ObjectRatingView without clipping
 		let maxWidth = max(minWidth, viewWidth - 2*d - 2)
+
 		let size = self.uiState.thumbnailSize
+		let cellWidth = size.clipped(to:minWidth...maxWidth)
+		let cellHeight = (cellWidth / ratio).validated(fallbackValue: h)
 		
 		// Item (cell)
 		
@@ -262,9 +265,6 @@ extension ObjectCollectionView
 //        }
         else
         {
-            let cellWidth = size.clipped(to:minWidth...maxWidth)
-            let cellHeight = (cellWidth / ratio).validated(fallbackValue: h)
-
             itemWidth = .absolute(cellWidth)
             itemHeight = .absolute(cellHeight)
             item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension:itemWidth, heightDimension:itemHeight))
