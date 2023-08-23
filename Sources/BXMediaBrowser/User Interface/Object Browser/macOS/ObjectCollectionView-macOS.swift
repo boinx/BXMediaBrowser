@@ -500,9 +500,16 @@ extension ObjectCollectionView
 			snapshot.appendSections([0])
 			snapshot.appendItems(objects, toSection:0)
 			
-			try? NSException.toSwiftError
+			do
 			{
-				self.dataSource.apply(snapshot, animatingDifferences:shouldAnimate)
+				try NSException.toSwiftError
+				{
+					self.dataSource.apply(snapshot, animatingDifferences:shouldAnimate)
+				}
+			}
+			catch let error
+			{
+				log.error {"\(Self.self).\(#function) ERROR \(error)"}
 			}
 		}
 
