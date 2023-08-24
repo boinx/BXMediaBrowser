@@ -232,18 +232,18 @@ extension ObjectCollectionView
 	
     private func createLayout(for collectionView:NSCollectionView, newSize:NSSize? = nil) -> NSCollectionViewLayout
     {
-		let w:CGFloat = cellType.width
-		let h:CGFloat = cellType.height
-		let d:CGFloat = cellType.spacing
+		let w:CGFloat = floor(cellType.width)
+		let h:CGFloat = floor(cellType.height)
+		let d:CGFloat = floor(cellType.spacing)
         let ratio = (w/h).validated(fallbackValue:0.75)
 		
 		let viewWidth = newSize?.width ?? collectionView.bounds.width
-		let minWidth:CGFloat = 70 // This is the minimum width to display ObjectRatingView without clipping
-		let maxWidth = max(minWidth, viewWidth - 2*d - 2)
-
+		let maxCellWidth = floor(max(32.0, viewWidth - 2*d - 2))	// view width determines maximum size - in case of 0 width view enforce a maxCellWidth>0 or we crash!
+		let minCellWidth = floor(min(70.0, maxCellWidth))			// 70 is the minimum width to display ObjectRatingView without clipping
+		
 		let size = self.uiState.thumbnailSize
-		let cellWidth = size.clipped(to:minWidth...maxWidth)
-		let cellHeight = (cellWidth / ratio).validated(fallbackValue: h)
+		let cellWidth = floor(size.clipped(to:minCellWidth...maxCellWidth))
+		let cellHeight = floor((cellWidth/ratio).validated(fallbackValue:h))
 		
 		// Item (cell)
 		
@@ -263,7 +263,7 @@ extension ObjectCollectionView
 //            itemHeight = .fractionalWidth(1.0/ratio)
 //            item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension:itemWidth, heightDimension:itemHeight))
 //        }
-        else
+        else	// ImageObjectCells use calculated size (cellWidth,cellHeight)
         {
             itemWidth = .absolute(cellWidth)
             itemHeight = .absolute(cellHeight)
