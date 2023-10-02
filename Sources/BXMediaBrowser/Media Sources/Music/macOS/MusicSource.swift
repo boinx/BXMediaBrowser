@@ -186,8 +186,11 @@ public class MusicSource : Source, AccessControl
 		   rootFolderURL.exists && rootFolderURL.isDirectory,
 		   rootFolderURL.startAccessingSecurityScopedResource()
 		{
-			MusicApp.shared.rootFolderURL = rootFolderURL
-			MusicApp.shared.grantedFolderURL = rootFolderURL
+			await MainActor.run
+			{
+				MusicApp.shared.rootFolderURL = rootFolderURL
+				MusicApp.shared.grantedFolderURL = rootFolderURL
+			}
 		}
 		
 		// Create top-level Containers
