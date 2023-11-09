@@ -126,6 +126,7 @@
 		D061B1F32805A35700B365E6 /* NativeSearchField+macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = D061B1F22805A35700B365E6 /* NativeSearchField+macOS.swift */; };
 		D06503B728255442002E52BE /* BXObjectCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D06503B628255442002E52BE /* BXObjectCollectionView.swift */; };
 		D08906DE2875C7B700FD6C0B /* LegacyDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08906DD2875C7B700FD6C0B /* LegacyDataController.swift */; };
+		D09B34082AFD08830082C906 /* NSColor+selectedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09B34072AFD08830082C906 /* NSColor+selectedImage.swift */; };
 		D0AA8FC0282038C20009A890 /* ObjectCollectionView-macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0AA8FB8282038C20009A890 /* ObjectCollectionView-macOS.swift */; };
 		D0AA8FC1282038C20009A890 /* ObjectRatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0AA8FB9282038C20009A890 /* ObjectRatingView.swift */; };
 		D0AA8FC2282038C20009A890 /* QuicklookCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0AA8FBA282038C20009A890 /* QuicklookCollectionView.swift */; };
@@ -311,6 +312,7 @@
 		D061B1F22805A35700B365E6 /* NativeSearchField+macOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NativeSearchField+macOS.swift"; sourceTree = "<group>"; };
 		D06503B628255442002E52BE /* BXObjectCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BXObjectCollectionView.swift; sourceTree = "<group>"; };
 		D08906DD2875C7B700FD6C0B /* LegacyDataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LegacyDataController.swift; sourceTree = "<group>"; };
+		D09B34072AFD08830082C906 /* NSColor+selectedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSColor+selectedImage.swift"; sourceTree = "<group>"; };
 		D0AA8FB8282038C20009A890 /* ObjectCollectionView-macOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ObjectCollectionView-macOS.swift"; sourceTree = "<group>"; };
 		D0AA8FB9282038C20009A890 /* ObjectRatingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectRatingView.swift; sourceTree = "<group>"; };
 		D0AA8FBA282038C20009A890 /* QuicklookCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuicklookCollectionView.swift; sourceTree = "<group>"; };
@@ -740,6 +742,7 @@
 				D0AA8FBC282038C20009A890 /* ObjectView.swift */,
 				D0AA8FB9282038C20009A890 /* ObjectRatingView.swift */,
 				D0AA8FBE282038C20009A890 /* PillTextFieldCell.swift */,
+				D09B34072AFD08830082C906 /* NSColor+selectedImage.swift */,
 			);
 			path = macOS;
 			sourceTree = "<group>";
@@ -896,6 +899,7 @@
 				D06503B728255442002E52BE /* BXObjectCollectionView.swift in Sources */,
 				D0BAD10827D392D700B749FD /* PexelsPhotoContainer.swift in Sources */,
 				D00DF1BE27F45BA300DC1D27 /* SortOrderPopup.swift in Sources */,
+				D09B34082AFD08830082C906 /* NSColor+selectedImage.swift in Sources */,
 				D01B497127CA1378008249C0 /* MusicFilter.swift in Sources */,
 				D061B1F32805A35700B365E6 /* NativeSearchField+macOS.swift in Sources */,
 				D01B498927CA1378008249C0 /* PhotosObject.swift in Sources */,

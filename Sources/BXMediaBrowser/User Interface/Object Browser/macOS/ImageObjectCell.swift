@@ -209,7 +209,7 @@ open class ImageObjectCell : ObjectCell
 		if let layer = self.imageView?.subviews.first?.layer
 		{
 			layer.borderWidth = isHilited ? 3.0 : 1.0
-			layer.borderColor = isHilited ? NSColor.systemYellow.cgColor : self.strokeColor.cgColor
+			layer.borderColor = isHilited ? NSColor.selectedImageColor.cgColor : self.strokeColor.cgColor
 		}
     }
     
