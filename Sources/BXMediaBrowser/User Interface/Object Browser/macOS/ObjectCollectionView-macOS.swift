@@ -86,6 +86,7 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 		self.registerCellType(for:collectionView)
         let layout = self.createLayout(for:collectionView)
         collectionView.collectionViewLayout = layout
+        collectionView.backgroundColors = [.clear]
         
         // Configure selection handling
         
