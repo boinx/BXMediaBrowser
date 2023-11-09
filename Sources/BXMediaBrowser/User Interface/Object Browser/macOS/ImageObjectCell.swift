@@ -208,7 +208,7 @@ open class ImageObjectCell : ObjectCell
 
 		if let layer = self.imageView?.subviews.first?.layer
 		{
-			layer.borderWidth = isHilited ? 4.0 : 1.0
+			layer.borderWidth = isHilited ? 3.0 : 1.0
 			layer.borderColor = isHilited ? NSColor.systemYellow.cgColor : self.strokeColor.cgColor
 		}
     }
