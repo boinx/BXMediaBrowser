@@ -38,13 +38,15 @@ public struct ObjectMetadataEntry : Identifiable
 	public let id:String
 	public var label:String
 	public var value:String
+	public var popoverView:(any View)?
 	public var action:(()->Void)?
 	
-	public init(label:String, value:String, action:(()->Void)? = nil)
+	public init(label:String, value:String, popoverView:(any View)? = nil, action:(()->Void)? = nil)
 	{
 		self.id = UUID().uuidString
 		self.label = label
 		self.value = value
+		self.popoverView = popoverView
 		self.action = action
 	}
 }
@@ -84,6 +86,8 @@ public struct LocalizedMetadataView : View
 	
 	var localizedMetadata:[ObjectMetadataEntry]
 	
+	@State private var isPopoverVisible = false
+	
 	// Init
 	
 	public init(with localizedMetadata:[ObjectMetadataEntry])
@@ -106,8 +110,9 @@ public struct LocalizedMetadataView : View
 					BXLabelView(label:entry.label, alignment:.trailing)
 					{
 						Text(entry.value)
-							.metadataValueStyle(for:entry.action)
-							.onOptionalTapGesture(entry.action)
+							.metadataValueStyle(for:entry)
+							.optionalPopover(for:entry, state:$isPopoverVisible)
+							.onOptionalTapGesture(with:entry.action)
 							.lineLimit(nil)
 							.fixedSize(horizontal:false, vertical:true)
 					}
@@ -131,11 +136,31 @@ public struct LocalizedMetadataView : View
 
 public extension View
 {
-	@ViewBuilder func onOptionalTapGesture(_ action:(()->Void)?) -> some View
+	@ViewBuilder func onOptionalTapGesture(with action:(()->Void)?) -> some View
 	{
 		if let action = action
 		{
 			self.onTapGesture(perform:action)
+		}
+		else
+		{
+			self
+		}
+	}
+
+
+	@ViewBuilder func optionalPopover(for entry:ObjectMetadataEntry, state:Binding<Bool>) -> some View
+	{
+		if let popoverView = entry.popoverView
+		{
+			self.popover(isPresented:state, arrowEdge:.trailing)
+			{
+				AnyView(popoverView)
+			}
+			.onTapGesture
+			{
+				state.wrappedValue = true
+			}
 		}
 		else
 		{
@@ -147,9 +172,9 @@ public extension View
 
 public extension Text
 {
-	@ViewBuilder func linkStyle(_ action:(()->Void)?) -> some View
+	@ViewBuilder func linkStyle(for entry:ObjectMetadataEntry) -> some View
 	{
-		if action != nil
+		if entry.action != nil || entry.popoverView != nil
 		{
 			self
 				.underline()
@@ -166,11 +191,11 @@ public extension Text
 	}
 	
 	
-	@ViewBuilder func metadataValueStyle(for action:(()->Void)?) -> some View
+	@ViewBuilder func metadataValueStyle(for entry:ObjectMetadataEntry) -> some View
 	{
-		if action != nil
+		if entry.action != nil || entry.popoverView != nil
 		{
-			self.linkStyle(action)
+			self.linkStyle(for:entry)
 		}
 		else
 		{
