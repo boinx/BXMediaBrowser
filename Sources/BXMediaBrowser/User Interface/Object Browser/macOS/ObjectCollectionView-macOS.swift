@@ -114,6 +114,7 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 		scrollView.contentView.drawsBackground = false
 		scrollView.drawsBackground = false
 		scrollView.backgroundColor = .clear
+ 		scrollView.identifier = NSUserInterfaceItemIdentifier("BXMediaBrowser.ObjectBrowserView")
 
 		// Check for missing thumbnail during scrolling and reload then when necessary
 		

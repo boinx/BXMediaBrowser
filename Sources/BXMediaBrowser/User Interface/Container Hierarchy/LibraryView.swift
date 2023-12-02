@@ -24,6 +24,7 @@
 
 
 import SwiftUI
+import BXSwiftUI
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -67,6 +68,10 @@ public struct LibraryView : View
 		
 		.environmentObject(library)
 
+		// Set id for finding in a hierarchy
+		
+		.identifiableBackingView(withID:"BXMediaBrowser.LibraryView")
+
 		// When important properties of the library have changed, then save the current state
 		
 //		.onReceive(library.$selectedContainer)
@@ -78,5 +83,6 @@ public struct LibraryView : View
 
 
 //----------------------------------------------------------------------------------------------------------------------
+
 
 
