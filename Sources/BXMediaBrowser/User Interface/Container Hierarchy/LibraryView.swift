@@ -70,7 +70,7 @@ public struct LibraryView : View
 
 		// Set id for finding in a hierarchy
 		
-		.identifiableBackingView(withID:"BXMediaBrowser.LibraryView")
+		.identifiableBackgroundView(withID:"BXMediaBrowser.LibraryView")
 
 		// When important properties of the library have changed, then save the current state
 		
