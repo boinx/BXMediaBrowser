@@ -70,8 +70,10 @@ public struct LibraryView : View
 
 		// Set id for finding in a hierarchy
 		
+		#if os(macOS)
 		.identifiableBackgroundView(withID:"BXMediaBrowser.LibraryView")
-
+		#endif
+		
 		// When important properties of the library have changed, then save the current state
 		
 //		.onReceive(library.$selectedContainer)

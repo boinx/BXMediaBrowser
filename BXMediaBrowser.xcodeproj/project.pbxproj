@@ -160,7 +160,7 @@
 		D0CBC1582833D6BF00C6BABB /* LightroomClassicSourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CBC1572833D6BE00C6BABB /* LightroomClassicSourceView.swift */; };
 		D0CBC15D283518EA00C6BABB /* LightroomClassic.strings in Resources */ = {isa = PBXBuildFile; fileRef = D0CBC15B283518EA00C6BABB /* LightroomClassic.strings */; };
 		D0CBC161283528E100C6BABB /* LightroomClassicObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CBC14F283299EF00C6BABB /* LightroomClassicObject.swift */; };
-		D0D7145E28DC6B2000C0B2F9 /* iMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D7145D28DC6B2000C0B2F9 /* iMedia.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		D0D7145E28DC6B2000C0B2F9 /* iMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D7145D28DC6B2000C0B2F9 /* iMedia.framework */; platformFilters = (macos, ); settings = {ATTRIBUTES = (Required, ); }; };
 		D0D9EDB027FC82E700D5D7FB /* UnsplashContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDAF27FC82E700D5D7FB /* UnsplashContainerView.swift */; };
 		D0D9EDB227FC83E600D5D7FB /* PexelsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDB127FC83E600D5D7FB /* PexelsContainerView.swift */; };
 		D0D9EDB427FCADB100D5D7FB /* PHAssetCollection+dateInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9EDB327FCADB100D5D7FB /* PHAssetCollection+dateInterval.swift */; };
