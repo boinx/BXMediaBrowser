@@ -73,6 +73,10 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 	
 	@MainActor @Published public private(set) var objects:[Object] = []
 	
+	/// The number of MediaObjects in this container. This property can be accessed outside the main thread, but its value might not be current.
+	
+	@Published public private(set) var objectCount = 0
+	
 	/// Returns true if this container is currently being loaded
 	
 	@MainActor @Published public private(set) var isLoading = false
@@ -293,6 +297,7 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 				{
 					self.containers = containers
 					self.objects = uniqueObjects
+					self.objectCount = uniqueObjects.count
 					self.isExpanded = isExpanded
 
 					// Restore isExpanded state of containers
