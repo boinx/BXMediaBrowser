@@ -99,6 +99,10 @@ public struct SectionView : View
 				}
 			})
 		
+		// For scripting support (to highlight sections)
+		
+		.identifiableBackgroundView(withID:"BXMediaBrowser.\(library.identifier).\(section.identifier)")
+			
 		// Layout
 		
 		.padding(.horizontal)
