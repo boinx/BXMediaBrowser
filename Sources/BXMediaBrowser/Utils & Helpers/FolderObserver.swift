@@ -67,7 +67,7 @@ public class FolderObserver : NSObject
 //----------------------------------------------------------------------------------------------------------------------
 
 
-    func resume()
+    public func resume()
     {
 		guard monitorSource == nil && fileDescriptor == -1 else { return }
 		
@@ -104,13 +104,13 @@ public class FolderObserver : NSObject
 	}
     
     
-    func suspend()
+    public func suspend()
     {
 		monitorSource?.suspend()
     }
     
     
-    func cancel()
+    public func cancel()
     {
 		monitorSource?.cancel()
     }
