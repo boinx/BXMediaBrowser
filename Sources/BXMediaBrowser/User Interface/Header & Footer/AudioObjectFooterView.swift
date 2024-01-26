@@ -90,6 +90,7 @@ public struct AudioPlayerView : View
 			{
 				self.controller.toggle()
 			}
+			.identifiableBackgroundView(withID:"AudioPlayerView.playPause")
 
 			BXIconPushButton(icon:"goforward.15")
 			{
@@ -101,6 +102,7 @@ public struct AudioPlayerView : View
 				
 			TimeSlider(fraction:self.$controller.fraction)
 				.frame(height:12)
+				.identifiableBackgroundView(withID:"AudioPlayerView.timeSlider")
 		}
 		.reducedOpacityWhenDisabled()
 		.enabled(controller.isEnabled)
