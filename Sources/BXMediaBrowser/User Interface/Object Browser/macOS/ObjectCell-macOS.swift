@@ -134,6 +134,10 @@ open class ObjectCell : NSCollectionViewItem
 		
 		_ = self.view
 
+		// Set an identifier (for scripting support)
+		
+		self.view.identifier = NSUserInterfaceItemIdentifier(object.identifier)
+		
 		// Reset
 		
 		self.imageView?.image = nil
