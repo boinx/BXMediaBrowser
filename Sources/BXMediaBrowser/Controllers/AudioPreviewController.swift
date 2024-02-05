@@ -57,6 +57,13 @@ public class AudioPreviewController : NSObject, ObservableObject, AVAudioPlayerD
 	
 	public var autoPlay = true
 	
+	/// Changes the volume of audio playback
+
+	public var volume:Double = 1.0
+	{
+		didSet { self.player?.volume = Float(volume) }
+	}
+	
 	/// The player handler audio playback
 	
 	private var player:AVAudioPlayer? = nil
@@ -159,6 +166,7 @@ public class AudioPreviewController : NSObject, ObservableObject, AVAudioPlayerD
 
 		self.player = try? AVAudioPlayer(contentsOf:url)
 		self.player?.delegate = self
+		self.player?.volume = Float(volume)
 		
 		self.timeObserver = Timer.publish(every:0.1, on:.main, in: RunLoop.Mode.common).autoconnect().sink
 		{
