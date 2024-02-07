@@ -34,7 +34,9 @@ import BXSwiftUtils
 
 public class BXObjectCollectionView : QuicklookCollectionView
 {
-	public static let getInfoNotification = Notification.Name("BXObjectCollectionView-getInfo")
+	public static let getInfoNotification = Notification.Name("BXObjectCollectionView.getInfo")
+	public static let selectAllNotification = Notification.Name("BXObjectCollectionView.selectAll")
+	public static let deselectAllNotification = Notification.Name("BXObjectCollectionView.deselectAll")
 	
 	internal var observers:[Any] = []
 	
@@ -49,6 +51,16 @@ public class BXObjectCollectionView : QuicklookCollectionView
 		self.observers += NotificationCenter.default.publisher(for:Self.getInfoNotification, object:nil).sink
 		{
 			[weak self] _ in self?.getInfo()
+		}
+		
+		self.observers += NotificationCenter.default.publisher(for:Self.selectAllNotification, object:nil).sink
+		{
+			[weak self] _ in self?.selectAll(nil)
+		}
+		
+		self.observers += NotificationCenter.default.publisher(for:Self.deselectAllNotification, object:nil).sink
+		{
+			[weak self] _ in self?.deselectAll(nil)
 		}
 	}
 	
@@ -125,6 +137,25 @@ public class BXObjectCollectionView : QuicklookCollectionView
 			}
 		}
 	}
+	
+	
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	/// Selects all object (in all browsers)
+
+	public static func selectAll()
+	{
+		NotificationCenter.default.post(name:Self.selectAllNotification, object:nil)
+	}
+
+	/// Deselects all object (in all browsers)
+
+	public static func deselectAll()
+	{
+		NotificationCenter.default.post(name:Self.deselectAllNotification, object:nil)
+	}
+
 }
 
 
