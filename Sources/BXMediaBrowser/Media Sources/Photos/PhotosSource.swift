@@ -169,6 +169,23 @@ public class PhotosSource : Source, AccessControl
 			data: albumsData,
 			filter: filter)
 		
+		// Shared Albums
+		
+		try await Tasks.canContinue()
+		
+		let fetchOptions = PHFetchOptions()
+		fetchOptions.predicate = NSPredicate(format: "estimatedAssetCount > 0")
+		let sharedFetchResult = PHAssetCollection.fetchAssetCollections(with:.album, subtype:.albumCloudShared, options:fetchOptions)
+		let sharedCollections = PhotosData.items(for:sharedFetchResult)
+		let sharedData = PhotosData.folder(collections:sharedCollections, fetchResult:sharedFetchResult)
+
+		containers += PhotosContainer(
+			identifier: "Photos:SharedAlbums",
+			icon: "folder",
+			name: NSLocalizedString("Shared Albums", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Container Name"),
+			data: sharedData,
+			filter: filter)
+
 		// Years
 
 		try await Tasks.canContinue()
