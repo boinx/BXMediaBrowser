@@ -113,7 +113,7 @@ extension DraggingProgressMixin
 			
 			self.progressStartTime = CFAbsoluteTimeGetCurrent()
 
-			self.setProgress(0.0)
+			self.setProgressFraction(0.0)
 		}
 
 		// Increment useCount of the singleton
@@ -125,6 +125,8 @@ extension DraggingProgressMixin
 		if showImmediately && !BXProgressWindowController.shared.isVisible
 		{
 			BXProgressWindowController.shared.show()
+			BXProgressWindowController.shared.title = self.progressTitle ?? NSLocalizedString("Importing Media Files", bundle:.BXMediaBrowser, comment:"Progress Title")
+			BXProgressWindowController.shared.isIndeterminate = true
 		}
 		
 		// Make progress key (just it case it wasn't before), so that progress bar is blue
@@ -145,12 +147,15 @@ extension DraggingProgressMixin
 			let dt = now - self.progressStartTime
 			let percent = Int(fraction*100)
 			
-			self.setProgress(fraction)
+			self.setProgressFraction(fraction)
 			
 			if !BXProgressWindowController.shared.isVisible && dt>0.5 //&& fraction<0.6
 			{
 				logDragAndDrop.debug {"\(Self.self).\(#function)  show progress window"}
+
 				BXProgressWindowController.shared.show()
+				BXProgressWindowController.shared.title = self.progressTitle ?? NSLocalizedString("Importing Media Files", bundle:.BXMediaBrowser, comment:"Progress Title")
+				BXProgressWindowController.shared.isIndeterminate = true
 			}
 
 			logDragAndDrop.verbose {"\(Self.self).\(#function)  progress=\(percent)%%  duration=\(dt)s"}
@@ -158,16 +163,15 @@ extension DraggingProgressMixin
 	}
 	
 	
-	/// Update the progress UI with the specified fraction
+	/// Updates the progress UI with the specified fraction
 	
-	private func setProgress(_ fraction:Double)
+	public func setProgressFraction(_ fraction:Double)
 	{
-		BXProgressWindowController.shared.title = self.progressTitle ?? NSLocalizedString("Importing Media Files", bundle:.BXMediaBrowser, comment:"Progress Title")
-		BXProgressWindowController.shared.message = self.progressMessage ?? NSLocalizedString("Downloading", bundle:.BXMediaBrowser, comment:"Progress Message")
+//		BXProgressWindowController.shared.title = self.progressTitle ?? NSLocalizedString("Importing Media Files", bundle:.BXMediaBrowser, comment:"Progress Title")
+//		BXProgressWindowController.shared.message = self.progressMessage ?? NSLocalizedString("Downloading", bundle:.BXMediaBrowser, comment:"Progress Message")
 		BXProgressWindowController.shared.value = fraction
 		BXProgressWindowController.shared.isIndeterminate = false
 	}
-	
 	
 	/// Hides the progress UI
 	
@@ -210,6 +214,45 @@ extension DraggingProgressMixin
 		self.progress = nil
 		self.progressObserver = nil
 		self.progressRetainCount = 0
+	}
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+public struct DraggingProgress
+{
+	/// Sets the title above the progress bar
+	
+	public static var title:String
+	{
+		set { BXProgressWindowController.shared.title = newValue }
+		get { BXProgressWindowController.shared.title  }
+	}
+	
+	/// Sets the message below the progress bar
+	
+	public static var message:String
+	{
+		set { BXProgressWindowController.shared.message = newValue }
+		get { BXProgressWindowController.shared.message  }
+	}
+	
+	/// Sets the indeterminate state of the progress bar
+	
+	public static var isIndeterminate:Bool
+	{
+		set { BXProgressWindowController.shared.isIndeterminate = newValue }
+		get { BXProgressWindowController.shared.isIndeterminate  }
+	}
+	
+	/// Sets the fraction of the progress bar
+	
+	public static var fraction:Double
+	{
+		set { BXProgressWindowController.shared.value = newValue }
+		get { BXProgressWindowController.shared.value  }
 	}
 }
 

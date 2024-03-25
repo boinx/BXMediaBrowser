@@ -197,6 +197,8 @@ open class PexelsVideoObject : Object
 	{
 		Pexels.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
+		DraggingProgress.message = NSLocalizedString("Downloading", bundle:.BXMediaBrowser, comment:"Progress Message")
+		
 		// Download the file
 		
 		let remoteURL = try remoteURL(for:identifier, data:data)
