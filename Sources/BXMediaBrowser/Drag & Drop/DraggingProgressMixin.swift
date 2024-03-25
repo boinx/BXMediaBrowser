@@ -191,6 +191,7 @@ extension DraggingProgressMixin
 	{
 		logDragAndDrop.debug {"\(Self.self).\(#function)"}
 		
+		self.progress?.cancel()
 		BXProgressWindowController.shared.hide()
 		self.cleanupProgress()
 	}
