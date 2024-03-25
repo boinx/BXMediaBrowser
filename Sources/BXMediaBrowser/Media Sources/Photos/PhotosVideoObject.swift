@@ -114,16 +114,19 @@ public class PhotosVideoObject : PhotosObject
 
 		guard let asset = data as? PHAsset else { throw Object.Error.downloadFileFailed }
 		
-//		var continueDownloading = true
-	
+		let progress = Progress(parent:nil)
+		progress.totalUnitCount = 100
+		progress.completedUnitCount = 0
+		Progress.globalParent?.addChild(progress, withPendingUnitCount:1)
+
 		let options = PHVideoRequestOptions()
 		options.version = .original
 		options.isNetworkAccessAllowed = true
 		options.progressHandler =
 		{
-			progress,error,outStop,_ in
-//			continueDownloading = iOSMediaBrowser.downloadProgressHandler?(self,progress,error) ?? true
-//			if !continueDownloading { outStop.pointee = true }
+			fraction,error,outStop,_ in
+			progress.completedUnitCount = Int64(fraction*100.0)
+			if progress.isCancelled { outStop.pointee = true }
 		}
 			
         return try await withCheckedThrowingContinuation
