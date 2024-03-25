@@ -176,6 +176,21 @@ open class FolderObject : Object
 		guard let url = data as? URL else { throw Error.downloadFileFailed }
 		guard url.exists else { throw Error.downloadFileFailed }
 //		guard !item.isDRMProtected else { throw Object.Error.drmProtected }
+
+		// Since we already have the file on disk we do not really spend any time in this "downloadFile"
+		// function. But we will still create a local progress object and set it to 100% immediately,
+		// so that Progress.globalParent gets notified and the progress bar is updated appropriately.
+		
+		if let parent = Progress.globalParent
+		{
+			let local = Progress(parent:nil)
+			local.totalUnitCount = 1
+			parent.addChild(local, withPendingUnitCount:1)
+			local.completedUnitCount = 1
+		}
+
+		// Return the URL to the local file on disk
+		
 		return url
 	}
 
