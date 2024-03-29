@@ -227,7 +227,14 @@ public struct DraggingProgress
 	
 	public static var title:String
 	{
-		set { BXProgressWindowController.shared.title = newValue }
+		set
+		{
+			DispatchQueue.main.asyncIfNeeded
+			{
+				BXProgressWindowController.shared.title = newValue
+			}
+		 }
+		 
 		get { BXProgressWindowController.shared.title  }
 	}
 	
@@ -235,7 +242,14 @@ public struct DraggingProgress
 	
 	public static var message:String
 	{
-		set { BXProgressWindowController.shared.message = newValue }
+		set
+		{
+			DispatchQueue.main.asyncIfNeeded
+			{
+				BXProgressWindowController.shared.message = newValue
+			}
+		 }
+		 
 		get { BXProgressWindowController.shared.message  }
 	}
 	
@@ -243,7 +257,14 @@ public struct DraggingProgress
 	
 	public static var isIndeterminate:Bool
 	{
-		set { BXProgressWindowController.shared.isIndeterminate = newValue }
+		set
+		{
+			DispatchQueue.main.asyncIfNeeded
+			{
+				BXProgressWindowController.shared.isIndeterminate = newValue
+			}
+		 }
+		 
 		get { BXProgressWindowController.shared.isIndeterminate  }
 	}
 	
@@ -251,7 +272,14 @@ public struct DraggingProgress
 	
 	public static var fraction:Double
 	{
-		set { BXProgressWindowController.shared.value = newValue }
+		set
+		{
+			DispatchQueue.main.asyncIfNeeded
+			{
+				BXProgressWindowController.shared.value = newValue
+			}
+		 }
+		 
 		get { BXProgressWindowController.shared.value  }
 	}
 }
