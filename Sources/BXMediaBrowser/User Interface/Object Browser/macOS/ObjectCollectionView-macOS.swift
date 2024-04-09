@@ -84,9 +84,20 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 		// Configure layout
 		
 		self.registerCellType(for:collectionView)
-        let layout = self.createLayout(for:collectionView)
-        collectionView.collectionViewLayout = layout
-        collectionView.backgroundColors = [.clear]
+
+		do
+		{
+			try NSException.toSwiftError
+			{
+				let layout = self.createLayout(for:collectionView)
+				collectionView.collectionViewLayout = layout
+				collectionView.backgroundColors = [.clear]
+			}
+        }
+        catch
+        {
+			BXMediaBrowser.log.error {"\(Self.self).\(#function) ERROR \(error)"}
+        }
         
         // Configure selection handling
         
@@ -158,11 +169,21 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 		{
 			guard collectionView.bounds.width > 0.0 else { return }
 			
-			let pos = self.saveScrollPos(for:collectionView)
-			defer { self.restoreScrollPos(for:collectionView, with:pos) }
-			
-			let layout = self.createLayout(for:collectionView)
-			collectionView.collectionViewLayout = layout
+			do
+			{
+				try NSException.toSwiftError
+				{
+					let pos = self.saveScrollPos(for:collectionView)
+					defer { self.restoreScrollPos(for:collectionView, with:pos) }
+				
+					let layout = self.createLayout(for:collectionView)
+					collectionView.collectionViewLayout = layout
+				}
+			}
+			catch
+			{
+				BXMediaBrowser.log.error {"\(Self.self).\(#function) ERROR \(error)"}
+			}
 		}
 		
 		// Observe view size changes so that layout can be adjusted as needed
