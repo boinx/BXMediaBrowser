@@ -129,6 +129,16 @@ open class PexelsContainer : Container
 	// MARK: - Loading
 
 	
+	// Only load and talk to the internet if this Container is actually selected AND visible
+	
+	override public func load(with containerState:[String:Any]? = nil)
+	{
+		guard self.isVisible else { return }
+		guard self.isSelected else { return }
+		super.load(with:containerState)
+	}
+
+
 	/// This method will be called when the user scrolls to the end of the NSCollectionView.
 	
 	func didScrollToEnd()

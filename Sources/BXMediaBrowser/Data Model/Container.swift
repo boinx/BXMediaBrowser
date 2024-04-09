@@ -92,6 +92,13 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 	/// Returns true if this container is expanded in the view. This property should only be manipulated by the view.
 	
 	@Published public var isExpanded = false
+	{
+		didSet { updateChildVisibility() }
+	}
+	
+	/// Returns true if this container is currently visible, i.e. its parent is expanded.
+	
+	@Published public var isVisible = false
 	
 	/// The currently running Task for loading the contents of this container
 	
@@ -458,6 +465,27 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 	@MainActor open var canExpand:Bool { true }
 
 
+	/// When a container is expanded is sub-containers need to be set to visible. If one of the subcontainers is selected,
+	/// it will be loaded.
+	
+	func updateChildVisibility()
+	{
+		Task
+		{
+			let containers = await self.containers
+			
+			await MainActor.run
+			{
+				for container in containers
+				{
+					container.isVisible = isExpanded
+					if container.isSelected && !container.isLoaded { container.load() }
+				}
+			}
+		}
+	}
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 

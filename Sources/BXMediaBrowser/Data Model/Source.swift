@@ -66,6 +66,9 @@ open class Source : ObservableObject, Identifiable, StateSaving
 	/// Returns true if this source is expanded in the view
 	
 	@Published public var isExpanded = false
+	{
+		didSet { updateChildVisibility() }
+	}
 	
  	/// The currently running Task for loading the top-level containers
 	
@@ -246,6 +249,28 @@ open class Source : ObservableObject, Identifiable, StateSaving
 	{
 		"isExpanded"
 	}
+
+
+	/// When a container is expanded is sub-containers need to be set to visible. If one of the subcontainers is selected,
+	/// it will be loaded.
+	
+	func updateChildVisibility()
+	{
+		Task
+		{
+			let containers = await self.containers
+			
+			await MainActor.run
+			{
+				for container in containers
+				{
+					container.isVisible = isExpanded
+					if container.isSelected && !container.isLoaded { container.load() }
+				}
+			}
+		}
+	}
+
 }
 
 
