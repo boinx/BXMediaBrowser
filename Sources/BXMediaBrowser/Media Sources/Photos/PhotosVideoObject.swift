@@ -116,6 +116,7 @@ public class PhotosVideoObject : PhotosObject
 		
 		DraggingProgress.message = NSLocalizedString("Downloading", bundle:.BXMediaBrowser, comment:"Progress Message")
 		
+		var isCancelled = false
 		let progress = Progress(parent:nil)
 		progress.totalUnitCount = 100
 		progress.completedUnitCount = 0
@@ -128,7 +129,11 @@ public class PhotosVideoObject : PhotosObject
 		{
 			fraction,error,outStop,_ in
 			progress.completedUnitCount = Int64(fraction*100.0)
-			if progress.isCancelled { outStop.pointee = true }
+			if progress.isCancelled
+			{
+				outStop.pointee = true
+				isCancelled = true
+			}
 		}
 			
         return try await withCheckedThrowingContinuation
@@ -146,7 +151,8 @@ public class PhotosVideoObject : PhotosObject
 				}
 				else
 				{
-					continuation.resume(throwing:Object.Error.downloadFileFailed)
+					let error = isCancelled ? Object.Error.downloadFileCancelled : Object.Error.downloadFileFailed
+					continuation.resume(throwing:error)
 				}
 			}
 		}

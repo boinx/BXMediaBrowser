@@ -33,6 +33,7 @@ extension Object
 		case loadThumbnailFailed
 		case loadMetadataFailed
 		case downloadFileFailed
+		case downloadFileCancelled
 	}
 }
 

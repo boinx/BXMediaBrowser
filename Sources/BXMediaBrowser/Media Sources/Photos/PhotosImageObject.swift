@@ -111,6 +111,7 @@ public class PhotosImageObject : PhotosObject
 
 		guard let asset = data as? PHAsset else { throw Object.Error.downloadFileFailed }
 		
+		var isCancelled = false
 		let progress = Progress(parent:nil)
 		progress.totalUnitCount = 100
 		progress.completedUnitCount = 0
@@ -124,7 +125,11 @@ public class PhotosImageObject : PhotosObject
 		{
 			fraction,outStop in
 			progress.completedUnitCount = Int64(fraction*100.0)
-			if progress.isCancelled { outStop.pointee = true }
+			if progress.isCancelled
+			{
+				outStop.pointee = true
+				isCancelled = true
+			}
 		}
 
         return try await withCheckedThrowingContinuation
@@ -141,7 +146,8 @@ public class PhotosImageObject : PhotosObject
 				}
 				else
 				{
-					continuation.resume(throwing:Object.Error.downloadFileFailed)
+					let error = isCancelled ? Object.Error.downloadFileCancelled : Object.Error.downloadFileFailed
+					continuation.resume(throwing:error)
 				}
 			}
 		}
