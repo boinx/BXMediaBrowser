@@ -72,6 +72,7 @@ open class PexelsVideoContainer : PexelsContainer
 
 			pexelsData.page = 0
 			pexelsData.objects = []
+			pexelsData.knownIDs.removeAll()
 			pexelsData.didReachEnd = false
 			pexelsData.loadNextPage = true
 			
@@ -163,8 +164,8 @@ open class PexelsVideoContainer : PexelsContainer
 		for video in videos
 		{
 			let id = video.id
-			guard pexelsData.knownIDs[id] == nil else { continue }
-			pexelsData.knownIDs[id] = true
+			guard !pexelsData.knownIDs.contains(id) else { continue }
+			pexelsData.knownIDs.insert(id)
 			pexelsData.objects += PexelsVideoObject(with:video)
 		}
 	}

@@ -62,7 +62,7 @@ open class PexelsPhotoContainer : PexelsContainer
 		guard let pexelsData = data as? PexelsData else { return (containers,objects) }
 		guard let pexelsFilter = filter as? PexelsFilter else { return (containers,objects) }
 		
-		// If the search string has changed, then clear the results and store the new filter 
+		// If the search string has changed, then clear the results and store the new filter
 		
 		if pexelsFilter != pexelsData.lastUsedFilter
 		{
@@ -70,6 +70,7 @@ open class PexelsPhotoContainer : PexelsContainer
 
 			pexelsData.page = 0
 			pexelsData.objects = []
+			pexelsData.knownIDs.removeAll()
 			pexelsData.didReachEnd = false
 			pexelsData.loadNextPage = true
 			
@@ -161,9 +162,8 @@ open class PexelsPhotoContainer : PexelsContainer
 			for photo in photos
 			{
 				let id = photo.id
-				
-				guard pexelsData.knownIDs[id] == nil else { continue }
-				pexelsData.knownIDs[id] = true
+				guard !pexelsData.knownIDs.contains(id) else { continue }
+				pexelsData.knownIDs.insert(id)
 				pexelsData.objects += PexelsPhotoObject(with:photo)
 			}
 		}

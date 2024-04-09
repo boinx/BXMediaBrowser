@@ -43,7 +43,7 @@ open class PexelsContainer : Container
 		var lastUsedFilter = PexelsFilter()
 		var page = 0
 		var objects:[Object] = []
-		var knownIDs:[Int:Bool] = [:]
+		var knownIDs = Set<Int>()
 		var didReachEnd = false
 		var loadNextPage = true
 	}
