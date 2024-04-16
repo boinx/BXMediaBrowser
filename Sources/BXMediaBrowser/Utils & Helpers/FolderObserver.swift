@@ -35,10 +35,19 @@ public class FolderObserver : NSObject
 	/// The URL of the directory to be observed
 	
     private let url:URL
+//    private let refURL:NSURL
     
-    /// An externally supplied closure that will be called when the directory (or its contents) is modififed
+    /// An externally supplied closure that will be called when the directory contents have been modififed
 	
-	public var folderDidChange:(()->Void)? = nil
+	public var folderContentsDidChange:(()->Void)? = nil
+	
+    /// An externally supplied closure that will be called when the directory was renamed
+	
+	public var folderWasRenamed:(()->Void)? = nil
+	
+    /// An externally supplied closure that will be called when the directory was deleted
+	
+	public var folderWasDeleted:(()->Void)? = nil
 	
 	/// A file descriptor for the monitored directory
 	
@@ -59,7 +68,10 @@ public class FolderObserver : NSObject
     public init(url:URL)
     {
 		self.url = url
+//		self.refURL = (url as NSURL).fileReferenceURL
+		
 		super.init()
+		
 		self.lastSnapshot = self.createSnapshot()
     }
     
@@ -85,7 +97,7 @@ public class FolderObserver : NSObject
 		
 		// Define a dispatch source monitoring the folder for additions, deletions, and renamings
 		
-		let source = DispatchSource.makeFileSystemObjectSource(fileDescriptor:fileDescriptor, eventMask:[.write,.delete], queue:DispatchQueue.main)
+		let source = DispatchSource.makeFileSystemObjectSource(fileDescriptor:fileDescriptor, eventMask:[.write,.rename,.delete], queue:DispatchQueue.main)
 		self.monitorSource = source
     
 		// Define the block to call when a file change is detected
@@ -94,8 +106,33 @@ public class FolderObserver : NSObject
 		{
 			[weak self] in
 			guard let self = self else { return }
-			print("\(Self.self).\(#function) monitorSource.data = \(source.data)")
-			self._folderDidChange()
+
+			let event = source.data
+			BXMediaBrowser.log.debug {"\(Self.self).\(#function) file system event \(event) for \(self.url)"}
+			
+			switch event
+			{
+				case .write:
+				
+					self._folderContentsDidChange()
+					
+				case .rename:
+				
+//					if let path = self.refURL.path?.lowercased(), path.contains("trash")
+//					{
+//						self.folderWasDeleted?()	// Moving a folder to the trash doesn't cause a delete event, but a rename event. In this case it will no longer be readable, so we assume deletion here. Not an ideal check, so reimplement this later if better checking becomes available!
+//					}
+//					else
+//					{
+						self.folderWasRenamed?()	// Folder was renamed
+//					}
+					
+				case .delete:
+				
+					self.folderWasDeleted?()
+					
+				default: break
+			}
 		}
     
 		// Define a cancel handler to ensure the directory is closed when the source is cancelled
@@ -132,15 +169,15 @@ public class FolderObserver : NSObject
 
 	/// This function is called when a file system event for our folder has been detected. This can fire multiple times.
 	
-	func _folderDidChange()
+	func _folderContentsDidChange()
 	{
-		self.performCoalesced(#selector(__folderDidChange), delay:1.0)
+		self.performCoalesced(#selector(__folderContentsDidChange), delay:1.0)
 	}
 	
 	
 	/// This function is called only once, after a specified delay.
 	
-	@objc func __folderDidChange()
+	@objc func __folderContentsDidChange()
 	{
 		// Create a folder contents snapshot and compare it with the last one
 		
@@ -154,7 +191,7 @@ public class FolderObserver : NSObject
 			DispatchQueue.main.async
 			{
 				BXMediaBrowser.log.debug {"\(Self.self).\(#function) Folder contents have changed -> CALL HANDLER"}
-				self.folderDidChange?()
+				self.folderContentsDidChange?()
 			}
 		}
 		

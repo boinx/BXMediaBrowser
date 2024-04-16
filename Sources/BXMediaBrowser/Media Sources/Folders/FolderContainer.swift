@@ -41,53 +41,92 @@ import AppKit
 
 open class FolderContainer : Container
 {
-	/// These helpers report any external changes to the folder
-	
-	private var nameObserver:FolderObserver
-	private var contentsObserver:FolderObserver
-
 	/// Creates a new Container for the folder at the specified URL
 	
 	public required init(url:URL, name:String? = nil, filter:FolderFilter, removeHandler:((Container)->Void)? = nil)
 	{
+		// Convert to a file reference url because that way it is more resistant to renaming
+		
 		let refURL = (url as NSURL).fileReferenceURL
 		
-		self.nameObserver = FolderObserver(url:url.deletingLastPathComponent())
-		self.contentsObserver = FolderObserver(url:url)
+		// Get the display name
+		
+		let displayName = name ?? FileManager.default.displayName(atPath:url.path)
+		
+		// Init the Container
 		
 		super.init(
 			identifier: FolderSource.identifier(for:url),
-			name: name ?? FileManager.default.displayName(atPath:url.path),
+			name: displayName,
 			data: refURL,
 			filter: filter,
 			loadHandler: Self.loadContents,
 			removeHandler: removeHandler)
 		
-		// Observe changes of folder name - in this case the container name needs to be updated, and the container needs to be reloaded
-		
-		self.nameObserver.folderDidChange =
-		{
-			[weak self] in
-			guard let self = self else { return }
-			self.name = name ?? FileManager.default.displayName(atPath:refURL.swiftURL.path)
-			self.reload()
-		}
-
-		self.nameObserver.resume()
-		
 		// Observe changes of folder contents
 		
-		self.contentsObserver.folderDidChange =
-		{
-			[weak self] in self?.reload()
-		}
+		self.setupContentObserver(for:refURL, customName:name)
 
-		self.contentsObserver.resume()
+		// On macOS also add drop detection
 		
 		#if os(macOS)
 		self.fileDropDestination = FolderDropDestination(folderURL:url)
 		#endif
 	}
+
+
+	/// Creates a FolderObserver for the specified folder
+	
+	private func setupContentObserver(for url:NSURL, customName:String?)
+	{
+		// Create a FolderObserver that tracks changes to this directory
+		
+		let observer = FolderObserver(url:url.swiftURL)
+		self.observer = observer
+		
+		// Reload the Container whenever the folder contents have changed
+		
+		observer.folderContentsDidChange =
+		{
+			[weak self] in
+			self?.reload()
+		}
+
+		// Rename the Container when the folder was renamed in the Finder. Please note that we also have
+		// to create a new FolderObserver for the folder because the old one doesn't work anymore. Also
+		// reload the Container, so that the URLs of all Objects inside are updated!
+		
+		observer.folderWasRenamed =
+		{
+			[weak self] in
+			guard let self = self else { return }
+			
+			self.name = customName ?? FileManager.default.displayName(atPath:url.swiftURL.path)		// Update Container name
+			self.setupContentObserver(for:url, customName:customName)								// Old observer doesn't work anymore, so create a new one
+			self.reload()																			// Update Objects inside the container (new URL paths!)
+		}
+		
+		// Get rid of this Container if the folder was deleted in the Finder
+		
+		observer.folderWasDeleted =
+		{
+			[weak self] in
+			guard let self = self else { return }
+
+			self.removeHandler?(self)
+			BXMediaBrowser.log.debug {"\(Self.self).\(#function) folder \(url.swiftURL.path) was deleted"}
+		}
+		
+		observer.resume()
+	}
+	
+	
+	/// This helper report any external changes to the folder
+	
+	private var observer:FolderObserver? = nil
+
+
+//----------------------------------------------------------------------------------------------------------------------
 
 
 	/// Returns the list of allowed sort Kinds for this Container
