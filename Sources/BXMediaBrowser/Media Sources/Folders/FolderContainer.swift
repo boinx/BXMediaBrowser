@@ -41,31 +41,35 @@ import AppKit
 
 open class FolderContainer : Container
 {
+	public var isTopLevel = true
+	public var bookmark:Data? = nil
+
 	/// Creates a new Container for the folder at the specified URL
 	
 	public required init(url:URL, name:String? = nil, filter:FolderFilter, removeHandler:((Container)->Void)? = nil)
 	{
-		// Convert to a file reference url because that way it is more resistant to renaming
-		
-		let refURL = (url as NSURL).fileReferenceURL
-		
 		// Get the display name
 		
 		let displayName = name ?? FileManager.default.displayName(atPath:url.path)
+		let bookmark = (try? url.bookmarkData()) ?? Data()
 		
 		// Init the Container
 		
 		super.init(
 			identifier: FolderSource.identifier(for:url),
 			name: displayName,
-			data: refURL,
+			data: bookmark,
 			filter: filter,
 			loadHandler: Self.loadContents,
 			removeHandler: removeHandler)
 		
+		// Store a bookmark (needed when renaming a Container)
+		
+		self.bookmark = try? url.bookmarkData()
+		
 		// Observe changes of folder contents
 		
-		self.setupContentObserver(for:refURL, customName:name)
+		self.setupContentObserver(for:url, customName:name)
 
 		// On macOS also add drop detection
 		
@@ -77,11 +81,11 @@ open class FolderContainer : Container
 
 	/// Creates a FolderObserver for the specified folder
 	
-	private func setupContentObserver(for url:NSURL, customName:String?)
+	private func setupContentObserver(for url:URL, customName:String?)
 	{
 		// Create a FolderObserver that tracks changes to this directory
 		
-		let observer = FolderObserver(url:url.swiftURL)
+		let observer = FolderObserver(url:url)
 		self.observer = observer
 		
 		// Reload the Container whenever the folder contents have changed
@@ -100,10 +104,13 @@ open class FolderContainer : Container
 		{
 			[weak self] in
 			guard let self = self else { return }
+			guard let url = self.folderURL else { return }
 			
-			self.name = customName ?? FileManager.default.displayName(atPath:url.swiftURL.path)		// Update Container name
-			self.setupContentObserver(for:url, customName:customName)								// Old observer doesn't work anymore, so create a new one
-			self.reload()																			// Update Objects inside the container (new URL paths!)
+			FolderSource.log.debug {"\(Self.self).\(#function) folder at \(url.path) was renamed"}
+
+			self.name = customName ?? FileManager.default.displayName(atPath:url.path)		// Update Container name
+			self.setupContentObserver(for:url, customName:customName)						// Old observer doesn't work anymore, so create a new one
+			self.reload()																	// Update Objects inside the container (new URL paths!)
 		}
 		
 		// Get rid of this Container if the folder was deleted in the Finder
@@ -114,7 +121,7 @@ open class FolderContainer : Container
 			guard let self = self else { return }
 
 			self.removeHandler?(self)
-			BXMediaBrowser.log.debug {"\(Self.self).\(#function) folder \(url.swiftURL.path) was deleted"}
+			FolderSource.log.debug {"\(Self.self).\(#function) folder at \(url.path) was deleted"}
 		}
 		
 		observer.resume()
@@ -129,6 +136,26 @@ open class FolderContainer : Container
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	/// Returns the URL to the folder
+	
+	public var folderURL:URL?
+	{
+		// if the original folder URL still exists then return it
+		
+//		if let url = data as? URL, url.exists, url.isDirectory, url.isReadable
+//		{
+//			return url
+//		}
+
+		// If not, then try to resolve the stored bookmark. This might be the case if the folder was renamed or moved
+		
+		guard let bookmark = self.bookmark else { return nil }
+		guard let url = URL(with:bookmark) else { return nil }
+		guard url.startAccessingSecurityScopedResource() else { return nil }
+		
+		return url
+	}
+	
 	/// Returns the list of allowed sort Kinds for this Container
 		
 	override open var allowedSortTypes:[Object.Filter.SortType]
@@ -145,8 +172,6 @@ open class FolderContainer : Container
 	
 	override open var canExpand: Bool
 	{
-		guard let folderURL = data as? URL else { return false }
-
 		if self.isLoaded { return !self.containers.isEmpty }
 		
 		if !didScanSubfolders
@@ -155,6 +180,7 @@ open class FolderContainer : Container
 			
 			Task
 			{
+				guard let folderURL = self.folderURL else { return }
 				let result = folderURL.hasSubfolders
 				await MainActor.run { self.hasSubfolders = result }
 			}
@@ -184,7 +210,10 @@ open class FolderContainer : Container
 		
 		// Convert identifier to URL and perform some sanity checks
 		
-		guard let folderURL = data as? URL else { throw Error.notFound }
+		guard let bookmark = data as? Data else { throw Error.notFound }
+		guard let folderURL = URL(with:bookmark) else { throw Error.notFound }
+		guard folderURL.startAccessingSecurityScopedResource() else { throw Error.accessDenied }
+//		guard let folderURL = self.folderURL else { throw Error.notFound }
 		guard folderURL.exists else { throw Error.notFound }
 		guard folderURL.isDirectory else { throw Error.notFound }
 		guard folderURL.isReadable else { throw Error.accessDenied }
@@ -218,8 +247,9 @@ open class FolderContainer : Container
 			
 			if url.isDirectory && !url.isPackage
 			{
-				if let container = try? Self.createContainer(for:url, filter:filter)
+				if let container = try? Self.createContainer(for:url, filter:filter) as? FolderContainer
 				{
+					container.isTopLevel = false
 					containers.append(container)
 				}
 			}
@@ -299,6 +329,8 @@ open class FolderContainer : Container
 	{
 		guard url.exists else { throw Container.Error.notFound }
 		guard url.isDirectory else { throw Container.Error.notFound }
+		guard url.isReadable else { throw Container.Error.accessDenied }
+		
 		return Self.init(url:url, filter:filter)
 	}
 
@@ -349,7 +381,7 @@ open class FolderContainer : Container
 	
 	open func revealInFinder()
 	{
-		guard let url = data as? URL else { return }
+		guard let url = self.folderURL else { return }
 		guard url.exists else { return }
 		
 		#if os(macOS)
