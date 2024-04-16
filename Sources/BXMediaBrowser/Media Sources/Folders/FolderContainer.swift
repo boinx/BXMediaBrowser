@@ -41,8 +41,9 @@ import AppKit
 
 open class FolderContainer : Container
 {
-	public var isTopLevel = true
-	public var bookmark:Data? = nil
+	/// Will be set to true if a folder was deleted in the Finder
+	
+	@Published public private(set) var isMissing = false
 
 	/// Creates a new Container for the folder at the specified URL
 	
@@ -62,10 +63,6 @@ open class FolderContainer : Container
 			filter: filter,
 			loadHandler: Self.loadContents,
 			removeHandler: removeHandler)
-		
-		// Store a bookmark (needed when renaming a Container)
-		
-		self.bookmark = try? url.bookmarkData()
 		
 		// Observe changes of folder contents
 		
@@ -105,12 +102,12 @@ open class FolderContainer : Container
 			[weak self] in
 			guard let self = self else { return }
 			guard let url = self.folderURL else { return }
-			
-			FolderSource.log.debug {"\(Self.self).\(#function) folder at \(url.path) was renamed"}
 
 			self.name = customName ?? FileManager.default.displayName(atPath:url.path)		// Update Container name
 			self.setupContentObserver(for:url, customName:customName)						// Old observer doesn't work anymore, so create a new one
 			self.reload()																	// Update Objects inside the container (new URL paths!)
+			
+			FolderSource.log.debug {"\(Self.self).\(#function) folder at \(url.path) was renamed"}
 		}
 		
 		// Get rid of this Container if the folder was deleted in the Finder
@@ -140,19 +137,9 @@ open class FolderContainer : Container
 	
 	public var folderURL:URL?
 	{
-		// if the original folder URL still exists then return it
-		
-//		if let url = data as? URL, url.exists, url.isDirectory, url.isReadable
-//		{
-//			return url
-//		}
-
-		// If not, then try to resolve the stored bookmark. This might be the case if the folder was renamed or moved
-		
-		guard let bookmark = self.bookmark else { return nil }
+		guard let bookmark = self.data as? Data else { return nil }
 		guard let url = URL(with:bookmark) else { return nil }
 		guard url.startAccessingSecurityScopedResource() else { return nil }
-		
 		return url
 	}
 	
@@ -213,7 +200,6 @@ open class FolderContainer : Container
 		guard let bookmark = data as? Data else { throw Error.notFound }
 		guard let folderURL = URL(with:bookmark) else { throw Error.notFound }
 		guard folderURL.startAccessingSecurityScopedResource() else { throw Error.accessDenied }
-//		guard let folderURL = self.folderURL else { throw Error.notFound }
 		guard folderURL.exists else { throw Error.notFound }
 		guard folderURL.isDirectory else { throw Error.notFound }
 		guard folderURL.isReadable else { throw Error.accessDenied }
@@ -247,9 +233,8 @@ open class FolderContainer : Container
 			
 			if url.isDirectory && !url.isPackage
 			{
-				if let container = try? Self.createContainer(for:url, filter:filter) as? FolderContainer
+				if let container = try? Self.createContainer(for:url, filter:filter)
 				{
-					container.isTopLevel = false
 					containers.append(container)
 				}
 			}

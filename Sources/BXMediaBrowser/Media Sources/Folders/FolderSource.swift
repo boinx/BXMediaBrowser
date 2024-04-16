@@ -226,7 +226,7 @@ open class FolderSource : Source, AccessControl
 		
 		let bookmarks = await self.containers
 			.compactMap { $0 as? FolderContainer }
-			.compactMap { $0.bookmark }
+			.compactMap { $0.data as? Data }
 		
 		state[Self.bookmarksKey] = bookmarks
 
