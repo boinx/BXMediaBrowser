@@ -110,14 +110,12 @@ open class FolderContainer : Container
 			FolderSource.log.debug {"\(Self.self).\(#function) folder at \(url.path) was renamed"}
 		}
 		
-		// Get rid of this Container if the folder was deleted in the Finder
+		// Mark this Container as missing if the folder was deleted in the Finder
 		
 		observer.folderWasDeleted =
 		{
 			[weak self] in
-			guard let self = self else { return }
-
-			self.removeHandler?(self)
+			self?.isMissing = true
 			FolderSource.log.debug {"\(Self.self).\(#function) folder at \(url.path) was deleted"}
 		}
 		
