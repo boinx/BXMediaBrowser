@@ -41,6 +41,9 @@ public struct ContainerView : View
 	@EnvironmentObject var library:Library
 	@Environment(\.viewFactory) private var viewFactory
 	
+	@State private var isHovering = false
+	@State private var isShowingAlert = false
+	
 	// Init
 	
 	public init(with container:Container)
@@ -61,9 +64,8 @@ public struct ContainerView : View
 					// Container name
 				
 					containerName()
-
 					Spacer()
-
+					
 					// Optional loading spinner
 					
 					if container.isLoading
@@ -77,10 +79,14 @@ public struct ContainerView : View
 					
 					// Optional remove button
 					
-					else if let removeHandler = container.removeHandler
+					else if let removeHandler = container.removeHandler, isHovering
 					{
 						self.removeButton(for:removeHandler)
 					}
+				}
+				.onHover
+				{
+					self.isHovering = $0
 				}
 				
 				// Styling
@@ -141,7 +147,7 @@ extension ContainerView
     @ViewBuilder func containerName() -> some View
     {
 		let icon = container.icon ?? "folder"
-		
+
 		// Disclosure button is only visible if this Container has any sub-containers
 		
 		if container.canExpand
@@ -156,9 +162,22 @@ extension ContainerView
 		
 		// Container icon
 		
-		BXImage(systemName:icon)
-			.frame(minWidth:16, alignment:.center)
-			.opacity(0.5)
+		if let folder = self.container as? FolderContainer, folder.isMissing
+		{
+			Text("⚠️")
+				.onTapGesture { self.isShowingAlert = true }
+				.popover(isPresented: $isShowingAlert)
+				{
+					MissingFolderAlertView(isPresented:$isShowingAlert)
+				}
+		}
+		else
+		{
+			BXImage(systemName:icon)
+				.frame(minWidth:16, alignment:.center)
+				.opacity(0.5)
+		}
+		
 			
 		// Container name
 		
@@ -166,10 +185,21 @@ extension ContainerView
 			.lineLimit(1)
 //			.font(.body)
 			.truncationMode(.tail)
+			.opacity(nameAlpha)
 			.padding(.trailing,-15)
     }
     
     
+	var nameAlpha:Double
+	{
+		if let folder = self.container as? FolderContainer, folder.isMissing
+		{
+			return 0.5
+		}
+		
+		return 1.0
+	}
+	
 	/// Builds a button to remove this Container
 	
 	@ViewBuilder func removeButton(for removeHandler:@escaping (Container)->Void) -> some View
@@ -214,6 +244,42 @@ extension ContainerView
     var textColor:Color
     {
 		library.selectedContainer === self.container ? .white : .primary
+    }
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+public struct MissingFolderAlertView : View
+{
+	// Params
+	
+	@Binding var isPresented:Bool
+
+	// Build View
+	
+	public var body: some View
+    {
+		let title = NSLocalizedString("Alert.missingFolder.title", bundle:.BXMediaBrowser, comment:"Alert Title")
+		let message = NSLocalizedString("Alert.missingFolder.message", bundle:.BXMediaBrowser, comment:"Alert Message")
+		
+		return VStack(alignment:.leading, spacing:12)
+		{
+			Text(title)
+				.bold()
+				.lineLimit(1)
+				.centerAligned()
+
+			Text(message)
+				.lineLimit(nil)
+				#if os(macOS)
+				.controlSize(.small)
+				#endif
+		}
+		.padding()
+		.buttonStyle(BXStrokedButtonStyle())
+		.frame(width:180)
     }
 }
 
