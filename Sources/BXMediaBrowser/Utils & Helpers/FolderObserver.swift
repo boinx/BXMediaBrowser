@@ -35,7 +35,6 @@ public class FolderObserver : NSObject
 	/// The URL of the directory to be observed
 	
     private let url:URL
-//    private let refURL:NSURL
     
     /// An externally supplied closure that will be called when the directory contents have been modififed
 	
@@ -68,7 +67,6 @@ public class FolderObserver : NSObject
     public init(url:URL)
     {
 		self.url = url
-//		self.refURL = (url as NSURL).fileReferenceURL
 		
 		super.init()
 		
@@ -89,6 +87,8 @@ public class FolderObserver : NSObject
     public func resume()
     {
 		guard monitorSource == nil && fileDescriptor == -1 else { return }
+		
+		let refURL = (url as NSURL).fileReferenceURL()
 		
 		// Open the folder referenced by URL for monitoring only
 		
@@ -118,14 +118,14 @@ public class FolderObserver : NSObject
 					
 				case .rename:
 				
-//					if let path = self.refURL.path?.lowercased(), path.contains("trash")
-//					{
-//						self.folderWasDeleted?()	// Moving a folder to the trash doesn't cause a delete event, but a rename event. In this case it will no longer be readable, so we assume deletion here. Not an ideal check, so reimplement this later if better checking becomes available!
-//					}
-//					else
-//					{
+					if let path = refURL?.path.lowercased().contains("trash")
+					{
+						self.folderWasDeleted?()	// Moving a folder to the trash doesn't cause a delete event, but a rename event. In this case it will no longer be readable, so we assume deletion here. Not an ideal check, so reimplement this later if better checking becomes available!
+					}
+					else
+					{
 						self.folderWasRenamed?()	// Folder was renamed
-//					}
+				}
 					
 				case .delete:
 				
@@ -267,5 +267,3 @@ public class FolderObserver : NSObject
 
 
 //----------------------------------------------------------------------------------------------------------------------
- 
- 
