@@ -88,7 +88,9 @@ public class FolderObserver : NSObject
     {
 		guard monitorSource == nil && fileDescriptor == -1 else { return }
 		
-		let refURL = (url as NSURL).fileReferenceURL()
+		// This bookmark is needed later to detect trashing
+		
+		let bookmark = try? url.bookmarkData()
 		
 		// Open the folder referenced by URL for monitoring only
 		
@@ -118,14 +120,14 @@ public class FolderObserver : NSObject
 					
 				case .rename:
 				
-					if let path = refURL?.path.lowercased().contains("trash")
+					if let bookmark = bookmark, let newURL = URL(with:bookmark), newURL.isInTrash
 					{
-						self.folderWasDeleted?()	// Moving a folder to the trash doesn't cause a delete event, but a rename event. In this case it will no longer be readable, so we assume deletion here. Not an ideal check, so reimplement this later if better checking becomes available!
+						self.folderWasDeleted?()	// Moving a folder to the trash doesn't cause a delete event, but a rename event, so we need to check the folder path for the trash!
 					}
 					else
 					{
 						self.folderWasRenamed?()	// Folder was renamed
-				}
+					}
 					
 				case .delete:
 				
