@@ -103,6 +103,7 @@ open class FolderContainer : Container
 			guard let self = self else { return }
 			guard let url = self.folderURL else { return }
 
+			self.isMissing = false
 			self.name = customName ?? FileManager.default.displayName(atPath:url.path)		// Update Container name
 			self.setupContentObserver(for:url, customName:customName)						// Old observer doesn't work anymore, so create a new one
 			self.reload()																	// Update Objects inside the container (new URL paths!)
