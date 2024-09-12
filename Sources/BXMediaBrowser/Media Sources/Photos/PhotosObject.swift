@@ -77,9 +77,24 @@ public class PhotosObject : Object
 			Task
 			{
 				await self.loader.purge()
+
+				self.refetchAsset()
+				self._displayName = ""
 				self.load()
 			}
         }
+	}
+	
+	func refetchAsset()
+	{
+		guard let asset = data as? PHAsset else { return }
+
+		let localIdentifier = asset.localIdentifier
+		let fetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [localIdentifier], options: nil)
+
+		guard fetchResult.count == 1 else { return }
+
+		self.data = fetchResult.object(at: 0)
 	}
 	
 	private let observer = PhotosChangeObserver()
