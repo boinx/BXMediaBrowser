@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -111,6 +111,7 @@
 		D027F92B2802D81B004D4264 /* AppLifecycleMixin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D027F92A2802D81B004D4264 /* AppLifecycleMixin.swift */; };
 		D036506C288BF0AC003FC4F8 /* MusicSourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D036506B288BF0AC003FC4F8 /* MusicSourceView.swift */; };
 		D036506E288BFA7E003FC4F8 /* MusicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D036506D288BFA7E003FC4F8 /* MusicApp.swift */; };
+		D04FC4D62CA2974B00DF2445 /* PhotosSourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04FC4D52CA2974B00DF2445 /* PhotosSourceView.swift */; };
 		D052BE2027ECB72C0084068A /* LightroomCC.strings in Resources */ = {isa = PBXBuildFile; fileRef = D052BE1E27ECB72C0084068A /* LightroomCC.strings */; };
 		D052BE2427EDCEF50084068A /* Object+MediaType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D052BE2327EDCEF40084068A /* Object+MediaType.swift */; };
 		D052BE2827F075630084068A /* LightroomCCImageObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D052BE2727F075610084068A /* LightroomCCImageObject.swift */; };
@@ -295,6 +296,7 @@
 		D027F92A2802D81B004D4264 /* AppLifecycleMixin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLifecycleMixin.swift; sourceTree = "<group>"; };
 		D036506B288BF0AC003FC4F8 /* MusicSourceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicSourceView.swift; sourceTree = "<group>"; };
 		D036506D288BFA7E003FC4F8 /* MusicApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicApp.swift; sourceTree = "<group>"; };
+		D04FC4D52CA2974B00DF2445 /* PhotosSourceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosSourceView.swift; sourceTree = "<group>"; };
 		D052BE1F27ECB72C0084068A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LightroomCC.strings; sourceTree = "<group>"; };
 		D052BE2127ECB7300084068A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/LightroomCC.strings; sourceTree = "<group>"; };
 		D052BE2227ECB7320084068A /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LightroomCC.strings; sourceTree = "<group>"; };
@@ -659,6 +661,7 @@
 				D01B493327CA1378008249C0 /* SectionView.swift */,
 				D01B493127CA1378008249C0 /* SourceView.swift */,
 				D01B493427CA1378008249C0 /* FolderSourceView.swift */,
+				D04FC4D52CA2974B00DF2445 /* PhotosSourceView.swift */,
 				D0573FA227E9ADED00788155 /* LightroomCCSourceView.swift */,
 				D0CBC1572833D6BE00C6BABB /* LightroomClassicSourceView.swift */,
 				D036506B288BF0AC003FC4F8 /* MusicSourceView.swift */,
@@ -934,6 +937,7 @@
 				D0AA8FCC282038CE0009A890 /* ObjectCollectionView-iOS.swift in Sources */,
 				D01B498027CA1378008249C0 /* UnsplashJSON.swift in Sources */,
 				D0CBC1582833D6BF00C6BABB /* LightroomClassicSourceView.swift in Sources */,
+				D04FC4D62CA2974B00DF2445 /* PhotosSourceView.swift in Sources */,
 				D0C1CBA9281D6FF100128DED /* QLThumbnailGenerator+asyncAwait.swift in Sources */,
 				D0C541A7298D363200183382 /* NSMenuItem+ConvenienceInit.swift in Sources */,
 				D01B495327CA1378008249C0 /* TempFilePool.swift in Sources */,
