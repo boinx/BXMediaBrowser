@@ -84,10 +84,12 @@ public struct ContainerView : View
 						self.removeButton(for:removeHandler)
 					}
 				}
+                #if os(macOS)
 				.onHover
 				{
 					self.isHovering = $0
 				}
+                #endif
 				
 				// Styling
 				

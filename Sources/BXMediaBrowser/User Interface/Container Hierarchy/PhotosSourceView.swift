@@ -119,6 +119,8 @@ extension PhotosSourceView
 	
     @ViewBuilder var statusView: some View
     {
+        #if os(macOS)
+        
 //		HStack(alignment:.top, spacing:12)
 //		{
 //			BXImage(systemName:"exclamationmark.triangle.fill")
@@ -138,14 +140,20 @@ extension PhotosSourceView
                 }
 			}
 //		}
+        
+        #else
+        EmptyView()
+        #endif
     }
     
     /// Opens System Settings > Privacy & Security > Photos
     
     func openSystemSettings()
     {
+        #if os(macOS)
         guard let url = URL(string:"x-apple.systempreferences:com.apple.preference.security?Privacy_Photos") else { return }
         NSWorkspace.shared.open(url)
+        #endif
     }
  }
 

@@ -114,8 +114,10 @@ public class PhotosVideoObject : PhotosObject
 
 		guard let asset = data as? PHAsset else { throw Object.Error.downloadFileFailed }
 		
+        #if os(macOS)
 		DraggingProgress.message = NSLocalizedString("Downloading", bundle:.BXMediaBrowser, comment:"Progress Message")
-		
+        #endif
+        
 		var isCancelled = false
 		let progress = Progress(parent:nil)
 		progress.totalUnitCount = 100

@@ -117,8 +117,10 @@ public class PhotosImageObject : PhotosObject
 		progress.completedUnitCount = 0
 		Progress.globalParent?.addChild(progress, withPendingUnitCount:1)
 
+        #if os(macOS)
 		DraggingProgress.message = NSLocalizedString("Downloading", bundle:.BXMediaBrowser, comment:"Progress Message")
-		
+        #endif
+        
 		let options = PHContentEditingInputRequestOptions()
 		options.isNetworkAccessAllowed = true
 		options.progressHandler =
