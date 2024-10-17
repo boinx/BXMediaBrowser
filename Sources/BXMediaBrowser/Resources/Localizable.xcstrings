@@ -1,0 +1,1071 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "⚠️" : {
+
+    },
+    "Add" : {
+      "comment" : "Button Title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hinzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter"
+          }
+        }
+      }
+    },
+    "Alert.message.removeFolder" : {
+      "comment" : "Alert Message",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wollen Sie den Ordner \"%@\" entfernen?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do you want to remove the folder \"%@\"?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voulez-vous supprimer le dossier \"%@\" ?"
+          }
+        }
+      }
+    },
+    "Alert.missingFolder.message" : {
+      "comment" : "Alert Message",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Ordner wurde vielleicht verschoben oder gelöscht."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This folder may have been moved or deleted."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce dossier a peut-être été déplacé ou supprimé."
+          }
+        }
+      }
+    },
+    "Alert.missingFolder.title" : {
+      "comment" : "Alert Title",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ Fehlender Ordner"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ Missing Folder"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ Dossier manquant"
+          }
+        }
+      }
+    },
+    "Alert.title.removeFolder" : {
+      "comment" : "Alert Title",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordner enfernen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove Folder"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer le dossier"
+          }
+        }
+      }
+    },
+    "Allow" : {
+      "comment" : "Button Title",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erlauben"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autoriser"
+          }
+        }
+      }
+    },
+    "AppleLoops.warning" : {
+      "comment" : "Warning Message",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Starten Sie GarageBand und wählen sie den Menübefehl Garage Band > Sound Library > Alle verfügbaren Sounds laden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please launch GarageBand and select the menu command\nGarage Band > Sound Library > Download All Available Sounds."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veuillez lancer GarageBand et sélectionner la commande de menu Garage Band > Bibliothèque de sons > Télécharger tous les sons disponibles."
+          }
+        }
+      }
+    },
+    "AppleMusic.warning" : {
+      "comment" : "Warning Message",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitte starten sie Apple Musik um dieses Lied herunterzuladen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please launch Apple Music to download this song and make it available in the media browser."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veuillez lancer Apple Music et télécharger cette chanson pour la rendre disponible dans le navigateur multimédia."
+          }
+        }
+      }
+    },
+    "Ascending" : {
+      "comment" : "Menu Item",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufsteigend"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Croissant"
+          }
+        }
+      }
+    },
+    "Cancel" : {
+      "comment" : "Button Title",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abbrechen"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler"
+          }
+        }
+      }
+    },
+    "Descending" : {
+      "comment" : "Menu Item",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Absteigend"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Décroissant"
+          }
+        }
+      }
+    },
+    "Direction" : {
+      "comment" : "Menu Item",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Richtung"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sens"
+          }
+        }
+      }
+    },
+    "Downloading" : {
+      "comment" : "Progress Message\nProgress Title",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herunterladen"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Téléchargement"
+          }
+        }
+      }
+    },
+    "DRM.warning" : {
+      "comment" : "Warning Message",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DRM geschützte Dateien können nur in Apple Musik or QuickTime Player benützt werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DRM protected media files can only be used in Apple Music or QuickTime Player."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les fichiers multimédias protégés par DRM ne peuvent être utilisés que dans les applications Apple Musique ou QuickTime Player."
+          }
+        }
+      }
+    },
+    "Get Info" : {
+      "comment" : "Menu Item",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Information"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informations"
+          }
+        }
+      }
+    },
+    "Importing Media Files" : {
+      "comment" : "Progress Title",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mediendateien importieren"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation de fichiers multimédias"
+          }
+        }
+      }
+    },
+    "Login" : {
+      "comment" : "Button Title",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anmelden"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connecter"
+          }
+        }
+      }
+    },
+    "Logout" : {
+      "comment" : "Button Title",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abmelden"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déconnecter"
+          }
+        }
+      }
+    },
+    "Metadata.label.album" : {
+      "comment" : "Metadata Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Album"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Album"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Album"
+          }
+        }
+      }
+    },
+    "Metadata.label.aperture" : {
+      "comment" : "Metadata Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blende"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aperture"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouverture"
+          }
+        }
+      }
+    },
+    "Metadata.label.artist" : {
+      "comment" : "Metadata Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Interpret"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artist"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artiste"
+          }
+        }
+      }
+    },
+    "Metadata.label.captureDate" : {
+      "comment" : "Metadata Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufnahmedatum"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capture Date"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date de capture"
+          }
+        }
+      }
+    },
+    "Metadata.label.codec" : {
+      "comment" : "Metadata Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Codec"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Codec"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Codec"
+          }
+        }
+      }
+    },
+    "Metadata.label.colorSpace" : {
+      "comment" : "Metadata Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Farbraum"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Color Space"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espace colorimétrique"
+          }
+        }
+      }
+    },
+    "Metadata.label.composer" : {
+      "comment" : "Metadata Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Komponist"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Composer"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compositeur"
+          }
+        }
+      }
+    },
+    "Metadata.label.creationDate" : {
+      "comment" : "Metadata Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erstellungsdatum"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Creation Date"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date de création"
+          }
+        }
+      }
+    },
+    "Metadata.label.duration" : {
+      "comment" : "Metadata Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dauer"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duration"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durée"
+          }
+        }
+      }
+    },
+    "Metadata.label.exposureTime" : {
+      "comment" : "Metadata Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belichtungszeit"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exposure Time"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temps d'exposition"
+          }
+        }
+      }
+    },
+    "Metadata.label.file" : {
+      "comment" : "Metadata Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datei"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fichier"
+          }
+        }
+      }
+    },
+    "Metadata.label.fileSize" : {
+      "comment" : "Metadata Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dateigröße"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File Size"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taille du fichier"
+          }
+        }
+      }
+    },
+    "Metadata.label.focalLength" : {
+      "comment" : "Metadata Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brennweite"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Focal Length"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Distance focale"
+          }
+        }
+      }
+    },
+    "Metadata.label.genre" : {
+      "comment" : "Metadata Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Genre"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Genre"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Genre"
+          }
+        }
+      }
+    },
+    "Metadata.label.imageSize" : {
+      "comment" : "Metadata Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildgröße"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Image Size"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taille de l'image"
+          }
+        }
+      }
+    },
+    "Metadata.label.kind" : {
+      "comment" : "Metadata Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Art"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kind"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type"
+          }
+        }
+      }
+    },
+    "Metadata.label.modificationDate" : {
+      "comment" : "Metadata Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Änderungsdatum"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modification Date"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date de modification"
+          }
+        }
+      }
+    },
+    "Metadata.label.song" : {
+      "comment" : "Metadata Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lied"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Song"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chansom"
+          }
+        }
+      }
+    },
+    "Metadata.label.tempo" : {
+      "comment" : "Metadata Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tempo"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tempo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tempo"
+          }
+        }
+      }
+    },
+    "Metadata.label.url" : {
+      "comment" : "Metadata Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL"
+          }
+        }
+      }
+    },
+    "Metadata.label.videoSize" : {
+      "comment" : "Metadata Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videogröße"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video Size"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taille de la vidéo"
+          }
+        }
+      }
+    },
+    "OK" : {
+      "comment" : "Button Title",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        }
+      }
+    },
+    "Panel.message" : {
+      "comment" : "Panel Message",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zugriff auf Ordner \"%@\" erlauben?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow access to folder \"%@\"?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autoriser l'accès au dossier \"%@\" ?"
+          }
+        }
+      }
+    },
+    "Quick Look" : {
+      "comment" : "Menu Item",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorschau"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coup d'œil"
+          }
+        }
+      }
+    },
+    "Reload" : {
+      "comment" : "Menu Item",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neu laden"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recharger"
+          }
+        }
+      }
+    },
+    "Remove" : {
+      "comment" : "Button Title\nMenu Item",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entfernen"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer"
+          }
+        }
+      }
+    },
+    "Reveal in Finder" : {
+      "comment" : "Menu Item",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Im Finder zeigen"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Révéler dans le Finder"
+          }
+        }
+      }
+    },
+    "Save" : {
+      "comment" : "Button Title",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sichern"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enregistrer"
+          }
+        }
+      }
+    },
+    "Search" : {
+      "comment" : "Placeholder",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suchen"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechercher"
+          }
+        }
+      }
+    },
+    "Select" : {
+      "comment" : "Button Title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auswählen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sélectionner"
+          }
+        }
+      }
+    },
+    "Show Filenames" : {
+      "comment" : "Menu Item",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dateiname zeigen"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher le nom du fichier"
+          }
+        }
+      }
+    },
+    "Sort by" : {
+      "comment" : "Menu Item",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sortiere nach"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordre de tri"
+          }
+        }
+      }
+    },
+    "Sort by:" : {
+      "comment" : "Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sortierung:"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trier par :"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

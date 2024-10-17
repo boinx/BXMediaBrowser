@@ -1,0 +1,57 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Folders" : {
+      "comment" : "Section Name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordner"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dossiers"
+          }
+        }
+      }
+    },
+    "Internet" : {
+      "comment" : "Section Name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Internet"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Internet"
+          }
+        }
+      }
+    },
+    "Libraries" : {
+      "comment" : "Section Name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bibliotheken"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bibliothèques"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

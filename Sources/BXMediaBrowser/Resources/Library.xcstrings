@@ -1,0 +1,57 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Audio" : {
+      "comment" : "Library Name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio"
+          }
+        }
+      }
+    },
+    "Images" : {
+      "comment" : "Library Name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilder"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Images"
+          }
+        }
+      }
+    },
+    "Videos" : {
+      "comment" : "Library Name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vidéos"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

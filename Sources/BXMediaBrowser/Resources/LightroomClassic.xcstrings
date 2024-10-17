@@ -1,0 +1,236 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "GrantAccess.button" : {
+      "comment" : "Button Title",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erteilen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grant Access"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autoriser"
+          }
+        }
+      }
+    },
+    "GrantAccess.title" : {
+      "comment" : "Alert Title",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zugriffsrechte erteilen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grant Access to Lightroom Classic"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autoriser l'accès à Lightroom Classic"
+          }
+        }
+      }
+    },
+    "LaunchLightroom.button" : {
+      "comment" : "Button Title",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lightroom starten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Launch Lightroom"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lancer Lightroom"
+          }
+        }
+      }
+    },
+    "PreviewSizeAlert.message" : {
+      "comment" : "Alert Message",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adobe Lightroom Classic stellt die Bilder in einer reduzierten Größe zur Verfügung.\n\nUm das Problem zu beheben, wechseln Sie zu Lightroom Classic und selektieren Sie den Menübefehl  Bibliothek > Vorschauen > 1:1-Vorschauen erstellen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Images were provided by Adobe Lightroom Classic at a reduced size.\n\nTo fix the problem, switch to Adobe Lightroom and select the menu item Library > Previews > Build 1:1 Previews."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les images ont été envoyées par Lightroom Classic à une taille réduite.\n\nPour résoudre le problème, passez à Adobe Lightroom et sélectionnez la commande de menu Bibliothèque > Aperçus > Créer des aperçus 1:1."
+          }
+        }
+      }
+    },
+    "PreviewSizeAlert.title" : {
+      "comment" : "Alert Title",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildgrößen Warnung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Image Size Warning"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alerte de taille d'image"
+          }
+        }
+      }
+    },
+    "RevokeAccess.button" : {
+      "comment" : "Button Title",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zugriffsrechte entziehen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revoke Access"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déautoriser l'accès"
+          }
+        }
+      }
+    },
+    "Status.noAccess.message" : {
+      "comment" : "Alert Message",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Lightroom Bibliothek is nicht lesbar. Bitte erteilen Sie Zugriffsrechte für den Bibliotheksordner. "
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Lightroom library is not readable. Please grant read access rights for its parent folder."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La bibliothèque Lightroom n'est pas lisible. Veuillez autoriser l'accès pour son dossier parent."
+          }
+        }
+      }
+    },
+    "Status.noAccess.title" : {
+      "comment" : "Alert Title",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fehlende Zugriffsrechte"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Missing Access Rights"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun droit d'accès"
+          }
+        }
+      }
+    },
+    "Status.notRunning.message" : {
+      "comment" : "Alert Message",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Um auf die Lightroom Bibliothek zugrifen zu können, muss Lightroom Classic im Hintergrund laufen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To access the library Lightroom Classic must be running in the background."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pour accéder à la bibliothèque, Lightroom Classic doit être lancé."
+          }
+        }
+      }
+    },
+    "Status.notRunning.title" : {
+      "comment" : "Alert Title",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lightroom Classic läuft nicht"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lightroom Classic Not Running"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lightroom Classic n'est pas actif"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

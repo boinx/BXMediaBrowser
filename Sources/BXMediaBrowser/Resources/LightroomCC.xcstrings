@@ -1,0 +1,383 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "ACCOUNT" : {
+      "comment" : "Label",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "KONTO"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "USER"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "COMPTE"
+          }
+        }
+      }
+    },
+    "All Photos" : {
+      "comment" : "Container Name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Photos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toutes les photos"
+          }
+        }
+      }
+    },
+    "All Videos" : {
+      "comment" : "Container Name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Videos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toutes les vidéos"
+          }
+        }
+      }
+    },
+    "Camera" : {
+      "comment" : "Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kamera"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Appareil"
+          }
+        }
+      }
+    },
+    "Capture Date" : {
+      "comment" : "Label",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufnahmedatum"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capture Date"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date de capture"
+          }
+        }
+      }
+    },
+    "Codec" : {
+      "comment" : "Label",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Codec"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Codec"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Codec"
+          }
+        }
+      }
+    },
+    "Description" : {
+      "comment" : "Label",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beschreibung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Description"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Description"
+          }
+        }
+      }
+    },
+    "Duration" : {
+      "comment" : "Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dauer"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durée"
+          }
+        }
+      }
+    },
+    "Error.currentlyUnavailable" : {
+      "comment" : "Error Message",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Lightroom CC Server ist derzeit nicht erreichbar. Bitte versuchen Sie es später wieder."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Access to the Lightroom CC server is currently not available. Please try again later."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L'accès à Lightroom CC n'est actuellement pas disponible. Veuillez réessayer plus tard."
+          }
+        }
+      }
+    },
+    "Error.invalidClientID" : {
+      "comment" : "Error Message",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lightroom CC wird in dieser Applikation nicht unterstützt. Bitte kontaktieren Sie den Entwickler."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lightroom CC support is not correctly configured. Please contact the developer of this application."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lightroom CC n'est pas configuré pour cette application. Veuillez contacter le développeur."
+          }
+        }
+      }
+    },
+    "Exposure" : {
+      "comment" : "Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belichtung"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exposition"
+          }
+        }
+      }
+    },
+    "File" : {
+      "comment" : "Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datei"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fichier"
+          }
+        }
+      }
+    },
+    "File Size" : {
+      "comment" : "Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dateigröße"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taille du fichier"
+          }
+        }
+      }
+    },
+    "Focal Length" : {
+      "comment" : "Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brennweite"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Distance focale"
+          }
+        }
+      }
+    },
+    "Framerate" : {
+      "comment" : "Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildrate"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fréquence"
+          }
+        }
+      }
+    },
+    "Image Size" : {
+      "comment" : "Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildgröße"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taille de l'image"
+          }
+        }
+      }
+    },
+    "Location" : {
+      "comment" : "Label",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ort"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Location"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lieu"
+          }
+        }
+      }
+    },
+    "Search" : {
+      "comment" : "Container Name",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search"
+          }
+        }
+      }
+    },
+    "Video Size" : {
+      "comment" : "Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videogröße"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taille du vidéo"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

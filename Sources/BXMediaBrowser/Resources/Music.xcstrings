@@ -1,0 +1,353 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Album" : {
+      "comment" : "Container Name\nLabel",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Album"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Album"
+          }
+        }
+      }
+    },
+    "Albums" : {
+      "comment" : "Container Name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Albums"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Albums"
+          }
+        }
+      }
+    },
+    "Alert.missingAccessRights.message" : {
+      "comment" : "Alert Message",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitte erteilen Sie das Zugriffsrecht für den Ordner \"%@\" um die Audiodateien benützen zu können."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please grant read access to the folder \"%@\" to make the audio files usable."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veuillez accorder l'accès au dossier «%@» pour rendre les fichiers audio utilisables."
+          }
+        }
+      }
+    },
+    "Alert.missingAccessRights.title" : {
+      "comment" : "Alert Title",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ Fehlende Zugriffsrechte"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ Missing Access Rights"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ Droits d'accès manquants"
+          }
+        }
+      }
+    },
+    "Artist" : {
+      "comment" : "Container Name\nLabel",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Interpret"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artiste"
+          }
+        }
+      }
+    },
+    "Artists" : {
+      "comment" : "Container Name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Interpreten"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artistes"
+          }
+        }
+      }
+    },
+    "Audio File" : {
+      "comment" : "Default Filename",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audiodatei"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fichier audio"
+          }
+        }
+      }
+    },
+    "Composer" : {
+      "comment" : "Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Komponist"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compositeur"
+          }
+        }
+      }
+    },
+    "Duration" : {
+      "comment" : "Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dauer"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durée"
+          }
+        }
+      }
+    },
+    "File Size" : {
+      "comment" : "Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dateigröße"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taille du fichier"
+          }
+        }
+      }
+    },
+    "Genre" : {
+      "comment" : "Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Genre"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Genre"
+          }
+        }
+      }
+    },
+    "Genres" : {
+      "comment" : "Container Name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Genres"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Genres"
+          }
+        }
+      }
+    },
+    "Grant Access" : {
+      "comment" : "Button Title",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zugriff erteilen"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accorder l'accès"
+          }
+        }
+      }
+    },
+    "Music" : {
+      "comment" : "Source Name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Musik App"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Music App"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Musique"
+          }
+        }
+      }
+    },
+    "MusicObject.tooltip.download" : {
+      "comment" : "Tooltip for Music.app songs that are not available locally",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieses Lied ist nicht lokal verfügbar. Bitte gehen Sie zur Musik App um das Lied auf diesen Computer herunterzuladen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This track is not available on your computer. Please go to the Music app to download the track to this computer."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette chanson n'est pas disponible sur votre appareil. Veuillez accéder à l'application Musique pour télécharger la chanson sur cet appareil."
+          }
+        }
+      }
+    },
+    "Playlists" : {
+      "comment" : "Container Name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playlisten"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listes de lecture"
+          }
+        }
+      }
+    },
+    "Revoke Access" : {
+      "comment" : "Menu Item",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zugriff widerrufen"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Révoquer l'accès"
+          }
+        }
+      }
+    },
+    "Song" : {
+      "comment" : "Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chanson"
+          }
+        }
+      }
+    },
+    "Songs" : {
+      "comment" : "Container Name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lieder"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chansons"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

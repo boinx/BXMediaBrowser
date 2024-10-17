@@ -1,0 +1,288 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Albums" : {
+      "comment" : "Container Name"
+    },
+    "All Photos" : {
+      "comment" : "Container Name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Fotos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toutes les photos"
+          }
+        }
+      }
+    },
+    "All Videos" : {
+      "comment" : "Container Name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Videos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toutes les vidéos"
+          }
+        }
+      }
+    },
+    "Creation Date" : {
+      "comment" : "Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufnahmedatum"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date de capture"
+          }
+        }
+      }
+    },
+    "Duration" : {
+      "comment" : "Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dauer"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durée"
+          }
+        }
+      }
+    },
+    "File" : {
+      "comment" : "Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datei"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fichier"
+          }
+        }
+      }
+    },
+    "File Size" : {
+      "comment" : "Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dateigröße"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taille du fichier"
+          }
+        }
+      }
+    },
+    "Image Size" : {
+      "comment" : "Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildgröße"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taille de l'image"
+          }
+        }
+      }
+    },
+    "Photos" : {
+      "comment" : "Source Name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fotos App"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Photos App"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Photos"
+          }
+        }
+      }
+    },
+    "Shared Albums" : {
+      "comment" : "Container Name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geteilte Alben"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Albums partagés"
+          }
+        }
+      }
+    },
+    "Smart Albums" : {
+      "comment" : "Container Name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Medienarten"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Types de média"
+          }
+        }
+      }
+    },
+    "Status.noAccess.button" : {
+      "comment" : "Alert Button",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Systemeinstellungen öffnen…"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open System Settings…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir les Réglages Système…"
+          }
+        }
+      }
+    },
+    "Status.noAccess.message" : {
+      "comment" : "Alert Message",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitte gewähren Sie FotoMagico Zugriff auf die Fotos Bibliothek. Gehen Sie zu Systemeinstellungen > Datenschutz & Sicherheit > Fotos. Danach starten Sie FotoMagico neu."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please grant FotoMagico access rights to the Photos library in System Settings > Privacy & Security > Photos. Then relaunch FotoMagico."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veuillez autoriser FotoMagico à accéder à la bibliothèque Photos dans Réglages Système > Confidentialité et sécurité > Photos. Relancez ensuite FotoMagico."
+          }
+        }
+      }
+    },
+    "Status.noAccess.title" : {
+      "comment" : "Alert Title",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fehlende Zugriffsrechte"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Missing Access Rights"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Droits d'accès manquants"
+          }
+        }
+      }
+    },
+    "Video Size" : {
+      "comment" : "Label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videogröße"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taille du vidéo"
+          }
+        }
+      }
+    },
+    "Years" : {
+      "comment" : "Container Name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jahre"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Années"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

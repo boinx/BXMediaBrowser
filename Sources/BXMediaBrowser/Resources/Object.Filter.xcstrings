@@ -1,0 +1,245 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "album" : {
+      "comment" : "Sorting Kind Name",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Album"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Album"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Album"
+          }
+        }
+      }
+    },
+    "alphabetical" : {
+      "comment" : "Sorting Kind Name",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nom"
+          }
+        }
+      }
+    },
+    "artist" : {
+      "comment" : "Sorting Kind Name",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Interpret"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artist"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artiste"
+          }
+        }
+      }
+    },
+    "captureDate" : {
+      "comment" : "Sorting Kind Name",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufnahmedatum"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capture Date"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date de capture"
+          }
+        }
+      }
+    },
+    "creationDate" : {
+      "comment" : "Sorting Kind Name",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Änderungsdatum"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Creation Date"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date de création"
+          }
+        }
+      }
+    },
+    "duration" : {
+      "comment" : "Sorting Kind Name",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dauer"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duration"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durée"
+          }
+        }
+      }
+    },
+    "genre" : {
+      "comment" : "Sorting Kind Name",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Genre"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Genre"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Genre"
+          }
+        }
+      }
+    },
+    "never" : {
+      "comment" : "Sorting Kind Name",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "None"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun"
+          }
+        }
+      }
+    },
+    "rating" : {
+      "comment" : "Sorting Kind Name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bewertung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rating"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Évaluation"
+          }
+        }
+      }
+    },
+    "useCount" : {
+      "comment" : "Sorting Kind Name",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verwendung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use Count"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre d'utilisations"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
