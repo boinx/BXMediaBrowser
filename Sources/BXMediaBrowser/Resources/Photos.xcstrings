@@ -2,15 +2,43 @@
   "sourceLanguage" : "en",
   "strings" : {
     "Albums" : {
-      "comment" : "Container Name"
+      "comment" : "Container Name",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alben"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Albums"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Albums"
+          }
+        }
+      }
     },
     "All Photos" : {
       "comment" : "Container Name",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alle Fotos"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Photos"
           }
         },
         "fr" : {
@@ -23,11 +51,18 @@
     },
     "All Videos" : {
       "comment" : "Container Name",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alle Videos"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Videos"
           }
         },
         "fr" : {
@@ -40,11 +75,18 @@
     },
     "Creation Date" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aufnahmedatum"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Creation Date"
           }
         },
         "fr" : {
@@ -57,11 +99,18 @@
     },
     "Duration" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dauer"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duration"
           }
         },
         "fr" : {
@@ -74,11 +123,18 @@
     },
     "File" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Datei"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File"
           }
         },
         "fr" : {
@@ -91,11 +147,18 @@
     },
     "File Size" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dateigröße"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File Size"
           }
         },
         "fr" : {
@@ -108,11 +171,18 @@
     },
     "Image Size" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bildgröße"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Image Size"
           }
         },
         "fr" : {
@@ -148,11 +218,18 @@
     },
     "Shared Albums" : {
       "comment" : "Container Name",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Geteilte Alben"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shared Albums"
           }
         },
         "fr" : {
@@ -165,11 +242,18 @@
     },
     "Smart Albums" : {
       "comment" : "Container Name",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Medienarten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Smart Albums"
           }
         },
         "fr" : {
@@ -251,11 +335,18 @@
     },
     "Video Size" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Videogröße"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video Size"
           }
         },
         "fr" : {
@@ -268,11 +359,18 @@
     },
     "Years" : {
       "comment" : "Container Name",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Jahre"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Years"
           }
         },
         "fr" : {

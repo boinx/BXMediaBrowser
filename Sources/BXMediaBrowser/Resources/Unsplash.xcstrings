@@ -49,11 +49,18 @@
     },
     "Aperture" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Blende"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aperture"
           }
         },
         "fr" : {
@@ -138,11 +145,18 @@
     },
     "Capture Date" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aufnahmedatum"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capture Date"
           }
         },
         "fr" : {
@@ -155,11 +169,18 @@
     },
     "Creation Date" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Erzeugungsdatum"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Creation Date"
           }
         },
         "fr" : {
@@ -172,11 +193,18 @@
     },
     "Description" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Beschreibung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Description"
           }
         },
         "fr" : {
@@ -189,11 +217,18 @@
     },
     "Exposure Time" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Belichtungszeit"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exposure Time"
           }
         },
         "fr" : {
@@ -206,11 +241,18 @@
     },
     "Focal Length" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Brennweite"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Focal Length"
           }
         },
         "fr" : {
@@ -247,11 +289,18 @@
     },
     "Image Size" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bildgröße"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Image Size"
           }
         },
         "fr" : {
@@ -288,11 +337,18 @@
     },
     "Location" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ort"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Location"
           }
         },
         "fr" : {
@@ -353,8 +409,15 @@
     },
     "Photo" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Photo"
+          }
+        },
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Photo"
@@ -370,11 +433,18 @@
     },
     "Photographer" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Photograph"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Photographer"
           }
         },
         "fr" : {
@@ -459,11 +529,18 @@
     },
     "Search" : {
       "comment" : "Container Name",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Suche"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search"
           }
         },
         "fr" : {
@@ -476,11 +553,18 @@
     },
     "Source" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Quelle"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Source"
           }
         },
         "fr" : {

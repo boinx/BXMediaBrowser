@@ -27,11 +27,18 @@
     },
     "All Photos" : {
       "comment" : "Container Name",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alle Photos"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Photos"
           }
         },
         "fr" : {
@@ -44,11 +51,18 @@
     },
     "All Videos" : {
       "comment" : "Container Name",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alle Videos"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Videos"
           }
         },
         "fr" : {
@@ -61,11 +75,18 @@
     },
     "Camera" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kamera"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Camera"
           }
         },
         "fr" : {
@@ -150,11 +171,18 @@
     },
     "Duration" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dauer"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duration"
           }
         },
         "fr" : {
@@ -213,11 +241,18 @@
     },
     "Exposure" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Belichtung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exposure"
           }
         },
         "fr" : {
@@ -230,11 +265,18 @@
     },
     "File" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Datei"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File"
           }
         },
         "fr" : {
@@ -247,11 +289,18 @@
     },
     "File Size" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dateigröße"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File Size"
           }
         },
         "fr" : {
@@ -264,11 +313,18 @@
     },
     "Focal Length" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Brennweite"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Focal Length"
           }
         },
         "fr" : {
@@ -281,11 +337,18 @@
     },
     "Framerate" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bildrate"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Framerate"
           }
         },
         "fr" : {
@@ -298,11 +361,18 @@
     },
     "Image Size" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bildgröße"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Image Size"
           }
         },
         "fr" : {
@@ -363,11 +433,18 @@
     },
     "Video Size" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Videogröße"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video Size"
           }
         },
         "fr" : {

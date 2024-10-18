@@ -2,7 +2,27 @@
   "sourceLanguage" : "en",
   "strings" : {
     "⚠️" : {
-
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️"
+          }
+        }
+      }
     },
     "Add" : {
       "comment" : "Button Title",
@@ -122,11 +142,18 @@
     },
     "Allow" : {
       "comment" : "Button Title",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Erlauben"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow"
           }
         },
         "fr" : {
@@ -185,11 +212,18 @@
     },
     "Ascending" : {
       "comment" : "Menu Item",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aufsteigend"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ascending"
           }
         },
         "fr" : {
@@ -202,11 +236,18 @@
     },
     "Cancel" : {
       "comment" : "Button Title",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Abbrechen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
           }
         },
         "fr" : {
@@ -219,11 +260,18 @@
     },
     "Descending" : {
       "comment" : "Menu Item",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Absteigend"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descending"
           }
         },
         "fr" : {
@@ -236,11 +284,18 @@
     },
     "Direction" : {
       "comment" : "Menu Item",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Richtung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Direction"
           }
         },
         "fr" : {
@@ -253,11 +308,18 @@
     },
     "Downloading" : {
       "comment" : "Progress Message\nProgress Title",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Herunterladen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Downloading"
           }
         },
         "fr" : {
@@ -293,11 +355,18 @@
     },
     "Get Info" : {
       "comment" : "Menu Item",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Information"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get Info"
           }
         },
         "fr" : {
@@ -310,11 +379,18 @@
     },
     "Importing Media Files" : {
       "comment" : "Progress Title",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mediendateien importieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importing Media Files"
           }
         },
         "fr" : {
@@ -327,11 +403,18 @@
     },
     "Login" : {
       "comment" : "Button Title",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Anmelden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Login"
           }
         },
         "fr" : {
@@ -344,11 +427,18 @@
     },
     "Logout" : {
       "comment" : "Button Title",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Abmelden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logout"
           }
         },
         "fr" : {
@@ -891,11 +981,18 @@
     },
     "Quick Look" : {
       "comment" : "Menu Item",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vorschau"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quick Look"
           }
         },
         "fr" : {
@@ -908,11 +1005,18 @@
     },
     "Reload" : {
       "comment" : "Menu Item",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Neu laden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reload"
           }
         },
         "fr" : {
@@ -925,11 +1029,18 @@
     },
     "Remove" : {
       "comment" : "Button Title\nMenu Item",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Entfernen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove"
           }
         },
         "fr" : {
@@ -942,11 +1053,18 @@
     },
     "Reveal in Finder" : {
       "comment" : "Menu Item",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Im Finder zeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reveal in Finder"
           }
         },
         "fr" : {
@@ -959,11 +1077,18 @@
     },
     "Save" : {
       "comment" : "Button Title",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sichern"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
           }
         },
         "fr" : {
@@ -976,11 +1101,18 @@
     },
     "Search" : {
       "comment" : "Placeholder",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Suchen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search"
           }
         },
         "fr" : {
@@ -1017,11 +1149,18 @@
     },
     "Show Filenames" : {
       "comment" : "Menu Item",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dateiname zeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Filenames"
           }
         },
         "fr" : {
@@ -1034,11 +1173,18 @@
     },
     "Sort by" : {
       "comment" : "Menu Item",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sortiere nach"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sort by"
           }
         },
         "fr" : {
@@ -1051,11 +1197,18 @@
     },
     "Sort by:" : {
       "comment" : "Label",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sortierung:"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sort by:"
           }
         },
         "fr" : {
