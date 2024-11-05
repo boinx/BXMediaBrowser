@@ -409,12 +409,6 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 				self.invalidateCache()
 				self.load()
 			}
-
-			for object in await self.objects
-			{
-				object.purge()
-				object.load()
-			}
 		}
 	}
 	
