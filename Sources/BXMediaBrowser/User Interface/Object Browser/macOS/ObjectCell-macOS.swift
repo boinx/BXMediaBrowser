@@ -151,16 +151,23 @@ open class ObjectCell : NSCollectionViewItem
 		
 		self.observers = []
 		
-		self.observers += object.$thumbnailImage.receive(on:RunLoop.main).sink
+		self.observers += object.$thumbnailImage.sink
 		{
-			[weak self] _ in DispatchQueue.main.asyncIfNeeded { self?.redraw() }
+			[weak self] _ in
+
+            DispatchQueue.main.async // Need to defer to next runloop cycle because value of object.thumbnailImage hasn't been changed yet!
+            {
+                self?.redraw()
+             }
 		}
 		
 		// Redraw when the isEnabled state changes
 		
-		self.observers += object.$isEnabled.receive(on:RunLoop.main).sink
+		self.observers += object.$isEnabled.sink
 		{
-			[weak self] _ in DispatchQueue.main.asyncIfNeeded
+			[weak self] _ in
+   
+            DispatchQueue.main.async // Need to defer to next runloop cycle because value of object.isEnabled hasn't been changed yet!
 			{
 				self?.redraw()
 				self?.updateTooltip()
