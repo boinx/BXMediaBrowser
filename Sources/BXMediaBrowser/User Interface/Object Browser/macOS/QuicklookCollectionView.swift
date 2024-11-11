@@ -98,7 +98,18 @@ public class QuicklookCollectionView : NSCollectionView, QLPreviewPanelDataSourc
 	}
 
 
-//----------------------------------------------------------------------------------------------------------------------
+    /// Call this function when the selection has changed to trigger relaoding of the QuickLook panel
+    
+    func updatePreviewPanel()
+    {
+        if let panel = QLPreviewPanel.shared(), panel.isVisible
+        {
+            panel.reloadData()
+        }
+    }
+
+
+ //----------------------------------------------------------------------------------------------------------------------
 
 
 	// MARK: -

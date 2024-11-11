@@ -27,6 +27,7 @@
 
 import AppKit
 import BXSwiftUtils
+import QuickLookUI
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -77,14 +78,70 @@ public class BXObjectCollectionView : QuicklookCollectionView
 	
 	override public func keyDown(with event:NSEvent)
 	{
-		if event.charactersIgnoringModifiers == "i" && event.modifierFlags.contains(.command)
-		{
-			self.getInfo()
-		}
-		else
-		{
-			super.keyDown(with:event)
-		}
+        func key(for event:NSEvent) -> Int
+        {
+            guard let str = event.charactersIgnoringModifiers?.utf16  else { return 0 }
+            let i = str.startIndex
+            guard i < str.endIndex else { return 0 }
+            return Int(str[i])
+        }
+
+		let str = event.charactersIgnoringModifiers
+		let key = key(for:event)
+        let indexes = self.selectionIndexPaths
+        let n = indexes.count
+        let objectCount = self.numberOfItems(inSection:0)
+        
+        // Custom behavior is only available for single selection
+        
+        if n == 1
+        {
+            let i = indexes.first?.item ?? 0
+
+            // Cmd-I open info popover
+            
+            if event.modifierFlags.contains(.command) && str == "i"
+            {
+                self.getInfo()
+            }
+            
+            // Left arrow key moves selection to prev object
+            
+            else if key == NSLeftArrowFunctionKey
+			{
+                if i > 0
+                {
+                    let indexPath = IndexPath(item:i-1, section:0)
+                    self.selectionIndexPaths = Set([indexPath])
+                    self.scrollToItems(at:[indexPath], scrollPosition:.nearestHorizontalEdge)
+                    self.updatePreviewPanel()
+                }
+			}
+            
+            // Right arrow key moves selection to succ object
+            
+			else if key == NSRightArrowFunctionKey
+			{
+                if i < objectCount-1
+                {
+                    let indexPath = IndexPath(item:i+1, section:0)
+                    self.selectionIndexPaths = Set([indexPath])
+                    self.scrollToItems(at:[indexPath], scrollPosition:.nearestHorizontalEdge)
+                    self.updatePreviewPanel()
+                }
+			}
+            else
+            {
+                super.keyDown(with:event)
+            }
+        }
+        
+        // Multiple selection - let superclass handle that
+        
+        else
+        {
+            super.keyDown(with:event)
+        }
 	}
 
 
