@@ -259,13 +259,14 @@ public class PhotosObject : Object
 			{
 				// Download the file (hires)
 				
-				let url = try await Self.downloadFile(for:identifier, data:data)
-				
-				// Store it in the TempFilePool and update the QLPreviewPanel
+				let url1 = try await Self.downloadFile(for:identifier, data:data)
+                let url2 = url1.rebuiltFromString   // Workaround: trying to use url1 directly sometimes fails for videos from Photos.app => however using the rebuilt url2 works!
+ 
+ 				// Store the URL and update the QLPreviewPanel
 				
 				await MainActor.run
 				{
-					self._previewItemURL = url
+					self._previewItemURL = url2
 					self.isDownloadingPreview = false
 					
 					#if os(macOS)
