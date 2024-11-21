@@ -148,8 +148,9 @@ public class PhotosVideoObject : PhotosObject
 
 				if let urlAsset = avasset as? AVURLAsset
 				{
-					let url = urlAsset.url
-					continuation.resume(returning:url)
+					let url1 = urlAsset.url
+					let url2 = url1.rebuiltFromString // Workaround: url1 is somoe times broken. Rebuilding from the absolute string seems to fix the problem.
+					continuation.resume(returning:url2)
 				}
 				else
 				{

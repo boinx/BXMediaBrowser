@@ -128,7 +128,12 @@ public class AudioPreviewController : NSObject, ObservableObject, AVAudioPlayerD
 
 		// Store reference to the new current Object. This will also create a new player (see next function).
 		
-		if let objects = notification.object as? [Object], objects.count == 1, let object = objects.first, let url = object.previewItemURL, url.isAudioFile
+		if let objects = notification.object as? [Object],
+           objects.count == 1,
+           let object = objects.first,
+           object.mediaType == .audio,
+           let url = object.previewItemURL,
+           url.isAudioFile
 		{
 			self.object = object
 		}
@@ -143,6 +148,7 @@ public class AudioPreviewController : NSObject, ObservableObject, AVAudioPlayerD
 	private func updatePlayer()
 	{
 		if let object = object,
+           object.mediaType == .audio,
 		   object.isEnabled,
 		   object.isLocallyAvailable,
 		   let url = object.previewItemURL,
