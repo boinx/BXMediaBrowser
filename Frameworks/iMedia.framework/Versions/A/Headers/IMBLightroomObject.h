@@ -67,11 +67,13 @@
 @interface IMBLightroomObject : IMBObject
 {
 	NSString* _absolutePyramidPath;
+	NSString* _resolvedPyramidPath;
 	NSNumber* _idLocal;
 	BOOL _isLoadingQuicklookPreview;
 }
 
 @property (retain) NSString* absolutePyramidPath;
+@property (retain) NSString* resolvedPyramidPath;
 @property (retain) NSNumber* idLocal;
 
 @end
