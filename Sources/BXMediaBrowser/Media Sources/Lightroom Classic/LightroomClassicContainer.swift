@@ -159,7 +159,9 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 			{
 				guard let node = node as? IMBNode else { continue }
 				guard knownNodes[node.identifier] == nil else { continue }
-				
+                if node.name.lowercased() == "smart collections" { continue }   // Filter out some nodes that aren't populated
+                if node.name.lowercased() == "quick collection" { continue }    // by iMedia and are thus useless anyways
+
 				try await Tasks.canContinue()
 		
 				let container = LightroomClassicContainer(node:node, mediaType:mediaType, parserMessenger:parserMessenger, filter:filter)
