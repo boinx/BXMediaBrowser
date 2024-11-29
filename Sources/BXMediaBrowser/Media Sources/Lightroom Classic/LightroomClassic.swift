@@ -194,7 +194,8 @@ public class LightroomClassic : ObservableObject, AppLifecycleMixin
 	public func showPreviewSizeWarningAlert(for imbObject:IMBLightroomObject, with url:URL)
 	{
 		guard LightroomClassic.shared.showPreviewSizeWarning else { return }
-
+        guard imbObject.mediaType() == kIMBMediaTypeImage else { return }
+        
 		guard let metadata1 = imbObject.preliminaryMetadata else { return }
 		let W = (metadata1["width"] as? NSNumber)?.intValue ?? 0
 		let H = (metadata1["height"] as? NSNumber)?.intValue ?? 0
