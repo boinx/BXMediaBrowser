@@ -73,7 +73,7 @@ open class ImageFolderContainer : FolderContainer
 	override open class func createObject(for url:URL, filter:FolderFilter) throws -> Object?
 	{
 		guard url.exists else { throw Object.Error.notFound }
-		guard url.isImageFile else { return nil }
+		guard url.isImageFile || url.isPDFFile else { return nil }
 		return ImageFile(url:url)
 	}
 
