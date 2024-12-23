@@ -25,7 +25,7 @@
       }
     },
     "any" : {
-      "comment" : "Color Name\n   Orientation Name\n   Size Name",
+      "comment" : "Color Name\nOrientation Name\nSize Name",
       "localizations" : {
         "de" : {
           "stringUnit" : {
