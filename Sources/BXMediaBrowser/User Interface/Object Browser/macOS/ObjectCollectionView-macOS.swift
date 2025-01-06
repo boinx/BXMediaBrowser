@@ -460,7 +460,7 @@ extension ObjectCollectionView
  		// MARK: - Setup
  		
  		
-        init(container:Container?, cellType:Cell.Type, uiState:UIState)
+        @MainActor init(container:Container?, cellType:Cell.Type, uiState:UIState)
         {
 			self.container = container
 			self.cellType = cellType
