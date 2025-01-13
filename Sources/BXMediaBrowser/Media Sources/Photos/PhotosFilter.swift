@@ -67,9 +67,8 @@ open class PhotosFilter : Object.Filter, Equatable
 			options.predicate = NSPredicate(format:"mediaType = %d", mediaType.rawValue)
 		}
 
-		if sortType == .captureDate
+		if sortType == .captureDate || sortType == .creationDate
 		{
-			#warning("FIXME: for some reason the sort order doesn't seem to be working")
 			let isAscending = sortDirection == .ascending
 			options.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending:isAscending)]
 		}
