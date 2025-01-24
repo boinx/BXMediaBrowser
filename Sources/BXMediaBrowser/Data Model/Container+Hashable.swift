@@ -34,6 +34,13 @@ extension Container : Hashable
 	{
 		lhs.identifier == rhs.identifier
 	}
+
+	
+	public var instanceIdentifier:String
+	{
+		let address = Unmanaged.passUnretained(self).toOpaque()
+		return "\(identifier) (\(address))"
+	}
 }
 
 
