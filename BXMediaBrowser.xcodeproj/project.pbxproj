@@ -119,6 +119,7 @@
 		D05F5F7127E8E840003735C6 /* LightroomCCSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05F5F6C27E8E840003735C6 /* LightroomCCSource.swift */; };
 		D061B1F32805A35700B365E6 /* NativeSearchField+macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = D061B1F22805A35700B365E6 /* NativeSearchField+macOS.swift */; };
 		D06503B728255442002E52BE /* BXObjectCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D06503B628255442002E52BE /* BXObjectCollectionView.swift */; };
+		D07267502D3BD27C00C7D080 /* Library+Selection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D072674F2D3BD27C00C7D080 /* Library+Selection.swift */; };
 		D08906DE2875C7B700FD6C0B /* LegacyDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08906DD2875C7B700FD6C0B /* LegacyDataController.swift */; };
 		D09B34082AFD08830082C906 /* NSColor+selectedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09B34072AFD08830082C906 /* NSColor+selectedImage.swift */; };
 		D0AA8FC0282038C20009A890 /* ObjectCollectionView-macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0AA8FB8282038C20009A890 /* ObjectCollectionView-macOS.swift */; };
@@ -292,6 +293,7 @@
 		D05F5F6C27E8E840003735C6 /* LightroomCCSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LightroomCCSource.swift; sourceTree = "<group>"; };
 		D061B1F22805A35700B365E6 /* NativeSearchField+macOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NativeSearchField+macOS.swift"; sourceTree = "<group>"; };
 		D06503B628255442002E52BE /* BXObjectCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BXObjectCollectionView.swift; sourceTree = "<group>"; };
+		D072674F2D3BD27C00C7D080 /* Library+Selection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Library+Selection.swift"; sourceTree = "<group>"; };
 		D08906DD2875C7B700FD6C0B /* LegacyDataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LegacyDataController.swift; sourceTree = "<group>"; };
 		D09B34072AFD08830082C906 /* NSColor+selectedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSColor+selectedImage.swift"; sourceTree = "<group>"; };
 		D0AA8FB8282038C20009A890 /* ObjectCollectionView-macOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ObjectCollectionView-macOS.swift"; sourceTree = "<group>"; };
@@ -475,6 +477,7 @@
 			children = (
 				D01B48ED27CA1378008249C0 /* Library.swift */,
 				D01B48EE27CA1378008249C0 /* Library+Hashable.swift */,
+				D072674F2D3BD27C00C7D080 /* Library+Selection.swift */,
 				D01B48F427CA1378008249C0 /* Library+State.swift */,
 				D01B48F727CA1378008249C0 /* Library+UI.swift */,
 				D01B48FB27CA1378008249C0 /* Section.swift */,
@@ -943,6 +946,7 @@
 				D01C33D727CD187D003337A9 /* DraggingProgressMixin.swift in Sources */,
 				D01B498227CA1378008249C0 /* UnsplashFilter.swift in Sources */,
 				D01B499B27CA1378008249C0 /* LibraryView.swift in Sources */,
+				D07267502D3BD27C00C7D080 /* Library+Selection.swift in Sources */,
 				D01B498A27CA1378008249C0 /* RatingFilterView.swift in Sources */,
 				D01B497B27CA1378008249C0 /* VideoFolderSource.swift in Sources */,
 				D01B494627CA1378008249C0 /* FolderDropDestination.swift in Sources */,

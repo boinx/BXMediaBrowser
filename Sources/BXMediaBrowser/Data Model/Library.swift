@@ -44,23 +44,36 @@ open class Library : ObservableObject, StateSaving
 	
 	/// The Objects of the currently selected Container are displayed in the ObjectView
 	
-	@Published public var selectedContainer:Container? = nil
+	public var selectedContainer:Container?
 	{
-		willSet
+		set
 		{
-			selectedContainer?.isSelected = false
-			selectedContainer?.purgeCachedDataOfObjects()
+			BXMediaBrowser.logDataModel.debug {"\(Self.self).\(#function) = \(selection.container?.identifier ?? "nil")"}
+
+			// Request purging of thumbnails of previously selected Container
 			
-			newValue?.isSelected = true
-			newValue?.cancelPurgeCachedDataOfObjects()
+			selection.container?.isSelected = false
+			selection.container?.purgeCachedDataOfObjects()
+
+			// Select new container
+			
+			self.objectWillChange.send()
+			selection.container = newValue
+			selection.container?.validateSortType()
+			
+			// Cancel purging if it was requested before
+			
+			selection.container?.isSelected = true
+			selection.container?.cancelPurgeCachedDataOfObjects()
 		}
 		
-		didSet
+		get
 		{
-			BXMediaBrowser.logDataModel.debug {"\(Self.self).\(#function) = \(selectedContainer?.identifier ?? "nil")"}
-			selectedContainer?.validateSortType()
+			selection.container
 		}
 	}
+	
+	public let selection = Selection()
 	
 	/// This externally supplied handler will be called when file URLs are dropped onto a LibraryView
 	
