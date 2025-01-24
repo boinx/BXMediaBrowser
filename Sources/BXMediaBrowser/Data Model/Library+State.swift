@@ -33,7 +33,7 @@ import Foundation
 
 extension Library
 {
-	/// This helper object is reponsible for coalescing (debouncing) requests to save the Library state.
+	/// This helper object is responsible for coalescing (debouncing) requests to save the Library state.
 	/// That way unnecessary duplicate work is avoided.
 	
 	class StateSaver
@@ -50,7 +50,7 @@ extension Library
 		
 		@Published internal var requestCounter = 0
 	
-		/// Reference to the Combine debounding pipeline
+		/// Reference to the Combine debouncing pipeline
 		
 		private var observers:[Any] = []
 		
