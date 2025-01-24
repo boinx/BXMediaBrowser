@@ -79,7 +79,7 @@ open class UIState : ObservableObject
 
 	public init(prefsKeyPrefix:String = UUID().uuidString, thumbnailSize:Double = 150)
 	{
-		self.prefsKeyPrefix = prefsKeyPrefix
+		self.prefsKeyPrefix = prefsKeyPrefix.replacingOccurrences(of:".", with:"-")
 		self.thumbnailSize = thumbnailSize
 		self.loadFromPrefs()
 		
