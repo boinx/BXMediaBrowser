@@ -64,9 +64,9 @@ open class UIState : ObservableObject
 	
 	public var prefsKeyPrefix:String
 	
-	private var thumbnailSizeKey:String { "\(prefsKeyPrefix)-thumbnailSize"}
-	private var sidebarWidthKey:String { "\(prefsKeyPrefix)-sidebarWidth"}
-	private var libraryHeightKey:String { "\(prefsKeyPrefix)-libraryHeight"}
+	private var thumbnailSizeKey:String { "\(prefsKeyPrefix)-thumbnailSize" }
+	private var sidebarWidthKey:String { "\(prefsKeyPrefix)-sidebarWidth" }
+	private var libraryHeightKey:String { "\(prefsKeyPrefix)-libraryHeight" }
 	
 	/// Internal housekeeping
 	
