@@ -47,18 +47,18 @@ open class LightroomCCSource : Source, AccessControl
 
 	/// Creates a new Source for local file system directories
 	
-	public init(library:Library?, allowedMediaTypes:[Object.MediaType])
+	public init(allowedMediaTypes:[Object.MediaType], in library:Library?)
 	{
 		LightroomCC.log.debug {"\(Self.self).\(#function)"}
 		
 		self.allowedMediaTypes = allowedMediaTypes
 		
 		super.init(
-			library: library,
 			identifier: Self.identifier,
 			icon: CGImage.image(named:"lr_appicon_noshadow_256", in:.BXMediaBrowser),
 			name: "Adobe Lightroom",
-			filter: LightroomCCFilter())
+			filter: LightroomCCFilter(),
+			in: library)
 		
 		self.loader = Loader(loadHandler:self.loadContainers)
 
@@ -293,7 +293,7 @@ open class LightroomCCSource : Source, AccessControl
 
 			try await Tasks.canContinue()
 		
-			containers += LightroomCCContainerAllPhotos(library:library, allowedMediaTypes:allowedMediaTypes, filter:filter)
+			containers += LightroomCCContainerAllPhotos(allowedMediaTypes:allowedMediaTypes, filter:filter, in:library)
 			
 			// Find top-level albums (parent is nil) and create a Container for each album
 			
@@ -306,7 +306,7 @@ open class LightroomCCSource : Source, AccessControl
 			{
 				try await Tasks.canContinue()
 		
-				containers += LightroomCCContainer(library:library, album:album, allowedMediaTypes:allowedMediaTypes, filter:filter)
+				containers += LightroomCCContainer(album:album, allowedMediaTypes:allowedMediaTypes, filter:filter, in:library)
 			}
 
 			return containers

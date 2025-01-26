@@ -80,7 +80,7 @@ public class MusicSource : Source, AccessControl
 
 	/// Creates a new Source for local file system directories
 	
-	public init(library:Library?, allowedMediaKinds:[ITLibMediaItemMediaKind] = [.kindSong])
+	public init(allowedMediaKinds:[ITLibMediaItemMediaKind] = [.kindSong], library:Library?)
 	{
 		MusicSource.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
 
@@ -97,7 +97,7 @@ public class MusicSource : Source, AccessControl
 //			name = FileManager.default.displayName(atPath:url.path)
 //		}
 		
-		super.init(library:library, identifier:Self.identifier, icon:Self.icon, name:name, filter:MusicFilter())
+		super.init(identifier:Self.identifier, icon:Self.icon, name:name, filter:MusicFilter(), in:library)
 		
 		self.loader = Loader(loadHandler:Self.loadContainers)
 		
@@ -250,12 +250,12 @@ public class MusicSource : Source, AccessControl
 		else
 		{
 			let container = MusicContainer(
-				library:library,
 				identifier:identifier,
 				icon:icon,
 				name:name,
 				data:data,
-				filter:filter)
+				filter:filter,
+				in: library)
 			
 			container._allowedSortTypes = allowedSortTypes
 			

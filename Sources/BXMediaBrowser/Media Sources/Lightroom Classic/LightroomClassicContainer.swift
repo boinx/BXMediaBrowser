@@ -50,7 +50,7 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 	
 	/// Creates a new Container for the folder at the specified URL
 	
-	public required init(library:Library?, node:IMBNode, mediaType:Object.MediaType, parserMessenger:IMBLightroomParserMessenger, filter:FolderFilter)
+	public required init(node:IMBNode, mediaType:Object.MediaType, parserMessenger:IMBLightroomParserMessenger, filter:FolderFilter, in library:Library?)
 	{
 		let data = LRCData(node:node, mediaType:mediaType, parserMessenger:parserMessenger)
 		let identifier = node.identifier ?? "LightroomClassic:Node:xxx"
@@ -58,13 +58,13 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 		let name = node.name ?? "••••••"
 		
 		super.init(
-			library: library,
 			identifier: identifier,
 			icon: icon,
 			name: name,
 			data: data,
 			filter: filter,
-			loadHandler: Self.loadContents)
+			loadHandler: Self.loadContents,
+			in: library)
 
 		// Since Lightroom CC does not have and change notification mechanism yet, we need to poll for changes.
 		// Whenever the app is brought to the foreground (activated), we just assume that a change was made in
@@ -165,7 +165,7 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 
 				try await Tasks.canContinue()
 		
-				let container = LightroomClassicContainer(library:library, node:node, mediaType:mediaType, parserMessenger:parserMessenger, filter:filter)
+				let container = LightroomClassicContainer(node:node, mediaType:mediaType, parserMessenger:parserMessenger, filter:filter, in:library)
 				knownNodes[node.identifier] = true
 				containers += container
 			}

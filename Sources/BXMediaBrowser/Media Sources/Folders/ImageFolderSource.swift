@@ -39,12 +39,11 @@ open class ImageFolderSource : FolderSource
 	
 	override open func createContainer(for url:URL, filter:FolderFilter, in library:Library?) throws -> Container?
 	{
-		let container = ImageFolderContainer(library:library, url:url, filter:filter)
-		{
-			[weak self] in self?.removeTopLevelContainer($0)
-		}
-		
-		return container
+		ImageFolderContainer(
+			url:url,
+			filter:filter,
+			removeHandler:{ [weak self] in self?.removeTopLevelContainer($0) },
+			in:library)
 	}
 
 

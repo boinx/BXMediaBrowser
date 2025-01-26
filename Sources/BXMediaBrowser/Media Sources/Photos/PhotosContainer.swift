@@ -34,19 +34,19 @@ public class PhotosContainer : Container
 {
 	/// Create a new PhotosContainer
 	
- 	public init(library:Library?, identifier:String, icon:String, name:String, data:Any, filter:Object.Filter)
+ 	public init(identifier:String, icon:String, name:String, data:Any, filter:Object.Filter, in library:Library?)
 	{
 		Photos.log.debug {"\(Self.self).\(#function) \(identifier)"}
 		
 		super.init(
-			library:library,
 			identifier:identifier,
 			icon:icon,
 			name:name,
 			data:data,
 			filter:filter,
 			loadHandler:Self.loadContents,
-			removeHandler:nil)
+			removeHandler:nil,
+			in:library)
 
 		observer.didChangeHandler =
 		{
@@ -168,12 +168,12 @@ public class PhotosContainer : Container
 						let name = assetCollection.localizedTitle ?? ""
 						
 						let container = PhotosContainer(
-							library: library,
 							identifier: "Photos:Album:\(assetCollection.localIdentifier)",
 							icon: icon,
 							name: name,
 							data: PhotosData.album(collection:assetCollection),
-							filter: filter)
+							filter: filter,
+							in: library)
 						
 						containers += container
 					}
@@ -184,12 +184,12 @@ public class PhotosContainer : Container
 						let name = collectionList.localizedTitle ?? ""
 						
 						let container = PhotosContainer(
-							library: library,
 							identifier: "Photos:Folder:\(collectionList.localIdentifier)",
 							icon: "folder",
 							name: name,
 							data: PhotosData.folder(collections:collections, fetchResult:fetchResult),
-							filter: filter)
+							filter: filter,
+							in: library)
 						
 						containers += container
 					}
@@ -213,12 +213,12 @@ public class PhotosContainer : Container
 								mediaType: filter.assetMediaType)
 							
 							containers += PhotosContainer(
-								library: library,
 								identifier: "Photos:Date:\(id)",
 								icon: "folder",
 								name: collection.localizedTitle ?? id,
 								data: PhotosData.dateInterval(unit:.year, assetCollection:collection, subCollections:monthCollections),
-								filter: filter)
+								filter: filter,
+								in: library)
 						}
 
 					case .year:
@@ -234,12 +234,12 @@ public class PhotosContainer : Container
 								mediaType: filter.assetMediaType)
 							
 							containers += PhotosContainer(
-								library: library,
 								identifier: "Photos:Date:\(id)",
 								icon: "folder",
 								name: collection.localizedTitle ?? id,
 								data: PhotosData.dateInterval(unit:.month, assetCollection:collection, subCollections:dayCollections),
-								filter: filter)
+								filter: filter,
+								in: library)
 						}
 					
 					case .month:
@@ -252,12 +252,12 @@ public class PhotosContainer : Container
 							let id = "\(year)/\(month)/\(day)"
 							
 							containers += PhotosContainer(
-								library: library,
 								identifier: "Photos:Date:\(id)",
 								icon: "folder",
 								name: collection.localizedTitle ?? id,
 								data: PhotosData.dateInterval(unit:.day, assetCollection:collection, subCollections:[]),
-								filter: filter)
+								filter: filter,
+								in: library)
 						}
 					
 					default: break

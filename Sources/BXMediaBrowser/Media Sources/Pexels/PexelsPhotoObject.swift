@@ -50,13 +50,13 @@ open class PexelsPhotoObject : Object
 	public required init(with photo:Pexels.Photo, in library:Library?)
 	{
 		super.init(
-			library: library,
 			identifier: "PexelsSource:Photo:\(photo.id)",
 			name: photo.alt,
 			data: photo,
 			loadThumbnailHandler: Self.loadThumbnail,
 			loadMetadataHandler: Self.loadMetadata,
-			downloadFileHandler: Self.downloadFile)
+			downloadFileHandler: Self.downloadFile,
+			in: library)
 	}
 
 	override nonisolated public var mediaType:MediaType

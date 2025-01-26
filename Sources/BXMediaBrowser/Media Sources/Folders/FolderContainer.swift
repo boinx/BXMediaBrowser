@@ -47,7 +47,7 @@ open class FolderContainer : Container
 
 	/// Creates a new Container for the folder at the specified URL
 	
-	public required init(library:Library?, url:URL, name:String? = nil, filter:FolderFilter, removeHandler:((Container)->Void)? = nil)
+	public required init(url:URL, name:String? = nil, filter:FolderFilter, removeHandler:((Container)->Void)? = nil, in library:Library?)
 	{
 		// Get the display name
 		
@@ -57,13 +57,13 @@ open class FolderContainer : Container
 		// Init the Container
 		
 		super.init(
-			library: library,
 			identifier: FolderSource.identifier(for:url),
 			name: displayName,
 			data: bookmark,
 			filter: filter,
 			loadHandler: Self.loadContents,
-			removeHandler: removeHandler)
+			removeHandler: removeHandler,
+			in: library)
 		
 		// Observe changes of folder contents
 		
@@ -316,7 +316,7 @@ open class FolderContainer : Container
 		guard url.isDirectory else { throw Container.Error.notFound }
 		guard url.isReadable else { throw Container.Error.accessDenied }
 		
-		return Self.init(library:library, url:url, filter:filter)
+		return Self.init(url:url, filter:filter, in:library)
 	}
 
 

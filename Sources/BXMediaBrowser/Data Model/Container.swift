@@ -139,7 +139,7 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 	
 	/// Creates a new Container
 	
-	public init(library:Library?, identifier:String, icon:String? = nil, name:String, data:Any, filter:Object.Filter, loadHandler:@escaping Container.Loader.LoadHandler, removeHandler:((Container)->Void)? = nil)
+	public init(identifier:String, icon:String? = nil, name:String, data:Any, filter:Object.Filter, loadHandler:@escaping Container.Loader.LoadHandler, removeHandler:((Container)->Void)? = nil, in library:Library?)
 	{
 		BXMediaBrowser.logDataModel.verbose {"\(Self.self).\(#function) \(identifier)"}
 

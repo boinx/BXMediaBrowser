@@ -57,7 +57,7 @@ open class LightroomCCContainerAllPhotos : Container, AppLifecycleMixin, ScrollT
 	
 	/// Creates a new Container for the folder at the specified URL
 	
-	public required init(library:Library?, allowedMediaTypes:[Object.MediaType], filter:LightroomCCFilter)
+	public required init(allowedMediaTypes:[Object.MediaType], filter:LightroomCCFilter, in library:Library?)
 	{
 		let data = LightroomCCData(allowedMediaTypes:allowedMediaTypes)
 		let identifier = "LightroomCC:AllPhotos"
@@ -67,13 +67,13 @@ open class LightroomCCContainerAllPhotos : Container, AppLifecycleMixin, ScrollT
 			NSLocalizedString("All Photos", tableName:"LightroomCC", bundle:.BXMediaBrowser, comment:"Container Name")
 		
 		super.init(
-			library: library,
 			identifier: identifier,
 			icon: icon,
 			name: name,
 			data: data,
 			filter: filter,
-			loadHandler: Self.loadContents)
+			loadHandler: Self.loadContents,
+			in: library)
 
 		// When scrolling to bottom, load the next page of assets
 		

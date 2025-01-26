@@ -55,16 +55,16 @@ public class MusicContainer : Container
 
 	/// Creates a new MusicContainer. The data argument carries essential information about this Container
 	
- 	public init(library:Library?, identifier:String, icon:String?, name:String, data:MusicData, filter:MusicFilter)
+ 	public init(identifier:String, icon:String?, name:String, data:MusicData, filter:MusicFilter, in library:Library?)
 	{
 		super.init(
-			library: library,
 			identifier:identifier,
 			icon:icon,
 			name:name,
 			data:data,
 			filter:filter,
-			loadHandler:Self.loadContents)
+			loadHandler:Self.loadContents,
+			in:library)
 	}
 	
 

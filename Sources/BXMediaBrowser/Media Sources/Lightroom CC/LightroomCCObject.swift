@@ -55,13 +55,13 @@ open class LightroomCCObject : Object, AppLifecycleMixin
 	public required init(with asset:LightroomCC.Asset, in library:Library?)
 	{
 		super.init(
-			library: library,
 			identifier: Self.identifier(for:asset),
 			name: asset.name,
 			data: asset,
 			loadThumbnailHandler: Self.loadThumbnail,
 			loadMetadataHandler: Self.loadMetadata,
-			downloadFileHandler: Self.downloadFile)
+			downloadFileHandler: Self.downloadFile,
+			in: library)
 		
 		// If we received a rating from Lightroom, then store it in our database
 		

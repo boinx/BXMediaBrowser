@@ -56,19 +56,19 @@ open class PexelsContainer : Container
 	
 	/// Creates a new Container for the folder at the specified URL
 	
-	public required init(library:Library?, identifier:String, icon:String, name:String, filter:PexelsFilter, saveHandler:SaveContainerHandler? = nil, removeHandler:((Container)->Void)? = nil)
+	public required init(identifier:String, icon:String, name:String, filter:PexelsFilter, saveHandler:SaveContainerHandler? = nil, removeHandler:((Container)->Void)? = nil, in library:Library?)
 	{
 		Pexels.log.verbose {"\(Self.self).\(#function) \(identifier)"}
 
 		super.init(
-			library: library,
 			identifier: identifier,
 			icon: icon,
 			name: name,
 			data: PexelsData(),
 			filter: filter,
 			loadHandler: Self.loadContents,
-			removeHandler: removeHandler)
+			removeHandler: removeHandler,
+			in: library)
 		
 		self.saveHandler = saveHandler
 

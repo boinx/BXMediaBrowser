@@ -44,13 +44,13 @@ open class FolderObject : Object
 		FolderSource.log.verbose {"\(Self.self).\(#function) url = \(url)"}
 
 		super.init(
-			library: library,
 			identifier: FolderSource.identifier(for:url),
 			name: name ?? url.lastPathComponent,
 			data: url,
 			loadThumbnailHandler: Self.loadThumbnail,
 			loadMetadataHandler: Self.loadMetadata,
-			downloadFileHandler: Self.downloadFile)
+			downloadFileHandler: Self.downloadFile,
+			in: library)
 
 		// File in a Finder folder are always local, non-download
 		

@@ -44,11 +44,11 @@ open class PexelsVideoSource : Source, AccessControl
 
 	/// Creates a new Source for local file system directories
 	
-	public init(library:Library?)
+	public init(in library:Library?)
 	{
 		Pexels.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
 		let icon = CGImage.image(named:"Pexels", in:.BXMediaBrowser)
-		super.init(library:library, identifier:Self.identifier, icon:icon, name:"Pexels.com", filter:PexelsFilter())
+		super.init(identifier:Self.identifier, icon:icon, name:"Pexels.com", filter:PexelsFilter(), in:library)
 		self.loader = Loader(loadHandler:self.loadContainers)
 	}
 	
@@ -70,10 +70,11 @@ open class PexelsVideoSource : Source, AccessControl
 		
 		guard let filter = filter as? PexelsFilter else { return containers }
 		let name = NSLocalizedString("Search", tableName:"Pexels", bundle:.BXMediaBrowser, comment:"Container Name")
-		containers += PexelsVideoContainer(library:library, identifier:"PexelsVideoSource:Search", icon:"magnifyingglass", name:name, filter:filter, saveHandler:
+		containers += PexelsVideoContainer(identifier:"PexelsVideoSource:Search", icon:"magnifyingglass", name:name, filter:filter, saveHandler:
 		{
 			[weak self] in self?.saveContainer($0)
-		})
+		},
+		in:library)
 
 		// Add Saved Searches
 		
@@ -134,28 +135,34 @@ open class PexelsVideoSource : Source, AccessControl
 		let identifier = "PexelsVideoSource:\(searchString)/\(orientation)/\(color)".replacingOccurrences(of:" ", with:"-")
 		let name = PexelsVideoContainer.description(with:filter)
 		
-		return PexelsVideoContainer(library:library, identifier:identifier, icon:"rectangle.stack", name:name, filter:filter, removeHandler:
-		{
-			[weak self] container in
-			
-			let title = NSLocalizedString("Alert.title.removeFolder", bundle:.BXMediaBrowser, comment:"Alert Title")
-			let message = String(format:NSLocalizedString("Alert.message.removeFolder", bundle:.BXMediaBrowser, comment:"Alert Message"), container.name)
-			let ok = NSLocalizedString("Remove", bundle:.BXMediaBrowser, comment:"Button Title")
-			let cancel = NSLocalizedString("Cancel", bundle:.BXMediaBrowser, comment:"Button Title")
-			
-			#if os(macOS)
-			
-			NSAlert.presentModal(style:.critical, title:title, message:message, okButton:ok, cancelButton:cancel)
+		return PexelsVideoContainer(
+			identifier:identifier,
+			icon:"rectangle.stack",
+			name:name,
+			filter:filter,
+			removeHandler:
 			{
-				[weak self] in self?.removeContainer(container)
-			}
-			
-			#else
-			
-			#warning("TODO: implement for iOS")
-			
-			#endif
-		})
+				[weak self] container in
+				
+				let title = NSLocalizedString("Alert.title.removeFolder", bundle:.BXMediaBrowser, comment:"Alert Title")
+				let message = String(format:NSLocalizedString("Alert.message.removeFolder", bundle:.BXMediaBrowser, comment:"Alert Message"), container.name)
+				let ok = NSLocalizedString("Remove", bundle:.BXMediaBrowser, comment:"Button Title")
+				let cancel = NSLocalizedString("Cancel", bundle:.BXMediaBrowser, comment:"Button Title")
+				
+				#if os(macOS)
+				
+				NSAlert.presentModal(style:.critical, title:title, message:message, okButton:ok, cancelButton:cancel)
+				{
+					[weak self] in self?.removeContainer(container)
+				}
+				
+				#else
+				
+				#warning("TODO: implement for iOS")
+				
+				#endif
+			},
+			in:library)
 	}
 
 

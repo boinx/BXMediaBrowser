@@ -44,18 +44,18 @@ public class PhotosSource : Source, AccessControl
 	
 	/// Creates a new Source for local file system directories
 	
-	public init(library:Library?, allowedMediaTypes:[Object.MediaType])
+	public init(allowedMediaTypes:[Object.MediaType], in library:Library?)
 	{
 		Photos.log.verbose {"\(Self.self).\(#function) \(Photos.identifier)"}
 
 		let filter = PhotosFilter(allowedMediaTypes:allowedMediaTypes)
 		
 		super.init(
-			library:library,
 			identifier:Photos.identifier,
 			icon:Photos.icon,
 			name:Photos.name,
-			filter:filter)
+			filter:filter,
+			in:library)
 		
 		self.loader = Loader(loadHandler:self.loadContainers)
 
@@ -131,12 +131,12 @@ public class PhotosSource : Source, AccessControl
 			NSLocalizedString("All Photos", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Container Name")
 	
 		containers += PhotosContainer(
-			library: library,
 			identifier: "\(Photos.identifier):Library",
 			icon: "photo.on.rectangle",
 			name: title,
 			data: libraryData,
-			filter: filter)
+			filter: filter,
+			in: library)
 
 		// Recently Added
 		
@@ -149,12 +149,12 @@ public class PhotosSource : Source, AccessControl
 			let recentsData = PhotosData.album(collection:recentsCollection)
 			
 			containers += PhotosContainer(
-				library: library,
 				identifier: "Photos:Recents",
 				icon: "clock",
 				name: recentsCollection.localizedTitle ?? "Recents",
 				data: recentsData,
-				filter: filter)
+				filter: filter,
+				in: library)
 		}
 
 		// Albums
@@ -166,12 +166,12 @@ public class PhotosSource : Source, AccessControl
 		let albumsData = PhotosData.folder(collections:albumsCollections, fetchResult:albumsFetchResult)
 
 		containers += PhotosContainer(
-			library: library,
 			identifier: "Photos:Albums",
 			icon: "folder",
 			name: NSLocalizedString("Albums", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Container Name"),
 			data: albumsData,
-			filter: filter)
+			filter: filter,
+			in: library)
 		
 		// Shared Albums
 		
@@ -184,12 +184,12 @@ public class PhotosSource : Source, AccessControl
 		let sharedData = PhotosData.folder(collections:sharedCollections, fetchResult:sharedFetchResult)
 
 		containers += PhotosContainer(
-			library: library,
 			identifier: "Photos:SharedAlbums",
 			icon: "folder",
 			name: NSLocalizedString("Shared Albums", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Container Name"),
 			data: sharedData,
-			filter: filter)
+			filter: filter,
+			in: library)
 
 		// Years
 
@@ -199,12 +199,12 @@ public class PhotosSource : Source, AccessControl
 		let yearsData = PhotosData.dateInterval(unit:.era, assetCollection:nil, subCollections:yearsCollections)
 		
 		containers += PhotosContainer(
-			library: library,
 			identifier: "Photos:Years",
 			icon: "folder",
 			name: NSLocalizedString("Years", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Container Name"),
 			data: yearsData,
-			filter: filter)
+			filter: filter,
+			in: library)
 
 		// Smart Albums
 
@@ -222,12 +222,12 @@ public class PhotosSource : Source, AccessControl
 			let smartAlbumsData = PhotosData.folder(collections:smartAlbumsCollections, fetchResult:smartAlbumsFetchResult)
 
 			containers += PhotosContainer(
-				library: library,
 				identifier: "Photos:SmartAlbums",
 				icon: "folder",
 				name: NSLocalizedString("Smart Albums", tableName:"Photos", bundle:.BXMediaBrowser, comment:"Container Name"),
 				data: smartAlbumsData,
-				filter: filter)
+				filter: filter,
+				in: library)
 		}
 		
 		return containers

@@ -44,12 +44,12 @@ open class UnsplashSource : Source, AccessControl
 
 	/// Creates a new Source for local file system directories
 	
-	public init(library:Library?)
+	public init(in library:Library?)
 	{
 		Unsplash.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
 		
 		let icon = CGImage.image(named:"Unsplash", in:.BXMediaBrowser)
-		super.init(library:library, identifier:Self.identifier, icon:icon, name:"Unsplash.com", filter:UnsplashFilter())
+		super.init(identifier:Self.identifier, icon:icon, name:"Unsplash.com", filter:UnsplashFilter(), in:library)
 		self.loader = Loader(loadHandler:self.loadContainers)
 	}
 
@@ -70,10 +70,11 @@ open class UnsplashSource : Source, AccessControl
 		// Add Live Search
 		
 		let name = NSLocalizedString("Search", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Container Name")
-		containers += UnsplashContainer(library:library, identifier:"Unsplash:Search", icon:"magnifyingglass", name:name, filter:UnsplashFilter(), saveHandler:
+		containers += UnsplashContainer(identifier:"Unsplash:Search", icon:"magnifyingglass", name:name, filter:UnsplashFilter(), saveHandler:
 		{
 			[weak self] in self?.saveContainer($0)
-		})
+		},
+		in:library)
 
 		// Add Saved Searches
 		
@@ -133,7 +134,7 @@ open class UnsplashSource : Source, AccessControl
 		let identifier = "Unsplash:\(searchString)/\(orientation)/\(color)".replacingOccurrences(of:" ", with:"-")
 		let name = UnsplashContainer.description(with:filter)
 		
-		return UnsplashContainer(library:library, identifier:identifier, icon:"rectangle.stack", name:name, filter:filter, removeHandler:
+		return UnsplashContainer(identifier:identifier, icon:"rectangle.stack", name:name, filter:filter, removeHandler:
 		{
 			[weak self] container in
 			
@@ -154,7 +155,8 @@ open class UnsplashSource : Source, AccessControl
 			#warning("TODO: implement for iOS")
 			
 			#endif
-		})
+		},
+		in:library)
 	}
 
 

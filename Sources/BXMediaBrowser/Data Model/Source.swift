@@ -86,7 +86,7 @@ open class Source : ObservableObject, Identifiable, StateSaving
 	
 	/// Creates a Source with the specified identifier and name
 	
-	public init(library:Library?, identifier:String, icon:CGImage? = nil, name:String, filter:Object.Filter)
+	public init(identifier:String, icon:CGImage? = nil, name:String, filter:Object.Filter, in library:Library?)
 	{
 		BXMediaBrowser.logDataModel.verbose {"\(Self.self).\(#function) \(identifier)"}
 

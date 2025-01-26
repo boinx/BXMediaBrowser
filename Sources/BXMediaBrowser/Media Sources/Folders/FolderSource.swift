@@ -50,11 +50,11 @@ open class FolderSource : Source, AccessControl
 	
 	/// Creates a new Source for local file system directories
 	
-	public init(library:Library?, filter:FolderFilter = FolderFilter())
+	public init(filter:FolderFilter = FolderFilter(), in library:Library?)
 	{
 		FolderSource.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
 
-		super.init(library:library, identifier:Self.identifier, name:"Finder", filter:filter)
+		super.init(identifier:Self.identifier, name:"Finder", filter:filter, in:library)
 		self.loader = Loader(loadHandler:self.loadContainers)
 	}
 
@@ -127,10 +127,11 @@ open class FolderSource : Source, AccessControl
 	{
 		FolderSource.log.verbose {"\(Self.self).\(#function) \(url)"}
 
-		return FolderContainer(library:library, url:url, filter:filter)
-		{
-			[weak self] in self?.removeTopLevelContainer($0)
-		}
+		return FolderContainer(
+			url: url,
+			filter: filter,
+			removeHandler: { [weak self] in self?.removeTopLevelContainer($0) },
+			in: library)
 	}
 
 

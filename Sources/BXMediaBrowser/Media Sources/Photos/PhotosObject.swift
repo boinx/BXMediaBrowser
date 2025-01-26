@@ -40,13 +40,13 @@ public class PhotosObject : Object
 	public init(with asset:PHAsset, in library:Library?)
 	{
 		super.init(
-			library: library,
 			identifier: Self.identifier(for:asset),
 			name: "", // asset.originalFilename ?? "", 	// Getting originalFilename is way too expensive at this point!
 			data: asset,
 			loadThumbnailHandler: Self.loadThumbnail,
 			loadMetadataHandler: Self.loadMetadata,
-			downloadFileHandler: Self.downloadFile)
+			downloadFileHandler: Self.downloadFile,
+			in:library)
 
 		self.observer.didChangeHandler =
 		{

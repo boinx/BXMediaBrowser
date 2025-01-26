@@ -98,7 +98,7 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 
 	// MARK: - Creating
 	
-	public init(library:Library?, identifier:String, name:String, data:Any, loadThumbnailHandler:@escaping Object.Loader.LoadThumbnailHandler, loadMetadataHandler:@escaping Object.Loader.LoadMetadataHandler, downloadFileHandler:@escaping Object.Loader.DownloadFileHandler)
+	public init(identifier:String, name:String, data:Any, loadThumbnailHandler:@escaping Object.Loader.LoadThumbnailHandler, loadMetadataHandler:@escaping Object.Loader.LoadMetadataHandler, downloadFileHandler:@escaping Object.Loader.DownloadFileHandler, in library:Library?)
 	{
 		self.library = library
 		self.identifier = identifier

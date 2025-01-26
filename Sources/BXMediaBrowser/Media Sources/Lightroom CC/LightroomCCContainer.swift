@@ -61,7 +61,7 @@ open class LightroomCCContainer : Container, AppLifecycleMixin
 	
 	/// Creates a new Container for the folder at the specified URL
 	
-	public required init(library:Library?, album:LightroomCC.Albums.Resource, allowedMediaTypes:[Object.MediaType], filter:LightroomCCFilter)
+	public required init(album:LightroomCC.Albums.Resource, allowedMediaTypes:[Object.MediaType], filter:LightroomCCFilter, in library:Library?)
 	{
 		let data = LightroomCCData(with:album, allowedMediaTypes:allowedMediaTypes)
 		let identifier = "LightroomCC:Album:\(album.id)"
@@ -69,13 +69,13 @@ open class LightroomCCContainer : Container, AppLifecycleMixin
 		let name = album.payload.name
 		
 		super.init(
-			library:library,
 			identifier: identifier,
 			icon: icon,
 			name: name,
 			data: data,
 			filter: filter,
-			loadHandler: Self.loadContents)
+			loadHandler: Self.loadContents,
+			in: library)
 
 		// If there is another page of assets to be retrieved from the Lightroom server, then reload this container
 		
@@ -211,10 +211,10 @@ open class LightroomCCContainer : Container, AppLifecycleMixin
 			{
 				data.cachedContainers?.append(
 					LightroomCCContainer(
-						library:library,
 						album:album,
 						allowedMediaTypes:data.allowedMediaTypes,
-						filter:filter))
+						filter:filter,
+						in:library))
 			}
 		}
 

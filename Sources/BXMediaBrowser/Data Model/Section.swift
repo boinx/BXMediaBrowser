@@ -64,7 +64,7 @@ open class Section : ObservableObject, Identifiable, StateSaving
 
 	/// Create a new Section with the specified name
 	
-	public init(library:Library?, identifier:String, name:String?)
+	public init(identifier:String, name:String?, in library:Library?)
 	{
 		self.library = library
 		self.identifier = identifier
@@ -82,7 +82,7 @@ open class Section : ObservableObject, Identifiable, StateSaving
 
 	/// Loads all Sources in this Section
 	
-	public func load(with sectionState:[String:Any]? = nil, in library:Library)
+	public func load(with sectionState:[String:Any]? = nil, in library:Library?)
 	{
 		if let isExpanded = sectionState?[isExpandedKey] as? Bool
 		{

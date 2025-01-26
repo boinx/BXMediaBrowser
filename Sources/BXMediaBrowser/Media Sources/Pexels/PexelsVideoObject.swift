@@ -53,13 +53,13 @@ open class PexelsVideoObject : Object
 		let name = String(format:format, video.user.name)
 		
 		super.init(
-			library: library,
 			identifier: "PexelsSource:Video:\(video.id)",
 			name: name,
 			data: video,
 			loadThumbnailHandler: Self.loadThumbnail,
 			loadMetadataHandler: Self.loadMetadata,
-			downloadFileHandler: Self.downloadFile)
+			downloadFileHandler: Self.downloadFile,
+			in: library)
 	}
 
 	override nonisolated public var mediaType:MediaType

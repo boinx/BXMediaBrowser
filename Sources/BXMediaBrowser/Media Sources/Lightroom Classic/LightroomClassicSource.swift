@@ -55,7 +55,7 @@ open class LightroomClassicSource : Source, AccessControl
 
 	/// Creates a new Source for local file system directories
 	
-	public init(library:Library, mediaType:Object.MediaType)
+	public init(mediaType:Object.MediaType, in library:Library?)
 	{
 		LightroomClassic.log.debug {"\(Self.self).\(#function)"}
 		
@@ -71,11 +71,11 @@ open class LightroomClassicSource : Source, AccessControl
 		}
 		
 		super.init(
-			library: library,
 			identifier: Self.identifier,
 			icon: LightroomClassic.shared.icon,
 			name: LightroomClassic.shared.name,
-			filter: FolderFilter())
+			filter: FolderFilter(),
+			in: library)
 		
 		self.loader = Loader(loadHandler:self.loadContainers)
 	}
@@ -207,7 +207,7 @@ open class LightroomClassicSource : Source, AccessControl
 			let containers:[LightroomClassicContainer] = rootNode.subnodes.compactMap
 			{
 				guard let node = $0 as? IMBNode else { return nil }
-				return LightroomClassicContainer(library:library, node:node, mediaType:mediaType, parserMessenger:parserMessenger, filter:filter)
+				return LightroomClassicContainer(node:node, mediaType:mediaType, parserMessenger:parserMessenger, filter:filter, in:library)
 			}
 			
 			await MainActor.run

@@ -47,13 +47,13 @@ public class MusicObject : Object
 		let name = item.title
 		
 		super.init(
-			library: library,
 			identifier: identifier,
 			name: name,
 			data: item,
 			loadThumbnailHandler: Self.loadThumbnail,
 			loadMetadataHandler: Self.loadMetadata,
-			downloadFileHandler: Self.downloadFile)
+			downloadFileHandler: Self.downloadFile,
+			in: library)
 		
 		// Get status for this audio file
 		
