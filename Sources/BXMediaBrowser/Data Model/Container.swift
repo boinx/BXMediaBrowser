@@ -35,6 +35,10 @@ import SwiftUI
 
 open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMixin
 {
+	/// Reference to the owning library
+	
+	public private(set) weak var library:Library? = nil
+
 	/// The identifier specifies the location of a Container
 	
 	public let identifier:String
@@ -135,10 +139,11 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 	
 	/// Creates a new Container
 	
-	public init(identifier:String, icon:String? = nil, name:String, data:Any, filter:Object.Filter, loadHandler:@escaping Container.Loader.LoadHandler, removeHandler:((Container)->Void)? = nil)
+	public init(library:Library?, identifier:String, icon:String? = nil, name:String, data:Any, filter:Object.Filter, loadHandler:@escaping Container.Loader.LoadHandler, removeHandler:((Container)->Void)? = nil)
 	{
 		BXMediaBrowser.logDataModel.verbose {"\(Self.self).\(#function) \(identifier)"}
 
+		self.library = library
 		self.identifier = identifier
 		self.icon = icon
 		self.name = name

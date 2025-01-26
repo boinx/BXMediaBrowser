@@ -40,6 +40,10 @@ import MobileCoreServices
 
 open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 {
+	/// Reference to the owning library
+	
+	public private(set) weak var library:Library? = nil
+	
 	/// This unique identifier is persistent across application launches and should be able to locate an object again
 	
 	public let identifier:String
@@ -94,8 +98,9 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 
 	// MARK: - Creating
 	
-	public init(identifier:String, name:String, data:Any, loadThumbnailHandler:@escaping Object.Loader.LoadThumbnailHandler, loadMetadataHandler:@escaping Object.Loader.LoadMetadataHandler, downloadFileHandler:@escaping Object.Loader.DownloadFileHandler)
+	public init(library:Library?, identifier:String, name:String, data:Any, loadThumbnailHandler:@escaping Object.Loader.LoadThumbnailHandler, loadMetadataHandler:@escaping Object.Loader.LoadMetadataHandler, downloadFileHandler:@escaping Object.Loader.DownloadFileHandler)
 	{
+		self.library = library
 		self.identifier = identifier
 		self.name = name
 		self.data = data

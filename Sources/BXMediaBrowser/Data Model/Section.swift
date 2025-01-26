@@ -33,6 +33,10 @@ import SwiftUI
 
 open class Section : ObservableObject, Identifiable, StateSaving
 {
+	/// Reference to the owning library
+	
+	public private(set) weak var library:Library? = nil
+
 	/// A unique identifier for this Section
 	
 	public let identifier:String
@@ -60,8 +64,9 @@ open class Section : ObservableObject, Identifiable, StateSaving
 
 	/// Create a new Section with the specified name
 	
-	public init(identifier:String, name:String?)
+	public init(library:Library?, identifier:String, name:String?)
 	{
+		self.library = library
 		self.identifier = identifier
 		self.name = name
 		self.sources = []

@@ -31,6 +31,10 @@ import SwiftUI
 
 open class Source : ObservableObject, Identifiable, StateSaving
 {
+	/// Reference to the owning library
+	
+	public private(set) weak var library:Library? = nil
+
 	/// A unique (and persistent) identifier for this Source
 	
 	public let identifier:String
@@ -82,10 +86,11 @@ open class Source : ObservableObject, Identifiable, StateSaving
 	
 	/// Creates a Source with the specified identifier and name
 	
-	public init(identifier:String, icon:CGImage? = nil, name:String, filter:Object.Filter)
+	public init(library:Library?, identifier:String, icon:CGImage? = nil, name:String, filter:Object.Filter)
 	{
 		BXMediaBrowser.logDataModel.verbose {"\(Self.self).\(#function) \(identifier)"}
 
+		self.library = library
 		self.identifier = identifier
 		self.icon = icon
 		self.name = name
