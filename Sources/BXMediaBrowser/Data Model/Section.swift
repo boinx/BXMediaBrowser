@@ -82,7 +82,7 @@ open class Section : ObservableObject, Identifiable, StateSaving
 
 	/// Loads all Sources in this Section
 	
-	public func load(with sectionState:[String:Any]? = nil)
+	public func load(with sectionState:[String:Any]? = nil, in library:Library)
 	{
 		if let isExpanded = sectionState?[isExpandedKey] as? Bool
 		{
@@ -93,7 +93,7 @@ open class Section : ObservableObject, Identifiable, StateSaving
 		{
 			let key = source.stateKey
 			let sourceState = sectionState?[key] as? [String:Any]
-			source.load(with:sourceState)
+			source.load(with:sourceState, in:library)
 		}
 	}
 

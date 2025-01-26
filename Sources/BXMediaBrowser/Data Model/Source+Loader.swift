@@ -33,7 +33,7 @@ extension Source
 {
 	public actor Loader
 	{
-		public typealias LoadHandler = ([String:Any]?,Object.Filter) async throws -> [Container]
+		public typealias LoadHandler = ([String:Any]?,Object.Filter,Library?) async throws -> [Container]
 		
 		let loadHandler:LoadHandler
 		
@@ -46,11 +46,11 @@ extension Source
 		
 		/// Loads the top-level containers of this source
 		
-		public func containers(with sourceState:[String:Any]? = nil, filter:Object.Filter) async throws -> [Container]
+		public func containers(with sourceState:[String:Any]? = nil, filter:Object.Filter, in library:Library?) async throws -> [Container]
 		{
 			try await Tasks.canContinue()
 			
-			return try await self.loadHandler(sourceState,filter)
+			return try await self.loadHandler(sourceState,filter,library)
 		}
 	}
 }

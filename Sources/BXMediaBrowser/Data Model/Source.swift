@@ -110,7 +110,7 @@ open class Source : ObservableObject, Identifiable, StateSaving
 	/// Loads the top-level containers of this source. If a previous load is still in progress it is cancelled,
 	/// so that the new load can be started sooner.
 	
-	public func load(with sourceState:[String:Any]? = nil)
+	public func load(with sourceState:[String:Any]? = nil, in library:Library?)
 	{
 		self.loadTask?.cancel()
 		self.loadTask = nil
@@ -132,7 +132,7 @@ open class Source : ObservableObject, Identifiable, StateSaving
 
 				// Get new list of containers
 				
-				let containers = try await self.loader.containers(with:sourceState, filter:filter)
+				let containers = try await self.loader.containers(with:sourceState, filter:filter, in:library)
 				let names = containers.map { $0.name }.joined(separator:", ")
 				BXMediaBrowser.logDataModel.verbose {"    containers = \(names)"}
 
@@ -155,7 +155,7 @@ open class Source : ObservableObject, Identifiable, StateSaving
 						if isExpanded
 						{
 							container.isExpanded = true
-							container.load(with:containerState)
+							container.load(with:containerState, in:library)
 						}
 					}
 					
@@ -270,7 +270,7 @@ open class Source : ObservableObject, Identifiable, StateSaving
 				for container in containers
 				{
 					container.isVisible = isExpanded
-					if container.isSelected && !container.isLoaded { container.load() }
+					if container.isSelected && !container.isLoaded { container.load(in:library) }
 				}
 			}
 		}

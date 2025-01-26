@@ -157,7 +157,7 @@ open class Library : ObservableObject, StateSaving
 				DispatchQueue.main.async
 				{
 					self.selectedContainer = container
-					container.load()
+					container.load(in:self)
 				}
 			}
 		}
@@ -168,7 +168,7 @@ open class Library : ObservableObject, StateSaving
 		{
 			let key = section.stateKey
 			let sectionState = libraryState?[key] as? [String:Any]
-			section.load(with:sectionState)
+			section.load(with:sectionState, in:self)
 		}
 	}
 

@@ -178,7 +178,7 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 				[weak self] _ in
 				guard let self = self else { return }
 				guard self.isSelected else { return }
-				self.load()
+				self.load(in:library)
 			}
 
 		// If this container is set to sort by rating and an Object rating has changed, then also reload
@@ -191,7 +191,7 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 				guard let self = self else { return }
 				guard self.isSelected else { return }
 				guard self.filter.sortType == .rating else { return }
-				self.load()
+				self.load(in:library)
 			}
 			
 		self.observers += NotificationCenter.default.publisher(for:StatisticsController.didChangeNotification, object:nil)
@@ -202,7 +202,7 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 				guard let self = self else { return }
 				guard self.isSelected else { return }
 				guard self.filter.sortType == .useCount else { return }
-				self.load()
+				self.load(in:library)
 			}
 	}
 	
@@ -231,7 +231,7 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 	/// Loads the contents of the container. If a previous load is still in progress it is cancelled,
 	/// so that the new load can be started sooner.
 	
-	public func load(with containerState:[String:Any]? = nil)
+	public func load(with containerState:[String:Any]? = nil, in library:Library?)
 	{
 		self.loadTask?.cancel()
 		self.loadTask = nil
@@ -270,7 +270,7 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 				
 				// Get new list of (sub)containers and objects
 				
-				let (containers,objects) = try await self.loader.contents(with:data, filter:filter)
+				let (containers,objects) = try await self.loader.contents(with:data, filter:filter, in:library)
 				let containerNames = containers.map { $0.name }.joined(separator:", ")
 				let objectNames = objects.map { $0.name }.joined(separator:", ")
 				BXMediaBrowser.logDataModel.verbose {"    containers = \(containerNames)"}
@@ -318,7 +318,7 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 					{
 						let state = containerState?[container.stateKey] as? [String:Any]
 						let isExpanded = state?[container.isExpandedKey] as? Bool ?? false
-						if isExpanded { container.load(with:state) }
+						if isExpanded { container.load(with:state, in:library) }
 					}
 					
 					self.isLoaded = true
@@ -412,7 +412,7 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 			await MainActor.run
 			{
 				self.invalidateCache()
-				self.load()
+				self.load(in:library)
 			}
 		}
 	}
@@ -478,7 +478,7 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 				for container in containers
 				{
 					container.isVisible = isExpanded
-					if container.isSelected && !container.isLoaded { container.load() }
+					if container.isSelected && !container.isLoaded { container.load(in:library) }
 				}
 			}
 		}
