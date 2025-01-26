@@ -171,11 +171,11 @@ public class MusicSource : Source, AccessControl
 		
 		MusicSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
-		guard let library = Self.library else { throw Container.Error.loadContentsFailed }
+		guard let itLibrary = Self.library else { throw Container.Error.loadContentsFailed }
 		guard let filter = filter as? MusicFilter else { throw Container.Error.loadContentsFailed }
 		
-		let allMediaItems = library.allMediaItems.filter { Self.allowedMediaKinds.contains($0.mediaKind) }
-		let allPlaylists = library.allPlaylists
+		let allMediaItems = itLibrary.allMediaItems.filter { Self.allowedMediaKinds.contains($0.mediaKind) }
+		let allPlaylists = itLibrary.allPlaylists
 		let topLevelPlaylists = allPlaylists.filter { $0.parentID == nil }
 		var containers:[Container] = []
 		
