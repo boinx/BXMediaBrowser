@@ -35,13 +35,14 @@ open class UnsplashObject : Object
 {
 	/// Creates a new Object for the file at the specified URL
 	
-	public init(with photo:UnsplashPhoto)
+	public init(with photo:UnsplashPhoto, in library:Library?)
 	{
 		let format = NSLocalizedString("%@ on Unsplash", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Value String")
 		let username = photo.user.name ?? photo.user.username
 		let name = String(format:format, username)
 		
 		super.init(
+			library: library,
 			identifier: "Unsplash:Photo:\(photo.id)",
 			name: name,
 			data: photo,

@@ -41,12 +41,13 @@ public class MusicObject : Object
 	
 	/// Creates a new MusicObject with the specified ITLibMediaItem
 	
-	public init(with item:ITLibMediaItem)
+	public init(with item:ITLibMediaItem, in library:Library?)
 	{
 		let identifier = "MusicSource:ITLibMediaItem:\(item.persistentID)"
 		let name = item.title
 		
 		super.init(
+			library: library,
 			identifier: identifier,
 			name: name,
 			data: item,

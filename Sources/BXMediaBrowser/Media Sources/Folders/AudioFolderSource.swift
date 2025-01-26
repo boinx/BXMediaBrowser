@@ -42,9 +42,9 @@ open class AudioFolderSource : FolderSource
 {
 	/// Creates a Container for the folder at the specified URL
 	
-	override open func createContainer(for url:URL, filter:FolderFilter) throws -> Container?
+	override open func createContainer(for url:URL, filter:FolderFilter, in library:Library?) throws -> Container?
 	{
-		AudioFolderContainer(url:url, filter:filter)
+		AudioFolderContainer(library:library, url:url, filter:filter)
 		{
 			[weak self] in self?.removeTopLevelContainer($0)
 		}
@@ -63,7 +63,7 @@ open class AudioFolderSource : FolderSource
 		
 		if let url = FileManager.default.urls(for:.musicDirectory, in:.userDomainMask).first?.resolvingSymlinksInPath(), url.isReadable
 		{
-			containers += try self.createContainer(for:url, filter:filter)
+			containers += try self.createContainer(for:url, filter:filter, in:library)
 		}
 		
 		// /Library/Audio/Apple Loops/Apple
@@ -72,7 +72,7 @@ open class AudioFolderSource : FolderSource
 		{
 			()->Container? in
 			guard let url = self.requestReadAccessRights(for:URL(fileURLWithPath:"/Library/Audio/Apple Loops/Apple")) else { return nil }
-			return try self.createContainer(for:url, filter:filter)
+			return try self.createContainer(for:url, filter:filter, in:library)
 		}
 		
 		return containers
@@ -138,7 +138,7 @@ open class AudioFolderContainer : FolderContainer
 	}
 
 
-	override open class func createObject(for url:URL, filter:FolderFilter) throws -> Object?
+	override open class func createObject(for url:URL, filter:FolderFilter, in library:Library?) throws -> Object?
 	{
 		if Config.DRMProtectedFile.isVisible == false && url.pathExtension == "m4p"
 		{
@@ -150,7 +150,7 @@ open class AudioFolderContainer : FolderContainer
 			return nil
 		}
 		
-		return AudioFile(url:url)
+		return AudioFile(url:url, in:library)
 	}
 
 	override nonisolated open var mediaTypes:[Object.MediaType]
@@ -174,11 +174,11 @@ open class AudioFolderContainer : FolderContainer
 
 open class AudioFile : FolderObject
 {
-	override public init(url:URL, name:String? = nil)
+	override public init(url:URL, name:String? = nil, in library:Library?)
 	{
 		FolderSource.log.verbose {"\(Self.self).\(#function) url = \(url)"}
 
-		super.init(url:url, name:name)
+		super.init(url:url, name:name, in:library)
 		
 		/// Check if this a DRM protected audio file, and whether it should be enabled or disabled
 		

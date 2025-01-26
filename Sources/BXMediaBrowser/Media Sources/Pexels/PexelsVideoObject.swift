@@ -47,12 +47,13 @@ open class PexelsVideoObject : Object
 {
 	/// Creates a new Object for the file at the specified URL
 	
-	public required init(with video:Pexels.Video)
+	public required init(with video:Pexels.Video, in library:Library?)
 	{
 		let format = NSLocalizedString("%@ on Pexels", tableName:"Pexels", bundle:.BXMediaBrowser, comment:"Label")
 		let name = String(format:format, video.user.name)
 		
 		super.init(
+			library: library,
 			identifier: "PexelsSource:Video:\(video.id)",
 			name: name,
 			data: video,

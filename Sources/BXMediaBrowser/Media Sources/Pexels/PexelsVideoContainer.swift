@@ -54,7 +54,7 @@ open class PexelsVideoContainer : PexelsContainer
 	
 	/// Loads the (shallow) contents of this folder
 	
-	override class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
+	override class func loadContents(for identifier:String, data:Any, filter:Object.Filter, in library:Library?) async throws -> Loader.Contents
 	{
 		Pexels.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
@@ -91,7 +91,7 @@ open class PexelsVideoContainer : PexelsContainer
 			Pexels.log.debug {"    appending page \(page)"}
 			
 			let newVideos = try await self.videos(for:pexelsFilter, page:page)
-			self.add(newVideos, to:pexelsData)
+			self.add(newVideos, to:pexelsData, in:library)
 
 			pexelsData.loadNextPage = false
 			if newVideos.isEmpty { pexelsData.didReachEnd = true }
@@ -159,14 +159,14 @@ open class PexelsVideoContainer : PexelsContainer
 	/// Adds the new videos to the list of cached Objects. To make sure that NSDiffableDataSource doesn't
 	/// complain (and throw an exception), any duplicates will be ignored.
 	
-	private class func add(_ videos:[Pexels.Video], to pexelsData:PexelsData)
+	private class func add(_ videos:[Pexels.Video], to pexelsData:PexelsData, in library:Library?)
 	{
 		for video in videos
 		{
 			let id = video.id
 			guard !pexelsData.knownIDs.contains(id) else { continue }
 			pexelsData.knownIDs.insert(id)
-			pexelsData.objects += PexelsVideoObject(with:video)
+			pexelsData.objects += PexelsVideoObject(with:video, in:library)
 		}
 	}
 }

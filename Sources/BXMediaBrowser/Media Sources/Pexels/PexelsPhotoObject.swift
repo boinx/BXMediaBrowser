@@ -47,9 +47,10 @@ open class PexelsPhotoObject : Object
 {
 	/// Creates a new Object for the file at the specified URL
 	
-	public required init(with photo:Pexels.Photo)
+	public required init(with photo:Pexels.Photo, in library:Library?)
 	{
 		super.init(
+			library: library,
 			identifier: "PexelsSource:Photo:\(photo.id)",
 			name: photo.alt,
 			data: photo,

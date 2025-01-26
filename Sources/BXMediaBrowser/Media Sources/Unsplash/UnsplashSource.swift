@@ -44,12 +44,12 @@ open class UnsplashSource : Source, AccessControl
 
 	/// Creates a new Source for local file system directories
 	
-	public init()
+	public init(library:Library?)
 	{
 		Unsplash.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
 		
 		let icon = CGImage.image(named:"Unsplash", in:.BXMediaBrowser)
-		super.init(identifier:Self.identifier, icon:icon, name:"Unsplash.com", filter:UnsplashFilter())
+		super.init(library:library, identifier:Self.identifier, icon:icon, name:"Unsplash.com", filter:UnsplashFilter())
 		self.loader = Loader(loadHandler:self.loadContainers)
 	}
 
@@ -61,7 +61,7 @@ open class UnsplashSource : Source, AccessControl
 	///
 	/// Subclasses can override this function, e.g. to load top level folder from the preferences file
 	
-	private func loadContainers(with sourceState:[String:Any]? = nil, filter:Object.Filter) async throws -> [Container]
+	private func loadContainers(with sourceState:[String:Any]? = nil, filter:Object.Filter, in library:Library?) async throws -> [Container]
 	{
 		Unsplash.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
@@ -70,7 +70,7 @@ open class UnsplashSource : Source, AccessControl
 		// Add Live Search
 		
 		let name = NSLocalizedString("Search", tableName:"Unsplash", bundle:.BXMediaBrowser, comment:"Container Name")
-		containers += UnsplashContainer(identifier:"Unsplash:Search", icon:"magnifyingglass", name:name, filter:UnsplashFilter(), saveHandler:
+		containers += UnsplashContainer(library:library, identifier:"Unsplash:Search", icon:"magnifyingglass", name:name, filter:UnsplashFilter(), saveHandler:
 		{
 			[weak self] in self?.saveContainer($0)
 		})
@@ -133,7 +133,7 @@ open class UnsplashSource : Source, AccessControl
 		let identifier = "Unsplash:\(searchString)/\(orientation)/\(color)".replacingOccurrences(of:" ", with:"-")
 		let name = UnsplashContainer.description(with:filter)
 		
-		return UnsplashContainer(identifier:identifier, icon:"rectangle.stack", name:name, filter:filter, removeHandler:
+		return UnsplashContainer(library:library, identifier:identifier, icon:"rectangle.stack", name:name, filter:filter, removeHandler:
 		{
 			[weak self] container in
 			

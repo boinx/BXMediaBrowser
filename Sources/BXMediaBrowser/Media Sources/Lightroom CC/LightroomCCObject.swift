@@ -52,9 +52,10 @@ open class LightroomCCObject : Object, AppLifecycleMixin
 
 	/// Creates a new Object for the file at the specified URL
 
-	public required init(with asset:LightroomCC.Asset)
+	public required init(with asset:LightroomCC.Asset, in library:Library?)
 	{
 		super.init(
+			library: library,
 			identifier: Self.identifier(for:asset),
 			name: asset.name,
 			data: asset,

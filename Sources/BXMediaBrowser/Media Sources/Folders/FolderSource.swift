@@ -50,11 +50,11 @@ open class FolderSource : Source, AccessControl
 	
 	/// Creates a new Source for local file system directories
 	
-	public init(filter:FolderFilter = FolderFilter())
+	public init(library:Library?, filter:FolderFilter = FolderFilter())
 	{
 		FolderSource.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
 
-		super.init(identifier:Self.identifier, name:"Finder", filter:filter)
+		super.init(library:library, identifier:Self.identifier, name:"Finder", filter:filter)
 		self.loader = Loader(loadHandler:self.loadContainers)
 	}
 
@@ -80,7 +80,7 @@ open class FolderSource : Source, AccessControl
 	///
 	/// Subclasses can override this function, e.g. to load top level folder from the preferences file
 	
-	private func loadContainers(with sourceState:[String:Any]? = nil, filter:Object.Filter) async throws -> [Container]
+	private func loadContainers(with sourceState:[String:Any]? = nil, filter:Object.Filter, in library:Library?) async throws -> [Container]
 	{
 		FolderSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
 		
@@ -105,7 +105,7 @@ open class FolderSource : Source, AccessControl
 			for folderURL in folderURLs
 			{
 				guard !isDuplicate(folderURL, in:containers) else { continue }
-				let container = try self.createContainer(for:folderURL, filter:filter)
+				let container = try self.createContainer(for:folderURL, filter:filter, in:library)
 				containers += container
 			}
 		}
@@ -123,11 +123,11 @@ open class FolderSource : Source, AccessControl
 	/// Creates a Container for the folder at the specified URL. Subclasses can override this
 	/// function to filter out some directories or return more specific Container subclasses.
 	
-	open func createContainer(for url:URL, filter:FolderFilter) throws -> Container?
+	open func createContainer(for url:URL, filter:FolderFilter, in library:Library?) throws -> Container?
 	{
 		FolderSource.log.verbose {"\(Self.self).\(#function) \(url)"}
 
-		return FolderContainer(url:url, filter:filter)
+		return FolderContainer(library:library, url:url, filter:filter)
 		{
 			[weak self] in self?.removeTopLevelContainer($0)
 		}

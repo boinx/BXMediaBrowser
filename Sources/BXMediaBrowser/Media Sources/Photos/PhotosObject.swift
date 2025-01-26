@@ -37,9 +37,10 @@ public class PhotosObject : Object
 {
 	/// Creates a new PhotosObject. Please note that this is an abstract base class that should never be instantiated.
 	
-	public init(with asset:PHAsset)
+	public init(with asset:PHAsset, in library:Library?)
 	{
 		super.init(
+			library: library,
 			identifier: Self.identifier(for:asset),
 			name: "", // asset.originalFilename ?? "", 	// Getting originalFilename is way too expensive at this point!
 			data: asset,

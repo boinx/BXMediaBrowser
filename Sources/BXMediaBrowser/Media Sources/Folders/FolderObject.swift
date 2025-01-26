@@ -39,11 +39,12 @@ open class FolderObject : Object
 {
 	/// Creates a new Object for the file at the specified URL
 	
-	public init(url:URL, name:String? = nil)
+	public init(url:URL, name:String? = nil, in library:Library?)
 	{
 		FolderSource.log.verbose {"\(Self.self).\(#function) url = \(url)"}
 
 		super.init(
+			library: library,
 			identifier: FolderSource.identifier(for:url),
 			name: name ?? url.lastPathComponent,
 			data: url,

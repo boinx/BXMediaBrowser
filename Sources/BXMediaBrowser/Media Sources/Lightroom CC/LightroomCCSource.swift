@@ -47,13 +47,14 @@ open class LightroomCCSource : Source, AccessControl
 
 	/// Creates a new Source for local file system directories
 	
-	public init(allowedMediaTypes:[Object.MediaType])
+	public init(library:Library?, allowedMediaTypes:[Object.MediaType])
 	{
 		LightroomCC.log.debug {"\(Self.self).\(#function)"}
 		
 		self.allowedMediaTypes = allowedMediaTypes
 		
 		super.init(
+			library: library,
 			identifier: Self.identifier,
 			icon: CGImage.image(named:"lr_appicon_noshadow_256", in:.BXMediaBrowser),
 			name: "Adobe Lightroom",
@@ -218,7 +219,7 @@ open class LightroomCCSource : Source, AccessControl
 					LightroomCC.shared.status = .loggedIn
 					
 					self.isExpanded = true
-					self.load()
+					self.load(in:library)
 					
 					completionHandler(self.hasAccess)
 				}
@@ -266,7 +267,7 @@ open class LightroomCCSource : Source, AccessControl
 	///
 	/// Subclasses can override this function, e.g. to load top level folder from the preferences file
 	
-	private func loadContainers(with sourceState:[String:Any]? = nil, filter:Object.Filter) async throws -> [Container]
+	private func loadContainers(with sourceState:[String:Any]? = nil, filter:Object.Filter, in library:Library?) async throws -> [Container]
 	{
 		LightroomCC.log.debug {"\(Self.self).\(#function)"}
 
@@ -292,7 +293,7 @@ open class LightroomCCSource : Source, AccessControl
 
 			try await Tasks.canContinue()
 		
-			containers += LightroomCCContainerAllPhotos(allowedMediaTypes:allowedMediaTypes, filter:filter)
+			containers += LightroomCCContainerAllPhotos(library:library, allowedMediaTypes:allowedMediaTypes, filter:filter)
 			
 			// Find top-level albums (parent is nil) and create a Container for each album
 			
@@ -305,7 +306,7 @@ open class LightroomCCSource : Source, AccessControl
 			{
 				try await Tasks.canContinue()
 		
-				containers += LightroomCCContainer(album:album, allowedMediaTypes:allowedMediaTypes, filter:filter)
+				containers += LightroomCCContainer(library:library, album:album, allowedMediaTypes:allowedMediaTypes, filter:filter)
 			}
 
 			return containers

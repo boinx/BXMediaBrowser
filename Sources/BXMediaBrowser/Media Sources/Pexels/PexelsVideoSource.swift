@@ -44,11 +44,11 @@ open class PexelsVideoSource : Source, AccessControl
 
 	/// Creates a new Source for local file system directories
 	
-	public init()
+	public init(library:Library?)
 	{
 		Pexels.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
 		let icon = CGImage.image(named:"Pexels", in:.BXMediaBrowser)
-		super.init(identifier:Self.identifier, icon:icon, name:"Pexels.com", filter:PexelsFilter())
+		super.init(library:library, identifier:Self.identifier, icon:icon, name:"Pexels.com", filter:PexelsFilter())
 		self.loader = Loader(loadHandler:self.loadContainers)
 	}
 	
@@ -60,7 +60,7 @@ open class PexelsVideoSource : Source, AccessControl
 	///
 	/// Subclasses can override this function, e.g. to load top level folder from the preferences file
 	
-	private func loadContainers(with sourceState:[String:Any]? = nil, filter:Object.Filter) async throws -> [Container]
+	private func loadContainers(with sourceState:[String:Any]? = nil, filter:Object.Filter, in library:Library?) async throws -> [Container]
 	{
 		Pexels.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
@@ -70,7 +70,7 @@ open class PexelsVideoSource : Source, AccessControl
 		
 		guard let filter = filter as? PexelsFilter else { return containers }
 		let name = NSLocalizedString("Search", tableName:"Pexels", bundle:.BXMediaBrowser, comment:"Container Name")
-		containers += PexelsVideoContainer(identifier:"PexelsVideoSource:Search", icon:"magnifyingglass", name:name, filter:filter, saveHandler:
+		containers += PexelsVideoContainer(library:library, identifier:"PexelsVideoSource:Search", icon:"magnifyingglass", name:name, filter:filter, saveHandler:
 		{
 			[weak self] in self?.saveContainer($0)
 		})
@@ -134,7 +134,7 @@ open class PexelsVideoSource : Source, AccessControl
 		let identifier = "PexelsVideoSource:\(searchString)/\(orientation)/\(color)".replacingOccurrences(of:" ", with:"-")
 		let name = PexelsVideoContainer.description(with:filter)
 		
-		return PexelsVideoContainer(identifier:identifier, icon:"rectangle.stack", name:name, filter:filter, removeHandler:
+		return PexelsVideoContainer(library:library, identifier:identifier, icon:"rectangle.stack", name:name, filter:filter, removeHandler:
 		{
 			[weak self] container in
 			

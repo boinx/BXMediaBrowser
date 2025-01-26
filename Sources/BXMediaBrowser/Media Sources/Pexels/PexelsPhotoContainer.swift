@@ -52,7 +52,7 @@ open class PexelsPhotoContainer : PexelsContainer
 
 	/// Loads the (shallow) contents of this folder
 	
-	override class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
+	override class func loadContents(for identifier:String, data:Any, filter:Object.Filter, in library:Library?) async throws -> Loader.Contents
 	{
 		Pexels.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
@@ -89,7 +89,7 @@ open class PexelsPhotoContainer : PexelsContainer
 			Pexels.log.debug {"    appending page \(page)"}
 			
 			let newPhotos = try await self.photos(for:pexelsFilter, page:page)
-			self.add(newPhotos, to:pexelsData)
+			self.add(newPhotos, to:pexelsData, in:library)
 
 			pexelsData.loadNextPage = false
 			if newPhotos.isEmpty { pexelsData.didReachEnd = true }
@@ -155,7 +155,7 @@ open class PexelsPhotoContainer : PexelsContainer
 	/// Adds the new photos to the list of cached Objects. To make sure that NSDiffableDataSource doesn't
 	/// complain (and throw an exception), any duplicates will be ignored.
 	
-	private class func add(_ photos:[Pexels.Photo], to pexelsData:PexelsData)
+	private class func add(_ photos:[Pexels.Photo], to pexelsData:PexelsData, in library:Library?)
 	{
 		synchronized(pexelsData)
 		{
@@ -164,7 +164,7 @@ open class PexelsPhotoContainer : PexelsContainer
 				let id = photo.id
 				guard !pexelsData.knownIDs.contains(id) else { continue }
 				pexelsData.knownIDs.insert(id)
-				pexelsData.objects += PexelsPhotoObject(with:photo)
+				pexelsData.objects += PexelsPhotoObject(with:photo, in:library)
 			}
 		}
 	}

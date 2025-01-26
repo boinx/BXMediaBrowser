@@ -50,7 +50,7 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 	
 	/// Creates a new Container for the folder at the specified URL
 	
-	public required init(node:IMBNode, mediaType:Object.MediaType, parserMessenger:IMBLightroomParserMessenger, filter:FolderFilter)
+	public required init(library:Library?, node:IMBNode, mediaType:Object.MediaType, parserMessenger:IMBLightroomParserMessenger, filter:FolderFilter)
 	{
 		let data = LRCData(node:node, mediaType:mediaType, parserMessenger:parserMessenger)
 		let identifier = node.identifier ?? "LightroomClassic:Node:xxx"
@@ -58,6 +58,7 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 		let name = node.name ?? "••••••"
 		
 		super.init(
+			library: library,
 			identifier: identifier,
 			icon: icon,
 			name: name,
@@ -126,7 +127,7 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 	
 	/// Loads the (shallow) contents of this folder
 	
-	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
+	class func loadContents(for identifier:String, data:Any, filter:Object.Filter, in library:Library?) async throws -> Loader.Contents
 	{
 		guard let data = data as? LRCData else { throw Error.loadContentsFailed }
 		guard let filter = filter as? FolderFilter else { throw Error.loadContentsFailed }
@@ -164,7 +165,7 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 
 				try await Tasks.canContinue()
 		
-				let container = LightroomClassicContainer(node:node, mediaType:mediaType, parserMessenger:parserMessenger, filter:filter)
+				let container = LightroomClassicContainer(library:library, node:node, mediaType:mediaType, parserMessenger:parserMessenger, filter:filter)
 				knownNodes[node.identifier] = true
 				containers += container
 			}
@@ -191,7 +192,7 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 				
 				// Convert to LightroomClassicObject
 				
-				let object = LightroomClassicObject(with:imbObject, mediaType:mediaType, parserMessenger:parserMessenger)
+				let object = LightroomClassicObject(with:imbObject, mediaType:mediaType, parserMessenger:parserMessenger, in:library)
 				knownObjects[identifier] = true
 				objects += object
 			}

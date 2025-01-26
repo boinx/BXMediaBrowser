@@ -57,7 +57,7 @@ open class LightroomCCContainerAllPhotos : Container, AppLifecycleMixin, ScrollT
 	
 	/// Creates a new Container for the folder at the specified URL
 	
-	public required init(allowedMediaTypes:[Object.MediaType], filter:LightroomCCFilter)
+	public required init(library:Library?, allowedMediaTypes:[Object.MediaType], filter:LightroomCCFilter)
 	{
 		let data = LightroomCCData(allowedMediaTypes:allowedMediaTypes)
 		let identifier = "LightroomCC:AllPhotos"
@@ -67,6 +67,7 @@ open class LightroomCCContainerAllPhotos : Container, AppLifecycleMixin, ScrollT
 			NSLocalizedString("All Photos", tableName:"LightroomCC", bundle:.BXMediaBrowser, comment:"Container Name")
 		
 		super.init(
+			library: library,
 			identifier: identifier,
 			icon: icon,
 			name: name,
@@ -78,7 +79,7 @@ open class LightroomCCContainerAllPhotos : Container, AppLifecycleMixin, ScrollT
 		
 		self.registerScrollToBottomHandler()
 		{
-			[weak self] in self?.load(with:nil)
+			[weak self] in self?.load(with:nil, in:library)
 		}
 	}
 
@@ -164,7 +165,7 @@ open class LightroomCCContainerAllPhotos : Container, AppLifecycleMixin, ScrollT
 	
 	/// Loads the (shallow) contents of this folder
 	
-	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
+	class func loadContents(for identifier:String, data:Any, filter:Object.Filter, in library:Library?) async throws -> Loader.Contents
 	{
 		guard let data = data as? LightroomCCData else { throw Error.loadContentsFailed }
 		guard let filter = filter as? LightroomCCFilter else { throw Error.loadContentsFailed }
@@ -182,7 +183,7 @@ open class LightroomCCContainerAllPhotos : Container, AppLifecycleMixin, ScrollT
 			let accessPoint = Self.intialAccessPoint(with:data,filter)
 			
 			let (assets,nextAccessPoint) = try await self.nextPageAssets(for:accessPoint)
-			self.add(assets, to:data)
+			self.add(assets, to:data, in:library)
 			data.nextAccessPoint = nextAccessPoint
 		}
 		
@@ -193,7 +194,7 @@ open class LightroomCCContainerAllPhotos : Container, AppLifecycleMixin, ScrollT
 			LightroomCC.log.debug {"\(Self.self).\(#function) accessPoint = \(accessPoint)"}
 			
 			let (assets,nextAccessPoint) = try await self.nextPageAssets(for:accessPoint)
-			self.add(assets, to:data)
+			self.add(assets, to:data, in:library)
 			data.nextAccessPoint = nextAccessPoint
 		}
 
@@ -271,7 +272,7 @@ open class LightroomCCContainerAllPhotos : Container, AppLifecycleMixin, ScrollT
 
 	/// Adds a pages of assets to the Object cache of this Container
 	
-	private class func add(_ assets:[LightroomCC.Asset], to data:LightroomCCData)
+	private class func add(_ assets:[LightroomCC.Asset], to data:LightroomCCData, in library:Library?)
 	{
 		let allowedMediaTypes = data.allowedMediaTypes
 		let allowImages = allowedMediaTypes.contains(.image)
@@ -283,7 +284,7 @@ open class LightroomCCContainerAllPhotos : Container, AppLifecycleMixin, ScrollT
 
 			if subtype == "image" && allowImages
 			{
-				let object = LightroomCCImageObject(with:asset)
+				let object = LightroomCCImageObject(with:asset, in:library)
 				let id = object.identifier
 				
 				if data.objectMap[id] == nil
@@ -294,7 +295,7 @@ open class LightroomCCContainerAllPhotos : Container, AppLifecycleMixin, ScrollT
 			}
 			else if subtype == "video" && allowVideos
 			{
-				let object = LightroomCCVideoObject(with:asset)
+				let object = LightroomCCVideoObject(with:asset, in:library)
 				let id = object.identifier
 				
 				if data.objectMap[id] == nil

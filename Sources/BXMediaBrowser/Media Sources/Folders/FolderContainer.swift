@@ -47,7 +47,7 @@ open class FolderContainer : Container
 
 	/// Creates a new Container for the folder at the specified URL
 	
-	public required init(url:URL, name:String? = nil, filter:FolderFilter, removeHandler:((Container)->Void)? = nil)
+	public required init(library:Library?, url:URL, name:String? = nil, filter:FolderFilter, removeHandler:((Container)->Void)? = nil)
 	{
 		// Get the display name
 		
@@ -57,6 +57,7 @@ open class FolderContainer : Container
 		// Init the Container
 		
 		super.init(
+			library: library,
 			identifier: FolderSource.identifier(for:url),
 			name: displayName,
 			data: bookmark,
@@ -187,7 +188,7 @@ open class FolderContainer : Container
 	
 	/// Loads the (shallow) contents of this folder
 	
-	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
+	class func loadContents(for identifier:String, data:Any, filter:Object.Filter, in library:Library?) async throws -> Loader.Contents
 	{
 		FolderSource.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
@@ -232,7 +233,7 @@ open class FolderContainer : Container
 			
 			if url.isDirectory && !url.isPackage
 			{
-				if let container = try? Self.createContainer(for:url, filter:filter)
+				if let container = try? Self.createContainer(for:url, filter:filter, in:library)
 				{
 					containers.append(container)
 				}
@@ -242,7 +243,7 @@ open class FolderContainer : Container
 			
 			else if let url = Self.filter(url, with:filter)
 			{
-				if let object = try? Self.createObject(for:url, filter:filter)
+				if let object = try? Self.createObject(for:url, filter:filter, in:library)
 				{
 					if filter.rating == 0 || StatisticsController.shared.rating(for:object) >= filter.rating
 					{
@@ -309,13 +310,13 @@ open class FolderContainer : Container
 	///
 	/// Subclasses can override this function to filter out some directories.
 	
-	open class func createContainer(for url:URL, filter:FolderFilter) throws -> Container?
+	open class func createContainer(for url:URL, filter:FolderFilter, in library:Library?) throws -> Container?
 	{
 		guard url.exists else { throw Container.Error.notFound }
 		guard url.isDirectory else { throw Container.Error.notFound }
 		guard url.isReadable else { throw Container.Error.accessDenied }
 		
-		return Self.init(url:url, filter:filter)
+		return Self.init(library:library, url:url, filter:filter)
 	}
 
 
@@ -323,25 +324,25 @@ open class FolderContainer : Container
 	///
 	/// Subclasses can override this function to filter out some files.
 	
-	open class func createObject(for url:URL, filter:FolderFilter) throws -> Object?
+	open class func createObject(for url:URL, filter:FolderFilter, in library:Library?) throws -> Object?
 	{
 		// Depending on file UTI create different Object subclass instances
 		
 		if url.isImageFile
 		{
-			return ImageFile(url:url)
+			return ImageFile(url:url, in:library)
 		}
 		else if url.isVideoFile
 		{
-			return VideoFile(url:url)
+			return VideoFile(url:url, in:library)
 		}
 		else if url.isAudioFile
 		{
-			return AudioFile(url:url)
+			return AudioFile(url:url, in:library)
 		}
 		else
 		{
-			return FolderObject(url:url)
+			return FolderObject(url:url, in:library)
 		}
 	}
 	

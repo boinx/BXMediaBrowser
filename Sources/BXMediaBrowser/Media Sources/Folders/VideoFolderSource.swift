@@ -36,9 +36,9 @@ open class VideoFolderSource : FolderSource
 {
 	/// Creates a Container for the folder at the specified URL
 	
-	override open func createContainer(for url:URL, filter:FolderFilter) throws -> Container?
+	override open func createContainer(for url:URL, filter:FolderFilter, in library:Library?) throws -> Container?
 	{
-		VideoFolderContainer(url:url, filter:filter)
+		VideoFolderContainer(library:library, url:url, filter:filter)
 		{
 			[weak self] in self?.removeTopLevelContainer($0)
 		}
@@ -53,7 +53,7 @@ open class VideoFolderSource : FolderSource
 		
 		guard let url = FileManager.default.urls(for:.moviesDirectory, in:.userDomainMask).first?.resolvingSymlinksInPath() else { return [] }
 		guard url.isReadable else { return [] }
-		guard let container = try self.createContainer(for:url, filter:filter) else { return [] }
+		guard let container = try self.createContainer(for:url, filter:filter, in:library) else { return [] }
 
 		return [container]
 	}
@@ -67,11 +67,11 @@ open class VideoFolderSource : FolderSource
 
 open class VideoFolderContainer : FolderContainer
 {
-	override open class func createObject(for url:URL, filter:FolderFilter) throws -> Object?
+	override open class func createObject(for url:URL, filter:FolderFilter, in library:Library?) throws -> Object?
 	{
 		guard url.exists else { throw Object.Error.notFound }
 		guard url.isVideoFile else { return nil }
-		return VideoFile(url:url)
+		return VideoFile(url:url, in:library)
 	}
 
 	override nonisolated open var mediaTypes:[Object.MediaType]

@@ -34,11 +34,12 @@ public class PhotosContainer : Container
 {
 	/// Create a new PhotosContainer
 	
- 	public init(identifier:String, icon:String, name:String, data:Any, filter:Object.Filter)
+ 	public init(library:Library?, identifier:String, icon:String, name:String, data:Any, filter:Object.Filter)
 	{
 		Photos.log.debug {"\(Self.self).\(#function) \(identifier)"}
 		
 		super.init(
+			library:library,
 			identifier:identifier,
 			icon:icon,
 			name:name,
@@ -117,7 +118,7 @@ public class PhotosContainer : Container
 	
 	/// Loads the (shallow) contents of this Container
 	
-	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
+	class func loadContents(for identifier:String, data:Any, filter:Object.Filter, in library:Library?) async throws -> Loader.Contents
 	{
 		guard let data = data as? PhotosData else { return ([],[]) }
  		guard let filter = filter as? PhotosFilter else { return ([],[]) }
@@ -167,6 +168,7 @@ public class PhotosContainer : Container
 						let name = assetCollection.localizedTitle ?? ""
 						
 						let container = PhotosContainer(
+							library: library,
 							identifier: "Photos:Album:\(assetCollection.localIdentifier)",
 							icon: icon,
 							name: name,
@@ -182,6 +184,7 @@ public class PhotosContainer : Container
 						let name = collectionList.localizedTitle ?? ""
 						
 						let container = PhotosContainer(
+							library: library,
 							identifier: "Photos:Folder:\(collectionList.localIdentifier)",
 							icon: "folder",
 							name: name,
@@ -210,6 +213,7 @@ public class PhotosContainer : Container
 								mediaType: filter.assetMediaType)
 							
 							containers += PhotosContainer(
+								library: library,
 								identifier: "Photos:Date:\(id)",
 								icon: "folder",
 								name: collection.localizedTitle ?? id,
@@ -230,6 +234,7 @@ public class PhotosContainer : Container
 								mediaType: filter.assetMediaType)
 							
 							containers += PhotosContainer(
+								library: library,
 								identifier: "Photos:Date:\(id)",
 								icon: "folder",
 								name: collection.localizedTitle ?? id,
@@ -247,6 +252,7 @@ public class PhotosContainer : Container
 							let id = "\(year)/\(month)/\(day)"
 							
 							containers += PhotosContainer(
+								library: library,
 								identifier: "Photos:Date:\(id)",
 								icon: "folder",
 								name: collection.localizedTitle ?? id,
@@ -276,11 +282,11 @@ public class PhotosContainer : Container
 
 				if mediaType == .image
 				{
-					objects += PhotosImageObject(with:asset)
+					objects += PhotosImageObject(with:asset, in:library)
 				}
 				else
 				{
-					objects += PhotosVideoObject(with:asset)
+					objects += PhotosVideoObject(with:asset, in:library)
 				}
 			}
 		}

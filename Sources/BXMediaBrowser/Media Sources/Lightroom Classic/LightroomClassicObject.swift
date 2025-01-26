@@ -55,9 +55,10 @@ open class LightroomClassicObject : Object, AppLifecycleMixin
 
 	/// Creates a new Object for the file at the specified URL
 
-	public required init(with imbObject:IMBLightroomObject, mediaType:Object.MediaType, parserMessenger:IMBLightroomParserMessenger)
+	public required init(with imbObject:IMBLightroomObject, mediaType:Object.MediaType, parserMessenger:IMBLightroomParserMessenger, in library:Library?)
 	{
 		super.init(
+			library: library,
 			identifier: Self.identifier(for:imbObject),
 			name: imbObject.name,
 			data: LRCData(imbObject:imbObject, mediaType:mediaType, parserMessenger:parserMessenger),

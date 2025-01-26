@@ -37,9 +37,9 @@ open class ImageFolderSource : FolderSource
 {
 	/// Creates a Container for the folder at the specified URL
 	
-	override open func createContainer(for url:URL, filter:FolderFilter) throws -> Container?
+	override open func createContainer(for url:URL, filter:FolderFilter, in library:Library?) throws -> Container?
 	{
-		let container = ImageFolderContainer(url:url, filter:filter)
+		let container = ImageFolderContainer(library:library, url:url, filter:filter)
 		{
 			[weak self] in self?.removeTopLevelContainer($0)
 		}
@@ -56,7 +56,7 @@ open class ImageFolderSource : FolderSource
 		
 		guard let url = FileManager.default.urls(for:.picturesDirectory, in:.userDomainMask).first?.resolvingSymlinksInPath() else { return [] }
 		guard url.isReadable else { return [] }
-		guard let container = try self.createContainer(for:url, filter:filter) else { return [] }
+		guard let container = try self.createContainer(for:url, filter:filter, in:library) else { return [] }
 
 		return [container]
 	}
@@ -70,11 +70,11 @@ open class ImageFolderSource : FolderSource
 
 open class ImageFolderContainer : FolderContainer
 {
-	override open class func createObject(for url:URL, filter:FolderFilter) throws -> Object?
+	override open class func createObject(for url:URL, filter:FolderFilter, in library:Library?) throws -> Object?
 	{
 		guard url.exists else { throw Object.Error.notFound }
 		guard url.isImageFile || url.isPDFFile else { return nil }
-		return ImageFile(url:url)
+		return ImageFile(url:url, in:library)
 	}
 
 	override nonisolated open var mediaTypes:[Object.MediaType]

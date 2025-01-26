@@ -80,7 +80,7 @@ public class MusicSource : Source, AccessControl
 
 	/// Creates a new Source for local file system directories
 	
-	public init(allowedMediaKinds:[ITLibMediaItemMediaKind] = [.kindSong])
+	public init(library:Library?, allowedMediaKinds:[ITLibMediaItemMediaKind] = [.kindSong])
 	{
 		MusicSource.log.verbose {"\(Self.self).\(#function) \(Self.identifier)"}
 
@@ -97,7 +97,7 @@ public class MusicSource : Source, AccessControl
 //			name = FileManager.default.displayName(atPath:url.path)
 //		}
 		
-		super.init(identifier:Self.identifier, icon:Self.icon, name:name, filter:MusicFilter())
+		super.init(library:library, identifier:Self.identifier, icon:Self.icon, name:name, filter:MusicFilter())
 		
 		self.loader = Loader(loadHandler:Self.loadContainers)
 		
@@ -155,7 +155,7 @@ public class MusicSource : Source, AccessControl
 			
 			await MainActor.run
 			{
-				self.load(with:state)
+				self.load(with:state, in:library)
 			}
 		}
 	}
@@ -165,7 +165,7 @@ public class MusicSource : Source, AccessControl
 	///
 	/// Subclasses can override this function, e.g. to load top level folder from the preferences file
 	
-	private class func loadContainers(with sourceState:[String:Any]? = nil, filter:Object.Filter) async throws -> [Container]
+	private class func loadContainers(with sourceState:[String:Any]? = nil, filter:Object.Filter, in library:Library?) async throws -> [Container]
 	{
 		try await Tasks.canContinue()
 		
@@ -198,27 +198,27 @@ public class MusicSource : Source, AccessControl
 		try await Tasks.canContinue()
 		
 		let songs = NSLocalizedString("Songs", tableName:"Music", bundle:.BXMediaBrowser, comment:"Container Name")
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Songs", icon:"music.note", name:songs, data:MusicContainer.MusicData.library(allMediaItems:allMediaItems), filter:filter, allowedSortTypes:[.never,.artist,.album,.genre,.duration])
+		containers += Self.makeMusicContainer(library:library, identifier:"MusicSource:Songs", icon:"music.note", name:songs, data:MusicContainer.MusicData.library(allMediaItems:allMediaItems), filter:filter, allowedSortTypes:[.never,.artist,.album,.genre,.duration])
 
 		try await Tasks.canContinue()
 		
 		let artists = NSLocalizedString("Artists", tableName:"Music", bundle:.BXMediaBrowser, comment:"Container Name")
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Artists", icon:"music.mic", name:artists, data:MusicContainer.MusicData.artistFolder(allMediaItems:allMediaItems), filter:filter, allowedSortTypes:[.never,.album,.genre,.duration])
+		containers += Self.makeMusicContainer(library:library, identifier:"MusicSource:Artists", icon:"music.mic", name:artists, data:MusicContainer.MusicData.artistFolder(allMediaItems:allMediaItems), filter:filter, allowedSortTypes:[.never,.album,.genre,.duration])
 
 		try await Tasks.canContinue()
 		
 		let albums = NSLocalizedString("Albums", tableName:"Music", bundle:.BXMediaBrowser, comment:"Container Name")
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Albums", icon:"square.stack", name:albums, data:MusicContainer.MusicData.albumFolder(allMediaItems:allMediaItems), filter:filter, allowedSortTypes:[.never,.artist,.genre,.duration])
+		containers += Self.makeMusicContainer(library:library, identifier:"MusicSource:Albums", icon:"square.stack", name:albums, data:MusicContainer.MusicData.albumFolder(allMediaItems:allMediaItems), filter:filter, allowedSortTypes:[.never,.artist,.genre,.duration])
 
 		try await Tasks.canContinue()
 		
 		let genres = NSLocalizedString("Genres", tableName:"Music", bundle:.BXMediaBrowser, comment:"Container Name")
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Genres", icon:"guitars", name:genres, data:MusicContainer.MusicData.genreFolder(allMediaItems:allMediaItems), filter:filter, allowedSortTypes:[.never,.artist,.album,.duration])
+		containers += Self.makeMusicContainer(library:library, identifier:"MusicSource:Genres", icon:"guitars", name:genres, data:MusicContainer.MusicData.genreFolder(allMediaItems:allMediaItems), filter:filter, allowedSortTypes:[.never,.artist,.album,.duration])
 
 		try await Tasks.canContinue()
 		
 		let playlists = NSLocalizedString("Playlists", tableName:"Music", bundle:.BXMediaBrowser, comment:"Container Name")
-		containers += Self.makeMusicContainer(identifier:"MusicSource:Playlists", icon:"music.note.list", name:playlists, data:MusicContainer.MusicData.playlistFolder(playlists:topLevelPlaylists, allPlaylists:allPlaylists), filter:filter, allowedSortTypes:[])
+		containers += Self.makeMusicContainer(library:library, identifier:"MusicSource:Playlists", icon:"music.note.list", name:playlists, data:MusicContainer.MusicData.playlistFolder(playlists:topLevelPlaylists, allPlaylists:allPlaylists), filter:filter, allowedSortTypes:[])
 
 		return containers
 	}
@@ -229,7 +229,7 @@ public class MusicSource : Source, AccessControl
 
 	/// Tries to reuse an existing Container from the cache before creating a new one and storing it in the cache.
 	
-	class func makeMusicContainer(identifier:String, icon:String?, name:String, data:MusicContainer.MusicData, filter:MusicFilter, allowedSortTypes:[Object.Filter.SortType]) -> MusicContainer
+	class func makeMusicContainer(library:Library?, identifier:String, icon:String?, name:String, data:MusicContainer.MusicData, filter:MusicFilter, allowedSortTypes:[Object.Filter.SortType]) -> MusicContainer
 	{
 		MusicSource.log.verbose {"\(Self.self).\(#function) \(identifier)"}
 
@@ -250,6 +250,7 @@ public class MusicSource : Source, AccessControl
 		else
 		{
 			let container = MusicContainer(
+				library:library,
 				identifier:identifier,
 				icon:icon,
 				name:name,
@@ -268,7 +269,7 @@ public class MusicSource : Source, AccessControl
 	/// Returns an Object for the specified ITLibMediaItem. Tries to reuse an existing Object from the cache
 	/// before creating a new one and storing it in the cache.
 	
-	class func makeMusicObject(with item:ITLibMediaItem) -> MusicObject?
+	class func makeMusicObject(with item:ITLibMediaItem, in library:Library?) -> MusicObject?
 	{
 		if Config.DRMProtectedFile.isVisible == false && item.isDRMProtected
 		{
@@ -283,7 +284,7 @@ public class MusicSource : Source, AccessControl
 		}
 		else
 		{
-			let object = MusicObject(with:item)
+			let object = MusicObject(with:item, in:library)
 			Self.cachedObjects[identifier] = object
 			return object
 		}

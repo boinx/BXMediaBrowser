@@ -62,13 +62,14 @@ open class UnsplashContainer : Container
 	
 	/// Creates a new Container for the folder at the specified URL
 	
-	public required init(identifier:String, icon:String, name:String, filter:UnsplashFilter, saveHandler:SaveContainerHandler? = nil, removeHandler:((Container)->Void)? = nil)
+	public required init(library:Library?, identifier:String, icon:String, name:String, filter:UnsplashFilter, saveHandler:SaveContainerHandler? = nil, removeHandler:((Container)->Void)? = nil)
 	{
 		Unsplash.log.verbose {"\(Self.self).\(#function) \(identifier)"}
 
 		self.saveHandler = saveHandler
 
 		super.init(
+			library: library,
 			identifier: identifier,
 			icon: icon,
 			name: name,
@@ -162,14 +163,14 @@ open class UnsplashContainer : Container
 		if !unsplashData.didReachEnd
 		{
 			unsplashData.loadNextPage = true
-			self.load(with:nil)
+			self.load(with:nil, in:library)
 		}
 	}
 	
 	
 	/// Loads the (shallow) contents of this folder
 	
-	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
+	class func loadContents(for identifier:String, data:Any, filter:Object.Filter, in library:Library?) async throws -> Loader.Contents
 	{
 		Unsplash.log.debug {"\(Self.self).\(#function) \(identifier)"}
 
@@ -205,7 +206,7 @@ open class UnsplashContainer : Container
 			Unsplash.log.debug {"    appending page \(page)"}
 			
 			let newPhotos = try await self.photos(for:unsplashFilter, page:page)
-			self.add(newPhotos, to:unsplashData)
+			self.add(newPhotos, to:unsplashData, in:library)
 
 			unsplashData.loadNextPage = false
 			if newPhotos.isEmpty { unsplashData.didReachEnd = true }
@@ -277,13 +278,13 @@ open class UnsplashContainer : Container
 	/// Adds the new photos to the list of cached Objects. To make sure that NSDiffableDataSource doesn't
 	/// complain (and throw an exception), any duplicates will be ignored.
 	
-	private class func add(_ photos:[UnsplashPhoto], to unsplashData:UnsplashData)
+	private class func add(_ photos:[UnsplashPhoto], to unsplashData:UnsplashData, in library:Library?)
 	{
 		for photo in photos
 		{
 			let id = photo.id
 			guard unsplashData.knownIDs[id] == nil else { continue }
-			unsplashData.objects += UnsplashObject(with:photo)
+			unsplashData.objects += UnsplashObject(with:photo, in:library)
 			unsplashData.knownIDs[id] = photo
 		}
 	}

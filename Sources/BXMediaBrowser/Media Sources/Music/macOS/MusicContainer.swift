@@ -55,9 +55,10 @@ public class MusicContainer : Container
 
 	/// Creates a new MusicContainer. The data argument carries essential information about this Container
 	
- 	public init(identifier:String, icon:String?, name:String, data:MusicData, filter:MusicFilter)
+ 	public init(library:Library?, identifier:String, icon:String?, name:String, data:MusicData, filter:MusicFilter)
 	{
 		super.init(
+			library: library,
 			identifier:identifier,
 			icon:icon,
 			name:name,
@@ -98,7 +99,7 @@ public class MusicContainer : Container
 
 	/// Loads the (shallow) contents of this folder
 	
-	class func loadContents(for identifier:String, data:Any, filter:Object.Filter) async throws -> Loader.Contents
+	class func loadContents(for identifier:String, data:Any, filter:Object.Filter, in library:Library?) async throws -> Loader.Contents
 	{
 		var containers:[Container] = []
 		var objects:[Object] = []
@@ -116,7 +117,7 @@ public class MusicContainer : Container
 				{
 					if filter.contains(item)
 					{
-						objects += MusicSource.makeMusicObject(with:item)
+						objects += MusicSource.makeMusicObject(with:item, in:library)
 					}
 				}
 
@@ -129,6 +130,7 @@ public class MusicContainer : Container
 					try await Tasks.canContinue()
 		
 					containers += MusicSource.makeMusicContainer(
+						library:library,
 						identifier:"MusicSource:Artist:\(artist.persistentID)",
 						icon:"person",
 						name:artist.name ?? NSLocalizedString("Artist", tableName:"Music", bundle:.BXMediaBrowser, comment:"Container Name"),
@@ -146,6 +148,7 @@ public class MusicContainer : Container
 					try await Tasks.canContinue()
 		
 					containers += MusicSource.makeMusicContainer(
+						library:library,
 						identifier:"MusicSource:Album:\(album.persistentID)",
 						icon:"square",
 						name:album.title ?? NSLocalizedString("Album", tableName:"Music", bundle:.BXMediaBrowser, comment:"Container Name"),
@@ -163,6 +166,7 @@ public class MusicContainer : Container
 					try await Tasks.canContinue()
 		
 					containers += MusicSource.makeMusicContainer(
+						library:library,
 						identifier:"MusicSource:Genre:\(genre)",
 						icon:"music.note",
 						name:genre,
@@ -193,17 +197,18 @@ public class MusicContainer : Container
 					
 					if kind == .regular	// Accept regular user playlists
 					{
-						containers += Self.container(for:playlist, filter:filter)
+						containers += Self.container(for:playlist, filter:filter, in:library)
 					}
 					else if kind == .smart && distinguishedKind == .kindNone // Accept user smart playlists
 					{
-						containers += Self.container(for:playlist, filter:filter)
+						containers += Self.container(for:playlist, filter:filter, in:library)
 					}
 					else if kind == .folder	// Accept sub-folders
 					{
 						let childPlaylists = Self.childPlaylists(for:playlist, allPlaylists:allPlaylists)
 						
 						containers += MusicSource.makeMusicContainer(
+								library:library,
 								identifier:"MusicSource:Playlist:\(playlist.persistentID)",
 								icon:"folder",
 								name:playlist.name,
@@ -221,7 +226,7 @@ public class MusicContainer : Container
 				{
 					if filter.contains(item)
 					{
-						objects += MusicSource.makeMusicObject(with:item)
+						objects += MusicSource.makeMusicObject(with:item, in:library)
 					}
 				}
 
@@ -233,7 +238,7 @@ public class MusicContainer : Container
 				{
 					if filter.contains(item)
 					{
-						objects += MusicSource.makeMusicObject(with:item)
+						objects += MusicSource.makeMusicObject(with:item, in:library)
 					}
 				}
 
@@ -245,7 +250,7 @@ public class MusicContainer : Container
 				{
 					if filter.contains(item)
 					{
-						objects += MusicSource.makeMusicObject(with:item)
+						objects += MusicSource.makeMusicObject(with:item, in:library)
 					}
 				}
 
@@ -257,7 +262,7 @@ public class MusicContainer : Container
 				{
 					if filter.contains(item)
 					{
-						objects += MusicSource.makeMusicObject(with:item)
+						objects += MusicSource.makeMusicObject(with:item, in:library)
 					}
 				}
 		}
@@ -278,7 +283,7 @@ public class MusicContainer : Container
 	{
 		if await self.isLoaded
 		{
-			self.load()
+			self.load(in:library)
 		}
 	}
 
@@ -306,7 +311,7 @@ extension MusicContainer
 {
 	/// Creates a Container for the specified playlist
 	
-	class func container(for playlist:ITLibPlaylist, filter:MusicFilter) -> MusicContainer
+	class func container(for playlist:ITLibPlaylist, filter:MusicFilter, in library:Library?) -> MusicContainer
 	{
 		var icon = "music.note.list"
 		
@@ -318,6 +323,7 @@ extension MusicContainer
 		}
 		
 		return MusicSource.makeMusicContainer(
+			library:library,
 			identifier:"MusicSource:Playlist:\(playlist.persistentID)",
 			icon:icon,
 			name:playlist.name,
