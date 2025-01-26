@@ -199,7 +199,7 @@ public struct MusicAccessAlertView : View
 				{
 					if $0
 					{
-						source.load()
+						source.load(in:library)
 						library.saveState()
 					}
 				}

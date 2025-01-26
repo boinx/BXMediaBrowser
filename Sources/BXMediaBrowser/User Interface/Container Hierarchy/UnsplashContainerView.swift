@@ -126,7 +126,7 @@ extension UnsplashContainerView
 
         if !container.isLoaded && !container.isLoading
         {
-            container.load()
+			container.load(in:library)
         }
 	}
 	
