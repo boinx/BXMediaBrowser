@@ -64,14 +64,6 @@ extension Library
 				{
 					[weak self] _ in self?.saveStateHandler?()
 				}
-				
-			self.observers += NotificationCenter.default.publisher(for:Container.didCreateNotification, object:nil).sink
-			{
-				[weak self] notification in
-				guard let self = self else { return }
-				guard let container = notification.object as? Container else { return }
-				self.restoreSelectedContainerHandler?(container)
-			}
 		}
 		
 		/// Calling this function will cause the state saving action closure to be called shortly.

@@ -122,11 +122,6 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 	public var fileDropDestination:FolderDropDestination? = nil
 	#endif
 	
-	/// This notification is sent after a new Container was created. The notification object
-	/// is the Container.
-	
-	static let didCreateNotification = NSNotification.Name("didCreateContainer")
-	
 	/// References to subcriptions and notifications
 	
 	public var observers:[Any] = []
@@ -156,11 +151,11 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 		
 		self.setupFilterObserver()
 			
-		// Send out notification when a new Container is created. This is needed by state restoration.
+		// If this (newly created) Container is the one that was selected in the Library before, then restore the selection.
 		
 		DispatchQueue.main.async
 		{
-			NotificationCenter.default.post(name:Self.didCreateNotification, object:self)
+			[weak self] in self?.restoreSelectedContainer()
 		}
 	}
 
@@ -481,6 +476,17 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 					if container.isSelected && !container.isLoaded { container.load(in:library) }
 				}
 			}
+		}
+	}
+	
+
+	/// Once a Container instance is created, this function can be called to restore the library's selection, i.e. if this is the one
+	
+	private func restoreSelectedContainer()
+	{
+		if let restoreHandler = self.library?.stateSaver.restoreSelectedContainerHandler
+		{
+			restoreHandler(self)
 		}
 	}
 	
