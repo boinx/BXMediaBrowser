@@ -48,11 +48,11 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 	
 	/// The Library has properties that may affect the display of this view
 	
-//	private var library:Library? = nil
-	
+	@ObservedObject var librarySelection:BXMediaBrowser.Library.Selection
+
 	/// The objects of this Container are displayed in the NSCollectionView
 	
-	private var container:Container? = nil
+	private var container:Container? { librarySelection.container }
 	
 	/// The class type of the ObjectViewController to be displayed in this NSCollectionView
 	
@@ -68,9 +68,9 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 
 	/// Creates ObjectCollectionView with the specified Container and cell type
 	
-	public init(container:Container?, cellType:Cell.Type, uiState:UIState)
+	public init(librarySelection:BXMediaBrowser.Library.Selection, cellType:Cell.Type, uiState:UIState)
 	{
-		self.container = container
+		self.librarySelection = librarySelection
 		self.cellType = cellType
 		self.uiState = uiState
 	}

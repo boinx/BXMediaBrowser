@@ -37,20 +37,15 @@ import SwiftUI
 
 public struct ObjectBrowserView : View
 {
-	// Model
-	
-	var container:Container?
+	@ObservedObject var librarySelection:BXMediaBrowser.Library.Selection
 	@ObservedObject var uiState:UIState
-	
-	// Environment
-	
 	@Environment(\.viewFactory) private var viewFactory
 	
 	// Init
 	
-	public init(for container:Container?, uiState:UIState)
+	public init(for librarySelection:BXMediaBrowser.Library.Selection, uiState:UIState)
 	{
-		self.container = container
+		self.librarySelection = librarySelection
 		self.uiState = uiState
 	}
 	
@@ -63,28 +58,21 @@ public struct ObjectBrowserView : View
 		return VStack(spacing:0)
 		{
 			viewFactory.objectsHeaderView(for:container, uiState:uiState)
-				.id(headerID)
 				
 			Color.primary.opacity(0.2).frame(height:1) // Divider line
 			
-			ObjectCollectionView(container:container, cellType:cellType, uiState:uiState)
+			ObjectCollectionView(librarySelection:librarySelection, cellType:cellType, uiState:uiState)
 				
 			Color.primary.opacity(0.2).frame(height:1) // Divider line
 
 			viewFactory.objectsFooterView(for:container, uiState:uiState)
-				.id(footerID)
 		}
 		.frame(minWidth:ObjectCollectionView.minWidth, maxWidth:.infinity) // WORKAROUND 3 (see ObjectCollectionView-macOS.swift)
    }
    
-   var headerID:String
+   var container:Container?
    {
-		"ObjectBrowserView.header." + (container?.identifier ?? "")
-   }
-   
-   var footerID:String
-   {
-		"ObjectBrowserView.footer." + (container?.identifier ?? "")
+	   librarySelection.container
    }
 }
 
