@@ -114,11 +114,11 @@ public struct SectionView : View
 		
 		.onReceive(section.$sources)
 		{
-			_ in library.saveState()
+			_ in library.setNeedsSaveState()
 		}
 		.onReceive(section.$isExpanded)
 		{
-			_ in library.saveState()
+			_ in library.setNeedsSaveState()
 		}
     }
 }

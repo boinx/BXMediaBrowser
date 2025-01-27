@@ -78,7 +78,7 @@ public struct LibraryView : View
 		
 //		.onReceive(library.$selectedContainer)
 //		{
-//			_ in library.saveState()
+//			_ in library.setNeedsSaveState()
 //		}
    }
 }

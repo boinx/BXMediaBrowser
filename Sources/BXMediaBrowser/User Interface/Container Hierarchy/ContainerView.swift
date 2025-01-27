@@ -131,9 +131,13 @@ public struct ContainerView : View
 			
 			// Whenever the current state changes, save it to persistent storage
 		
+			.onReceive(container.$containers)
+			{
+				_ in library.setNeedsSaveState()
+			}
 			.onReceive(container.$isExpanded)
 			{
-				_ in library.saveState()
+				_ in library.setNeedsSaveState()
 			}
     }
     

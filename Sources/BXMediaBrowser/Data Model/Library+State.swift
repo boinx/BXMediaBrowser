@@ -78,21 +78,21 @@ extension Library
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	/// Calling this function causes the state of this Library to be saved to persistent storage. Please note
-	/// that multiple consecutive calls of this function will be coalesced (debounced) so that the heavy duty
-	/// work is only performed once (per debounce interval).
+	/// Calling this function causes the state of this Library to be saved to persistent storage. Please note that multiple consecutive calls
+	/// of this function will be coalesced (debounced) so that the heavy duty work is only performed once (per debounce interval).
 	
-	public func saveState()
+	public func setNeedsSaveState()
 	{
 		self.stateSaver.request()
 	}
 	
-	
-	// Since getting the state is an async function that accesses @MainActor properties, this work has to be
-	// wrapped in a Task.
+	/// This function gathers the current state of all Containers and persists them to storage (usually NSUserDefaults)
 	
 	internal func asyncSaveState()
 	{
+		// Since getting the state is an async function that accesses @MainActor properties,
+		// this work has to be wrapped in a Task.
+	
 		Task
 		{
 			BXMediaBrowser.logDataModel.debug {"\(Self.self).\(#function) \(identifier)"}

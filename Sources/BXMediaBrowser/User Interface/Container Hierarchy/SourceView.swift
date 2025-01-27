@@ -77,11 +77,11 @@ public struct SourceView : View
 		
 			.onReceive(source.$containers)
 			{
-				_ in library.saveState()
+				_ in library.setNeedsSaveState()
 			}
 			.onReceive(source.$isExpanded)
 			{
-				_ in library.saveState()
+				_ in library.setNeedsSaveState()
 			}
     }
 }
