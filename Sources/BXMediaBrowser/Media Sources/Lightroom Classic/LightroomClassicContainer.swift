@@ -149,6 +149,9 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 			// Load subnodes
 			
 			let node = data.node
+			node.setSubnodes(nil)
+			node.objects = []
+			
 			_ = try parserMessenger.populateNode(node)
 			
 			// Convert the IMBNodes to LightroomClassicContainer. For some reason we end sometimes end up with
