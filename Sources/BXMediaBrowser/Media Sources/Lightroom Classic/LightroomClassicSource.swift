@@ -194,8 +194,12 @@ open class LightroomClassicSource : Source, AccessControl
 
 			// Get the top-level node from iMedia
 			
-			let rootNodes = try parserMessenger.unpopulatedTopLevelNodes().compactMap { $0 as? IMBNode }
-			guard let rootNode = rootNodes.first else { return [] }
+			let rootNodes = try parserMessenger							// Here we may get multiple top-level nodes,
+				.unpopulatedTopLevelNodes()								// e.g. for Lightroom 5, Lightroom 7, and
+				.compactMap { $0 as? IMBNode }							// Lightroom 14. Sort them alphabetically
+				.sorted{ $0.identifier < $1.identifier }				// so that the most modern one is last
+				
+			guard let rootNode = rootNodes.last else { return [] }		// Use the most modern one
 			
 			// This top-level nodes in not of interest to us, so populate
 			// it to get at its subnodes "Folders" and "Collections".
