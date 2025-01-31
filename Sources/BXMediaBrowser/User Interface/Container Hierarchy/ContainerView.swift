@@ -99,13 +99,23 @@ public struct ContainerView : View
 				
 				// Clicking selects the container
 				
-//				.contentShape(Rectangle().size(width:1000,height:20).offset(x:-100,y:0))  // Make hit target wider so that whole row is clickable!
-				
 				.simultaneousGesture( TapGesture().onEnded
 				{
 					self.library.selectedContainer = self.container
 					self.loadIfNeeded()
 				})
+
+				// A right click selects the Container if necessary, then shows a context menu
+				
+				.onContextClick 	// This makes sure that the Container get's selected BEFORE the context menu is shown
+				{
+					self.library.selectedContainer = self.container
+					self.loadIfNeeded()
+				}
+				.contextMenu
+				{
+					viewFactory.containerContextMenu(for:container)
+				}
 			},
 			
 			body:
@@ -121,13 +131,6 @@ public struct ContainerView : View
 				}
 				.padding(.leading,16)
 			})
-			
-			// Display an optional context menu when right-clicking
-			
-			.contextMenu
-			{
-				viewFactory.containerContextMenu(for:container)
-			}
 			
 			// Whenever the current state changes, save it to persistent storage
 		
