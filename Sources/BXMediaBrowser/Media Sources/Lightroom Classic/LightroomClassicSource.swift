@@ -192,31 +192,61 @@ open class LightroomClassicSource : Source, AccessControl
 			
 			self.restoreAccess(with:sourceState)
 
-			// Get the top-level node from iMedia
+			// Get the top-level nodes from iMedia. Here we may get multiple top-level nodes, one for each
+			// catalog that was found. Please note that these may have been created by different versions
+			// of Lightroom Classic.
 			
-			let rootNodes = try parserMessenger							// Here we may get multiple top-level nodes,
-				.unpopulatedTopLevelNodes()								// e.g. for Lightroom 5, Lightroom 7, and
-				.compactMap { $0 as? IMBNode }							// Lightroom 14. Sort them alphabetically
-				.sorted{ $0.identifier < $1.identifier }				// so that the most modern one is last
+			let rootNodes = try parserMessenger
+				.unpopulatedTopLevelNodes()
+				.compactMap { $0 as? IMBNode }
 				
-			guard let rootNode = rootNodes.last else { return [] }		// Use the most modern one
+			// We have no way of knowing wich one is the correct node. The only way to find out, is to try
+			// loading each one and if there is an error, it wasn't the the correct one.
 			
-			// This top-level nodes in not of interest to us, so populate
-			// it to get at its subnodes "Folders" and "Collections".
+			var rootNode:IMBNode? = nil
+			var lastError:Swift.Error? = nil
 			
-			_ = try parserMessenger.populateNode(rootNode)
-			
-			// Convert these two subnodes to native BXMediaBrowser Containers
-			
-			let containers:[LightroomClassicContainer] = rootNode.subnodes.compactMap
+			for node in rootNodes
 			{
-				guard let node = $0 as? IMBNode else { return nil }
-				return LightroomClassicContainer(node:node, mediaType:mediaType, parserMessenger:parserMessenger, filter:filter, in:library)
+				do
+				{
+					// Populate it to get at its subnodes "Folders" and "Collections".
+					
+					_ = try parserMessenger.populateNode(node)
+					
+					// Found the correct one
+					
+					rootNode = node
+					lastError = nil
+					break
+				}
+				catch
+				{
+					// Oops, error, so try the next one
+					
+					lastError = error
+					continue
+				}
+			}
+			
+			if let lastError = lastError
+			{
+				throw lastError
 			}
 			
 			await MainActor.run
 			{
 				LightroomClassic.shared.error = nil
+			}
+			
+			// Convert these two subnodes to native BXMediaBrowser Containers
+			
+			guard let rootNode = rootNode else { return [] }
+			
+			let containers:[LightroomClassicContainer] = rootNode.subnodes.compactMap
+			{
+				guard let node = $0 as? IMBNode else { return nil }
+				return LightroomClassicContainer(node:node, mediaType:mediaType, parserMessenger:parserMessenger, filter:filter, in:library)
 			}
 			
 			return containers
