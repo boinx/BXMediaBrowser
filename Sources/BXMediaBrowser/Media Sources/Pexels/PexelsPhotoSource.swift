@@ -187,6 +187,45 @@ open class PexelsPhotoSource : Source, AccessControl
 	}
 
 	internal static var savedFilterDatasKey:String { "savedFilterDatas" }
+
+	/// Saves the properties that are relevant to this Source to the supplied state dictionary
+	
+	override open func save(to state:inout [String:Any])
+	{
+		super.save(to:&state)
+		
+		if let filter = self.filter as? PexelsFilter
+		{
+			state["orientation"] = filter.orientation.rawValue
+			state["color"] = filter.color.rawValue
+			state["size"] = filter.size.rawValue
+		}
+	}
+	
+	/// Restore the properties relevant to this Source from the supplied Source dictionary
+	
+	override open func restore(from state:[String:Any]? = nil)
+	{
+		guard let filter = self.filter as? PexelsFilter else { return }
+		guard let state = state else { return }
+		
+		super.restore(from:state)
+		
+		if let value = state["orientation"] as? String, let orientation = PexelsFilter.Orientation(rawValue:value)
+		{
+			filter.orientation = orientation
+		}
+		
+		if let value = state["color"] as? String, let color = PexelsFilter.Color(rawValue:value)
+		{
+			filter.color = color
+		}
+		
+		if let value = state["size"] as? String, let size = PexelsFilter.Size(rawValue:value)
+		{
+			filter.size = size
+		}
+	}
 }
 
 

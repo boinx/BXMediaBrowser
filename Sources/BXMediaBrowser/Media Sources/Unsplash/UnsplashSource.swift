@@ -180,6 +180,39 @@ open class UnsplashSource : Source, AccessControl
 	}
 
 	internal static var savedFilterDatasKey:String { "savedFilterDatas" }
+
+	/// Saves the properties that are relevant to this Source to the supplied state dictionary
+	
+	override open func save(to state:inout [String:Any])
+	{
+		super.save(to:&state)
+		
+		if let filter = self.filter as? UnsplashFilter
+		{
+			state["orientation"] = filter.orientation.rawValue
+			state["color"] = filter.color.rawValue
+		}
+	}
+	
+	/// Restore the properties relevant to this Source from the supplied Source dictionary
+	
+	override open func restore(from state:[String:Any]? = nil)
+	{
+		guard let filter = self.filter as? UnsplashFilter else { return }
+		guard let state = state else { return }
+		
+		super.restore(from:state)
+		
+		if let value = state["orientation"] as? String, let orientation = UnsplashFilter.Orientation(rawValue:value)
+		{
+			filter.orientation = orientation
+		}
+		
+		if let value = state["color"] as? String, let color = UnsplashFilter.Color(rawValue:value)
+		{
+			filter.color = color
+		}
+	}
 }
 
 

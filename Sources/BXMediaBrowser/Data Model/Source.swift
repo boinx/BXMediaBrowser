@@ -136,16 +136,17 @@ open class Source : ObservableObject, Identifiable, StateSaving
 				let names = containers.map { $0.name }.joined(separator:", ")
 				BXMediaBrowser.logDataModel.verbose {"    containers = \(names)"}
 
-				let isExpanded = sourceState?[isExpandedKey] as? Bool ?? self.isExpanded
-
 				// Assign result in main thread
 				
 				await MainActor.run
 				{
-					self.containers = containers
-					self.isExpanded = isExpanded
+					// Restore state of this Source
 					
-					// Restore isExpanded state of containers
+					self.restore(from:sourceState)
+					
+					// Restore state of containers
+					
+					self.containers = containers
 					
 					for container in containers
 					{
@@ -227,7 +228,8 @@ open class Source : ObservableObject, Identifiable, StateSaving
 	public func state() async -> [String:Any]
 	{
 		var state:[String:Any] = [:]
-		state[isExpandedKey] = self.isExpanded
+		
+		self.save(to:&state)
 		
 		let containers = await self.containers
 
@@ -241,23 +243,44 @@ open class Source : ObservableObject, Identifiable, StateSaving
 		return state
 	}
 	
-	/// The key for the state dictionary of this Source
+	/// Saves the properties that are relevant to this Source to the supplied state dictionary
 	
-	internal var stateKey:String
+	open func save(to state:inout [String:Any])
 	{
-		"\(identifier)".replacingOccurrences(of:".", with:"-")
+		state[isExpandedKey] = self.isExpanded
+		state[ratingKey] = self.filter.rating
+		state[sortTypeKey] = self.filter.sortType
+		state[sortDirectionKey] = self.filter.sortDirection.rawValue
+	}
+	
+	/// Restore the properties relevant to this Source from the supplied Source dictionary
+	
+	open func restore(from state:[String:Any]? = nil)
+	{
+		guard let state = state else { return }
+		
+		if let isExpanded = state[isExpandedKey] as? Bool
+		{
+			self.isExpanded = isExpanded
+		}
+		
+		if let rating = state[ratingKey] as? Int
+		{
+			self.filter.rating = rating
+		}
+		
+		if let sortType = state[sortTypeKey] as? String
+		{
+			self.filter.sortType = sortType
+		}
+		
+		if let value = state[sortDirectionKey] as? Int, let sortDirection = Object.Filter.SortDirection(rawValue:value)
+		{
+			self.filter.sortDirection = sortDirection
+		}
 	}
 
-	/// The key of the isExpanded state inside the state dictionary
-
-	internal var isExpandedKey:String
-	{
-		"isExpanded"
-	}
-
-
-	/// When a container is expanded is sub-containers need to be set to visible. If one of the subcontainers is selected,
-	/// it will be loaded.
+	/// When a container is expanded is sub-containers need to be set to visible. If one of the subcontainers is selected, it will be loaded.
 	
 	func updateChildVisibility()
 	{
@@ -275,7 +298,35 @@ open class Source : ObservableObject, Identifiable, StateSaving
 			}
 		}
 	}
+	
+	/// The key for the state dictionary of this Source
+	
+	internal var stateKey:String
+	{
+		"\(identifier)".replacingOccurrences(of:".", with:"-")
+	}
 
+	/// The key of the isExpanded state inside the state dictionary
+
+	internal var isExpandedKey:String
+	{
+		"isExpanded"
+	}
+
+	internal var ratingKey:String
+	{
+		"rating"
+	}
+
+	internal var sortTypeKey:String
+	{
+		"sortType"
+	}
+
+	internal var sortDirectionKey:String
+	{
+		"sortDirection"
+	}
 }
 
 
