@@ -69,31 +69,17 @@ extension Object
 			}
 		}
 		
-		public enum SortDirection : Equatable, Hashable, Codable
+		private var _sortDirection:[SortType:SortDirection] = Object.Filter.defaultSortDirections()
+
+		/// The SortDirection determines whether Objects are sorted ascending or descending
+	
+		public enum SortDirection : Int,Equatable,Hashable,Codable
 		{
 			case ascending
 			case descending
 		}
-
-		private var _sortDirection:[SortType:SortDirection] = Object.Filter.defaultSortDirections()
 		
-		private static func defaultSortDirections() -> [SortType:SortDirection]
-		{
-			[
-				.never : .ascending,
-				.rating : .descending,
-				.useCount : .descending,
-				.captureDate : .ascending,
-				.creationDate : .ascending,
-				.alphabetical : .ascending,
-				.duration : .ascending,
-				.artist : .ascending,
-				.album : .ascending,
-				.genre : .ascending,
-			]
-		}
-
-
+		
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -101,7 +87,10 @@ extension Object
 	
 		/// Creates a new Filter instance
 		
-		public init() { }
+		public init()
+		{
+
+		}
 
 		/// Returns a copy of this Filter instance
 		
@@ -116,6 +105,8 @@ extension Object
 //----------------------------------------------------------------------------------------------------------------------
 
 
+		// MARK: - Sorting
+	
 		/// A ObjectComparator is a closure that determines if two Objects are ordered ascending (return true)
 		/// or descending (returns false).
 		
@@ -146,7 +137,7 @@ extension Object
 //----------------------------------------------------------------------------------------------------------------------
 
 
-		// MARK: -
+		// MARK: - Coding
 	
 		private enum Key : String, CodingKey
 		{
@@ -188,6 +179,24 @@ extension Object
 	
 extension Object.Filter
 {
+	/// Defines the default SortDirection for each SortType
+	
+	private static func defaultSortDirections() -> [SortType:SortDirection]
+	{
+		[
+			.never : .ascending,
+			.rating : .descending,
+			.useCount : .descending,
+			.captureDate : .ascending,
+			.creationDate : .ascending,
+			.alphabetical : .ascending,
+			.duration : .ascending,
+			.artist : .ascending,
+			.album : .ascending,
+			.genre : .ascending,
+		]
+	}
+
 	/// Toggles the current SortDirection
 	
 	public func toggleSortDirection()
