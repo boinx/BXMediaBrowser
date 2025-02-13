@@ -74,24 +74,29 @@ open class FolderObject : Object
 		guard url.exists else { throw Error.loadThumbnailFailed }
     	let size = CGSize(width:256, height:256)
     	
-    	#if os(macOS)
-    	
-        let options = [ kQLThumbnailOptionIconModeKey : kCFBooleanFalse ]
-        
-        let ref = QLThumbnailImageCreate(
-			kCFAllocatorDefault,
-			url as CFURL,
-			size,
-			options as CFDictionary)
-        
-        guard let thumbnail = ref?.takeUnretainedValue() else { throw Error.loadThumbnailFailed }
-		return thumbnail
-		
-		#else
-		
-		return try await QLThumbnailGenerator.shared.thumbnail(with:url, maxSize:size)
-		
-		#endif
+ 		return try await url.downloadFromCloudIfNeeded()
+		{
+			url in
+
+			#if os(macOS)
+			
+			let options = [ kQLThumbnailOptionIconModeKey : kCFBooleanFalse ]
+			
+			let ref = QLThumbnailImageCreate(
+				kCFAllocatorDefault,
+				url as CFURL,
+				size,
+				options as CFDictionary)
+			
+			guard let thumbnail = ref?.takeUnretainedValue() else { throw Error.loadThumbnailFailed }
+			return thumbnail
+			
+			#else
+			
+			return try await QLThumbnailGenerator.shared.thumbnail(with:url, maxSize:size)
+			
+			#endif
+		}
 	}
 
 
@@ -104,25 +109,30 @@ open class FolderObject : Object
 		guard let url = data as? URL else { throw Error.loadMetadataFailed }
 		guard url.exists else { throw Error.loadMetadataFailed }
 
-		var metadata:[String:Any] = [:]
-		
-		if let fileSize = url.fileSize
+		return try await url.downloadFromCloudIfNeeded()
 		{
-//			metadata["fileSize"] = fileSize
-			metadata[.fileSizeKey] = fileSize
-		}
+			url in
 
-		if let creationDate = url.creationDate
-		{
-			metadata[.creationDateKey] = creationDate
-		}
+			var metadata:[String:Any] = [:]
+			
+			if let fileSize = url.fileSize
+			{
+	//			metadata["fileSize"] = fileSize
+				metadata[.fileSizeKey] = fileSize
+			}
 
-		if let modificationDate = url.modificationDate
-		{
-			metadata[.modificationDateKey] = modificationDate
+			if let creationDate = url.creationDate
+			{
+				metadata[.creationDateKey] = creationDate
+			}
+
+			if let modificationDate = url.modificationDate
+			{
+				metadata[.modificationDateKey] = modificationDate
+			}
+			
+			return metadata
 		}
-		
-		return metadata
 	}
 
 
@@ -182,6 +192,8 @@ open class FolderObject : Object
 		// function. But we will still create a local progress object and set it to 100% immediately,
 		// so that Progress.globalParent gets notified and the progress bar is updated appropriately.
 		
+		#warning("FIXME: Implement proper progress reporting, since the above comment is no longer valid when considering cloud storage")
+		
 		if let parent = Progress.globalParent
 		{
 			let local = Progress(parent:nil)
@@ -192,7 +204,11 @@ open class FolderObject : Object
 
 		// Return the URL to the local file on disk
 		
-		return url
+		return try await url.downloadFromCloudIfNeeded
+		{
+			url in
+			return url
+		}
 	}
 
 

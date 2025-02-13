@@ -215,18 +215,22 @@ open class AudioFile : FolderObject
 		guard let url = data as? URL else { throw Error.loadThumbnailFailed }
 		guard url.exists else { throw Error.loadThumbnailFailed }
 		
-		#if os(macOS)
-		
-		let image = NSWorkspace.shared.icon(forFile:url.path)
-		guard let thumbnail = image.cgImage(forProposedRect:nil, context:nil, hints:nil) else { throw Error.loadThumbnailFailed }
-		return thumbnail
-		
-		#else
-		
-		let size = CGSize(256,256)
-		return try await QLThumbnailGenerator.shared.thumbnail(with:url, maxSize:size, type:.icon)
-		
-		#endif
+		return try await url.downloadFromCloudIfNeeded
+		{
+			url in
+			#if os(macOS)
+			
+			let image = NSWorkspace.shared.icon(forFile:url.path)
+			guard let thumbnail = image.cgImage(forProposedRect:nil, context:nil, hints:nil) else { throw Error.loadThumbnailFailed }
+			return thumbnail
+			
+			#else
+			
+			let size = CGSize(256,256)
+			return try await QLThumbnailGenerator.shared.thumbnail(with:url, maxSize:size, type:.icon)
+			
+			#endif
+		}
 	}
 
 
@@ -239,9 +243,18 @@ open class AudioFile : FolderObject
 		guard let url = data as? URL else { throw Error.loadMetadataFailed }
 		guard url.exists else { throw Error.loadMetadataFailed }
 		
+		// Get general file metadata
+		
 		var metadata = try await super.loadMetadata(for:identifier, data:data)
 		
-		let audioInfo = url.audioMetadata
+		// Get audio specific info
+		
+		let audioInfo = try await url.downloadFromCloudIfNeeded
+		{
+			url in url.audioMetadata
+		}
+		
+		// And copy it to metadata dict
 		
 		for (key,value) in audioInfo
 		{

@@ -111,41 +111,46 @@ open class VideoFile : FolderObject
 		guard url.exists else { throw Error.loadThumbnailFailed }
 		let size = CGSize(256,256)
 
-		// Try with AVAssetImageGenerator
-		
-		do
+		return try await url.downloadFromCloudIfNeeded
 		{
-			let asset = AVURLAsset(url:url)
-			let duration = asset.duration.seconds
-			let posterFrame = 0.5 * duration
-			let time = CMTime(seconds:posterFrame, preferredTimescale:600)
+			url in
+
+			// Try with AVAssetImageGenerator
 			
-			let generator = AVAssetImageGenerator(asset:asset)
-			generator.appliesPreferredTrackTransform = true
-			generator.maximumSize = size
-			
-			let thumbnail = try generator.copyCGImage(at:time, actualTime:nil)
-			return thumbnail
-		}
-		
-		// Use QuickLook as fallback solution
-		
-		catch let error
-		{
-			#if os(macOS)
-			
-			if let image = QLThumbnailImageCreate(kCFAllocatorDefault, url as CFURL, size, nil)?.takeRetainedValue()
+			do
 			{
-				return image
+				let asset = AVURLAsset(url:url)
+				let duration = asset.duration.seconds
+				let posterFrame = 0.5 * duration
+				let time = CMTime(seconds:posterFrame, preferredTimescale:600)
+				
+				let generator = AVAssetImageGenerator(asset:asset)
+				generator.appliesPreferredTrackTransform = true
+				generator.maximumSize = size
+				
+				let thumbnail = try generator.copyCGImage(at:time, actualTime:nil)
+				return thumbnail
 			}
 			
-			throw error
+			// Use QuickLook as fallback solution
 			
-			#else
-			
-			return try await QLThumbnailGenerator.shared.thumbnail(with:url, maxSize:size)
+			catch let error
+			{
+				#if os(macOS)
+				
+				if let image = QLThumbnailImageCreate(kCFAllocatorDefault, url as CFURL, size, nil)?.takeRetainedValue()
+				{
+					return image
+				}
+				
+				throw error
+				
+				#else
+				
+				return try await QLThumbnailGenerator.shared.thumbnail(with:url, maxSize:size)
 
-			#endif
+				#endif
+			}
 		}
 	}
 
@@ -159,14 +164,25 @@ open class VideoFile : FolderObject
 		guard let url = data as? URL else { throw Error.loadMetadataFailed }
 		guard url.exists else { throw Error.loadMetadataFailed }
 		
+		// Get general file metadata
+		
 		var metadata = try await super.loadMetadata(for:identifier, data:data)
 		
-		let videoInfo = url.videoMetadata
+		// Get video specific info
+		
+		let videoInfo = try await url.downloadFromCloudIfNeeded
+		{
+			url in url.videoMetadata
+		}
+		
+		// And copy it to metadata dict
 		
 		for (key,value) in videoInfo
 		{
 			metadata[key as String] = value
 		}
+		
+		// Copy capture date from EXIF subdict to top-level
 		
 		if let exif = metadata["{Exif}"] as? [String:Any], let str = exif[.exifCaptureDateKey] as? String
 		{

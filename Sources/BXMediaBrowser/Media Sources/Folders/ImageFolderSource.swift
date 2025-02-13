@@ -111,17 +111,22 @@ open class ImageFile : FolderObject
 		guard let url = data as? URL else { throw Error.loadThumbnailFailed }
 		guard url.exists else { throw Error.loadThumbnailFailed }
 
-		let options:[CFString:AnyObject] =
-		[
-			kCGImageSourceCreateThumbnailFromImageIfAbsent : kCFBooleanTrue,
-			kCGImageSourceCreateThumbnailFromImageAlways : kCFBooleanFalse,
-			kCGImageSourceThumbnailMaxPixelSize : NSNumber(value:256.0),
-			kCGImageSourceCreateThumbnailWithTransform : kCFBooleanTrue
-		]
+		return try await url.downloadFromCloudIfNeeded
+		{
+			url in
 
-		guard let source = CGImageSourceCreateWithURL(url as CFURL,nil) else { throw Error.loadThumbnailFailed }
-		guard let thumbnail = CGImageSourceCreateThumbnailAtIndex(source,0,options as CFDictionary) else { throw Error.loadThumbnailFailed }
-		return thumbnail
+			let options:[CFString:AnyObject] =
+			[
+				kCGImageSourceCreateThumbnailFromImageIfAbsent : kCFBooleanTrue,
+				kCGImageSourceCreateThumbnailFromImageAlways : kCFBooleanFalse,
+				kCGImageSourceThumbnailMaxPixelSize : NSNumber(value:256.0),
+				kCGImageSourceCreateThumbnailWithTransform : kCFBooleanTrue
+			]
+		
+			guard let source = CGImageSourceCreateWithURL(url as CFURL,nil) else { throw Error.loadThumbnailFailed }
+			guard let thumbnail = CGImageSourceCreateThumbnailAtIndex(source,0,options as CFDictionary) else { throw Error.loadThumbnailFailed }
+			return thumbnail
+		}
 	}
 
 
@@ -134,17 +139,29 @@ open class ImageFile : FolderObject
 		guard let url = data as? URL else { throw Error.loadMetadataFailed }
 		guard url.exists else { throw Error.loadMetadataFailed }
 		
+		// Get general file metadata
+		
 		var metadata = try await super.loadMetadata(for:identifier, data:data)
 		
-		if let source = CGImageSourceCreateWithURL(url as CFURL,nil),
-		   let properties = CGImageSourceCopyPropertiesAtIndex(source,0,nil),
-		   let dict = properties as? [String:Any]
+		// Get image specific info
+		
+		let imageInfo = try await url.downloadFromCloudIfNeeded
 		{
-			for (key,value) in dict
-			{
-				metadata[key] = value
-			}
+			url in
+			guard let source = CGImageSourceCreateWithURL(url as CFURL,nil) else { throw Error.loadMetadataFailed }
+			guard let properties = CGImageSourceCopyPropertiesAtIndex(source,0,nil) else { throw Error.loadMetadataFailed }
+			guard let dict = properties as? [String:Any] else { throw Error.loadMetadataFailed }
+			return dict
 		}
+
+		// And copy it to metadata dict
+		
+		for (key,value) in imageInfo
+		{
+			metadata[key] = value
+		}
+		
+		// Copy capture date from EXIF subdict to top-level
 		
 		if let exif = metadata["{Exif}"] as? [String:Any], let str = exif[.exifCaptureDateKey] as? String
 		{
