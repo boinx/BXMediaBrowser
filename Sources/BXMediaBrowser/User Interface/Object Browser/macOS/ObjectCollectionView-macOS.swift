@@ -87,7 +87,7 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 
 		do
 		{
-			try NSException.toSwiftError
+			try NSException.catch
 			{
 				let layout = self.createLayout(for:collectionView)
 				collectionView.collectionViewLayout = layout
@@ -171,7 +171,7 @@ public struct ObjectCollectionView<Cell:ObjectCell> : NSViewRepresentable
 			
 			do
 			{
-				try NSException.toSwiftError
+				try NSException.catch
 				{
 					let pos = self.saveScrollPos(for:collectionView)
 					defer { self.restoreScrollPos(for:collectionView, with:pos) }
@@ -526,7 +526,7 @@ extension ObjectCollectionView
 			
 			do
 			{
-				try NSException.toSwiftError
+				try NSException.catch
 				{
 					self.dataSource.apply(snapshot, animatingDifferences:shouldAnimate)
 				}

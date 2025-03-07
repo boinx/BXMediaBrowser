@@ -176,7 +176,7 @@ public class QuicklookCollectionView : NSCollectionView, QLPreviewPanelDataSourc
     {
 		var item:NSCollectionViewItem? = nil
 
-		try? NSException.toSwiftError
+		try? NSException.catch
 		{
 			item = super.item(at:indexPath)
 		}
