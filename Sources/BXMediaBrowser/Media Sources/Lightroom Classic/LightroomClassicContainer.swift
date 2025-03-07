@@ -162,47 +162,53 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 			
 			var knownNodes:[String:Bool] = [:]
 			
-			for node in node.subnodes
+			if let subnodes = node.subnodes
 			{
-				guard let node = node as? IMBNode else { continue }
-				guard knownNodes[node.identifier] == nil else { continue }
-                if node.name.lowercased() == "smart collections" { continue }   // Filter out some nodes that aren't populated
-                if node.name.lowercased() == "quick collection" { continue }    // by iMedia and are thus pretty useless anyway
+				for node in node.subnodes
+				{
+					guard let node = node as? IMBNode else { continue }
+					guard knownNodes[node.identifier] == nil else { continue }
+					if node.name.lowercased() == "smart collections" { continue }   // Filter out some nodes that aren't populated
+					if node.name.lowercased() == "quick collection" { continue }    // by iMedia and are thus pretty useless anyway
 
-				try await Tasks.canContinue()
-		
-				let container = LightroomClassicContainer(node:node, mediaType:mediaType, parserMessenger:parserMessenger, filter:filter, in:library)
-				knownNodes[node.identifier] = true
-				containers += container
+					try await Tasks.canContinue()
+			
+					let container = LightroomClassicContainer(node:node, mediaType:mediaType, parserMessenger:parserMessenger, filter:filter, in:library)
+					knownNodes[node.identifier] = true
+					containers += container
+				}
 			}
 			
 			// Convert IMBLightroomObjects to LightroomClassicObjects. Again, there are edge cases where we get
 			// duplicate objects - which can cause crashes with the NSDiffableDataSource of our NSCollectionView.
-			// FOr this reason we need to remove any duplicates.
+			// For this reason we need to remove any duplicates.
 			
 			var knownObjects:[String:Bool] = [:]
-
-			for item in node.objects
+	
+			if let nodeObjects = node.objects
 			{
-				// Get next IMBLightroomObject
-				
-				guard let imbObject = item as? IMBLightroomObject else { continue }
-				let identifier = LightroomClassicObject.identifier(for:imbObject)
-				let name = imbObject.name ?? ""
-				
-				// Filter out items that are not wanted
-				
-				guard searchString.isEmpty || name.contains(searchString) else { continue }
-				guard minRating == 0 || StatisticsController.shared.rating(for:identifier) >= minRating else { continue }
-				guard knownObjects[identifier] == nil else { continue }
-				
-				// Convert to LightroomClassicObject
-				
-				let object = LightroomClassicObject(with:imbObject, mediaType:mediaType, parserMessenger:parserMessenger, in:library)
-				knownObjects[identifier] = true
-				objects += object
+				for item in nodeObjects
+				{
+					// Get next IMBLightroomObject
+					
+					guard let imbObject = item as? IMBLightroomObject else { continue }
+					let identifier = LightroomClassicObject.identifier(for:imbObject)
+					let name = imbObject.name ?? ""
+					
+					// Filter out items that are not wanted
+					
+					guard searchString.isEmpty || name.contains(searchString) else { continue }
+					guard minRating == 0 || StatisticsController.shared.rating(for:identifier) >= minRating else { continue }
+					guard knownObjects[identifier] == nil else { continue }
+					
+					// Convert to LightroomClassicObject
+					
+					let object = LightroomClassicObject(with:imbObject, mediaType:mediaType, parserMessenger:parserMessenger, in:library)
+					knownObjects[identifier] = true
+					objects += object
+				}
 			}
-
+			
 			// Sort according to specified sort order
 			
 			filter.sort(&objects)
