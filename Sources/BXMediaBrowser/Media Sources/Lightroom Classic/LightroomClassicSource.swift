@@ -212,7 +212,10 @@ open class LightroomClassicSource : Source, AccessControl
 				{
 					// Populate it to get at its subnodes "Folders" and "Collections".
 					
-					_ = try parserMessenger.populateNode(node)
+					try NSException.catch
+					{
+						_ = try parserMessenger.populateNode(node)
+					}
 					
 					// Found the correct one
 					

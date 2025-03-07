@@ -86,8 +86,14 @@ open class LightroomClassicObject : Object, AppLifecycleMixin
 		let parserMessenger = data.parserMessenger
 		let imbObject = data.imbObject
 		
-		let object = try parserMessenger.loadThumbnail(for:imbObject)
-		guard let image = object.imageRepresentation() as? AnyObject else { throw Error.loadThumbnailFailed }
+		var object:IMBObject? = nil
+		
+		try NSException.catch
+		{
+			/*let*/ object = try parserMessenger.loadThumbnail(for:imbObject)
+		}
+		
+		guard let image = object?.imageRepresentation() as? AnyObject else { throw Error.loadThumbnailFailed }
 		
 		if CFGetTypeID(image) == CGImage.typeID
 		{
@@ -111,8 +117,14 @@ open class LightroomClassicObject : Object, AppLifecycleMixin
 		let parserMessenger = data.parserMessenger
 		let imbObject = data.imbObject
 
-		let object = try parserMessenger.loadMetadata(for:imbObject)
-		guard var metadata = object.metadata as? [String:Any] else { throw Error.loadMetadataFailed }
+		var object:IMBObject? = nil
+
+		try NSException.catch
+		{
+			/*let*/ object = try parserMessenger.loadMetadata(for:imbObject)
+		}
+		
+		guard var metadata = object?.metadata as? [String:Any] else { throw Error.loadMetadataFailed }
 
 		// Copy some existing key/value pairs to standard keys that are expected by BXMediaBrowser
 		

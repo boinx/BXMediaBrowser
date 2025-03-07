@@ -152,7 +152,10 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 			node.setSubnodes(nil)
 			node.objects = []
 			
-			_ = try parserMessenger.populateNode(node)
+			try NSException.catch
+			{
+				_ = try parserMessenger.populateNode(node)
+			}
 			
 			// Convert the IMBNodes to LightroomClassicContainer. For some reason we end sometimes end up with
 			// duplicate nodes. For this reason we have to skip any duplicates and only create unique Containers.
