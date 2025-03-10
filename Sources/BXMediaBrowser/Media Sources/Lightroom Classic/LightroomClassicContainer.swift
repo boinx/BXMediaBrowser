@@ -164,7 +164,7 @@ open class LightroomClassicContainer : Container, AppLifecycleMixin
 			
 			if let subnodes = node.subnodes
 			{
-				for node in node.subnodes
+				for node in subnodes
 				{
 					guard let node = node as? IMBNode else { continue }
 					guard knownNodes[node.identifier] == nil else { continue }
