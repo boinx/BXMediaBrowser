@@ -331,11 +331,11 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 				
 				if let error = error as? Container.Error, error == .loadContentsCancelled
 				{
-					BXMediaBrowser.logDataModel.warning {"ERROR \(error)"}
+					BXMediaBrowser.logDataModel.warning {"\(Self.self).\(#function) ERROR \(error)"}
 				}
 				else
 				{
-					BXMediaBrowser.logDataModel.error {"ERROR \(error)"}
+					BXMediaBrowser.logDataModel.error {"\(Self.self).\(#function) ERROR \(error)"}
 				}
 			}
 		}
