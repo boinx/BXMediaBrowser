@@ -115,6 +115,9 @@ open class ImageFile : FolderObject
 		{
 			url in
 
+			// First try to create the thumbnail via ImageIO. Please note that as of macOS 15 this fails
+			// for the relatively new jxl image file format.
+			
 			let options:[CFString:AnyObject] =
 			[
 				kCGImageSourceCreateThumbnailFromImageIfAbsent : kCFBooleanTrue,
@@ -124,8 +127,15 @@ open class ImageFile : FolderObject
 			]
 		
 			guard let source = CGImageSourceCreateWithURL(url as CFURL,nil) else { throw Error.loadThumbnailFailed }
-			guard let thumbnail = CGImageSourceCreateThumbnailAtIndex(source,0,options as CFDictionary) else { throw Error.loadThumbnailFailed }
-			return thumbnail
+			
+			if let thumbnail = CGImageSourceCreateThumbnailAtIndex(source,0,options as CFDictionary)
+			{
+				return thumbnail
+			}
+			
+			// As a fallback we will let QuickLook give it a try
+			
+			return try await super.loadThumbnail(for:identifier, data:data)
 		}
 	}
 
