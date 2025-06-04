@@ -107,6 +107,7 @@ public struct ContainerView : View
 
 				// A right click selects the Container if necessary, then shows a context menu
 				
+				#if os(macOS)
 				.onContextClick 	// This makes sure that the Container get's selected BEFORE the context menu is shown
 				{
 					self.library.selectedContainer = self.container
@@ -116,6 +117,7 @@ public struct ContainerView : View
 				{
 					viewFactory.containerContextMenu(for:container)
 				}
+               #endif
 			},
 			
 			body:
