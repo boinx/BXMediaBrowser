@@ -16,10 +16,22 @@
             "value" : "Grant Access"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conceder acceso"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Autoriser"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Concedi Accesso"
           }
         }
       }
@@ -39,10 +51,22 @@
             "value" : "Grant Access to Lightroom Classic"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conceder acceso a Lightroom Classic"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Autoriser l'accès à Lightroom Classic"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Concedi accesso a Lightroom Classic"
           }
         }
       }
@@ -62,10 +86,22 @@
             "value" : "Launch Lightroom"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iniciar Lightroom"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lancer Lightroom"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avvia Lightroom"
           }
         }
       }
@@ -85,10 +121,22 @@
             "value" : "Images were provided by Adobe Lightroom Classic at a reduced size.\n\nTo fix the problem, switch to Adobe Lightroom and select the menu item Library > Previews > Build 1:1 Previews."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las imágenes fueron proporcionadas por Adobe Lightroom Classic a un tamaño reducido.\n\nPara solucionar el problema, cambie a Adobe Lightroom y seleccione el elemento de menú Biblioteca > Previsualizaciones > Crear previsualizaciones 1:1."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Les images ont été envoyées par Lightroom Classic à une taille réduite.\n\nPour résoudre le problème, passez à Adobe Lightroom et sélectionnez la commande de menu Bibliothèque > Aperçus > Créer des aperçus 1:1."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le immagini sono state fornite da Adobe Lightroom Classic a dimensione ridotta.\n\nPer risolvere il problema, passa a Adobe Lightroom e seleziona la voce di menu Libreria > Anteprime > Crea anteprime 1:1."
           }
         }
       }
@@ -108,10 +156,22 @@
             "value" : "Image Size Warning"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Advertencia de tamaño de imagen"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alerte de taille d'image"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avviso dimensione immagine"
           }
         }
       }
@@ -131,10 +191,22 @@
             "value" : "Revoke Access"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revocar acceso"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Déautoriser l'accès"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revoca accesso"
           }
         }
       }
@@ -154,10 +226,22 @@
             "value" : "The Lightroom library is not readable. Please grant read access rights for its parent folder."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La biblioteca de Lightroom no es legible. Por favor, conceda derechos de acceso de lectura a su carpeta principal."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "La bibliothèque Lightroom n'est pas lisible. Veuillez autoriser l'accès pour son dossier parent."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La libreria di Lightroom non è leggibile. Si prega di concedere i diritti di accesso in lettura alla sua cartella principale."
           }
         }
       }
@@ -177,10 +261,22 @@
             "value" : "Missing Access Rights"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Derechos de acceso faltantes"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aucun droit d'accès"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diritti di accesso mancanti"
           }
         }
       }
@@ -200,10 +296,22 @@
             "value" : "To access the library Lightroom Classic must be running in the background."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para acceder a la biblioteca Lightroom Classic debe estar ejecutándose en segundo plano."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pour accéder à la bibliothèque, Lightroom Classic doit être lancé."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Per accedere alla libreria, Lightroom Classic deve essere in esecuzione in background."
           }
         }
       }
@@ -223,10 +331,22 @@
             "value" : "Lightroom Classic Not Running"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lightroom Classic no está en ejecución"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lightroom Classic n'est pas actif"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lightroom Classic non in esecuzione"
           }
         }
       }
