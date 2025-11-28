@@ -175,6 +175,30 @@ extension Object
 //----------------------------------------------------------------------------------------------------------------------
 
 
+// MARK: - Filtering
+	
+extension Object.Filter
+{
+	/// Returns true if any filtering is active, possibly leading to an empty object list
+	
+	public var isFiltering:Bool
+	{
+		self.searchString.count > 0 || self.rating > 0
+	}
+	
+	/// Resets the filter, so that all objects in a Container are displayed again
+	
+	public func reset()
+	{
+		self.searchString = ""
+		self.rating = 0
+	}
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
 // MARK: - Sorting
 	
 extension Object.Filter
