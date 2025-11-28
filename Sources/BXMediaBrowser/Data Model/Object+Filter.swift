@@ -241,6 +241,8 @@ extension Object.Filter
 //----------------------------------------------------------------------------------------------------------------------
 
 
+// MARK: -
+	
 extension Object.Filter.SortType
 {
 	/// Special SortType that does not modify the ordering of Objects

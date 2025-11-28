@@ -206,7 +206,6 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 	
 	nonisolated public var id:String
 	{
-		
 		"\(identifier)-\(icon ?? "folder")-\(name)"
 	}
 	
