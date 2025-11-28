@@ -44,6 +44,10 @@ extension Library
 		/// This property can be set externally to trigger SwiftUI rebuilding of various views as necessary.
 
 		@Published public var libraryIdentifier:String? = nil
+
+		/// This property is incremented whenever the currently selected Container is loaded
+		
+		@Published public var loadCount = 0
 	}
 }
 

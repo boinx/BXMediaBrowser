@@ -306,6 +306,11 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 					self.objectCount = uniqueObjects.count
 					self.isExpanded = isExpanded
 
+					if self === self.library?.selection.container
+					{
+						self.library?.selection.loadCount += 1
+					}
+
 					// Restore isExpanded state of containers
 					
 					for container in containers
