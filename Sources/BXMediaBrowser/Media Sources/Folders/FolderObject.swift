@@ -74,29 +74,29 @@ open class FolderObject : Object
 		guard url.exists else { throw Error.loadThumbnailFailed }
     	let size = CGSize(width:256, height:256)
     	
- 		return try await url.downloadFromCloudIfNeeded()
+		#if os(macOS)
+		
+		let options = [ kQLThumbnailOptionIconModeKey : kCFBooleanFalse ]
+		
+		let ref = QLThumbnailImageCreate(
+			kCFAllocatorDefault,
+			url as CFURL,
+			size,
+			options as CFDictionary)
+		
+		if let thumbnail = ref?.takeUnretainedValue()
 		{
-			url in
-
-			#if os(macOS)
-			
-			let options = [ kQLThumbnailOptionIconModeKey : kCFBooleanFalse ]
-			
-			let ref = QLThumbnailImageCreate(
-				kCFAllocatorDefault,
-				url as CFURL,
-				size,
-				options as CFDictionary)
-			
-			guard let thumbnail = ref?.takeUnretainedValue() else { throw Error.loadThumbnailFailed }
 			return thumbnail
-			
-			#else
-			
-			return try await QLThumbnailGenerator.shared.thumbnail(with:url, maxSize:size)
-			
-			#endif
 		}
+		
+		FolderSource.log.error {"\(Self.self).\(#function) failed to load thumbnail for \(url)"}
+		throw Error.loadThumbnailFailed
+		
+		#else
+		
+		return try await QLThumbnailGenerator.shared.thumbnail(with:url, maxSize:size)
+		
+		#endif
 	}
 
 
