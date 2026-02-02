@@ -54,7 +54,8 @@ public struct FolderFilterBar : View
 			NativeSearchField(value:self.$filter.searchString, placeholderString:searchPlaceholder)
 				.strokeBorder()
 				.frame(maxWidth:300)
-
+				.id(selectedContainer.identifier)
+				
 			Spacer()
 
 			RatingFilterView(rating:self.$filter.rating)
