@@ -3,7 +3,7 @@
   "strings" : {
     "album" : {
       "comment" : "Sorting Kind Name",
-      "extractionState" : "migrated",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -39,7 +39,7 @@
     },
     "alphabetical" : {
       "comment" : "Sorting Kind Name",
-      "extractionState" : "migrated",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -75,7 +75,7 @@
     },
     "artist" : {
       "comment" : "Sorting Kind Name",
-      "extractionState" : "migrated",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -111,7 +111,7 @@
     },
     "captureDate" : {
       "comment" : "Sorting Kind Name",
-      "extractionState" : "migrated",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -147,7 +147,7 @@
     },
     "creationDate" : {
       "comment" : "Sorting Kind Name",
-      "extractionState" : "migrated",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -183,7 +183,7 @@
     },
     "duration" : {
       "comment" : "Sorting Kind Name",
-      "extractionState" : "migrated",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -219,7 +219,7 @@
     },
     "genre" : {
       "comment" : "Sorting Kind Name",
-      "extractionState" : "migrated",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -255,7 +255,7 @@
     },
     "never" : {
       "comment" : "Sorting Kind Name",
-      "extractionState" : "migrated",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -326,7 +326,7 @@
     },
     "useCount" : {
       "comment" : "Sorting Kind Name",
-      "extractionState" : "migrated",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
