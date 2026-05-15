@@ -147,7 +147,7 @@
     },
     "Capture Date" : {
       "comment" : "Label",
-      "extractionState" : "migrated",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -219,7 +219,7 @@
     },
     "Description" : {
       "comment" : "Label",
-      "extractionState" : "migrated",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -577,7 +577,7 @@
     },
     "Location" : {
       "comment" : "Label",
-      "extractionState" : "migrated",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -613,7 +613,7 @@
     },
     "Search" : {
       "comment" : "Container Name",
-      "extractionState" : "migrated",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
