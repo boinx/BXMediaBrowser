@@ -115,9 +115,9 @@ open class ImageFile : FolderObject
 		{
 			url in
 
-			// First try to create the thumbnail via ImageIO. Please note that as of macOS 15 this fails
-			// for the relatively new jxl image file format.
-			
+			// First try to create the thumbnail via ImageIO the fast way, by using the embedded thumbnail.
+			// Please note that as of macOS 15 this fails for the relatively new jxl image file format.
+
 			let options:[CFString:AnyObject] =
 			[
 				kCGImageSourceCreateThumbnailFromImageIfAbsent : kCFBooleanTrue,
@@ -127,8 +127,23 @@ open class ImageFile : FolderObject
 			]
 		
 			guard let source = CGImageSourceCreateWithURL(url as CFURL,nil) else { throw Error.loadThumbnailFailed }
-			
-			if let thumbnail = CGImageSourceCreateThumbnailAtIndex(source,0,options as CFDictionary)
+
+			if let thumbnail = CGImageSourceCreateThumbnailAtIndex(source,0,options as CFDictionary), !thumbnail.isAllBlack()
+			{
+				return thumbnail
+			}
+
+			// New iOS 26 HDR images (Display P3 + PQ with an "Adaptive Gain Curve" gain map) ship an embedded
+			// thumbnail that decodes to pure black, so retry by generating the thumbnail from the hires image data.
+
+			let fullImageOptions:[CFString:AnyObject] =
+			[
+				kCGImageSourceCreateThumbnailFromImageAlways : kCFBooleanTrue,
+				kCGImageSourceThumbnailMaxPixelSize : NSNumber(value:256.0),
+				kCGImageSourceCreateThumbnailWithTransform : kCFBooleanTrue
+			]
+
+			if let thumbnail = CGImageSourceCreateThumbnailAtIndex(source,0,fullImageOptions as CFDictionary), !thumbnail.isAllBlack()
 			{
 				return thumbnail
 			}
