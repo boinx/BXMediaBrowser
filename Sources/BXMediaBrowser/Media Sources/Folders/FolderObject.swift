@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------------------------------------------
 //
-//  Copyright ©2022 Peter Baumgartner. All rights reserved.
+//  Copyright ©2022-2026 Peter Baumgartner. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -74,29 +74,19 @@ open class FolderObject : Object
 		guard url.exists else { throw Error.loadThumbnailFailed }
     	let size = CGSize(width:256, height:256)
     	
-		#if os(macOS)
-		
-		let options = [ kQLThumbnailOptionIconModeKey : kCFBooleanFalse ]
-		
-		let ref = QLThumbnailImageCreate(
-			kCFAllocatorDefault,
-			url as CFURL,
-			size,
-			options as CFDictionary)
-		
-		if let thumbnail = ref?.takeUnretainedValue()
+		// This used to call the deprecated - and synchronous - QLThumbnailImageCreate on macOS. Since we are on a
+		// cooperative pool thread here, that blocked one of the very few threads that QuickLookThumbnailing itself
+		// needs to deliver its result, which deadlocked the whole app (FM-2532). Always use the async API.
+
+		do
 		{
-			return thumbnail
+			return try await QLThumbnailGenerator.shared.thumbnail(with:url, maxSize:size)
 		}
-		
-		FolderSource.log.error {"\(Self.self).\(#function) failed to load thumbnail for \(url)"}
-		throw Error.loadThumbnailFailed
-		
-		#else
-		
-		return try await QLThumbnailGenerator.shared.thumbnail(with:url, maxSize:size)
-		
-		#endif
+		catch
+		{
+			FolderSource.log.error {"\(Self.self).\(#function) failed to load thumbnail for \(url) - \(error)"}
+			throw Error.loadThumbnailFailed
+		}
 	}
 
 
