@@ -49,9 +49,11 @@ public class ObjectFilePromiseProvider : NSFilePromiseProvider
 		didSet { self.storeDraggedObject() }
 	}
 	
-	/// This type identifies the native Object on the NSPasteboard
+	/// This type identifies the native Object on the NSPasteboard. Items are identified
+	/// with a private type to prevent the object-specific identifier from being interpreted
+	/// as plain text by drag targets.
 	
-	public static let objectIdentifierType = NSPasteboard.PasteboardType.string
+	public static let objectIdentifierType = NSPasteboard.PasteboardType("com.boinx.BXMediaBrowser.object-identifier")
 	
 	
 //----------------------------------------------------------------------------------------------------------------------

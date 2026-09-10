@@ -37,10 +37,16 @@ extension NSPasteboard
 	
 	public var mediaBrowserObjects:[Object]?
 	{
-		guard let identifiers = self.readObjects(forClasses:[NSString.self], options:[:]) as? [String] else { return nil }
-		guard !identifiers.isEmpty else { return nil }
+		guard let pasteboardItems = self.pasteboardItems else { return nil }
+
+		// Read the identifier from its own private type. Reading NSString off the pasteboard would
+		// pick up any text that happens to be there, and no longer finds the identifier at all now
+		// that it is not written with the generic string pasteboard type.
+
+		let identifiers = pasteboardItems.compactMap { $0.string(forType:ObjectFilePromiseProvider.objectIdentifierType) }
+
 		let objects = identifiers.compactMap { Object.draggedObject(for:$0) }
-		return objects
+		return objects.count > 0 ? objects : nil
 	}
 
 	/// Returns the list of file URLs (if any) that are on this NSPasteboard
