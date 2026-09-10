@@ -166,12 +166,12 @@ open class FolderSource : Source, AccessControl
 	
 	open func isDuplicate(_ url:URL, in containers:[Container]) -> Bool
 	{
-		for container in containers
-		{
-			if let otherURL = container.data as? URL, url == otherURL { return true }
-		}
-		
-		return false
+		// Every Container this can receive is a FolderContainer, which stores its Container.data as
+		// bookmark Data rather than as a URL. Compare the derived identifier instead, which can
+		// be done without resolving the bookmark, and uniquely identifies the container.
+
+		let identifier = Self.identifier(for:url)
+		return containers.contains(where:{ $0.identifier == identifier })
 	}
 	
 	
