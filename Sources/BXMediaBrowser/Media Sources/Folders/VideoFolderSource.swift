@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------------------------------------------
 //
-//  Copyright ©2022 Peter Baumgartner. All rights reserved.
+//  Copyright ©2022-2026 Peter Baumgartner. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@
 import BXSwiftUtils
 import AVFoundation
 import QuickLook
+import QuickLookThumbnailing
 import Foundation
 
 
@@ -138,28 +139,24 @@ open class VideoFile : FolderObject
 				generator.appliesPreferredTrackTransform = true
 				generator.maximumSize = size
 				
-				let thumbnail = try generator.copyCGImage(at:time, actualTime:nil)
-				return thumbnail
+				// copyCGImage() is synchronous and waits on an internal semaphore, so it must not be called from a
+				// cooperative pool thread (see FM-2532). Its async replacement image(at:) needs iOS 16, which is
+				// above our iOS deployment target of 14 - so keep the old call there, mirroring the duration
+				// handling above. Revisit once iOS is bumped to 16.
+
+				#if os(macOS)
+				return try await generator.image(at:time).image
+				#else
+				return try generator.copyCGImage(at:time, actualTime:nil)
+				#endif
 			}
 			
 			// Use QuickLook as fallback solution
 			
-			catch let error
+			catch
 			{
-				#if os(macOS)
-				
-				if let image = QLThumbnailImageCreate(kCFAllocatorDefault, url as CFURL, size, nil)?.takeRetainedValue()
-				{
-					return image
-				}
-				
-				throw error
-				
-				#else
-				
+				FolderSource.log.warning {"\(Self.self).\(#function) AVAssetImageGenerator failed for \(url), falling back to QuickLook - \(error)"}
 				return try await QLThumbnailGenerator.shared.thumbnail(with:url, maxSize:size)
-
-				#endif
 			}
 		}
 	}
