@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------------------------------------------
 //
-//  Copyright ©2022 Peter Baumgartner. All rights reserved.
+//  Copyright ©2022-2026 Peter Baumgartner. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -103,7 +103,14 @@ extension Object
 					
 					logDataModel.verbose {"Loading thumbnail for \(identifier)"}
 					
-					let image = try await self.loadThumbnailHandler(identifier,data)
+					// Wait for a free slot, so that a folder full of files cannot flood the system with
+					// simultaneous thumbnail requests (see FM-2532)
+					
+					let image = try await Tasks.concurrencyLimiter.perform
+					{
+						try await self.loadThumbnailHandler(identifier,data)
+					}
+					
 					self._thumbnailImage = image
 					self._loadThumbnailTask = nil
 					return image
@@ -161,7 +168,13 @@ extension Object
 
 					logDataModel.verbose {"Loading metadata for \(identifier)"}
 					
-					let metadata:[String:Any] = try await self.loadMetadataHandler(identifier,data)
+					// Wait for a free slot, for the same reason as in thumbnailImage above
+					
+					let metadata:[String:Any] = try await Tasks.concurrencyLimiter.perform
+					{
+						try await self.loadMetadataHandler(identifier,data)
+					}
+					
 					self._metadata = metadata
 					self._loadMetadataTask = nil
 					return metadata
