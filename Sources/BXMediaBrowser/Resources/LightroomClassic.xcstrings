@@ -123,8 +123,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Las imágenes fueron proporcionadas por Adobe Lightroom Classic a un tamaño reducido.\n\nPara solucionar el problema, cambie a Adobe Lightroom y seleccione el elemento de menú Biblioteca > Previsualizaciones > Crear previsualizaciones 1:1."
+            "state" : "machine_translated",
+            "value" : "Las imágenes fueron proporcionadas por Adobe Lightroom Classic a un tamaño reducido.\n\nPara solucionar el problema, cambia a Adobe Lightroom y selecciona el ítem de menú Biblioteca > Previsualizaciones > Crear previsualizaciones 1:1."
           }
         },
         "fr" : {
@@ -228,8 +228,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "La biblioteca de Lightroom no es legible. Por favor, conceda derechos de acceso de lectura a su carpeta principal."
+            "state" : "machine_translated",
+            "value" : "La biblioteca de Lightroom no es legible. Concede derechos de acceso de lectura a su carpeta principal."
           }
         },
         "fr" : {
@@ -352,5 +352,5 @@
       }
     }
   },
-  "version" : "1.0"
+  "version" : "1.3"
 }

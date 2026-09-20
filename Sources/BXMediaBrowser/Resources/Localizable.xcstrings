@@ -54,8 +54,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "¿Desea eliminar la carpeta \"%@\"?"
+            "state" : "machine_translated",
+            "value" : "¿Quieres eliminar la carpeta \"%@\"?"
           }
         },
         "fr" : {
@@ -230,8 +230,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Por favor, inicia GarageBand y selecciona el comando de menú GarageBand > Biblioteca de Sonidos > Descargar todos los sonidos disponibles."
+            "state" : "machine_translated",
+            "value" : "Inicia GarageBand y selecciona el ítem de menú GarageBand > Biblioteca de Sonidos > Descargar todos los sonidos disponibles."
           }
         },
         "fr" : {
@@ -265,8 +265,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Por favor, lanza Apple Music para descargar esta canción y hacerla disponible en el navegador de medios."
+            "state" : "machine_translated",
+            "value" : "Lanza Apple Music para descargar esta canción y hacerla disponible en el navegador multimedia."
           }
         },
         "fr" : {
@@ -372,8 +372,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Los archivos de medios protegidos por DRM solo pueden ser utilizados en Apple Music o QuickTime Player."
+            "state" : "machine_translated",
+            "value" : "Los archivos multimedia protegidos por DRM solo pueden usarse en Apple Music o QuickTime Player."
           }
         },
         "fr" : {
@@ -552,8 +552,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importando archivos de medios"
+            "state" : "machine_translated",
+            "value" : "Importando archivos multimedia"
           }
         },
         "fr" : {
@@ -1359,8 +1359,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tamaño del video"
+            "state" : "machine_translated",
+            "value" : "Tamaño del vídeo"
           }
         },
         "fr" : {
@@ -1847,5 +1847,5 @@
       }
     }
   },
-  "version" : "1.0"
+  "version" : "1.3"
 }
