@@ -91,8 +91,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Todos los videos"
+            "state" : "machine_translated",
+            "value" : "Todos los vídeos"
           }
         },
         "fr" : {
@@ -413,8 +413,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abrir Configuración del Sistema…"
+            "state" : "machine_translated",
+            "value" : "Abrir Ajustes del Sistema…"
           }
         },
         "fr" : {
@@ -448,8 +448,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Por favor, concede a %1$@ los derechos de acceso a la biblioteca de Fotos en Configuración del Sistema > Privacidad y Seguridad > Fotos. Luego, reinicia %1$@."
+            "state" : "machine_translated",
+            "value" : "Concede a %1$@ los derechos de acceso a la biblioteca de Fotos en Ajustes del Sistema > Privacidad y seguridad > Fotos. Luego, reinicia %1$@."
           }
         },
         "fr" : {
@@ -554,8 +554,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tamaño de video"
+            "state" : "machine_translated",
+            "value" : "Tamaño de vídeo"
           }
         },
         "fr" : {
@@ -609,5 +609,5 @@
       }
     }
   },
-  "version" : "1.0"
+  "version" : "1.3"
 }

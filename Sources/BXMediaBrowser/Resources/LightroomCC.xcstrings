@@ -91,8 +91,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Todos los videos"
+            "state" : "machine_translated",
+            "value" : "Todos los vídeos"
           }
         },
         "fr" : {
@@ -306,8 +306,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "El acceso al servidor de Lightroom CC no está disponible actualmente. Por favor, inténtalo de nuevo más tarde."
+            "state" : "machine_translated",
+            "value" : "El acceso al servidor de Lightroom CC no está disponible actualmente. Inténtalo de nuevo más tarde."
           }
         },
         "fr" : {
@@ -341,8 +341,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "El soporte de Lightroom CC no está configurado correctamente. Por favor, contacta con el desarrollador de esta aplicación."
+            "state" : "machine_translated",
+            "value" : "El soporte de Lightroom CC no está configurado correctamente. Contacta con el desarrollador de esta aplicación."
           }
         },
         "fr" : {
@@ -665,8 +665,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tamaño de video"
+            "state" : "machine_translated",
+            "value" : "Tamaño de vídeo"
           }
         },
         "fr" : {
@@ -684,5 +684,5 @@
       }
     }
   },
-  "version" : "1.0"
+  "version" : "1.3"
 }

@@ -90,8 +90,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Por favor, concede acceso de lectura a la carpeta \"%@\" para que los archivos de audio sean utilizables."
+            "state" : "machine_translated",
+            "value" : "Concede acceso de lectura a la carpeta \"%@\" para poder usar los archivos de audio."
           }
         },
         "fr" : {
@@ -519,8 +519,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Esta pista no está disponible en tu computadora. Por favor, ve a la aplicación de Música para descargar la pista a esta computadora."
+            "state" : "machine_translated",
+            "value" : "Esta pista no está disponible en tu ordenador. Ve a la aplicación de Música para descargar la pista a este ordenador."
           }
         },
         "fr" : {
@@ -682,5 +682,5 @@
       }
     }
   },
-  "version" : "1.0"
+  "version" : "1.3"
 }
