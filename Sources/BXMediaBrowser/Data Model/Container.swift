@@ -108,6 +108,11 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 	
 	private var loadTask:Task<Void,Never>? = nil
 	
+	/// Incremented for every call to load(). A load Task only publishes its results if it is still the most
+	/// recent request, so that a superseded load cannot overwrite newer results.
+	
+	private var loadRequestCount = 0
+	
 	/// This task is used to only show the loading spinner if loading takes a while
 	
 //	private var spinnerTask:Task<Void,Never>? = nil
@@ -227,8 +232,17 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 	
 	public func load(with containerState:[String:Any]? = nil, in library:Library?)
 	{
-		self.loadTask?.cancel()
-		self.loadTask = nil
+		// Cancellation is cooperative, so the previous load may still be running. Loaders of some sources
+		// (e.g. Pexels, Unsplash, Lightroom Classic) mutate shared state without locking, so two concurrent
+		// loads can corrupt [Object] arrays and leave deallocated Objects behind, which later crash the
+		// NSDiffableDataSource of the ObjectCollectionView. For this reason the new load waits until the
+		// previous one has finished.
+		
+		let previousTask = self.loadTask
+		previousTask?.cancel()
+		
+		self.loadRequestCount += 1
+		let requestCount = self.loadRequestCount
 		
 		// Show spinning wheel after 0.15s
 		
@@ -246,8 +260,11 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 		
 		self.loadTask = Task
 		{
+			_ = await previousTask?.value
+			
 			do
 			{
+				try Task.checkCancellation()
 				try await Tasks.canContinue()
 				
 				BXMediaBrowser.logDataModel.debug {"\(Self.self).\(#function) \(identifier)"}
@@ -265,6 +282,8 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 				// Get new list of (sub)containers and objects
 				
 				let (containers,objects) = try await self.loader.contents(with:data, filter:filter, in:library)
+				try Task.checkCancellation()
+				
 				let containerNames = containers.map { $0.name }.joined(separator:", ")
 				let objectNames = objects.map { $0.name }.joined(separator:", ")
 				BXMediaBrowser.logDataModel.verbose {"    containers = \(containerNames)"}
@@ -301,6 +320,10 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 				
 				await MainActor.run
 				{
+					// Bail out if a newer load was requested in the meantime - its results take precedence
+					
+					guard requestCount == self.loadRequestCount else { return }
+					
 					self.containers = containers
 					self.objects = uniqueObjects
 					self.objectCount = uniqueObjects.count
@@ -329,11 +352,18 @@ open class Container : ObservableObject, Identifiable, StateSaving, BXSignpostMi
 			{
 				await MainActor.run
 				{
+					// A superseded load must not reset the state of the newer load that is still running
+					
+					guard requestCount == self.loadRequestCount else { return }
 					self.isLoading = false
 					self.isLoaded = false
 				}
 				
-				if let error = error as? Container.Error, error == .loadContentsCancelled
+				if error is CancellationError
+				{
+					BXMediaBrowser.logDataModel.debug {"\(Self.self).\(#function) cancelled \(identifier)"}
+				}
+				else if let error = error as? Container.Error, error == .loadContentsCancelled
 				{
 					BXMediaBrowser.logDataModel.warning {"\(Self.self).\(#function) ERROR \(error)"}
 				}
