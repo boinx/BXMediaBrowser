@@ -66,20 +66,25 @@ open class PexelsVideoContainer : PexelsContainer
 		
 		// If the search string has changed, then clear the results and store the new filter 
 		
-		if pexelsFilter != pexelsData.lastUsedFilter
+		// The cached search results are shared by all loads of this Container, so access them under a lock
+		
+		synchronized(pexelsData)
 		{
-			Pexels.log.debug {"    clear search results"}
+			if pexelsFilter != pexelsData.lastUsedFilter
+			{
+				Pexels.log.debug {"    clear search results"}
 
-			pexelsData.page = 0
-			pexelsData.objects = []
-			pexelsData.knownIDs.removeAll()
-			pexelsData.didReachEnd = false
-			pexelsData.loadNextPage = true
+				pexelsData.page = 0
+				pexelsData.objects = []
+				pexelsData.knownIDs.removeAll()
+				pexelsData.didReachEnd = false
+				pexelsData.loadNextPage = true
 			
-			pexelsData.lastUsedFilter.searchString = pexelsFilter.searchString
-			pexelsData.lastUsedFilter.orientation = pexelsFilter.orientation
-			pexelsData.lastUsedFilter.color = pexelsFilter.color
-			pexelsData.lastUsedFilter.size = pexelsFilter.size
+				pexelsData.lastUsedFilter.searchString = pexelsFilter.searchString
+				pexelsData.lastUsedFilter.orientation = pexelsFilter.orientation
+				pexelsData.lastUsedFilter.color = pexelsFilter.color
+				pexelsData.lastUsedFilter.size = pexelsFilter.size
+			}
 		}
 		
 		// Append the next page of search results
@@ -99,7 +104,9 @@ open class PexelsVideoContainer : PexelsContainer
 		
 		// Filter objects by rating
 		
-		objects = pexelsData.objects.filter
+		let cachedObjects = synchronized(pexelsData) { pexelsData.objects }
+		
+		objects = cachedObjects.filter
 		{
 			StatisticsController.shared.rating(for:$0) >= filter.rating
 		}
@@ -161,12 +168,15 @@ open class PexelsVideoContainer : PexelsContainer
 	
 	private class func add(_ videos:[Pexels.Video], to pexelsData:PexelsData, in library:Library?)
 	{
-		for video in videos
+		synchronized(pexelsData)
 		{
-			let id = video.id
-			guard !pexelsData.knownIDs.contains(id) else { continue }
-			pexelsData.knownIDs.insert(id)
-			pexelsData.objects += PexelsVideoObject(with:video, in:library)
+			for video in videos
+			{
+				let id = video.id
+				guard !pexelsData.knownIDs.contains(id) else { continue }
+				pexelsData.knownIDs.insert(id)
+				pexelsData.objects += PexelsVideoObject(with:video, in:library)
+			}
 		}
 	}
 }

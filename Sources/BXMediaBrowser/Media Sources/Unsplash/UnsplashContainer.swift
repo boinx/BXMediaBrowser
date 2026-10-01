@@ -182,19 +182,24 @@ open class UnsplashContainer : Container
 		
 		// If the search string has changed, then clear the results and store the new filter 
 		
-		if unsplashFilter != unsplashData.lastUsedFilter
+		// The cached search results are shared by all loads of this Container, so access them under a lock
+		
+		synchronized(unsplashData)
 		{
-			Unsplash.log.debug {"    clear search results"}
+			if unsplashFilter != unsplashData.lastUsedFilter
+			{
+				Unsplash.log.debug {"    clear search results"}
 
-			unsplashData.page = 0
-			unsplashData.objects = []
-			unsplashData.knownIDs = [:]
-			unsplashData.didReachEnd = false
-			unsplashData.loadNextPage = true
+				unsplashData.page = 0
+				unsplashData.objects = []
+				unsplashData.knownIDs = [:]
+				unsplashData.didReachEnd = false
+				unsplashData.loadNextPage = true
 
-			unsplashData.lastUsedFilter.searchString = unsplashFilter.searchString
-			unsplashData.lastUsedFilter.orientation = unsplashFilter.orientation
-			unsplashData.lastUsedFilter.color = unsplashFilter.color
+				unsplashData.lastUsedFilter.searchString = unsplashFilter.searchString
+				unsplashData.lastUsedFilter.orientation = unsplashFilter.orientation
+				unsplashData.lastUsedFilter.color = unsplashFilter.color
+			}
 		}
 		
 		// Append the next page of search results
@@ -214,7 +219,9 @@ open class UnsplashContainer : Container
 		
 		// Filter objects by rating
 		
-		objects = unsplashData.objects.filter
+		let cachedObjects = synchronized(unsplashData) { unsplashData.objects }
+		
+		objects = cachedObjects.filter
 		{
 			StatisticsController.shared.rating(for:$0) >= filter.rating
 		}
@@ -280,12 +287,15 @@ open class UnsplashContainer : Container
 	
 	private class func add(_ photos:[UnsplashPhoto], to unsplashData:UnsplashData, in library:Library?)
 	{
-		for photo in photos
+		synchronized(unsplashData)
 		{
-			let id = photo.id
-			guard unsplashData.knownIDs[id] == nil else { continue }
-			unsplashData.objects += UnsplashObject(with:photo, in:library)
-			unsplashData.knownIDs[id] = photo
+			for photo in photos
+			{
+				let id = photo.id
+				guard unsplashData.knownIDs[id] == nil else { continue }
+				unsplashData.objects += UnsplashObject(with:photo, in:library)
+				unsplashData.knownIDs[id] = photo
+			}
 		}
 	}
 	
