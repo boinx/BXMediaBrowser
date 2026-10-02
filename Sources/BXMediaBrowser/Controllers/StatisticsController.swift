@@ -66,6 +66,14 @@ public class StatisticsController : ObservableObject
 	
 	private var _rating:[String:Int] = [:]
 
+	/// Ratings and use counts are read by Container loaders on background threads (filtering and sorting), while they are modified on the main thread.
+	/// Unsynchronized concurrent access to a Swift Dictionary corrupts the heap, so all access to _rating and _useCountDataSource is protected by
+	/// this lock.
+	///
+	/// To rule out deadlocks, this lock is a leaf lock: while holding it, never call out to other code, post notifications, or acquire any other lock.
+	
+	private let lock = NSLock()
+
 	/// This notification is sent when a ratings value was changed.
 	///
 	/// The BXMediaBrowser.Object is stored in notification.object.
@@ -74,8 +82,7 @@ public class StatisticsController : ObservableObject
 
 	/// An externally supplied handler that loads rating statistics from storage.
 	///
-	/// The default implementation uses UserDefaults, but a client application can store
-	/// this information elsewhere, e.g. in a document file.
+	/// The default implementation uses UserDefaults, but a client application can store this information elsewhere, e.g. in a document file.
 	
 	public var loadRatingHandler:()->[String:Int] =
 	{
@@ -84,8 +91,7 @@ public class StatisticsController : ObservableObject
 	
 	/// An externally supplied handler that saves rating statistics to storage.
 	///
-	/// The default implementation uses UserDefaults, but a client application can store
-	/// this information elsewhere, e.g. in a document file.
+	/// The default implementation uses UserDefaults, but a client application can store this information elsewhere, e.g. in a document file.
 	
 	public var saveRatingHandler:([String:Int])->Void =
 	{
@@ -98,8 +104,7 @@ public class StatisticsController : ObservableObject
 
 	/// This notification is sent (from the main thread) whenever a statistics value was changed.
 	///
-	/// The identifier of the changed Object is stored in notification.object. If all Objects are changed at once,
-	/// then notification.object will be nil.
+	/// The identifier of the changed Object is stored in notification.object. If all Objects are changed at once, then notification.object will be nil.
 	
 	public static let didChangeNotification = Notification.Name("BXMediaBrowser.StatisticsController.didChange")
 	
@@ -144,10 +149,23 @@ public class StatisticsController : ObservableObject
 	
 	public func useCount(for identifier:String) -> Int
 	{
-		self.useCountDataSource?.useCount(for:identifier) ?? 0
+		// Only retrieve the dataSource while holding the lock - calling into the dataSource happens outside
+		// the lock, because the dataSource uses its own lock.
+		
+		let dataSource = self.useCountDataSource
+		return dataSource?.useCount(for:identifier) ?? 0
 	}
 
-	public weak var useCountDataSource:UseCountDataSource? = nil
+	/// The useCountDataSource is replaced on the main thread (e.g. when switching documents), but read on background
+	/// threads while sorting, so access is protected by the lock.
+	
+	public var useCountDataSource:UseCountDataSource?
+	{
+		get { self.withLock { self._useCountDataSource } }
+		set { self.withLock { self._useCountDataSource = newValue } }
+	}
+
+	private weak var _useCountDataSource:UseCountDataSource? = nil
 	
 	
 //----------------------------------------------------------------------------------------------------------------------
@@ -160,14 +178,16 @@ public class StatisticsController : ObservableObject
 	
 	public func loadRatings()
 	{
-		self._rating = self.loadRatingHandler()
+		let rating = self.loadRatingHandler()
+		self.withLock { self._rating = rating }
 	}
 
 	/// Saves statistics to storage
 	
 	public func saveRatings()
 	{
-		self.saveRatingHandler(_rating)
+		let rating = self.withLock { self._rating }
+		self.saveRatingHandler(rating)
 	}
 	
 	
@@ -178,13 +198,18 @@ public class StatisticsController : ObservableObject
 	
 	public func setRating(_ rating:Int, for object:Object, sendNotifications:Bool = true)
 	{
-		if rating > 0
+		let identifier = object.identifier
+		
+		self.withLock
 		{
-			self._rating[object.identifier] = rating
-		}
-		else
-		{
-			self._rating[object.identifier] = nil
+			if rating > 0
+			{
+				self._rating[identifier] = rating
+			}
+			else
+			{
+				self._rating[identifier] = nil
+			}
 		}
 		
 		if sendNotifications
@@ -209,9 +234,24 @@ public class StatisticsController : ObservableObject
 	
 	public func rating(for identifier:String) -> Int
 	{
-		self._rating[identifier] ?? 0
+		self.withLock { self._rating[identifier] ?? 0 }
 	}
 
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: - Locking
+	
+	
+	/// Executes the closure while holding the lock. The closure must only access the protected properties.
+	
+	private func withLock<T>(_ closure:()->T) -> T
+	{
+		self.lock.lock()
+		defer { self.lock.unlock() }
+		return closure()
+	}
 }
 	
 	
