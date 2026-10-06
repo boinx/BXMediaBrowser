@@ -197,6 +197,28 @@ extension Object
 		
 		public var isLoadingMetadata:Bool { _loadMetadataTask != nil }
 		
+		/// Returns true if the cached metadata is only partial, e.g. because it was loaded while the file was
+		/// still in the cloud, so that only information that doesn't require the file contents was available.
+		
+		public var hasPartialMetadata:Bool
+		{
+			self._metadata?[.isPartialMetadataKey] as? Bool == true
+		}
+		
+		/// Discards the cached metadata and loads it again. This is used to replace partial metadata with
+		/// the complete metadata, once the file is available locally.
+		
+		public func reloadMetadata() async throws -> [String:Any]
+		{
+			if let task = self._loadMetadataTask
+			{
+				_ = try? await task.value
+			}
+			
+			self._metadata = nil
+			return try await self.metadata
+		}
+		
 	
 //----------------------------------------------------------------------------------------------------------------------
 

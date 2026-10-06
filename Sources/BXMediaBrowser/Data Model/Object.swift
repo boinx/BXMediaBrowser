@@ -281,6 +281,20 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 		get async throws
 		{
 			let url = try await self.loader.localURL
+			
+			// If the metadata was loaded while the file was still in the cloud, it is only partial (e.g. no EXIF).
+			// Now that the file is local, load the complete metadata BEFORE returning, because clients (e.g. the
+			// FotoMagico data model) copy self.metadata right after awaiting the local file.
+			
+			if await self.loader.hasPartialMetadata, let metadata = try? await self.loader.reloadMetadata()
+			{
+				await MainActor.run
+				{
+					self.metadata = metadata
+					self.captureDate = metadata[.captureDateKey] as? Date
+				}
+			}
+			
 			return url
 		}
 	}
@@ -291,3 +305,16 @@ open class Object : NSObject, ObservableObject, Identifiable, BXSignpostMixin
 //----------------------------------------------------------------------------------------------------------------------
 
 
+// MARK: -
+
+public extension String
+{
+	/// Marks a metadata dictionary as partial. When a file is still in the cloud, its metadata is assembled without
+	/// reading the file contents (which would trigger a download), so some information is missing. A partial
+	/// metadata dictionary is reloaded once the file is available locally (see Object.localFileURL).
+	
+	static let isPartialMetadataKey = "BXMediaBrowser_isPartialMetadata"	// No dots, because FotoMagicoCore reads metadata dicts via value(forKeyPath:)
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
