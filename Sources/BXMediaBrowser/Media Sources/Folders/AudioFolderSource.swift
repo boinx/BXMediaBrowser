@@ -220,22 +220,20 @@ open class AudioFile : FolderObject
 		guard let url = data as? URL else { throw Error.loadThumbnailFailed }
 		guard url.exists else { throw Error.loadThumbnailFailed }
 		
-		return try await url.downloadFromCloudIfNeeded
-		{
-			url in
-			#if os(macOS)
-			
-			let image = NSWorkspace.shared.icon(forFile:url.path)
-			guard let thumbnail = image.cgImage(forProposedRect:nil, context:nil, hints:nil) else { throw Error.loadThumbnailFailed }
-			return thumbnail
-			
-			#else
-			
-			let size = CGSize(256,256)
-			return try await QLThumbnailGenerator.shared.thumbnail(with:url, maxSize:size, type:.icon)
-			
-			#endif
-		}
+		// A generic file icon doesn't need the file contents, so there is no need to download a cloud based file
+		
+		#if os(macOS)
+		
+		let image = NSWorkspace.shared.icon(forFile:url.path)
+		guard let thumbnail = image.cgImage(forProposedRect:nil, context:nil, hints:nil) else { throw Error.loadThumbnailFailed }
+		return thumbnail
+		
+		#else
+		
+		let size = CGSize(256,256)
+		return try await QLThumbnailGenerator.shared.thumbnail(with:url, maxSize:size, type:.icon)
+		
+		#endif
 	}
 
 

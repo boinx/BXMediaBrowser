@@ -189,7 +189,42 @@ open class FolderObject : Object
 			local.completedUnitCount = 1
 		}
 
-		// Return the URL to the local file on disk
+	// MARK: - Cloud Based Files
+	
+	// Reading the contents of a cloud based file whose contents have been evicted (e.g. in iCloud Drive) makes the
+	// system download the WHOLE file. Merely browsing a folder must not do that, so thumbnails and metadata of such
+	// files are loaded from sources that do not need the file contents: the thumbnail that the file provider keeps
+	// in the cloud, and the attributes that Spotlight has indexed. Only downloadFile() may trigger a download.
+	
+	/// Loads the thumbnail for the specified file. If the file is local, the thumbnail is created by readingFile.
+	/// If it is an evicted cloud file, the preview thumbnail is fetched from the file provider instead. Only if the
+	/// file provider doesn't have one (rare), the file is downloaded as a last resort, since images and videos must
+	/// be identifiable in the browser - a generic file icon is not acceptable for them.
+	
+	public class func loadThumbnail(for url:URL, readingFile:@escaping (URL) async throws -> CGImage) async throws -> CGImage
+	{
+		guard url.isEvictedCloudItem else { return try await readingFile(url) }
+		
+		if let thumbnail = await QLThumbnailGenerator.shared.previewThumbnail(with:url, maxSize:CGSize(width:256, height:256))
+		{
+			return thumbnail
+		}
+		
+		FolderSource.log.warning {"\(Self.self).\(#function) no cloud thumbnail available, downloading \(url)"}
+
+		// Fallback downloads run one at a time, so that scrolling past many such files doesn't fan out into
+		// dozens of simultaneous downloads
+		
+		return try await Self.downloadFallbackLimiter.perform
+		{
+			try await Tasks.canContinue()
+			return try await url.downloadFromCloudIfNeeded(byAccessor:readingFile)
+		}
+	}
+	
+	private static let downloadFallbackLimiter = BXConcurrencyLimiter(limit:1)
+	
+	
 	/// Returns the Spotlight attributes for the specified keys. Since some information (e.g. EXIF) is not available
 	/// this way, the returned dictionary is marked as partial, so that the full metadata is loaded as soon as the
 	/// file has been downloaded (see Object.localFileURL).

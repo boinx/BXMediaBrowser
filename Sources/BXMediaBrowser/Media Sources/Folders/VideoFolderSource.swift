@@ -112,7 +112,10 @@ open class VideoFile : FolderObject
 		guard url.exists else { throw Error.loadThumbnailFailed }
 		let size = CGSize(256,256)
 
-		return try await url.downloadFromCloudIfNeeded
+		// For a cloud based file that isn't available locally, the closure is skipped in favor of the thumbnail
+		// stored in the cloud, so that browsing doesn't download the file (see FolderObject)
+		
+		return try await Self.loadThumbnail(for:url)
 		{
 			url in
 

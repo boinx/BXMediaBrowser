@@ -69,6 +69,46 @@ extension QLThumbnailGenerator
 			}
         }
     }
+    
+    
+	/// Returns a real preview thumbnail for the specified URL, or nil if QuickLook can only provide a generic icon.
+	///
+	/// For files in iCloud Drive whose contents have been evicted, QuickLook gets the thumbnail from the file provider
+	/// (iCloud stores one per document), so this does NOT download the file. The type check matters, because QuickLook
+	/// may otherwise fall back to an icon, which is useless for identifying an image or video in the browser.
+	
+    public func previewThumbnail(with url:URL, maxSize:CGSize) async -> CGImage?
+    {
+        await withCheckedContinuation
+        {
+			continuation in
+
+			let request = QLThumbnailGenerator.Request(
+				fileAt:url,
+				size:maxSize,
+				scale:1.0,
+				representationTypes:.thumbnail)
+
+			var isResumed = false
+			
+			self.generateBestRepresentation(for:request)
+			{
+				(thumbnail,_) in
+
+				guard !isResumed else { return }
+				isResumed = true
+				
+				if let thumbnail, thumbnail.type == .thumbnail
+				{
+					continuation.resume(returning:thumbnail.cgImage)
+				}
+				else
+				{
+					continuation.resume(returning:nil)
+				}
+			}
+        }
+    }
 }
 
 
