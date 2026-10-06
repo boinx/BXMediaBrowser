@@ -100,7 +100,12 @@ open class AudioFolderContainer : FolderContainer
 		let filename = url.lastPathComponent.lowercased()
 		if filename.contains(searchString) { return url }
 
-		let audioMetadata = url.audioMetadata
+		// Reading the metadata from the file itself would download a cloud based file that isn't available locally,
+		// so in that case only search what Spotlight knows about the file
+		
+		let audioMetadata = url.isEvictedCloudItem ?
+			url.spotlightMetadata(for:[kMDItemTitle,kMDItemAuthors,kMDItemComposer,kMDItemAlbum,kMDItemMusicalGenre,kMDItemCopyright]) :
+			url.audioMetadata
 
 		if let title = audioMetadata[kMDItemTitle] as? String, title.lowercased().contains(searchString)
 		{
@@ -247,12 +252,19 @@ open class AudioFile : FolderObject
 		
 		var metadata = try await super.loadMetadata(for:identifier, data:data)
 		
+		// If the file is in the cloud and not available locally, reading it would trigger a download. Use whatever
+		// Spotlight knows instead. The complete metadata is loaded once the file has been downloaded.
+		
+		if url.isEvictedCloudItem
+		{
+			let keys:[String] = [.durationKey, .titleKey, .albumKey, .authorsKey, .kindKey]
+			metadata += Self.spotlightMetadata(for:url, keys:keys)
+			return metadata
+		}
+
 		// Get audio specific info
 		
-		let audioInfo = try await url.downloadFromCloudIfNeeded
-		{
-			url in url.audioMetadata
-		}
+		let audioInfo = url.audioMetadata
 		
 		// And copy it to metadata dict
 		

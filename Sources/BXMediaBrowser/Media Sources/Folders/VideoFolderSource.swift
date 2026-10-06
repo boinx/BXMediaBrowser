@@ -175,12 +175,19 @@ open class VideoFile : FolderObject
 		
 		var metadata = try await super.loadMetadata(for:identifier, data:data)
 		
+		// If the file is in the cloud and not available locally, reading it would trigger a download. Use whatever
+		// Spotlight knows instead. The complete metadata is loaded once the file has been downloaded.
+		
+		if url.isEvictedCloudItem
+		{
+			let keys:[String] = [.widthKey, .heightKey, .durationKey, .kindKey, .codecsKey, .captureDateKey]
+			metadata += Self.spotlightMetadata(for:url, keys:keys)
+			return metadata
+		}
+
 		// Get video specific info
 		
-		let videoInfo = try await url.downloadFromCloudIfNeeded
-		{
-			url in url.videoMetadata
-		}
+		let videoInfo = url.videoMetadata
 		
 		// And copy it to metadata dict
 		

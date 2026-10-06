@@ -99,30 +99,27 @@ open class FolderObject : Object
 		guard let url = data as? URL else { throw Error.loadMetadataFailed }
 		guard url.exists else { throw Error.loadMetadataFailed }
 
-		return try await url.downloadFromCloudIfNeeded()
+		// These file system attributes are available without reading the file contents, so there is no need
+		// to download a cloud based file here (which a coordinated read would have done).
+		
+		var metadata:[String:Any] = [:]
+		
+		if let fileSize = url.fileSize
 		{
-			url in
-
-			var metadata:[String:Any] = [:]
-			
-			if let fileSize = url.fileSize
-			{
-	//			metadata["fileSize"] = fileSize
-				metadata[.fileSizeKey] = fileSize
-			}
-
-			if let creationDate = url.creationDate
-			{
-				metadata[.creationDateKey] = creationDate
-			}
-
-			if let modificationDate = url.modificationDate
-			{
-				metadata[.modificationDateKey] = modificationDate
-			}
-			
-			return metadata
+			metadata[.fileSizeKey] = fileSize
 		}
+
+		if let creationDate = url.creationDate
+		{
+			metadata[.creationDateKey] = creationDate
+		}
+
+		if let modificationDate = url.modificationDate
+		{
+			metadata[.modificationDateKey] = modificationDate
+		}
+		
+		return metadata
 	}
 
 
@@ -193,12 +190,21 @@ open class FolderObject : Object
 		}
 
 		// Return the URL to the local file on disk
+	/// Returns the Spotlight attributes for the specified keys. Since some information (e.g. EXIF) is not available
+	/// this way, the returned dictionary is marked as partial, so that the full metadata is loaded as soon as the
+	/// file has been downloaded (see Object.localFileURL).
+	
+	public class func spotlightMetadata(for url:URL, keys:[String]) -> [String:Any]
+	{
+		var metadata:[String:Any] = [:]
 		
-		return try await url.downloadFromCloudIfNeeded
+		for (key,value) in url.spotlightMetadata(for:keys.map { $0 as CFString })
 		{
-			url in
-			return url
+			metadata[key as String] = value
 		}
+		
+		metadata[.isPartialMetadataKey] = true
+		return metadata
 	}
 
 

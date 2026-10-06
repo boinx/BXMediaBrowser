@@ -168,16 +168,21 @@ open class ImageFile : FolderObject
 		
 		var metadata = try await super.loadMetadata(for:identifier, data:data)
 		
+		// If the file is in the cloud and not available locally, reading it would trigger a download. Use whatever
+		// Spotlight knows instead. The complete metadata is loaded once the file has been downloaded.
+		
+		if url.isEvictedCloudItem
+		{
+			let keys:[String] = [.widthKey, .heightKey, .profileNameKey, .captureDateKey]
+			metadata += Self.spotlightMetadata(for:url, keys:keys)
+			return metadata
+		}
+
 		// Get image specific info
 		
-		let imageInfo = try await url.downloadFromCloudIfNeeded
-		{
-			url in
-			guard let source = CGImageSourceCreateWithURL(url as CFURL,nil) else { throw Error.loadMetadataFailed }
-			guard let properties = CGImageSourceCopyPropertiesAtIndex(source,0,nil) else { throw Error.loadMetadataFailed }
-			guard let dict = properties as? [String:Any] else { throw Error.loadMetadataFailed }
-			return dict
-		}
+		guard let source = CGImageSourceCreateWithURL(url as CFURL,nil) else { throw Error.loadMetadataFailed }
+		guard let properties = CGImageSourceCopyPropertiesAtIndex(source,0,nil) else { throw Error.loadMetadataFailed }
+		guard let imageInfo = properties as? [String:Any] else { throw Error.loadMetadataFailed }
 
 		// And copy it to metadata dict
 		
