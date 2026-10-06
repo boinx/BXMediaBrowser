@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------------------------------------------
 //
-//  Copyright ©2022 Peter Baumgartner. All rights reserved.
+//  Copyright ©2022-2026 Peter Baumgartner. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -114,6 +114,19 @@ extension DraggingProgressMixin
 			self.progressStartTime = CFAbsoluteTimeGetCurrent()
 
 			self.setProgressFraction(0.0)
+			
+			// Show the progress window after a short delay, even if no progress has been reported by then.
+			// updateProgress() alone isn't enough, because it only runs when the fraction changes - and some
+			// downloads report nothing until they are (almost) done. E.g. iCloud Drive publishes 0% for the
+			// entire download of large video files, then jumps to 99%, so no window would show up at all.
+			
+			DispatchQueue.main.asyncAfter(deadline:.now() + 0.5)
+			{
+				[weak self] in
+				guard let self, self.progress === progress else { return }
+				guard !progress.isCancelled, progress.fractionCompleted < 1.0 else { return }
+				self.showProgressWindow(fraction:progress.fractionCompleted)
+			}
 		}
 
 		// Increment useCount of the singleton
@@ -149,17 +162,32 @@ extension DraggingProgressMixin
 			
 			self.setProgressFraction(fraction)
 			
-			if !BXProgressWindowController.shared.isVisible && dt>0.5 //&& fraction<0.6
+			if dt > 0.5
 			{
-				logDragAndDrop.debug {"\(Self.self).\(#function)  show progress window"}
-
-				BXProgressWindowController.shared.show()
-				BXProgressWindowController.shared.title = self.progressTitle ?? NSLocalizedString("Importing Media Files", bundle:.BXMediaBrowser, comment:"Progress Title")
-				BXProgressWindowController.shared.isIndeterminate = true
+				self.showProgressWindow(fraction:fraction)
 			}
 
 			logDragAndDrop.verbose {"\(Self.self).\(#function)  progress=\(percent)%%  duration=\(dt)s"}
 		}
+	}
+	
+	
+	/// Shows the progress window, if it isn't visible yet
+	
+	private func showProgressWindow(fraction:Double)
+	{
+		guard !BXProgressWindowController.shared.isVisible else { return }
+		
+		logDragAndDrop.debug {"\(Self.self).\(#function)  show progress window"}
+
+		BXProgressWindowController.shared.show()
+		BXProgressWindowController.shared.title = self.progressTitle ?? NSLocalizedString("Importing Media Files", bundle:.BXMediaBrowser, comment:"Progress Title")
+
+		// Only show the indeterminate bar if there is no progress yet. Otherwise the full-width indeterminate
+		// bar flashes up until the next update, which then replaces it with a new determinate bar that
+		// animates up from 0 - looking as if progress jumped to 100% and then went back.
+
+		BXProgressWindowController.shared.isIndeterminate = fraction <= 0.0
 	}
 	
 	
