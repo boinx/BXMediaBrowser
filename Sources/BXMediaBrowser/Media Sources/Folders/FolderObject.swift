@@ -175,19 +175,35 @@ open class FolderObject : Object
 		guard url.exists else { throw Error.downloadFileFailed }
 //		guard !item.isDRMProtected else { throw Object.Error.drmProtected }
 
-		// Since we already have the file on disk we do not really spend any time in this "downloadFile"
-		// function. But we will still create a local progress object and set it to 100% immediately,
-		// so that Progress.globalParent gets notified and the progress bar is updated appropriately.
+		// Usually the file is already on disk, and the progress jumps to 100% immediately. But if the file is in
+		// the cloud (e.g. iCloud Drive) and its contents have been evicted, it has to be downloaded first. This is
+		// the ONLY place where a folder based file may be downloaded, so this is where real progress is reported.
 		
-		#warning("FIXME: Implement proper progress reporting, since the above comment is no longer valid when considering cloud storage")
+		let progress = Progress(parent:nil)
+		progress.totalUnitCount = 100
+		progress.completedUnitCount = 0
+		Progress.globalParent?.addChild(progress, withPendingUnitCount:1)
+
+		#if os(macOS)
 		
-		if let parent = Progress.globalParent
+		if url.isEvictedCloudItem
 		{
-			let local = Progress(parent:nil)
-			local.totalUnitCount = 1
-			parent.addChild(local, withPendingUnitCount:1)
-			local.completedUnitCount = 1
+			DraggingProgress.message = NSLocalizedString("Downloading", bundle:.BXMediaBrowser, comment:"Progress Message")
 		}
+		
+		return try await url.downloadFromCloud(reportingTo:progress)
+		
+		#else
+		
+		defer { progress.completedUnitCount = progress.totalUnitCount }
+		return try await url.downloadFromCloudIfNeeded { $0 }
+		
+		#endif
+	}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
 
 	// MARK: - Cloud Based Files
 	
@@ -243,6 +259,11 @@ open class FolderObject : Object
 	}
 
 
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: -
+	
 	// Return the URL to the media file
 	
 	open var url:URL?

@@ -27,6 +27,7 @@
 		D01B495527CA1378008249C0 /* FolderObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48E227CA1378008249C0 /* FolderObserver.swift */; };
 		D01B495627CA1378008249C0 /* StateSaving.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48E327CA1378008249C0 /* StateSaving.swift */; };
 		D01B495727CA1378008249C0 /* Progress+globalParent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48E427CA1378008249C0 /* Progress+globalParent.swift */; };
+		AC10C1D02E9A000100000004 /* URL+downloadWithProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC10C1D02E9A000100000003 /* URL+downloadWithProgress.swift */; };
 		AC10C1D02E9A000100000002 /* URL+CloudStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC10C1D02E9A000100000001 /* URL+CloudStatus.swift */; };
 		D01B495827CA1378008249C0 /* AccessControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48E527CA1378008249C0 /* AccessControl.swift */; };
 		D01B495927CA1378008249C0 /* AudioPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01B48E727CA1378008249C0 /* AudioPreviewController.swift */; };
@@ -200,6 +201,7 @@
 		D01B48E227CA1378008249C0 /* FolderObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderObserver.swift; sourceTree = "<group>"; };
 		D01B48E327CA1378008249C0 /* StateSaving.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateSaving.swift; sourceTree = "<group>"; };
 		D01B48E427CA1378008249C0 /* Progress+globalParent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Progress+globalParent.swift"; sourceTree = "<group>"; };
+		AC10C1D02E9A000100000003 /* URL+downloadWithProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URL+downloadWithProgress.swift"; sourceTree = "<group>"; };
 		AC10C1D02E9A000100000001 /* URL+CloudStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URL+CloudStatus.swift"; sourceTree = "<group>"; };
 		D01B48E527CA1378008249C0 /* AccessControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessControl.swift; sourceTree = "<group>"; };
 		D01B48E727CA1378008249C0 /* AudioPreviewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPreviewController.swift; sourceTree = "<group>"; };
@@ -456,6 +458,7 @@
 				D01B48E227CA1378008249C0 /* FolderObserver.swift */,
 				D01B48E327CA1378008249C0 /* StateSaving.swift */,
 				D01B48E427CA1378008249C0 /* Progress+globalParent.swift */,
+				AC10C1D02E9A000100000003 /* URL+downloadWithProgress.swift */,
 				AC10C1D02E9A000100000001 /* URL+CloudStatus.swift */,
 				D01B48E527CA1378008249C0 /* AccessControl.swift */,
 				D027F92A2802D81B004D4264 /* AppLifecycleMixin.swift */,
@@ -904,6 +907,7 @@
 				D01B496627CA1378008249C0 /* Container+Loader.swift in Sources */,
 				D00D6DE4283923AE00013C39 /* ScrollToBottomMixin.swift in Sources */,
 				D01B495727CA1378008249C0 /* Progress+globalParent.swift in Sources */,
+				AC10C1D02E9A000100000004 /* URL+downloadWithProgress.swift in Sources */,
 				AC10C1D02E9A000100000002 /* URL+CloudStatus.swift in Sources */,
 				D01B495B27CA1378008249C0 /* Object+Loader.swift in Sources */,
 				D0AA8FC1282038C20009A890 /* ObjectRatingView.swift in Sources */,
